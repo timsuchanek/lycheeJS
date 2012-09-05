@@ -1,0 +1,74 @@
+{
+
+	"tags": {
+
+		"platform": {
+
+			"html": "platform/html",
+			"v8gl": "platform/v8gl",
+			"webgl": "platform/webgl"
+
+		}
+
+	},
+
+	"tree": {
+
+		"platform": {
+
+			"html": {
+
+				"Input": [ "js" ],
+				"Jukebox": [ "js" ],
+				"Preloader": [ "js" ],
+				"Renderer": [ "js" ],
+				"Track": [ "js" ]
+
+			},
+
+			"v8gl": {
+
+				"game": {
+					"Loop": [ "js" ]
+				},
+
+				"Input": [ "js" ],
+				"Jukebox": [ "js" ],
+				"Preloader": [ "js" ],
+				"Renderer": [ "js" ],
+				"Track": [ "js" ]
+
+			},
+
+			"webgl": {
+
+			}
+
+		},
+
+		"game": {
+			"Entity": [ "js" ],
+			"Loop": [ "js" ],
+			"Main": [ "js" ],
+			"State": [ "js" ],
+			"Jukebox": [ "js" ]
+		},
+
+		"physics": {
+			"Particle": [ "js" ],
+			"Vector": [ "js" ]
+		},
+
+		"parser": {
+			"ASTScope": [ "js" ],
+			"ASTWalker": [ "js" ],
+			"Tokenizer": [ "js" ],
+			"Parser": [ "js" ]
+		},
+
+		"Font": [ "js" ],
+		"Events": [ "js" ]
+
+	}
+
+}

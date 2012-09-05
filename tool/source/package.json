@@ -1,0 +1,10 @@
+{
+	"tags": {},
+
+	"tree": {
+
+		"Font": [ "js", "css" ],
+		"FontGenerator": [ "js" ]
+
+	}
+}
