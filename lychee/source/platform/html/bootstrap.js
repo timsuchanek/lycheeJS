@@ -52,6 +52,65 @@
 
 
 	/*
+	 * POLYFILLS
+	 */
+
+	var _log = console.log || function() {};
+
+
+	if (typeof console.info === 'undefined') {
+
+		console.info = function() {
+
+			var args = [].slice.call(arguments, 0);
+
+			args.reverse();
+			args.push('[INFO]');
+			args.reverse();
+
+			_log.apply(console, args);
+
+		};
+
+	}
+
+
+	if (typeof console.warn === 'undefined') {
+
+		console.warn = function() {
+
+			var args = [].slice.call(arguments, 0);
+
+			args.reverse();
+			args.push('[WARN]');
+			args.reverse();
+
+			_log.apply(console, args);
+
+		};
+
+	}
+
+
+	if (typeof console.error === 'undefined') {
+
+		console.error = function() {
+
+			var args = [].slice.call(arguments, 0);
+
+			args.reverse();
+			args.push('[ERROR]');
+			args.reverse();
+
+			_log.apply(console, args);
+
+		};
+
+	}
+
+
+
+	/*
 	 * FEATURE DETECTION
 	 */
 
@@ -109,9 +168,20 @@
 		};
 
 
+		var consol = 'console' in global && typeof console !== 'undefined';
 		var audio  = 'Audio' in global && typeof Audio !== 'undefined';
 		var buffer = true;
 		var image  = 'Image' in global && typeof Image !== 'undefined';
+
+
+		if (consol) {
+
+		} else {
+
+			console = {};
+
+		}
+
 
 		if (audio) {
 
@@ -266,14 +336,15 @@
 
 			var methods = [];
 
-			if (audio)  methods.push('Audio');
-			if (buffer) methods.push('Buffer');
-			if (image)  methods.push('Image');
+			if (consol)  methods.push('console');
+			if (audio)   methods.push('Audio');
+			if (buffer)  methods.push('Buffer');
+			if (image)   methods.push('Image');
 
 			if (methods.length === 0) {
 				console.error('bootstrap.js: Supported methods are NONE');
 			} else {
-				console.log('bootstrap.js: Supported methods are ' + methods.join(', '));
+				console.info('bootstrap.js: Supported methods are ' + methods.join(', '));
 			}
 
 		}
@@ -1847,6 +1918,7 @@
 	lychee.Environment.setAssetType('snd',  Sound);
 	lychee.Environment.setAssetType('png',  Texture);
 	lychee.Environment.setAssetType('*',    _Wildcard);
+
 
 
 	Object.defineProperty(lychee.Environment, '__FILENAME', {

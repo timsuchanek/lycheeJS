@@ -348,7 +348,7 @@ lychee.Package = typeof lychee.Package !== 'undefined' ? lychee.Package : (funct
 				if (result === true) {
 
 					if (lychee.debug === true) {
-						console.log('lychee.Package-' + that.id + ': Package at ' + this.url + ' ready');
+						console.info('lychee.Package-' + that.id + ': Package at ' + this.url + ' ready');
 					}
 
 				} else {

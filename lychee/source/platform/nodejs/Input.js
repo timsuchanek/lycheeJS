@@ -70,7 +70,7 @@ lychee.define('Input').tags({
 
 
 		if (lychee.debug === true) {
-			console.log('lychee.Input: Supported methods are Keyboard');
+			console.info('lychee.Input: Supported methods are Keyboard');
 		}
 
 	})();

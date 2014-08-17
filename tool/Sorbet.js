@@ -18,6 +18,7 @@ var lychee  = null;
 try {
 	lychee  = require(root + '/lychee/build/nodejs/core.js')(root);
 } catch(e) {
+console.error(e);
 	console.error('Please build the lycheeJS core first, run "nodejs ./tool/configure.js".');
 	process.exit(1);
 }

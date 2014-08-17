@@ -54,7 +54,7 @@ lychee.define('Storage').tags({
 			if (methods.length === 0) {
 				console.error('lychee.Storage: Supported methods are NONE');
 			} else {
-				console.log('lychee.Storage: Supported methods are ' + methods.join(', '));
+				console.info('lychee.Storage: Supported methods are ' + methods.join(', '));
 			}
 
 		}

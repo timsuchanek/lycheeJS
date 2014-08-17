@@ -255,7 +255,7 @@ lychee.define('sorbet.Main').requires([
 					if (this.apis.get(aid) === null) {
 
 						if (lychee.debug === true) {
-							console.log('sorbet.Main: Spawning API "' + aid + '" from "' + config.api[aid] + '"');
+							console.info('sorbet.Main: Spawning API "' + aid + '" from "' + config.api[aid] + '"');
 						}
 
 						this.apis.set(aid.toLowerCase(), new apiconstruct(this));
@@ -279,7 +279,7 @@ lychee.define('sorbet.Main').requires([
 					if (this.modules.get(mid) === null) {
 
 						if (lychee.debug === true) {
-							console.log('sorbet.Main: Spawning Module "' + mid + '" from "' + config.module[mid] + '"');
+							console.info('sorbet.Main: Spawning Module "' + mid + '" from "' + config.module[mid] + '"');
 						}
 
 						this.modules.set(mid, new modconstruct(this));
@@ -464,7 +464,7 @@ lychee.define('sorbet.Main').requires([
 						if (module !== null) {
 
 							if (lychee.debug === true) {
-								console.log('sorbet.Main: Calling API "' + moduleid + '"');
+								console.info('sorbet.Main: Calling API "' + moduleid + '"');
 							}
 
 							if (module.process(vhost, response, {
@@ -655,7 +655,7 @@ lychee.define('sorbet.Main').requires([
 				if (server !== null) {
 
 					if (lychee.debug === true) {
-						console.log('sorbet.Main: Terminating Server "' + server.id + '" (' + server.pid + ')');
+						console.warn('sorbet.Main: Terminating Server "' + server.id + '" (' + server.pid + ')');
 					}
 
 
@@ -677,7 +677,7 @@ lychee.define('sorbet.Main').requires([
 				if (module !== null) {
 
 					if (lychee.debug === true) {
-						console.log('sorbet.Main: Terminating Module "' + module.id + '"');
+						console.warn('sorbet.Main: Terminating Module "' + module.id + '"');
 					}
 
 
