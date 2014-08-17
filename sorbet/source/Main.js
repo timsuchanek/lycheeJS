@@ -215,6 +215,7 @@ lychee.define('sorbet.Main').requires([
 						aliases:   [].slice.call(blob.hosts, 1)
 					}, this);
 
+
 					this.vhosts.set(identifier, vhost);
 
 					for (var h = 1, hl = blob.hosts.length; h < hl; h++) {
@@ -309,8 +310,12 @@ lychee.define('sorbet.Main').requires([
 
 		refresh: function() {
 
+			this.fs.refresh(false);
+
+
 			var vhosts = this.vhosts.values();
 			for (var v = 0, vl = vhosts.length; v < vl; v++) {
+				vhosts[v].fs.refresh(false);
 				vhosts[v].refresh();
 			}
 

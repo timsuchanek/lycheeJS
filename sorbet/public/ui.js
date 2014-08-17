@@ -644,8 +644,6 @@ global._EVENTS = _events;
 
 					if (found.dynamic === true) {
 
-console.log(found.query);
-
 						var elements = ui.query(found.query);
 						if (elements.length > 0) {
 							found.elements = elements;

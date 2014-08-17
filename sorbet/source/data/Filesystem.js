@@ -133,7 +133,10 @@ lychee.define('sorbet.data.Filesystem').includes([
 		 * PUBLIC API
 		 */
 
-		refresh: function() {
+		refresh: function(force) {
+
+			force = force === false ? false : true;
+
 
 			var root = this.root;
 			if (root !== null) {
@@ -143,7 +146,7 @@ lychee.define('sorbet.data.Filesystem').includes([
 				}
 
 
-				_refresh_recursive.call(this, root, true);
+				_refresh_recursive.call(this, root, force);
 
 			}
 
