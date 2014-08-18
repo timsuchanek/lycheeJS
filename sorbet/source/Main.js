@@ -107,39 +107,49 @@ lychee.define('sorbet.Main').requires([
 
 	var _response_handler = function(request, response, data) {
 
-		var accept_encoding = request.headers['accept-encoding'] || "";
-		if (accept_encoding.match(/\bgzip\b/)) {
+		if (data.status === 304) {
 
-			zlib.gzip(data.content, function(err, buffer) {
-
-				if (!err) {
-
-					data.header['Content-Encoding'] = 'gzip';
-					data.header['Content-Length']   = buffer.length;
-
-					response.writeHead(data.status, data.header);
-					response.write(buffer);
-
-				} else {
-
-					data.header['Content-Length'] = data.content.length;
-
-					response.writeHead(data.status, data.header);
-					response.write(data.content);
-
-				}
-
-				response.end();
-
-			});
+			response.writeHead(data.status);
+			response.end();
 
 		} else {
 
-			data.header['Content-Length'] = data.content.length;
+			var accept_encoding = request.headers['accept-encoding'] || "";
+			if (accept_encoding.match(/\bgzip\b/)) {
 
-			response.writeHead(data.status, data.header);
-			response.write(data.content);
-			response.end();
+				zlib.gzip(data.content, function(err, buffer) {
+
+					if (!err) {
+
+						data.header['Content-Encoding'] = 'gzip';
+						data.header['Content-Length']   = buffer.length;
+
+						response.writeHead(data.status, data.header);
+						response.write(buffer);
+
+					} else {
+
+						data.header['Content-Length'] = data.content.length;
+
+						response.writeHead(data.status, data.header);
+						response.write(data.content);
+
+					}
+
+					response.end();
+
+				});
+
+			} else {
+
+				data.header['Content-Length'] = data.content.length;
+
+				response.writeHead(data.status, data.header);
+				response.write(data.content);
+
+				response.end();
+
+			}
 
 		}
 
@@ -548,10 +558,11 @@ lychee.define('sorbet.Main').requires([
 					} else if (fs.isFile(resolved) === true) {
 
 						if (_file.process(vhost, response, {
-							url:      url,
-							resolved: resolved,
-							range:    request.headers.range || null,
-							version:  parseFloat(request.httpVersion, 10) || 1.0
+							url:       url,
+							resolved:  resolved,
+							range:     request.headers.range || null,
+							version:   parseFloat(request.httpVersion, 10) || 1.0,
+							timestamp: request.headers['if-modified-since'] || null
 						})) {
 							return response;
 						}
