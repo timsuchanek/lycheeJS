@@ -88,7 +88,7 @@ var ui = (function(lychee, global) {
 			if (methods.length === 0) {
 				console.error('ui: Supported methods are NONE');
 			} else {
-				console.log('ui: Supported methods are ' + methods.join(', '));
+				console.info('ui: Supported methods are ' + methods.join(', '));
 			}
 
 		}
@@ -481,8 +481,6 @@ var ui = (function(lychee, global) {
 
 	};
 
-
-global._EVENTS = _events;
 
 	return {
 

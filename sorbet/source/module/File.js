@@ -69,12 +69,6 @@ lychee.define('sorbet.module.File').exports(function(lychee, sorbet, global, att
 			var ext      = tmp2[tmp2.length - 1];
 
 
-// Browser request headers
-// If-Modified-Since:Sun, 06 Jul 2014 02:31:56 GMT
-// If-None-Match:"1329921-4798-1404613916000"
-
-
-
 			var mime = Class.MIME['default'];
 			if (Class.MIME[ext] !== undefined) {
 
