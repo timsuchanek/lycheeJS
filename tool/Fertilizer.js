@@ -1,35 +1,223 @@
 #!/usr/bin/env nodejs
 
-
-
-var root = __dirname;
-if (root.split('/').pop() === 'tool') {
-	var tmp = root.split('/'); tmp.pop();
-	root = tmp.join('/');
-}
+var _shell = require(__dirname + '/shell.js');
 
 
 
-String.prototype.replacetemplate = function(key, value) {
+/*
+ * USAGE
+ */
 
-	key   = typeof key === 'string'   ? key   : null;
-	value = typeof value === 'string' ? value : '';
+var _print_help = function() {
+
+	console.log('                                                                                            ');
+	console.log('============================================================================================');
+	console.log('               ,   _                                                                        ');
+	console.log('              { \\/`o;====-  ,_(\'--,                 lycheeJS v0.8 Fertilizer              ');
+	console.log('         .----\'-/`-/          (.--; ,--\')_,                                               ');
+	console.log('          `\'-..-| /               | ;--.)     @   (Cross-Compiler and CI-Builder)          ');
+	console.log('               /\\/\\           .-. |.| .-.    <|>                                *O*       ');
+	console.log('               `--`               \|\|/         |                                 \\|/      ');
+	console.log('    ^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^     ');
+	console.log('                                                                                            ');
+	console.log('                                                                                            ');
+	console.log('Usage: fertilizer [Mode] [Parameter, ...]                                                   ');
+	console.log('                                                                                            ');
+	console.log('                                                                                            ');
+	console.log('Modes:                                                                                      ');
+	console.log('                                                                                            ');
+	console.log('   file                                       Builds the lychee.env to a single file        ');
+	console.log('   folder                                     Builds the lychee.env to a folder             ');
+	console.log('   library                                    Builds the lychee.env to a single library file');
+	console.log('                                                                                            ');
+	console.log('Parameters:                                                                                 ');
+	console.log('                                                                                            ');
+	console.log('   --environment="./path/to/lychee.env"       The lychee.Environment\'s serialize() output. ');
+	console.log('   --fertilizer="./fertilizers/nodejs"        The platform-specific Fertilizer.             ');
+	console.log('   --sandbox="./myproject/sandbox"            The isolated sandbox folder.                  ');
+	console.log('                                                                                            ');
+	console.log('Important:                                                                                  ');
+	console.log('                                                                                            ');
+	console.log('- File and Folder Mode produce static code that includes bootstrap.js and lychee.init().    ');
+	console.log('- Library Mode produces dynamic code that is ready for inclusion or injection.              ');
+	console.log('- If Environment has not the same platform-specific tags as the Fertilizer, it will fail.   ');
+	console.log('                                                                                            ');
+	console.log('Examples:                                                                                   ');
+	console.log('                                                                                            ');
+	console.log('fertilizer file --environment="./lychee/build/nodejs/main.lychee.env" --fertilizer="./fertilizers/nodejs" --sandbox="./example"');
+	console.log('                                                                                            ');
+
+};
 
 
-	if (key !== null) {
 
-		var keyl = key.length;
-		var keyi = this.indexOf(key);
-		if (keyi !== -1) {
-			return '' + this.substr(0, keyi) + value + this.substr(keyi + keyl);
+var _mode        = null;
+var _environment = null;
+var _fertilizer  = null;
+var _sandbox     = null;
+
+(function() {
+
+	var settings = {
+		mode:        null,
+		environment: null,
+		fertilizer:  null,
+		sandbox:     null
+	};
+
+
+	for (var a = 0, al = process.argv.length; a < al; a++) {
+
+		var arg = process.argv[a];
+		if (arg.substr(0, 2) === '--' && arg.indexOf('=') !== -1) {
+
+			var key = arg.substr(2).split('=')[0];
+			var val = arg.substr(2).split('=')[1];
+
+			if (!isNaN(parseInt(val, 10))) {
+				val = parseInt(val, 10);
+			}
+
+
+			if (typeof settings[key] !== undefined) {
+				settings[key] = val;
+			}
+
+		} else if (arg.match(/file|folder|library/)) {
+
+			settings['mode'] = arg;
+
 		}
 
 	}
 
-	return this;
 
-};
 
+	if (settings.environment !== null) {
+
+		if (_shell.isFile(settings.environment)) {
+			settings.environment = _shell.read(settings.environment);
+		} else {
+			settings.environment = null;
+		}
+
+		_environment = settings.environment;
+
+	}
+
+
+	if (settings.fertilizer !== null) {
+
+		if (_shell.isDirectory(settings.fertilizer) === false) {
+			settings.fertilizer = null;
+		}
+
+		_fertilizer = settings.fertilizer;
+
+	}
+
+
+	if (settings.sandbox !== null) {
+
+		if (_shell.isDirectory(settings.sandbox) === false) {
+			settings.sandbox = null;
+		}
+
+		_sandbox = settings.sandbox;
+
+	}
+
+
+	if (settings.mode !== null) {
+		_mode = settings.mode;
+	}
+
+
+	settings = null;
+
+})();
+
+
+
+/*
+ * IMPLEMENTATION
+ */
+
+(function(shell, mode, environment, fertilizer, sandbox) {
+
+	var lychee = shell.lychee;
+	var global = shell.global;
+
+	lychee.event         = lychee.event || {};
+	lychee.event.Emitter = shell.include('lychee/source/event/Emitter.js', 'lychee.event.Emitter');
+
+
+
+	/*
+	 * HELPERS
+	 */
+
+
+
+	/*
+	 * INITIALIZATION
+	 */
+
+	if (
+		   mode !== null
+		&& environment !== null
+		&& fertilizer !== null
+		&& sandbox !== null
+	) {
+
+		console.log('DOING STUFF', mode);
+		console.log(mode, environment, fertilizer, sandbox);
+
+	} else {
+
+		if (mode === null) {
+			console.error('fertilizer: Invalid Mode');
+		}
+
+		if (environment === null) {
+			console.error('fertilizer: Invalid Environment');
+		}
+
+		if (fertilizer === null) {
+			console.error('fertilizer: Invalid Fertilizer');
+		}
+
+		if (sandbox === null) {
+			console.error('fertilizer: Invalid Sandbox');
+		}
+
+
+		_print_help();
+		process.exit(1);
+
+	}
+
+})(_shell, _mode, _environment, _fertilizer, _sandbox);
+
+
+
+
+// TODO: Port the old stuff with Filesystem and Templates
+//
+//
+// XXX: TEST COMMAND
+// mkdir ___sandbox;
+// ./tool/Fertilizer.js file --environment="./lychee/build/nodejs/main.lychee.env" --fertilizer="./fertilizers/nodejs" --sandbox="./___sandbox"
+
+
+
+
+
+
+
+
+
+return;
 
 
 (function(lychee, arguments) {
@@ -39,31 +227,6 @@ String.prototype.replacetemplate = function(key, value) {
 	 * These files are required, but are not part of lycheeJS core
 	 */
 
-	var manual = (function(paths, identifiers) {
-
-		var map = {};
-
-		for (var p = 0, pl = paths.length; p < pl; p++) {
-
-			require(root + '/' + paths[p]);
-
-			var identifier  = identifiers[p];
-			var definition  = lychee.environment.definitions[identifier];
-
-			map[identifier] = definition._exports.call(definition._exports, lychee, global, definition._attaches);
-
-		}
-
-		return map;
-
-	})([
-		'lychee/source/event/Emitter.js'
-	], [
-		'lychee.event.Emitter'
-	]);
-
-
-
 	var _fs   = require('fs');
 	var _path = require('path');
 
@@ -72,58 +235,6 @@ String.prototype.replacetemplate = function(key, value) {
 	/*
 	 * HELPERS
 	 */
-
-	var _is_directory = function(path) {
-
-		var result = false;
-
-		if (typeof path === 'string') {
-
-			try {
-
-				var stat = _fs.statSync(path);
-				if (stat.isDirectory()) {
-					result = true;
-				}
-
-			} catch(e) {
-			}
-
-		}
-
-		if (result === false) {
-			console.error('tool.Fertilizer: Invalid Directory "' + path + '"');
-		}
-
-		return result;
-
-	};
-
-	var _is_file = function(path) {
-
-		var result = false;
-
-		if (typeof path === 'string') {
-
-			try {
-
-				var stat = _fs.statSync(path);
-				if (stat.isFile()) {
-					result = true;
-				}
-
-			} catch(e) {
-			}
-
-		}
-
-		if (result === false) {
-			console.error('tool.Fertilizer: Invalid File "' + path + '"');
-		}
-
-		return result;
-
-	};
 
 	var _EVENTS = [
 		'configure',
@@ -568,37 +679,7 @@ String.prototype.replacetemplate = function(key, value) {
 	} else {
 
 		if (settings.silent === false) {
-
-			console.log('                                                                                        ');
-			console.log('========================================================================================');
-			console.log('             ,   _                                                                      ');
-			console.log('            { \\/`o;====-  ,_(\'--,              lycheeJS v0.8 Fertilizer               ');
-			console.log('       .----\'-/`-/          (.--; ,--\')_,                                             ');
-			console.log('        `\'-..-| /               | ;--.)     @     (Project Builder)                    ');
-			console.log('             /\\/\\           .-. |.| .-.    <|>                             *O*        ');
-			console.log('             `--`               \|\|/         |                              \\|/       ');
-			console.log('  ^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^   ');
-			console.log('                                                                                        ');
-			console.log('                                                                                        ');
-			console.log('Parameters:                                                                             ');
-			console.log('                                                                                        ');
-			console.log('   --environment="./path/to/lychee.env"          lychee.Environment File     (required) ');
-			console.log('   --sandbox="./projects/boilerplate/sandbox"    Build Sandbox Folder        (required) ');
-			console.log('   --template="./templates/nodejs/index.js"      Build Template              (required) ');
-			console.log('   --mode=<library | file | folder>              Build Mode                  (optional) ');
-			console.log('                                                                                        ');
-			console.log('Important:                                                                              ');
-			console.log('                                                                                        ');
-			console.log('- lychee.Environment File has to have the same platform-specific tags as Build Template.');
-			console.log('- "library" Build Mode will output a compressed file ready for inclusion.               ');
-			console.log('- "file" Build Mode will output a compressed file containing all assets and boot code.  ');
-			console.log('- "folder" Build Mode will output a folder with subfolders for all assets and boot code.');
-			console.log('                                                                                        ');
-			console.log('Examples:                                                                               ');
-			console.log('                                                                                        ');
-			console.log('./tool/fertilizer.js --environment="./lychee/build/main.nodejs/lychee.env" --template="./templates/nodejs/index.js" --sandbox="./example"');
-			console.log('                                                                                        ');
-
+			_print_help();
 		}
 
 

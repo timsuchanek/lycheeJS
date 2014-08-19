@@ -37,7 +37,7 @@ var _print_help = function() {
 	console.log('   --profile="./path/to/profile.json"         The static configuration file.                ');
 	console.log('                                                                                            ');
 	console.log('   --port="8080"                              The dynamic configuration port number.        ');
-	console.log('   --root="./path/to/project"                 The dynamic configuration root directory.     ');
+	console.log('   --sandbox="./path/to/project"              The dynamic configuration root directory.     ');
 	console.log('   --virtualhost="cosmo.lycheejs.org"         The dynamic virtualhost identifier.           ');
 	console.log('                                                                                            ');
 	console.log('Important:                                                                                  ');
@@ -45,20 +45,21 @@ var _print_help = function() {
 	console.log('- Profiles are static configuration. They setup ports, root folders and virtualhosts.       ');
 	console.log('- If no Profile is set, it will default to using the dynamic configuration settings.        ');
 	console.log('- If no Identifier is set, it will default to the process id (PID).                         ');
-	console.log('- If no Root Directory is set, it will default to the current working directory.            ');
+	console.log('- If no Sandbox Directory is set, it will default to the current working directory.         ');
 	console.log('- If no VirtualHost is set, it will default to "localhost".                                 ');
 	console.log('                                                                                            ');
 	console.log('Examples:                                                                                   ');
 	console.log('                                                                                            ');
 	console.log('cd ~/lycheeJS; sorbet start --profile="/sorbet/profile/localhost.json"                      ');
 	console.log('cd ~/myproject; sorbet start --port="8081"                                                  ');
-	console.log('cd ~; sorbet start --port="8082" --root="./myproject" --virtualhost="myproject.lycheejs.org"');
+	console.log('cd ~; sorbet start --port="8082" --sandbox="./myproject" --virtualhost="foo.lycheejs.org"   ');
 	console.log('                                                                                            ');
-	console.log('cd ~; sorbet start --identifier="betastuff" --port="8083" --root="./myproject"              ');
+	console.log('cd ~; sorbet start --identifier="betastuff" --port="8083" --sandbox="./myproject"           ');
 	console.log('cd ~; sorbet restart --identifier="betastuff"                                               ');
 	console.log('                                                                                            ');
 
 }
+
 
 
 var _command    = null;
@@ -72,7 +73,7 @@ var _profile    = null;
 		identifier:  null,
 		profile:     null,
 		port:        null,
-		root:        process.cwd(),
+		sandbox:     process.cwd(),
 		virtualhost: null
 	};
 
@@ -126,7 +127,7 @@ var _profile    = null;
 	var cmd  = typeof settings.command === 'string'    ? settings.command    : null;
 	var port = typeof settings.port === 'number'       ? settings.port       : 8080;
 	var host = typeof settings.host === 'string'       ? settings.host       : 'localhost';
-	var root = _shell.isDirectory(settings.root)       ? settings.root       : process.cwd();
+	var root = _shell.isDirectory(settings.sandbox)    ? settings.sandbox    : process.cwd();
 
 	if (settings.profile === null) {
 
@@ -160,7 +161,7 @@ var _profile    = null;
 
 
 /*
- * INITIALIZATION
+ * IMPLEMENTATION
  */
 
 (function(shell, command, identifier, profile) {
@@ -217,6 +218,11 @@ var _profile    = null;
 	};
 
 
+
+	/*
+	 * INITIALIZATION
+	 */
+
 	if (command === 'start' && profile !== null) {
 
 		_start_server(identifier, profile);
@@ -245,7 +251,6 @@ var _profile    = null;
 		process.exit(1);
 
 	}
-
 
 })(_shell, _command, _identifier, _profile);
 

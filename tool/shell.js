@@ -1,6 +1,36 @@
 
-var root = require('path').resolve(__dirname, '../');
+/*
+ * POLYFILLS
+ */
 
+String.prototype.replacetemplate = function(key, value) {
+
+	key   = typeof key === 'string'   ? key   : null;
+	value = typeof value === 'string' ? value : '';
+
+
+	if (key !== null) {
+
+		var keyl = key.length;
+		var keyi = this.indexOf(key);
+		if (keyi !== -1) {
+			return '' + this.substr(0, keyi) + value + this.substr(keyi + keyl);
+		}
+
+	}
+
+	return this;
+
+};
+
+
+
+/*
+ * IMPLEMENTATION
+ */
+
+
+var _root = require('path').resolve(__dirname, '../');
 
 (function(lychee, global) {
 
@@ -20,31 +50,23 @@ var root = require('path').resolve(__dirname, '../');
 		lychee:  lychee,
 		global:  global,
 
-		include: function(paths, identifiers) {
+		include: function(path, identifier) {
 
-			var map = {};
+			var Class = null;
 
-			for (var p = 0, pl = paths.length; p < pl; p++) {
+			try {
 
-				var path       = paths[p];
-				var identifier = identifiers[p];
+				require(_root + '/' + path);
 
-				try {
-
-					require(paths[p]);
-
-					var definition = lychee.environment.definitions[identifier] || null;
-					if (definition !== null) {
-						map[identifier] = definition._exports.call(definition._exports, lychee, global, definition._attaches);
-					}
-
-				} catch(e) {
+				var definition = lychee.environment.definitions[identifier] || null;
+				if (definition !== null) {
+					Class = definition._exports.call(definition._exports, lychee, global, definition._attaches);
 				}
 
+			} catch(e) {
 			}
 
-
-			return map;
+			return Class;
 
 		},
 
@@ -55,7 +77,7 @@ var root = require('path').resolve(__dirname, '../');
 			if (typeof path === 'string') {
 
 				try {
-					result = _path.resolve(root, path);
+					result = _path.resolve(_root, path);
 				} catch(e) {
 					result = path;
 				}
@@ -153,5 +175,5 @@ var root = require('path').resolve(__dirname, '../');
 
 	};
 
-})(require(root + '/lychee/build/nodejs/core.js')(root), typeof global !== 'undefined' ? global : this);
+})(require(_root + '/lychee/build/nodejs/core.js')(_root), typeof global !== 'undefined' ? global : this);
 
