@@ -64,7 +64,7 @@ nodejs ./tool/configure.js; # Important: current working directory is lycheeJS r
 
 ```bash
 cd ~/lycheeJS;
-nodejs ./tool/Sorbet.js localhost; # see ./sorbet/profile folder for alternative profiles
+nodejs ./tool/Sorbet.js start --profile="./sorbet/profile/localhost.json";
 ```
 
 - Open your Web Browser, navigate to **http://localhost:8080** or try out the Dashboard
