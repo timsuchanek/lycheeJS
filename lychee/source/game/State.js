@@ -532,31 +532,6 @@ lychee.define('lychee.game.State').requires([
 
 			}
 
-		},
-
-		// TODO: Remove legacy API simulateTouch(), not necessary anymore
-
-		simulateTouch: function(id, position, delta) {
-
-			id       = typeof id === 'number'     ? id       : 0;
-			position = position instanceof Object ? position : { x: 0, y: 0 };
-			delta    = typeof delta === 'number'  ? delta    : 0;
-
-
-			var renderer = this.renderer;
-			if (renderer !== null) {
-
-				position.x += renderer.width  / 2;
-				position.y += renderer.height / 2;
-
-				position.x += renderer.offset.x;
-				position.y += renderer.offset.y;
-
-			}
-
-
-			this.processTouch(id, position, delta);
-
 		}
 
 	};

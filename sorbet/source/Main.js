@@ -189,15 +189,17 @@ lychee.define('sorbet.Main').requires([
 	 * IMPLEMENTATION
 	 */
 
-	var Class = function(root, profile, config) {
-
-		root   = typeof root === 'string' ? root   : '/var/www';
-		config = config instanceof Object ? config : {};
+	var _root = require('path').resolve(__dirname, '../../');
 
 
-		this.fs      = new _filesystem(root);
+	var Class = function(profile) {
+
+		profile = profile instanceof Object ? profile : {};
+
+
+		this.fs      = new _filesystem(_root);
 		this.port    = null;
-		this.root    = root;
+		this.root    = _root;
 		this.servers = new _map();
 
 		this.vhosts  = new _map();
@@ -210,11 +212,11 @@ lychee.define('sorbet.Main').requires([
 		 * DYNAMIC VHOSTS
 		 */
 
-		if (config.vhosts instanceof Array) {
+		if (profile.vhosts instanceof Array) {
 
-			for (var v = 0, vl = config.vhosts.length; v < vl; v++) {
+			for (var v = 0, vl = profile.vhosts.length; v < vl; v++) {
 
-				var blob       = config.vhosts[v];
+				var blob       = profile.vhosts[v];
 				var identifier = blob.hosts[0] || null;
 				if (identifier !== null) {
 
@@ -255,17 +257,17 @@ lychee.define('sorbet.Main').requires([
 		 * DYNAMIC MODULES
 		 */
 
-		if (config.api instanceof Object) {
+		if (profile.api instanceof Object) {
 
-			for (var aid in config.api) {
+			for (var aid in profile.api) {
 
-				var apiconstruct = _resolve_constructor(config.api[aid], global);
+				var apiconstruct = _resolve_constructor(profile.api[aid], global);
 				if (apiconstruct instanceof Function) {
 
 					if (this.apis.get(aid) === null) {
 
 						if (lychee.debug === true) {
-							console.info('sorbet.Main: Spawning API "' + aid + '" from "' + config.api[aid] + '"');
+							console.info('sorbet.Main: Spawning API "' + aid + '" from "' + profile.api[aid] + '"');
 						}
 
 						this.apis.set(aid.toLowerCase(), new apiconstruct(this));
@@ -279,17 +281,17 @@ lychee.define('sorbet.Main').requires([
 		}
 
 
-		if (config.module instanceof Object) {
+		if (profile.module instanceof Object) {
 
-			for (var mid in config.module) {
+			for (var mid in profile.module) {
 
-				var modconstruct = _resolve_constructor(config.module[mid], global);
+				var modconstruct = _resolve_constructor(profile.module[mid], global);
 				if (modconstruct instanceof Function) {
 
 					if (this.modules.get(mid) === null) {
 
 						if (lychee.debug === true) {
-							console.info('sorbet.Main: Spawning Module "' + mid + '" from "' + config.module[mid] + '"');
+							console.info('sorbet.Main: Spawning Module "' + mid + '" from "' + profile.module[mid] + '"');
 						}
 
 						this.modules.set(mid, new modconstruct(this));

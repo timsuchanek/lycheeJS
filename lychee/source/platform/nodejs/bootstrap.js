@@ -6,7 +6,7 @@
 	 */
 
 	var _fs        = require('fs');
-	var _root      = '';
+	var _root      = process.cwd();
 	var __filename = null;
 
 	var _resolve_url = function(path) {

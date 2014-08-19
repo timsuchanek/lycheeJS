@@ -1,6 +1,6 @@
 {
 	"name":        "lycheejs",
-	"author":      "LazerUnicorns Ltd.",
+	"homepage":    "http://lycheejs.org",
 	"license":     "MIT",
 	"version":     "0.8.2",
 	"description": "Environment-Independent Cross-Platform JavaScript engine (NodeJS, NodeJS SDL2, HTML5, Apache Cordova, WebGL, native OpenGL)",
@@ -11,8 +11,8 @@
 		"nodejs",
 		"webgl",
 		"opengl",
-		"cordova",
 		"android",
+		"cordova",
 		"ios",
 		"libsdl"
 	],
@@ -21,12 +21,25 @@
 	"readmeFilename": "README.md",
 
 	"scripts": {
-		"postinstall": "./tool/configure.js"
+		"postinstall": "./tool/configure.js",
+		"start":       "./tool/Sorbet.js start --profile=localhost",
+		"stop":        "./tool/Sorbet.js stop",
+		"restart":     "./tool/Sorbet.js restart --profile=localhost"
+	},
+
+	"bin": {
+		"fertilizer": "./tool/Fertilizer.js",
+		"sorbet":     "./tool/Sorbet.js"
+	},
+
+	"author": {
+		"name":  "LazerUnicorns Ltd.",
+		"email": "support@lazerunicorns.com"
 	},
 
 	"repository": {
 		"type": "git",
-		"url": "git://github.com/LazerUnicorns/lycheeJS"
+		"url":  "git://github.com/LazerUnicorns/lycheeJS"
 	}
 
 }

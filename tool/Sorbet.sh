@@ -219,8 +219,6 @@ case "$1" in
 		fi;
 
 
-		start_sorbet $profile;
-
 		exit;
 		;;
 
@@ -254,7 +252,6 @@ case "$1" in
 	stop)
 
 		echo -e "\nStopping Sorbet ...";
-		stop_sorbet;
 
 		exit;
 		;;
@@ -268,10 +265,6 @@ case "$1" in
 		then
 			profile="localhost";
 		fi;
-
-
-		stop_sorbet;
-		start_sorbet $profile;
 
 		exit;
 		;;
