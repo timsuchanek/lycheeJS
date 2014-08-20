@@ -1,31 +1,5 @@
 
-# Documentation
-
-The documentation is always hosted on the documentation branch.
-First, you have to make sure you are up-to-date for the newest implementations.
-
-
-```bash
-git clone https://github.com/LazerUnicorns/lycheeJS.git;
-cd lycheeJS;
-git checkout documentation-0.9;
-```
-
-
-After you have checked out the correct branch, you may want to edit some files.
-The folder structure of the api folder has to be identical to the source folder.
-
-```javascript
-
-if (exists('/lychee/source/game/Entity.js') && !exists('/lychee/api/game/Entity.md')) {
-    contributor.writeAPIDocs('lychee.game.Entity');
-}
-
-```
-
-
-
-# Feature Requests
+# Contributing to lycheeJS
 
 Upcoming feature requests are better stored in their own branch, so
 we can make usage of pull requests on github.
@@ -71,4 +45,32 @@ button appearing with the label **Compare & pull request**.
 Click on it, now you have to fill out the form with the description.
 After that, we can now automatically merge in your implemented
 features.
+
+
+# Reserved Branches
+
+- all *development-x.x* branches are reserved for the master repository.
+- all *documentation-x.x* branches are reserved for the master repository.
+
+
+# Contributing to Documentation
+
+If you want to contribute to the documentation, please use the guide in the
+**Contribution Workflow** and replace *fancy-feature* with *documentation-0.9*.
+
+
+The main guide for documentation is that all the files have the same structure.
+For automatic parsing purposes, the structure of articles shall have the
+identical structure and wording.
+
+The folder structure is setup like this:
+
+```javascript
+
+if (exists('/lychee/source/game/Entity.js') && !exists('/lychee/api/game/Entity.md')) {
+    contributor.writeAPIDocs('lychee.game.Entity');
+}
+
+```
+ 
 
