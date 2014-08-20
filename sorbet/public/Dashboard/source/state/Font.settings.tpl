@@ -1,5 +1,5 @@
 
-<h1>Font Editor</h1>
+<h1>Font Generator</h1>
 
 <form onsubmit="ui.trigger('form input, form select', 'MAIN', 'submit'); return false;">
 <table>

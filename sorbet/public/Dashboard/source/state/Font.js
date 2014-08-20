@@ -1,5 +1,5 @@
 
-lychee.define('dashboard.state.FontEditor').requires([
+lychee.define('dashboard.state.Font').requires([
 	'dashboard.data.Font'
 ]).includes([
 	'lychee.game.State'

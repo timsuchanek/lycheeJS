@@ -3,13 +3,163 @@ var ui = (function(lychee, global) {
 
 	var _document      = global.document;
 	var _events        = [];
+	var _dropzones     = [];
 	var _notifications = _document.querySelector('ul#ui-notifications') || null;
 
+	var _stub = function(event) {
+		event.stopPropagation();
+		event.preventDefault();
+	};
 
 
 	/*
 	 * EVENTS
 	 */
+
+	var _on_drop = function(files, dropzone) {
+
+		if (files.length > 0) {
+
+			for (var f = 0, fl = files.length; f < fl; f++) {
+
+				(function(file, callback, scope) {
+
+					var reader = new FileReader();
+
+					reader.onload = function(event) {
+
+						callback.call(scope, {
+							name: file.name,
+							type: file.type,
+							blob: event.target.result
+						});
+
+					};
+
+					reader.readAsDataURL(file);
+
+				})(files[f], dropzone.callback, dropzone.scope);
+
+			}
+
+		}
+
+	};
+
+	var _unbind_dropzone = function(dropzone) {
+
+		var elements = dropzone.elements;
+
+		for (var e = 0, el = elements.length; e < el; e++) {
+			elements[e].removeEventListener('dragenter');
+			elements[e].removeEventListener('dragover');
+			elements[e].removeEventListener('drop');
+		}
+
+	};
+
+	var _bind_dropzone = function(dropzone) {
+
+		var elements = dropzone.elements;
+
+		for (var e = 0, el = elements.length; e < el; e++) {
+
+			elements[e].addEventListener('dragenter', _stub,    false);
+			elements[e].addEventListener('dragover',  _stub,    false);
+			elements[e].addEventListener('drop',      function(event) {
+				_stub(event);
+				_on_drop(event.dataTransfer.files || [], dropzone);
+			}, false);
+
+		}
+
+	};
+
+	var _refresh_dropzones = function() {
+
+		for (var d = 0, dl = _dropzones.length; d < dl; d++) {
+
+			var found = null;
+
+			for (var e = 0, el = _dropzones[d].elements.length; e < el; e++) {
+
+				var parent = _dropzones[d].elements[e].parentNode || null;
+				if (parent === null) {
+					found = _dropzones[d];
+					break;
+				}
+
+			}
+
+			if (found !== null) {
+
+				if (found.dynamic === true) {
+
+					_unbind_dropzone(found);
+
+					var elements = ui.query(found.query);
+					if (elements.length > 0) {
+						found.elements = elements;
+					} else {
+						found.elements = [];
+					}
+
+					_bind_dropzone(found);
+
+				} else {
+
+					_dropzones.splice(d, 1);
+					dl--;
+					d--;
+
+				}
+
+			}
+
+		}
+
+	};
+
+	var _refresh_events = function() {
+
+		for (var ev = 0, evl = _events.length; ev < evl; ev++) {
+
+			var found = null;
+
+			for (var el = 0, ell = _events[ev].elements.length; el < ell; el++) {
+
+				var parent = _events[ev].elements[el].parentNode || null;
+				if (parent === null) {
+					found = _events[ev];
+					break;
+				}
+
+			}
+
+			if (found !== null) {
+
+				if (found.dynamic === true) {
+
+					var elements = ui.query(found.query);
+					if (elements.length > 0) {
+						found.elements = elements;
+					} else {
+						found.elements = [];
+					}
+
+				} else {
+
+					_events.splice(ev, 1);
+					evl--;
+					ev--;
+
+				}
+
+			}
+
+		}
+
+	};
 
 	var _listeners = {
 
@@ -497,7 +647,7 @@ var ui = (function(lychee, global) {
 
 
 			var elements = ui.query(query);
-			if (elements.length !== 0 && callback !== null) {
+			if (elements.length > 0 && callback !== null) {
 
 				_events.push({
 					query:    query,
@@ -506,6 +656,8 @@ var ui = (function(lychee, global) {
 					scope:    scope,
 					dynamic:  dynamic
 				});
+
+				_refresh_events();
 
 				return true;
 
@@ -624,45 +776,8 @@ var ui = (function(lychee, global) {
 
 		refresh: function() {
 
-			var found = null;
-
-			for (var ev = 0, evl = _events.length; ev < evl; ev++) {
-
-				for (var el = 0, ell = _events[ev].elements.length; el < ell; el++) {
-
-					var parent = _events[ev].elements[el].parentNode || null;
-					if (parent === null) {
-						found = _events[ev];
-						break;
-					}
-
-				}
-
-				if (found !== null) {
-
-					if (found.dynamic === true) {
-
-						var elements = ui.query(found.query);
-						if (elements.length > 0) {
-							found.elements = elements;
-						} else {
-							found.elements = [];
-						}
-
-					} else {
-
-						_events.splice(ev, 1);
-						evl--;
-						ev--;
-
-					}
-
-					found = null;
-
-				}
-
-			}
-
+			_refresh_dropzones();
+			_refresh_events();
 
 			return true;
 
@@ -695,7 +810,7 @@ var ui = (function(lychee, global) {
 
 
 			var elements = ui.query(query);
-			if (elements.length !== 0) {
+			if (elements.length > 0) {
 
 				for (var e = 0, el = elements.length; e < el; e++) {
 
@@ -723,7 +838,7 @@ var ui = (function(lychee, global) {
 
 
 			var elements = ui.query(query);
-			if (elements.length !== 0) {
+			if (elements.length > 0) {
 
 				for (var e = 0, el = elements.length; e < el; e++) {
 
@@ -759,7 +874,7 @@ var ui = (function(lychee, global) {
 
 
 			var elements = ui.query(query);
-			if (elements.length !== 0) {
+			if (elements.length > 0) {
 
 				var refresh = false;
 
@@ -806,7 +921,7 @@ var ui = (function(lychee, global) {
 
 
 			var elements = ui.query(query);
-			if (elements.length !== 0) {
+			if (elements.length > 0) {
 
 				var refresh = false;
 
@@ -870,6 +985,43 @@ var ui = (function(lychee, global) {
 
 				}
 
+
+				return true;
+
+			}
+
+
+			return false;
+
+		},
+
+
+
+		/*
+		 * UI EVENTS
+		 */
+
+		dropzone: function(query, callback, scope, dynamic) {
+
+			query    = typeof query === 'string'    ? query    : null;
+			callback = callback instanceof Function ? callback : null;
+			scope    = scope !== undefined          ? scope    : global;
+			dynamic  = dynamic === true;
+
+
+			var elements = ui.query(query);
+			if (elements.length > 0 && callback !== null) {
+
+				var length = _dropzones.push({
+					query:    query,
+					elements: elements,
+					callback: callback,
+					scope:    scope,
+					dynamic:  dynamic
+				});
+
+				_bind_dropzone(_dropzones[length - 1]);
+//				_refresh_dropzones();
 
 				return true;
 
