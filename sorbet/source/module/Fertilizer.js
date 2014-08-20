@@ -158,6 +158,7 @@ lychee.define('sorbet.module.Fertilizer').requires([
 			if (_fs.existsSync(fertilizerdaemon) && _fs.existsSync(sandboxpath) && _fs.existsSync(fertilizerpath + '/index.js')) {
 
 				var that = this;
+				var root = this.main.root;
 				var json = JSON.stringify(data.environment.serialize(), null, '\t');
 
 
@@ -170,7 +171,9 @@ lychee.define('sorbet.module.Fertilizer').requires([
 					'--environment="' + environmentpath + '"',
 					'--fertilizer="'  + fertilizerpath  + '"',
 					'--sandbox="'     + sandboxpath     + '"'
-				]).on('exit', function(code) {
+				], {
+					cwd: root
+				}).on('exit', function(code) {
 
 					if (code === 1) {
 

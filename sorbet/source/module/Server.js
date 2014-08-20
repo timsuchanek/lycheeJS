@@ -51,15 +51,13 @@ lychee.define('sorbet.module.Server').requires([
 				}
 
 
-				var server = _child_process.fork(
-					root + '/sorbet.js', [
-						this.main.root,
-						port,
-						host
-					], {
-						cwd: root
-					}
-				);
+				var server = _child_process.fork(root + '/sorbet.js', [
+					this.main.root,
+					port,
+					host
+				], {
+					cwd: root
+				});
 
 				server.id   = project.id;
 				server.host = host;

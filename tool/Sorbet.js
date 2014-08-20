@@ -50,7 +50,8 @@ var _print_help = function() {
 	console.log('                                                                                            ');
 	console.log('Examples:                                                                                   ');
 	console.log('                                                                                            ');
-	console.log('cd ~/lycheeJS; sorbet start --profile="/sorbet/profile/localhost.json"                      ');
+	console.log('cd ~/lycheeJS; sorbet start --profile="./sorbet/profile/localhost.json"                     ');
+	console.log('                                                                                            ');
 	console.log('cd ~/myproject; sorbet start --port="8081"                                                  ');
 	console.log('cd ~; sorbet start --port="8082" --sandbox="./myproject" --virtualhost="foo.lycheejs.org"   ');
 	console.log('                                                                                            ');
@@ -80,7 +81,7 @@ var _profile    = null;
 
 	for (var a = 0, al = process.argv.length; a < al; a++) {
 
-		var arg = process.argv[a];
+		var arg = process.argv[a].replace(/"/g, '');
 		if (arg.substr(0, 2) === '--' && arg.indexOf('=') !== -1) {
 
 			var key = arg.substr(2).split('=')[0];
