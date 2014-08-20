@@ -275,9 +275,9 @@ var _root = require('path').resolve(__dirname, '../');
 
 			for (var f = 0, fl = filtered.length; f < fl; f++) {
 
-				var file        = filtered[f].splice('/').pop();
+				var file        = filtered[f].split('/').pop();
 				var sandboxpath = this.__sandbox + '/' + file;
-				var outputpath  = this.__sandbox + '.' + file.splice('.').pop();
+				var outputpath  = this.__sandbox + '.' + file.split('.').pop();
 
 				if (filtered[f] === file) {
 
