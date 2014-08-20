@@ -34,6 +34,8 @@ First, you have to fork the project on github to your own repository.
 This allows you to work on the feature before the decision of merging
 it in was done.
 
+![How to create a Fork](./asset/howto-fork.png)
+
 This example shows how the feature branches work.
 Replace *yourname* accordingly with your github username.
 Replace *fancy-feature* accordingly with a better description for your
@@ -56,9 +58,11 @@ git push origin fancy-feature;
 
 ```
 
-Now, you can go on github to your repository and switch to the
+Now you can go on github to your repository and switch to the
 *fancy-feature* branch. After you did that, there's a new green
-button appearing with the label "Pull Request".
+button appearing with the label **Compare & pull request**.
+
+![How to create a Pull Request](./asset/howto-pullrequest.png)
 
 Click on it, now you have to fill out the form with the description.
 After that, we can now automatically merge in your implemented
