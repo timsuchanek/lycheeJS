@@ -1,6 +1,6 @@
 #!/usr/bin/env nodejs
 
-var _shell = require(__dirname + '/shell.js');
+var _cli = require(__dirname + '/cli.js');
 
 
 
@@ -107,9 +107,9 @@ var _profile    = null;
 
 	if (settings.profile !== null) {
 
-		if (_shell.isFile(settings.profile)) {
+		if (_cli.isFile(settings.profile)) {
 
-			var data = _shell.read(settings.profile);
+			var data = _cli.read(settings.profile);
 			if (data !== null) {
 				settings.profile = data;
 			} else {
@@ -128,7 +128,7 @@ var _profile    = null;
 	var cmd  = typeof settings.command === 'string'    ? settings.command    : null;
 	var port = typeof settings.port === 'number'       ? settings.port       : 8080;
 	var host = typeof settings.host === 'string'       ? settings.host       : 'localhost';
-	var root = _shell.isDirectory(settings.sandbox)    ? settings.sandbox    : process.cwd();
+	var root = _cli.isDirectory(settings.sandbox)      ? settings.sandbox    : process.cwd();
 
 	if (settings.profile === null) {
 
@@ -165,10 +165,10 @@ var _profile    = null;
  * IMPLEMENTATION
  */
 
-(function(shell, command, identifier, profile) {
+(function(cli, command, identifier, profile) {
 
-	var lychee = shell.lychee;
-	var global = shell.global;
+	var lychee = cli.lychee;
+	var global = cli.global;
 
 
 
@@ -253,5 +253,5 @@ var _profile    = null;
 
 	}
 
-})(_shell, _command, _identifier, _profile);
+})(_cli, _command, _identifier, _profile);
 

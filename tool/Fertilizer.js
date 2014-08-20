@@ -1,6 +1,6 @@
 #!/usr/bin/env nodejs
 
-var _shell = require(__dirname + '/shell.js');
+var _cli = require(__dirname + '/cli.js');
 
 
 
@@ -95,8 +95,8 @@ var _sandbox     = null;
 
 	if (settings.environment !== null) {
 
-		if (_shell.isFile(settings.environment)) {
-			settings.environment = _shell.read(settings.environment);
+		if (_cli.isFile(settings.environment)) {
+			settings.environment = _cli.read(settings.environment);
 		} else {
 			settings.environment = null;
 		}
@@ -108,7 +108,7 @@ var _sandbox     = null;
 
 	if (settings.fertilizer !== null) {
 
-		if (_shell.isDirectory(settings.fertilizer) === false) {
+		if (_cli.isDirectory(settings.fertilizer) === false) {
 			settings.fertilizer = null;
 		}
 
@@ -119,7 +119,7 @@ var _sandbox     = null;
 
 	if (settings.sandbox !== null) {
 
-		if (_shell.isDirectory(settings.sandbox) === false) {
+		if (_cli.isDirectory(settings.sandbox) === false) {
 			settings.sandbox = null;
 		}
 
@@ -143,13 +143,13 @@ var _sandbox     = null;
  * IMPLEMENTATION
  */
 
-(function(shell, mode, environment, fertilizer, sandbox) {
+(function(cli, mode, environment, fertilizer, sandbox) {
 
-	var lychee = shell.lychee;
-	var global = shell.global;
+	var lychee = cli.lychee;
+	var global = cli.global;
 
 	lychee.event         = lychee.event || {};
-	lychee.event.Emitter = shell.include('lychee/source/event/Emitter.js', 'lychee.event.Emitter');
+	lychee.event.Emitter = cli.include('lychee/source/event/Emitter.js', 'lychee.event.Emitter');
 
 
 
@@ -209,7 +209,7 @@ var _sandbox     = null;
 
 
 		this.environment   = environment;
-		this.filesystem    = new shell.Filesystem(fertilizerpath, sandboxpath);
+		this.filesystem    = new cli.Filesystem(fertilizerpath, sandboxpath);
 		this.mode          = mode;
 
 		this.__configured  = false;
@@ -335,15 +335,5 @@ var _sandbox     = null;
 
 	}
 
-})(_shell, _mode, _environment, _fertilizer, _sandbox);
-
-
-
-
-// TODO: Port the old stuff with Filesystem and Templates
-//
-//
-// XXX: TEST COMMAND
-// mkdir ___sandbox;
-// ./tool/Fertilizer.js file --environment="./lychee/build/nodejs/main.lychee.env" --fertilizer="./fertilizers/nodejs" --sandbox="./___sandbox"
+})(_cli, _mode, _environment, _fertilizer, _sandbox);
 
