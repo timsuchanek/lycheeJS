@@ -1,5 +1,6 @@
 
 lychee.define('game.state.Game').requires([
+	'lychee.effect.Shake',
 	'lychee.game.Background',
 	'lychee.ui.Button',
 	'lychee.ui.Layer',
@@ -46,8 +47,7 @@ lychee.define('game.state.Game').requires([
 		this.emitter = new _lychee_game_Emitter({
 			type:     lychee.game.Emitter.TYPE.confetti,
 			amount:   10,
-			lifetime: 1000,
-			loop:     false,
+			duration: 500,
 			entity:   new game.entity.Circle({
 				radius: 16
 				color:  '#ffffff'
@@ -94,19 +94,22 @@ lychee.define('game.state.Game').requires([
 				var background = this.queryLayer('background', 'background');
 
 				if (layer.effects.length === 0) {
-/*
+
 					layer.addEffect(new lychee.effect.Shake({
 						type:     lychee.effect.Shake.TYPE.bounceeaseout,
-						duration: 500
+						duration: 500,
+						shake: {
+							x: Math.random() > 0.5 ? -24 : 24,
+							y: Math.random() > 0.5 ? -24 : 24
+						}
 					}));
-*/
+
 				}
 
 				if (background.effects.length === 0) {
 
 					background.addEffect(new lychee.effect.Color({
 						type:     lychee.effect.Color.TYPE.bounceeaseout,
-						delay:    1000,
 						duration: 500,
 						color:    color
 					}));

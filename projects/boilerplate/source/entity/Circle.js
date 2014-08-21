@@ -1,6 +1,7 @@
 
 lychee.define('game.entity.Circle').requires([
-	'lychee.effect.Color'
+	'lychee.effect.Color',
+	'lychee.effect.Radius'
 ]).includes([
 	'lychee.ui.Entity'
 ]).exports(function(lychee, game, global, attachments) {
@@ -71,6 +72,12 @@ lychee.define('game.entity.Circle').requires([
 					type:     lychee.effect.Color.TYPE.bounceeaseout,
 					duration: 500,
 					color:    _random_color()
+				}));
+
+				this.addEffect(new lychee.effect.Radius({
+					type:     lychee.effect.Color.TYPE.bounceeaseout,
+					duration: 500,
+					radius:   24 + ((Math.random() * 48) | 0)
 				}));
 
 			}

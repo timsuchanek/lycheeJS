@@ -22,7 +22,7 @@
 				"entities": [{
 					"constructor": "lychee.ui.Label",
 					"arguments": [{
-						"label": "Game State active",
+						"label": "Game State",
 						"position": {
 							"x": 0,
 							"y": -50
@@ -37,7 +37,7 @@
 				}, {
 					"constructor": "lychee.ui.Label",
 					"arguments": [{
-						"label": "Touch the circle to make Noise",
+						"label": "Touch the circle",
 						"position": {
 							"x": 0,
 							"y": 0

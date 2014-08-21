@@ -110,8 +110,10 @@
 			},
 
 			"effect": {
-				"Color": [ "js" ],
-				"Tween": [ "js" ]
+				"Color":    [ "js" ],
+				"Position": [ "js" ],
+				"Radius":   [ "js" ],
+				"Shake":    [ "js" ]
 			},
 
 			"event": {
