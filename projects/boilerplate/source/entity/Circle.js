@@ -43,7 +43,10 @@ lychee.define('game.entity.Circle').requires([
 		delete settings.color;
 
 
-		settings.radius = 48;
+		if (typeof settings.radius !== 'number') {
+			settings.radius = 48;
+		}
+
 		settings.shape  = lychee.ui.Entity.SHAPE.circle;
 
 

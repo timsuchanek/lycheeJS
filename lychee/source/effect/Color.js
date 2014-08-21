@@ -39,10 +39,11 @@ lychee.define('lychee.effect.Color').exports(function(lychee, global, attachment
 	var Class = function(settings) {
 
 		this.type     = Class.TYPE.easeout;
-		this.start    = null;
 		this.duration = 250;
-		this.from     = null;
-		this.to       = null;
+		this.color    = '#000000';
+
+		this.__origin = null;
+		this.__start  = null;
 
 
 		// No data validation garbage allowed for effects
@@ -60,7 +61,7 @@ lychee.define('lychee.effect.Color').exports(function(lychee, global, attachment
 		}
 
 		if (color !== null) {
-			this.to = color;
+			this.color = color;
 		}
 
 	};
@@ -77,63 +78,86 @@ lychee.define('lychee.effect.Color').exports(function(lychee, global, attachment
 
 	Class.prototype = {
 
+		// deserialize: function(blob) {},
+
+		serialize: function() {
+
+			var settings = {};
+
+
+			if (this.type !== Class.TYPE.easeout) settings.type     = this.type;
+			if (this.duration !== 250)            settings.duration = this.duration;
+			if (this.color !== '#000000')         settings.color    = this.color;
+
+
+			return {
+				'constructor': 'lychee.effect.Color',
+				'arguments':   [ settings ]
+			};
+
+		},
+
 		render: function(renderer, offsetX, offsetY) {
 
 		},
 
 		update: function(entity, clock, delta) {
 
-			if (this.start === null) {
+			if (this.__start === null) {
 
-				this.start = clock;
-				this.from  = entity.color || '#000000';
+				this.__start  = clock;
+				this.__origin = entity.color || '#000000';
 
 			}
 
 
-			var fromr = parseInt(this.from.substr(1, 2), 16) || 0;
-			var fromg = parseInt(this.from.substr(3, 2), 16) || 0;
-			var fromb = parseInt(this.from.substr(5, 2), 16) || 0;
+			var origin  = this.__origin;
+			var color   = this.color;
 
-			var tor   = parseInt(this.to.substr(1, 2), 16) || 0;
-			var tog   = parseInt(this.to.substr(3, 2), 16) || 0;
-			var tob   = parseInt(this.to.substr(5, 2), 16) || 0;
+			var originr = parseInt(origin.substr(1, 2), 16) || 0;
+			var origing = parseInt(origin.substr(3, 2), 16) || 0;
+			var originb = parseInt(origin.substr(5, 2), 16) || 0;
 
-			var r     = 0;
-			var g     = 0;
-			var b     = 0;
+			var colorr  = parseInt(color.substr(1, 2), 16) || 0;
+			var colorg  = parseInt(color.substr(3, 2), 16) || 0;
+			var colorb  = parseInt(color.substr(5, 2), 16) || 0;
 
-			var t = (clock - this.start) / this.duration;
+			var r       = originr;
+			var g       = origing;
+			var b       = originb;
+
+
+			var t = (clock - this.__start) / this.duration;
 			if (t <= 1) {
 
 				var f  = 0;
-				var dr = tor - fromr;
-				var dg = tog - fromg;
-				var db = tob - fromb;
+				var dr = colorr - originr;
+				var dg = colorg - origing;
+				var db = colorb - originb;
 
 
 				var type = this.type;
 				if (type === Class.TYPE.linear) {
 
-					r = fromr + t * dr;
-					g = fromg + t * dg;
-					b = fromb + t * db;
+					r += t * dr;
+					g += t * dg;
+					b += t * db;
 
 				} else if (type === Class.TYPE.easein) {
 
 					f = 1 * Math.pow(t, 3);
 
-					r = fromr + f * dr;
-					g = fromg + f * dg;
-					b = fromb + f * db;
+					r += f * dr;
+					g += f * dg;
+					b += f * db;
 
 				} else if (type === Class.TYPE.easeout) {
 
 					f = Math.pow(t - 1, 3) + 1;
 
-					r = fromr + f * dr;
-					g = fromg + f * dg;
-					b = fromb + f * db;
+					r += f * dr;
+					g += f * dg;
+					b += f * db;
 
 				} else if (type === Class.TYPE.bounceeasein) {
 
@@ -149,9 +173,9 @@ lychee.define('lychee.effect.Color').exports(function(lychee, global, attachment
 						f = 7.5625 * ( k -= ( 2.625 / 2.75 )) * k + 0.984375;
 					}
 
-					r = fromr + (1 - f) * dr;
-					g = fromg + (1 - f) * dg;
-					b = fromb + (1 - f) * db;
+					r += (1 - f) * dr;
+					g += (1 - f) * dg;
+					b += (1 - f) * db;
 
 				} else if (type === Class.TYPE.bounceeaseout) {
 
@@ -165,9 +189,9 @@ lychee.define('lychee.effect.Color').exports(function(lychee, global, attachment
 						f = 7.5625 * ( t -= ( 2.625 / 2.75 )) * t + 0.984375;
 					}
 
-					r = fromr + f * dr;
-					g = fromg + f * dg;
-					b = fromb + f * db;
+					r += f * dr;
+					g += f * dg;
+					b += f * db;
 
 				}
 
@@ -179,7 +203,7 @@ lychee.define('lychee.effect.Color').exports(function(lychee, global, attachment
 
 			} else {
 
-				entity.color = _rgba_to_color(tor | 0, tog | 0, tob | 0);
+				entity.color = _rgba_to_color(colorr | 0, colorg | 0, colorb | 0);
 
 
 				return false;

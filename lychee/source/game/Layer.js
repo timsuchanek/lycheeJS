@@ -36,12 +36,13 @@ lychee.define('lychee.game.Layer').requires([
 		this.width  = 0;
 		this.height = 0;
 
+		this.effects  = [];
 		this.entities = [];
 		this.offset   = { x: 0, y: 0 };
 		this.position = { x: 0, y: 0 };
 		this.visible  = true;
 
-		this.__map = {};
+		this.__map    = {};
 
 
 		this.setEntities(settings.entities);
@@ -213,6 +214,18 @@ lychee.define('lychee.game.Layer').requires([
 				entities[e].update(clock, delta);
 			}
 
+			var effects = this.effects;
+			for (var e = 0, el = this.effects.length; e < el; e++) {
+
+				var effect = this.effects[e];
+				if (effect.update(this, clock, delta) === false) {
+					this.removeEffect(effect);
+					el--;
+					e--;
+				}
+
+			}
+
 		},
 
 
@@ -248,6 +261,52 @@ lychee.define('lychee.game.Layer').requires([
 
 			this.width  = hwidth  * 2;
 			this.height = hheight * 2;
+
+		},
+
+		addEffect: function(effect) {
+
+			effect = effect instanceof Object && typeof effect.update === 'function' ? effect : null;
+
+
+			if (effect !== null) {
+
+				var index = this.effects.indexOf(effect);
+				if (index === -1) {
+
+					this.effects.push(effect);
+
+					return true;
+
+				}
+
+			}
+
+
+			return false;
+
+		},
+
+		removeEffect: function(effect) {
+
+			effect = effect instanceof Object && typeof effect.update === 'function' ? effect : null;
+
+
+			if (effect !== null) {
+
+				var index = this.effects.indexOf(effect);
+				if (index !== -1) {
+
+					this.effects.splice(index, 1);
+
+					return true;
+
+				}
+
+			}
+
+
+			return false;
 
 		},
 

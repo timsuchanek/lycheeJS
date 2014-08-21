@@ -36,10 +36,36 @@ lychee.define('game.state.Game').requires([
 	 * IMPLEMENTATION
 	 */
 
+
 	var Class = function(main) {
 
 		lychee.game.State.call(this, main);
 
+
+/*
+		this.emitter = new _lychee_game_Emitter({
+			type:     lychee.game.Emitter.TYPE.confetti,
+			amount:   10,
+			lifetime: 1000,
+			loop:     false,
+			entity:   new game.entity.Circle({
+				radius: 16
+				color:  '#ffffff'
+			}),
+			effects:  [
+				new lychee.effect.Blur({
+					type:     lychee.effect.Blur.TYPE.easeout,
+					delay:    500,
+					duration: 500
+				}),
+				new lychee.effect.Color({
+					type:     lychee.effect.Color.TYPE.bounceeaseout,
+					duration: 500,
+					color:    '#000000'
+				})
+			]
+		});
+*/
 
 		this.intervalId = null;
 
@@ -63,18 +89,38 @@ lychee.define('game.state.Game').requires([
 			entity = this.queryLayer('ui', 'circle');
 			entity.bind('touch', function() {
 
-				var effects = this.effects;
-				if (effects.length === 0) {
+				var color      = this.queryLayer('ui', 'circle').color;
+				var layer      = this.getLayer('ui');
+				var background = this.queryLayer('background', 'background');
 
-					this.addEffect(new lychee.effect.Color({
-						type:     lychee.effect.Color.TYPE.bounceeaseout,
-						duration: 1000,
-						color:    this.color === '#000000' ? _random_color() : '#000000'
+				if (layer.effects.length === 0) {
+
+					layer.addEffect(new lychee.effect.Shake({
+						type:     lychee.effect.Shake.TYPE.bounceeaseout,
+						duration: 500
 					}));
 
 				}
 
-			}, this.queryLayer('background', 'background'));
+				if (background.effects.length === 0) {
+
+					background.addEffect(new lychee.effect.Color({
+						type:     lychee.effect.Color.TYPE.bounceeaseout,
+						duration: 500,
+						color:    color
+					}));
+
+				}
+
+
+/*
+				var emitter = this.emitter;
+				if (emitter.entities.length === 0) {
+					emitter.emit();
+				}
+*/
+
+			}, this);
 
 		},
 

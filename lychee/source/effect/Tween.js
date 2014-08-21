@@ -4,10 +4,11 @@ lychee.define('lychee.effect.Tween').exports(function(lychee, global, attachment
 	var Class = function(settings) {
 
 		this.type     = Class.TYPE.easeout;
-		this.start    = null;
 		this.duration = 250;
-		this.from     = { x: null, y: null, z: null };
-		this.to       = { x: null, y: null, z: null };
+		this.position = { x: null, y: null, z: null };
+
+		this.__origin = { x: null, y: null, z: null };
+		this.__start  = null;
 
 
 		// No data validation garbage allowed for effects
@@ -25,9 +26,9 @@ lychee.define('lychee.effect.Tween').exports(function(lychee, global, attachment
 		}
 
 		if (position !== null) {
-			this.to.x = typeof position.x === 'number' ? (position.x | 0) : null;
-			this.to.y = typeof position.y === 'number' ? (position.y | 0) : null;
-			this.to.z = typeof position.z === 'number' ? (position.z | 0) : null;
+			this.position.x = typeof position.x === 'number' ? (position.x | 0) : null;
+			this.position.y = typeof position.y === 'number' ? (position.y | 0) : null;
+			this.position.z = typeof position.z === 'number' ? (position.z | 0) : null;
 		}
 
 	};
@@ -44,65 +45,98 @@ lychee.define('lychee.effect.Tween').exports(function(lychee, global, attachment
 
 	Class.prototype = {
 
+		// deserialize: function(blob) {},
+
+		serialize: function() {
+
+			var settings = {};
+
+
+			if (this.type !== Class.TYPE.easeout) settings.type     = this.type;
+			if (this.duration !== 250)            settings.duration = this.duration;
+
+
+			if (this.position.x !== 0 || this.position.y !== 0 || this.position.z !== 0) {
+
+				settings.position = {};
+
+				if (this.position.x !== 0) settings.position.x = this.position.x;
+				if (this.position.y !== 0) settings.position.y = this.position.y;
+				if (this.position.z !== 0) settings.position.z = this.position.z;
+
+			}
+
+
+			return {
+				'constructor': 'lychee.effect.Tween',
+				'arguments':   [ settings ]
+			};
+
+		},
+
 		render: function(renderer, offsetX, offsetY) {
 
 		},
 
 		update: function(entity, clock, delta) {
 
-			if (this.start === null) {
+			if (this.__start === null) {
 
-				this.start  = clock;
-				this.from.x = entity.position.x;
-				this.from.y = entity.position.y;
-				this.from.z = entity.position.z;
+				this.__start    = clock;
+				this.__origin.x = entity.position.x;
+				this.__origin.y = entity.position.y;
+				this.__origin.z = entity.position.z;
 
 			}
 
 
-			var fromx = this.from.x;
-			var fromy = this.from.y;
-			var fromz = this.from.z;
+			var origin    = this.__origin;
+			var position  = this.position;
 
-			var tox   = this.to.x;
-			var toy   = this.to.y;
-			var toz   = this.to.z;
+			var originx   = origin.x;
+			var originy   = origin.y;
+			var originz   = origin.z;
 
-			var x     = 0;
-			var y     = 0;
-			var z     = 0;
+			var positionx = position.x;
+			var positiony = position.y;
+			var positionz = position.z;
 
-			var t = (clock - this.start) / this.duration;
+			var x         = originx;
+			var y         = originy;
+			var z         = originz;
+
+
+			var t = (clock - this.__start) / this.duration;
 			if (t <= 1) {
 
 				var f  = 0;
-				var dx = tox - fromx;
-				var dy = toy - fromy;
-				var dz = toz - fromz;
+				var dx = positionx - originx;
+				var dy = positiony - originy;
+				var dz = positionz - originz;
 
 
 				var type = this.type;
 				if (type === Class.TYPE.linear) {
 
-					x = fromx + t * dx;
-					y = fromy + t * dy;
-					z = fromz + t * dz;
+					x += t * dx;
+					y += t * dy;
+					z += t * dz;
 
 				} else if (type === Class.TYPE.easein) {
 
 					f = 1 * Math.pow(t, 3);
 
-					x = fromx + f * dx;
-					y = fromy + f * dy;
-					z = fromz + f * dz;
+					x += f * dx;
+					y += f * dy;
+					z += f * dz;
 
 				} else if (type === Class.TYPE.easeout) {
 
 					f = Math.pow(t - 1, 3) + 1;
 
-					x = fromx + f * dx;
-					y = fromy + f * dy;
-					z = fromz + f * dz;
+					x += f * dx;
+					y += f * dy;
+					z += f * dz;
 
 				} else if (type === Class.TYPE.bounceeasein) {
 
@@ -118,9 +152,9 @@ lychee.define('lychee.effect.Tween').exports(function(lychee, global, attachment
 						f = 7.5625 * ( k -= ( 2.625 / 2.75 )) * k + 0.984375;
 					}
 
-					x = fromx + (1 - f) * dx;
-					y = fromy + (1 - f) * dy;
-					z = fromz + (1 - f) * dz;
+					x += (1 - f) * dx;
+					y += (1 - f) * dy;
+					z += (1 - f) * dz;
 
 				} else if (type === Class.TYPE.bounceeaseout) {
 
@@ -134,24 +168,24 @@ lychee.define('lychee.effect.Tween').exports(function(lychee, global, attachment
 						f = 7.5625 * ( t -= ( 2.625 / 2.75 )) * t + 0.984375;
 					}
 
-					x = fromx + f * dx;
-					y = fromy + f * dy;
-					z = fromz + f * dz;
+					x += f * dx;
+					y += f * dy;
+					z += f * dz;
 
 				}
 
-				if (tox !== null) entity.position.x = x;
-				if (toy !== null) entity.position.y = y;
-				if (toz !== null) entity.position.z = z;
+				if (positionx !== null) entity.position.x = x;
+				if (positiony !== null) entity.position.y = y;
+				if (positionz !== null) entity.position.z = z;
 
 
 				return true;
 
 			} else {
 
-				if (tox !== null) entity.position.x = tox;
-				if (toy !== null) entity.position.y = toy;
-				if (toz !== null) entity.position.z = toz;
+				if (positionx !== null) entity.position.x = positionx;
+				if (positiony !== null) entity.position.y = positiony;
+				if (positionz !== null) entity.position.z = positionz;
 
 
 				return false;
