@@ -130,10 +130,19 @@ lychee.define('sorbet.module.File').exports(function(lychee, sorbet, global, att
 
 						vhost.fs.read(resolved, function(buffer) {
 
-							response.status                  = 206;
-							response.header['Accept-Ranges'] = 'bytes';
-							response.header['Content-Range'] = '0-' + (buffer.length - 1) + '/' + buffer.length;
-							response.content                 = buffer;
+							if (buffer !== null) {
+
+								response.status                  = 206;
+								response.header['Accept-Ranges'] = 'bytes';
+								response.header['Content-Range'] = '0-' + (buffer.length - 1) + '/' + buffer.length;
+								response.content                 = buffer;
+
+							} else {
+
+								response.status  = 500;
+								response.content = '';
+
+							}
 
 							response.ready();
 
@@ -145,9 +154,18 @@ lychee.define('sorbet.module.File').exports(function(lychee, sorbet, global, att
 
 						vhost.fs.readchunk(resolved, range[0], range[1], function(chunk) {
 
-							response.status                  = 206;
-							response.header['Content-Range'] = 'bytes ' + range[0] + '-' + (range[1] - 1) + '/' + chunk.length;
-							response.content                 = chunk;
+							if (chunk !== null) {
+
+								response.status                  = 206;
+								response.header['Content-Range'] = 'bytes ' + range[0] + '-' + (range[1] - 1) + '/' + chunk.length;
+								response.content                 = chunk;
+
+							} else {
+
+								response.status  = 500;
+								response.content = '';
+
+							}
 
 							response.ready();
 
@@ -159,8 +177,17 @@ lychee.define('sorbet.module.File').exports(function(lychee, sorbet, global, att
 
 					vhost.fs.read(resolved, function(buffer) {
 
-						response.status  = 200;
-						response.content = buffer;
+						if (buffer !== null) {
+
+							response.status  = 200;
+							response.content = buffer;
+
+						} else {
+
+							response.status  = 500;
+							response.content = '';
+
+						}
 
 						response.ready();
 
