@@ -48,7 +48,7 @@ lychee.define('game.entity.Circle').requires([
 			settings.radius = 48;
 		}
 
-		settings.shape  = lychee.ui.Entity.SHAPE.circle;
+		settings.shape = lychee.ui.Entity.SHAPE.circle;
 
 
 		lychee.ui.Entity.call(this, settings);
@@ -111,9 +111,16 @@ lychee.define('game.entity.Circle').requires([
 
 		render: function(renderer, offsetX, offsetY) {
 
+			var alpha    = this.alpha;
 			var position = this.position;
 			var radius   = this.radius;
 			var color    = this.color;
+
+
+			if (alpha !== 1) {
+				renderer.setAlpha(alpha);
+			}
+
 
 			renderer.drawCircle(
 				offsetX + position.x,
@@ -122,6 +129,11 @@ lychee.define('game.entity.Circle').requires([
 				color,
 				true
 			);
+
+
+			if (alpha !== 1) {
+				renderer.setAlpha(1);
+			}
 
 		},
 
