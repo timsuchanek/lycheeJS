@@ -1,20 +1,55 @@
 
-lychee.define('lychee.effect.Tween').exports(function(lychee, global, attachments) {
+lychee.define('lychee.effect.Color').exports(function(lychee, global, attachments) {
+
+	/*
+	 * HELPERS
+	 */
+
+	var _is_color = function(color) {
+
+		if (typeof color === 'string') {
+
+			if (color.match(/(#[AaBbCcDdEeFf0-9]{6})/) || color.match(/(#[AaBbCcDdEeFf0-9]{8})/)) {
+				return true;
+			}
+
+		}
+
+
+		return false;
+
+	};
+
+	var _rgba_to_color = function(r, g, b) {
+
+		var strr = r > 15 ? (r).toString(16) : '0' + (r).toString(16);
+		var strg = g > 15 ? (g).toString(16) : '0' + (g).toString(16);
+		var strb = b > 15 ? (b).toString(16) : '0' + (b).toString(16);
+
+		return '#' + strr + strg + strb;
+
+	};
+
+
+
+	/*
+	 * IMPLEMENTATION
+	 */
 
 	var Class = function(settings) {
 
 		this.type     = Class.TYPE.easeout;
 		this.start    = null;
 		this.duration = 250;
-		this.from     = { x: null, y: null, z: null };
-		this.to       = { x: null, y: null, z: null };
+		this.from     = null;
+		this.to       = null;
 
 
 		// No data validation garbage allowed for effects
 
 		var type     = lychee.enumof(Class.TYPE, settings.type) ? settings.type           : null;
 		var duration = typeof settings.duration === 'number'    ? (settings.duration | 0) : null;
-		var position = settings.position instanceof Object      ? settings.position       : null;
+		var color    = _is_color(settings.color)                ? settings.color          : null;
 
 		if (type !== null) {
 			this.type = type;
@@ -24,10 +59,8 @@ lychee.define('lychee.effect.Tween').exports(function(lychee, global, attachment
 			this.duration = duration;
 		}
 
-		if (position !== null) {
-			this.to.x = typeof position.x === 'number' ? (position.x | 0) : null;
-			this.to.y = typeof position.y === 'number' ? (position.y | 0) : null;
-			this.to.z = typeof position.z === 'number' ? (position.z | 0) : null;
+		if (color !== null) {
+			this.to = color;
 		}
 
 	};
@@ -52,57 +85,55 @@ lychee.define('lychee.effect.Tween').exports(function(lychee, global, attachment
 
 			if (this.start === null) {
 
-				this.start  = clock;
-				this.from.x = entity.position.x;
-				this.from.y = entity.position.y;
-				this.from.z = entity.position.z;
+				this.start = clock;
+				this.from  = entity.color || '#000000';
 
 			}
 
 
-			var fromx = this.from.x;
-			var fromy = this.from.y;
-			var fromz = this.from.z;
+			var fromr = parseInt(this.from.substr(1, 2), 16) || 0;
+			var fromg = parseInt(this.from.substr(3, 2), 16) || 0;
+			var fromb = parseInt(this.from.substr(5, 2), 16) || 0;
 
-			var tox   = this.to.x;
-			var toy   = this.to.y;
-			var toz   = this.to.z;
+			var tor   = parseInt(this.to.substr(1, 2), 16) || 0;
+			var tog   = parseInt(this.to.substr(3, 2), 16) || 0;
+			var tob   = parseInt(this.to.substr(5, 2), 16) || 0;
 
-			var x     = 0;
-			var y     = 0;
-			var z     = 0;
+			var r     = 0;
+			var g     = 0;
+			var b     = 0;
 
 			var t = (clock - this.start) / this.duration;
 			if (t <= 1) {
 
 				var f  = 0;
-				var dx = tox - fromx;
-				var dy = toy - fromy;
-				var dz = toz - fromz;
+				var dr = tor - fromr;
+				var dg = tog - fromg;
+				var db = tob - fromb;
 
 
 				var type = this.type;
 				if (type === Class.TYPE.linear) {
 
-					x = fromx + t * dx;
-					y = fromy + t * dy;
-					z = fromz + t * dz;
+					r = fromr + t * dr;
+					g = fromg + t * dg;
+					b = fromb + t * db;
 
 				} else if (type === Class.TYPE.easein) {
 
 					f = 1 * Math.pow(t, 3);
 
-					x = fromx + f * dx;
-					y = fromy + f * dy;
-					z = fromz + f * dz;
+					r = fromr + f * dr;
+					g = fromg + f * dg;
+					b = fromb + f * db;
 
 				} else if (type === Class.TYPE.easeout) {
 
 					f = Math.pow(t - 1, 3) + 1;
 
-					x = fromx + f * dx;
-					y = fromy + f * dy;
-					z = fromz + f * dz;
+					r = fromr + f * dr;
+					g = fromg + f * dg;
+					b = fromb + f * db;
 
 				} else if (type === Class.TYPE.bounceeasein) {
 
@@ -118,9 +149,9 @@ lychee.define('lychee.effect.Tween').exports(function(lychee, global, attachment
 						f = 7.5625 * ( k -= ( 2.625 / 2.75 )) * k + 0.984375;
 					}
 
-					x = fromx + (1 - f) * dx;
-					y = fromy + (1 - f) * dy;
-					z = fromz + (1 - f) * dz;
+					r = fromr + (1 - f) * dr;
+					g = fromg + (1 - f) * dg;
+					b = fromb + (1 - f) * db;
 
 				} else if (type === Class.TYPE.bounceeaseout) {
 
@@ -134,24 +165,20 @@ lychee.define('lychee.effect.Tween').exports(function(lychee, global, attachment
 						f = 7.5625 * ( t -= ( 2.625 / 2.75 )) * t + 0.984375;
 					}
 
-					x = fromx + f * dx;
-					y = fromy + f * dy;
-					z = fromz + f * dz;
+					r = fromr + f * dr;
+					g = fromg + f * dg;
+					b = fromb + f * db;
 
 				}
 
-				if (tox !== null) entity.position.x = x;
-				if (toy !== null) entity.position.y = y;
-				if (toz !== null) entity.position.z = z;
+				entity.color = _rgba_to_color(r, g, b);
 
 
 				return true;
 
 			} else {
 
-				if (tox !== null) entity.position.x = tox;
-				if (toy !== null) entity.position.y = toy;
-				if (toz !== null) entity.position.z = toz;
+				entity.color = _rgba_to_color(tor, tog, tob);
 
 
 				return false;
