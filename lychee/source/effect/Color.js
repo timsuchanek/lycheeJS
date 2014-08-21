@@ -39,6 +39,7 @@ lychee.define('lychee.effect.Color').exports(function(lychee, global, attachment
 	var Class = function(settings) {
 
 		this.type     = Class.TYPE.easeout;
+		this.delay    = 0;
 		this.duration = 250;
 		this.color    = '#000000';
 
@@ -49,11 +50,16 @@ lychee.define('lychee.effect.Color').exports(function(lychee, global, attachment
 		// No data validation garbage allowed for effects
 
 		var type     = lychee.enumof(Class.TYPE, settings.type) ? settings.type           : null;
+		var delay    = typeof settings.delay === 'number'       ? (settings.delay | 0)    : null;
 		var duration = typeof settings.duration === 'number'    ? (settings.duration | 0) : null;
 		var color    = _is_color(settings.color)                ? settings.color          : null;
 
 		if (type !== null) {
 			this.type = type;
+		}
+
+		if (delay !== null) {
+			this.delay = delay;
 		}
 
 		if (duration !== null) {
@@ -86,6 +92,7 @@ lychee.define('lychee.effect.Color').exports(function(lychee, global, attachment
 
 
 			if (this.type !== Class.TYPE.easeout) settings.type     = this.type;
+			if (this.delay !== 0)                 settings.delay    = this.delay;
 			if (this.duration !== 250)            settings.duration = this.duration;
 			if (this.color !== '#000000')         settings.color    = this.color;
 
@@ -105,7 +112,7 @@ lychee.define('lychee.effect.Color').exports(function(lychee, global, attachment
 
 			if (this.__start === null) {
 
-				this.__start  = clock;
+				this.__start  = clock + this.delay;
 				this.__origin = entity.color || '#000000';
 
 			}
@@ -128,6 +135,10 @@ lychee.define('lychee.effect.Color').exports(function(lychee, global, attachment
 
 
 			var t = (clock - this.__start) / this.duration;
+			if (t < 0) {
+				return true;
+			}
+
 			if (t <= 1) {
 
 				var f  = 0;

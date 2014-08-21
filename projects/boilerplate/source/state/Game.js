@@ -94,18 +94,19 @@ lychee.define('game.state.Game').requires([
 				var background = this.queryLayer('background', 'background');
 
 				if (layer.effects.length === 0) {
-
+/*
 					layer.addEffect(new lychee.effect.Shake({
 						type:     lychee.effect.Shake.TYPE.bounceeaseout,
 						duration: 500
 					}));
-
+*/
 				}
 
 				if (background.effects.length === 0) {
 
 					background.addEffect(new lychee.effect.Color({
 						type:     lychee.effect.Color.TYPE.bounceeaseout,
+						delay:    1000,
 						duration: 500,
 						color:    color
 					}));

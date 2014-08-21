@@ -4,6 +4,7 @@ lychee.define('lychee.effect.Tween').exports(function(lychee, global, attachment
 	var Class = function(settings) {
 
 		this.type     = Class.TYPE.easeout;
+		this.delay    = 0;
 		this.duration = 250;
 		this.position = { x: null, y: null, z: null };
 
@@ -14,11 +15,16 @@ lychee.define('lychee.effect.Tween').exports(function(lychee, global, attachment
 		// No data validation garbage allowed for effects
 
 		var type     = lychee.enumof(Class.TYPE, settings.type) ? settings.type           : null;
+		var delay    = typeof settings.delay === 'number'       ? (settings.delay | 0)    : null;
 		var duration = typeof settings.duration === 'number'    ? (settings.duration | 0) : null;
 		var position = settings.position instanceof Object      ? settings.position       : null;
 
 		if (type !== null) {
 			this.type = type;
+		}
+
+		if (delay !== null) {
+			this.delay = delay;
 		}
 
 		if (duration !== null) {
@@ -53,6 +59,7 @@ lychee.define('lychee.effect.Tween').exports(function(lychee, global, attachment
 
 
 			if (this.type !== Class.TYPE.easeout) settings.type     = this.type;
+			if (this.delay !== 0)                 settings.delay    = this.delay;
 			if (this.duration !== 250)            settings.duration = this.duration;
 
 
@@ -82,7 +89,7 @@ lychee.define('lychee.effect.Tween').exports(function(lychee, global, attachment
 
 			if (this.__start === null) {
 
-				this.__start    = clock;
+				this.__start    = clock + this.delay;
 				this.__origin.x = entity.position.x;
 				this.__origin.y = entity.position.y;
 				this.__origin.z = entity.position.z;
@@ -107,6 +114,10 @@ lychee.define('lychee.effect.Tween').exports(function(lychee, global, attachment
 
 
 			var t = (clock - this.__start) / this.duration;
+			if (t < 0) {
+				return true;
+			}
+
 			if (t <= 1) {
 
 				var f  = 0;
