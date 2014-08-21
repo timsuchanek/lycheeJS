@@ -109,6 +109,10 @@
 				"BitON": [ "js" ]
 			},
 
+			"effect": {
+				"Tween": [ "js" ]
+			},
+
 			"event": {
 				"Bus":     [ "js" ],
 				"Emitter": [ "js" ],
