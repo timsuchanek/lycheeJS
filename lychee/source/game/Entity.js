@@ -19,12 +19,12 @@ lychee.define('lychee.game.Entity').exports(function(lychee, global) {
 		this.radius = typeof settings.radius === 'number' ? settings.radius : 0;
 
 		this.collision = Class.COLLISION.none;
+		this.effects   = [];
 		this.shape     = Class.SHAPE.rectangle;
 		this.state     = _default_state;
 		this.position  = { x: 0, y: 0, z: 0 };
 		this.velocity  = { x: 0, y: 0, z: 0 };
 
-		this.__effects = [];
 		this.__states  = _default_states;
 
 
@@ -163,10 +163,10 @@ lychee.define('lychee.game.Entity').exports(function(lychee, global) {
 			}
 
 
-			var effects = this.__effects;
-			for (var e = 0, el = this.__effects.length; e < el; e++) {
+			var effects = this.effects;
+			for (var e = 0, el = this.effects.length; e < el; e++) {
 
-				var effect = this.__effects[e];
+				var effect = this.effects[e];
 				if (effect.update(this, clock, delta) === false) {
 					this.removeEffect(effect);
 					el--;
@@ -308,10 +308,10 @@ lychee.define('lychee.game.Entity').exports(function(lychee, global) {
 
 			if (effect !== null) {
 
-				var index = this.__effects.indexOf(effect);
+				var index = this.effects.indexOf(effect);
 				if (index === -1) {
 
-					this.__effects.push(effect);
+					this.effects.push(effect);
 
 					return true;
 
@@ -331,10 +331,10 @@ lychee.define('lychee.game.Entity').exports(function(lychee, global) {
 
 			if (effect !== null) {
 
-				var index = this.__effects.indexOf(effect);
+				var index = this.effects.indexOf(effect);
 				if (index !== -1) {
 
-					this.__effects.splice(index, 1);
+					this.effects.splice(index, 1);
 
 					return true;
 

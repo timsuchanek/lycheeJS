@@ -110,6 +110,7 @@
 			},
 
 			"effect": {
+				"Color": [ "js" ],
 				"Tween": [ "js" ]
 			},
 

@@ -171,14 +171,15 @@ lychee.define('lychee.effect.Color').exports(function(lychee, global, attachment
 
 				}
 
-				entity.color = _rgba_to_color(r, g, b);
+
+				entity.color = _rgba_to_color(r | 0, g | 0, b | 0);
 
 
 				return true;
 
 			} else {
 
-				entity.color = _rgba_to_color(tor, tog, tob);
+				entity.color = _rgba_to_color(tor | 0, tog | 0, tob | 0);
 
 
 				return false;

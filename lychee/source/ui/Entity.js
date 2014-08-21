@@ -27,12 +27,12 @@ lychee.define('lychee.ui.Entity').includes([
 		this.radius = typeof settings.radius === 'number' ? settings.radius : 0;
 
 		this.collision = 1; // Used for event flow, NOT modifiable
+		this.effects   = [];
 		this.shape     = Class.SHAPE.rectangle;
 		this.state     = _default_state;
 		this.position  = { x: 0, y: 0 };
 		this.visible   = true;
 
-		this.__effects = [];
 		this.__states  = _default_states;
 
 
@@ -117,10 +117,10 @@ lychee.define('lychee.ui.Entity').includes([
 
 		update: function(clock, delta) {
 
-			var effects = this.__effects;
-			for (var e = 0, el = this.__effects.length; e < el; e++) {
+			var effects = this.effects;
+			for (var e = 0, el = this.effects.length; e < el; e++) {
 
-				var effect = this.__effects[e];
+				var effect = this.effects[e];
 				if (effect.update(this, clock, delta) === false) {
 					this.removeEffect(effect);
 					el--;
@@ -185,10 +185,10 @@ lychee.define('lychee.ui.Entity').includes([
 
 			if (effect !== null) {
 
-				var index = this.__effects.indexOf(effect);
+				var index = this.effects.indexOf(effect);
 				if (index === -1) {
 
-					this.__effects.push(effect);
+					this.effects.push(effect);
 
 					return true;
 
@@ -208,10 +208,10 @@ lychee.define('lychee.ui.Entity').includes([
 
 			if (effect !== null) {
 
-				var index = this.__effects.indexOf(effect);
+				var index = this.effects.indexOf(effect);
 				if (index !== -1) {
 
-					this.__effects.splice(index, 1);
+					this.effects.splice(index, 1);
 
 					return true;
 

@@ -1,5 +1,6 @@
 
 lychee.define('game.state.Game').requires([
+	'lychee.game.Background',
 	'lychee.ui.Button',
 	'lychee.ui.Layer',
 	'game.entity.Button',
@@ -14,6 +15,26 @@ lychee.define('game.state.Game').requires([
 		normal:   attachments["normal.fnt"]
 	};
 
+
+
+	/*
+	 * HELPERS
+	 */
+
+	var _random_color = function() {
+
+		var strr = (16 + Math.random() * 239 | 0).toString(16);
+		var strg = (16 + Math.random() * 239 | 0).toString(16);
+		var strb = (16 + Math.random() * 239 | 0).toString(16);
+
+		return '#' + strr + strg + strb;
+	};
+
+
+
+	/*
+	 * IMPLEMENTATION
+	 */
 
 	var Class = function(main) {
 
@@ -35,6 +56,26 @@ lychee.define('game.state.Game').requires([
 
 			lychee.game.State.prototype.deserialize.call(this, blob);
 
+
+			var entity = null;
+
+
+			entity = this.queryLayer('ui', 'circle');
+			entity.bind('touch', function() {
+
+				var effects = this.effects;
+				if (effects.length === 0) {
+
+					this.addEffect(new lychee.effect.Color({
+						type:     lychee.effect.Color.TYPE.bounceeaseout,
+						duration: 1000,
+						color:    this.color === '#000000' ? _random_color() : '#000000'
+					}));
+
+				}
+
+			}, this.queryLayer('background', 'background'));
+
 		},
 
 		reshape: function(orientation, rotation) {
@@ -50,6 +91,10 @@ lychee.define('game.state.Game').requires([
 				var height = renderer.height;
 
 
+				entity = this.queryLayer('background', 'background');
+				entity.width  = width;
+				entity.height = height;
+
 				entity = this.queryLayer('ui', 'button');
 				entity.position.y = 1/2 * height - 42;
 
@@ -62,13 +107,15 @@ lychee.define('game.state.Game').requires([
 			lychee.game.State.prototype.enter.call(this);
 
 
-			var circle = this.queryLayer('ui', 'circle');
-			if (circle !== null) {
-				circle.setColor('#888888', true);
-			}
+			var entity = null;
+
+			entity = this.queryLayer('ui', 'circle');
+			entity.setColor('#888888');
+
+			entity = this.queryLayer('background', 'background');
+			entity.setColor('#000000');
 
 
-			var entity  = null;
 			var service = this.client.getService('ping');
 			if (service !== null) {
 

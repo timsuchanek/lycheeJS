@@ -1,10 +1,32 @@
 
-lychee.define('game.entity.Circle').includes([
+lychee.define('game.entity.Circle').requires([
+	'lychee.effect.Color'
+]).includes([
 	'lychee.ui.Entity'
 ]).exports(function(lychee, game, global, attachments) {
 
 	var _sound = attachments["snd"];
 
+
+
+	/*
+	 * HELPERS
+	 */
+
+	var _random_color = function() {
+
+		var strr = (16 + Math.random() * 239 | 0).toString(16);
+		var strg = (16 + Math.random() * 239 | 0).toString(16);
+		var strb = (16 + Math.random() * 239 | 0).toString(16);
+
+		return '#' + strr + strg + strb;
+	};
+
+
+
+	/*
+	 * IMPLEMENTATION
+	 */
 
 	var Class = function(data, main) {
 
@@ -14,14 +36,6 @@ lychee.define('game.entity.Circle').includes([
 		this.main = main || null;
 
 		this.color = '#888888';
-
-		this.__pulse = {
-			duration: 500,
-			color:    '#888888',
-			radius:   0,
-			start:    null,
-			active:   false
-		};
 
 
 		this.setColor(settings.color);
@@ -45,14 +59,17 @@ lychee.define('game.entity.Circle').includes([
 
 		this.bind('touch', function() {
 
-			this.main.jukebox.play(_sound);
+			var effects = this.effects;
+			if (effects.length === 0) {
 
+				this.main.jukebox.play(_sound);
 
-			var color = this.color;
-			if (color === '#ff3333') {
-				this.setColor('#33ff33', true);
-			} else {
-				this.setColor('#ff3333', true);
+				this.addEffect(new lychee.effect.Color({
+					type:     lychee.effect.Color.TYPE.bounceeaseout,
+					duration: 500,
+					color:    _random_color()
+				}));
+
 			}
 
 		}, this);
@@ -78,24 +95,6 @@ lychee.define('game.entity.Circle').includes([
 
 		update: function(clock, delta) {
 
-			var pulse = this.__pulse;
-			if (pulse.active === true) {
-
-				if (pulse.start === null) {
-					pulse.start = clock;
-				}
-
-				var t = (clock - pulse.start) / pulse.duration;
-				if (t <= 1) {
-					pulse.radius = t * this.radius;
-				} else {
-					this.color = pulse.color;
-					pulse.active = false;
-				}
-
-			}
-
-
 			lychee.ui.Entity.prototype.update.call(this, clock, delta);
 
 		},
@@ -104,28 +103,15 @@ lychee.define('game.entity.Circle').includes([
 
 			var position = this.position;
 			var radius   = this.radius;
+			var color    = this.color;
 
 			renderer.drawCircle(
 				offsetX + position.x,
 				offsetY + position.y,
 				radius,
-				this.color,
+				color,
 				true
 			);
-
-
-			var pulse = this.__pulse;
-			if (pulse.active === true) {
-
-				renderer.drawCircle(
-					offsetX + position.x,
-					offsetY + position.y,
-					pulse.radius,
-					pulse.color,
-					true
-				);
-
-			}
 
 		},
 
@@ -135,30 +121,14 @@ lychee.define('game.entity.Circle').includes([
 		 * CUSTOM API
 		 */
 
-		setColor: function(color, fade) {
+		setColor: function(color) {
 
 			color = typeof color === 'string' ? color : null;
-			fade  = fade === true;
 
 
 			if (color !== null) {
 
-				if (fade === true) {
-
-					var pulse = this.__pulse;
-
-					pulse.duration = 250;
-					pulse.color    = color;
-					pulse.radius   = 0;
-					pulse.start    = null;
-					pulse.active   = true;
-
-				} else {
-
-					this.color = color;
-
-				}
-
+				this.color = color;
 
 				return true;
 
