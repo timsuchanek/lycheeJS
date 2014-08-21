@@ -26,6 +26,7 @@ lychee.define('lychee.ui.Entity').includes([
 		this.depth  = 0;
 		this.radius = typeof settings.radius === 'number' ? settings.radius : 0;
 
+		this.alpha     = 1;
 		this.collision = 1; // Used for event flow, NOT modifiable
 		this.effects   = [];
 		this.shape     = Class.SHAPE.rectangle;
@@ -51,6 +52,7 @@ lychee.define('lychee.ui.Entity').includes([
 		}
 
 
+		this.setAlpha(settings.alpha);
 		this.setShape(settings.shape);
 		this.setState(settings.state);
 		this.setPosition(settings.position);
@@ -88,6 +90,7 @@ lychee.define('lychee.ui.Entity').includes([
 			if (this.height !== 0) settings.height = this.height;
 			if (this.radius !== 0) settings.radius = this.radius;
 
+			if (this.alpha !== 1)                     settings.alpha   = this.alpha;
 			if (this.shape !== Class.SHAPE.rectangle) settings.shape   = this.shape;
 			if (this.state !== _default_state)        settings.state   = this.state;
 			if (this.__states !== _default_states)    settings.states  = this.__states;
@@ -170,6 +173,24 @@ lychee.define('lychee.ui.Entity').includes([
 					}
 
 				}
+
+			}
+
+
+			return false;
+
+		},
+
+		setAlpha: function(alpha) {
+
+			alpha = (typeof alpha === 'number' && alpha >= 0 && alpha <= 1) ? alpha : null;
+
+
+			if (alpha !== null) {
+
+				this.alpha = alpha;
+
+				return true;
 
 			}
 

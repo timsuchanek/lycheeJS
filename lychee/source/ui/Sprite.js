@@ -139,10 +139,17 @@ lychee.define('lychee.ui.Sprite').includes([
 			var texture = this.texture;
 			if (texture !== null) {
 
+				var alpha    = this.alpha;
 				var position = this.position;
 
 				var x1 = 0;
 				var y1 = 0;
+
+
+				if (alpha !== 1) {
+					renderer.setAlpha(alpha);
+				}
+
 
 				var map = this.getMap();
 				if (map !== null) {
@@ -171,6 +178,11 @@ lychee.define('lychee.ui.Sprite').includes([
 						texture
 					);
 
+				}
+
+
+				if (alpha !== 1) {
+					renderer.setAlpha(1);
 				}
 
 			}

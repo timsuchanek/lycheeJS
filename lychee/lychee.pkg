@@ -110,6 +110,7 @@
 			},
 
 			"effect": {
+				"Alpha":    [ "js" ],
 				"Color":    [ "js" ],
 				"Position": [ "js" ],
 				"Radius":   [ "js" ],

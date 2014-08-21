@@ -18,6 +18,7 @@ lychee.define('lychee.game.Entity').exports(function(lychee, global) {
 		this.depth  = typeof settings.depth  === 'number' ? settings.depth  : 0;
 		this.radius = typeof settings.radius === 'number' ? settings.radius : 0;
 
+		this.alpha     = 1;
 		this.collision = Class.COLLISION.none;
 		this.effects   = [];
 		this.shape     = Class.SHAPE.rectangle;
@@ -43,6 +44,7 @@ lychee.define('lychee.game.Entity').exports(function(lychee, global) {
 		}
 
 
+		this.setAlpha(settings.alpha);
 		this.setCollision(settings.collision);
 		this.setShape(settings.shape);
 		this.setState(settings.state);
@@ -92,6 +94,7 @@ lychee.define('lychee.game.Entity').exports(function(lychee, global) {
 			if (this.depth  !== 0) settings.depth  = this.depth;
 			if (this.radius !== 0) settings.radius = this.radius;
 
+			if (this.alpha !== 1)                         settings.alpha     = this.alpha;
 			if (this.collision !== Class.COLLISION.none)  settings.collision = this.collision;
 			if (this.shape     !== Class.SHAPE.rectangle) settings.shape     = this.shape;
 			if (this.state     !== _default_state)        settings.state     = this.state;
@@ -278,6 +281,24 @@ lychee.define('lychee.game.Entity').exports(function(lychee, global) {
 				colY    = hheight * 2 < (this.height + entity.height);
 
 				return colX && colY;
+
+			}
+
+
+			return false;
+
+		},
+
+		setAlpha: function(alpha) {
+
+			alpha = (typeof alpha === 'number' && alpha >= 0 && alpha <= 1) ? alpha : null;
+
+
+			if (alpha !== null) {
+
+				this.alpha = alpha;
+
+				return true;
 
 			}
 
