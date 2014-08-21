@@ -63,20 +63,19 @@ lychee.define('lychee.effect.Shake').exports(function(lychee, global, attachment
 			if (this.duration !== 250)            settings.duration = this.duration;
 
 
-// TODO: shake serialization
-			if (this.position.x !== 0 || this.position.y !== 0 || this.position.z !== 0) {
+			if (this.shake.x !== null || this.shake.y !== null || this.shake.z !== null) {
 
-				settings.position = {};
+				settings.shake = {};
 
-				if (this.position.x !== null) settings.position.x = this.position.x;
-				if (this.position.y !== null) settings.position.y = this.position.y;
-				if (this.position.z !== null) settings.position.z = this.position.z;
+				if (this.shake.x !== null) settings.shake.x = this.shake.x;
+				if (this.shake.y !== null) settings.shake.y = this.shake.y;
+				if (this.shake.z !== null) settings.shake.z = this.shake.z;
 
 			}
 
 
 			return {
-				'constructor': 'lychee.effect.Position',
+				'constructor': 'lychee.effect.Shake',
 				'arguments':   [ settings ]
 			};
 

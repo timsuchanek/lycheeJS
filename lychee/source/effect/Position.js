@@ -63,7 +63,7 @@ lychee.define('lychee.effect.Position').exports(function(lychee, global, attachm
 			if (this.duration !== 250)            settings.duration = this.duration;
 
 
-			if (this.position.x !== 0 || this.position.y !== 0 || this.position.z !== 0) {
+			if (this.position.x !== null || this.position.y !== null || this.position.z !== null) {
 
 				settings.position = {};
 
