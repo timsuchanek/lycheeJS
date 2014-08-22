@@ -1,14 +1,4 @@
 
-### Work-in-progress features for next minor release v0.8.3
-
-- Debugger integration to Dashboard
-- html-webgl platform finalization (webgl2d refactor)
-- html-cordova platform finalization
-- Game Boilerplate needs broadcast demo *Touch to create random Highscore*
-- Automatized APIdoc generation
-- Automatized Fuzz test suite
-
-
 # lycheeJS (v0.8.2)
 
 lycheeJS is a JavaScript Game library that offers a
@@ -110,6 +100,18 @@ A project's folder name is equivalent to its unique identifier.
 # Documentation
 
 The documentation is available online at [http://lycheejs.org/docs](http://lycheejs.org/docs).
+
+
+# Roadmap
+
+You want to see what kind of fancy features will arrive next?
+Please take a look at the (ROADMAP.md)[ROADMAP.md] file.
+
+
+# Contribution
+
+You want to contribute to the project?
+Please take a look at the (CONTRIBUTING.md) file.
 
 
 # Other (unsupported) JavaScript Runtimes

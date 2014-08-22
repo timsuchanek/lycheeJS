@@ -114,7 +114,8 @@
 				"Color":    [ "js" ],
 				"Position": [ "js" ],
 				"Radius":   [ "js" ],
-				"Shake":    [ "js" ]
+				"Shake":    [ "js" ],
+				"Velocity": [ "js" ]
 			},
 
 			"event": {
