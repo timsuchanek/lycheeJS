@@ -109,7 +109,7 @@ lychee.define('game.state.Game').requires([
 				duration: 500,
 				lifetime: 2000,
 				position: {
-					x:  0,
+					x: 0,
 					y: -100
 				},
 				entity:   lychee.serialize(new game.entity.Particle({

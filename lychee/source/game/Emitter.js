@@ -10,11 +10,12 @@ lychee.define('lychee.game.Emitter').requires([
 		var settings = lychee.extend({}, data);
 
 
-		this.delay      = 1000;
+		this.delay      = 0;
 		this.duration   = 1000;
 		this.entity     = null;
 		this.lifetime   = 1000;
 		this.position   = { x: 0, y: 0, z: 0 };
+		this.velocity   = { x: 0, y: 0, z: 0 };
 		this.type       = Class.TYPE.explosion;
 
 		this.__create    = 0;
@@ -27,6 +28,7 @@ lychee.define('lychee.game.Emitter').requires([
 		this.setEntity(settings.entity);
 		this.setPosition(settings.position);
 		this.setType(settings.type);
+		this.setVelocity(settings.velocity);
 
 
 		lychee.event.Emitter.call(this);
@@ -39,7 +41,6 @@ lychee.define('lychee.game.Emitter').requires([
 	Class.TYPE = {
 		explosion: 0,
 		stream:    1
-		// TODO: Evaluate if flame: 2 makes sense?
 	};
 
 
@@ -56,10 +57,12 @@ lychee.define('lychee.game.Emitter').requires([
 			var settings = {};
 
 
-// TODO: This whole serialize() method
+			if (this.delay !== 0)                   settings.delay    = this.delay;
+			if (this.duration !== 1000)             settings.duration = this.duration;
+			if (this.entity !== null)               settings.entity   = this.entity;
+			if (this.lifetime !== 1000)             settings.lifetime = this.lifetime;
+			if (this.type !== Class.TYPE.explosion) settings.type     = this.type;
 
-			if (this.amount !== 1)    settings.amount = this.amount;
-			if (this.entity !== null) settings.entity = this.height;
 
 			if (this.position.x !== 0 || this.position.y !== 0 || this.position.z !== 0) {
 
@@ -106,7 +109,7 @@ lychee.define('lychee.game.Emitter').requires([
 
 
 				var t = (clock - this.__start) / this.duration;
-				if (t <= 1) {
+				if (t > 0 && t <= 1) {
 
 					var entity = lychee.deserialize(this.entity);
 					if (entity !== null) {
@@ -114,12 +117,16 @@ lychee.define('lychee.game.Emitter').requires([
 						var velocity = entity.velocity || null;
 						if (velocity !== null) {
 
+							var vx = this.velocity.x;
+							var vy = this.velocity.y;
+							var vz = this.velocity.z;
+
 							var type = this.type;
 							if (type === Class.TYPE.explosion) {
 
-								var vx = (Math.random() * 1000) | 0;
-								var vy = (Math.random() * 1000) | 0;
-								var vz = (Math.random() * 1000) | 0;
+								vx += (Math.random() * 1000) | 0;
+								vy += (Math.random() * 1000) | 0;
+								vz += (Math.random() * 1000) | 0;
 
 								var index = this.__entities.length;
 								if (index % 4 === 0) {
@@ -132,6 +139,57 @@ lychee.define('lychee.game.Emitter').requires([
 								} else {
 									vx *= -1;
 								}
+
+								entity.velocity.x = vx;
+								entity.velocity.y = vy;
+								entity.velocity.z = vz;
+
+							} else if (type === Class.TYPE.stream) {
+
+								var vxabs = Math.abs(vx);
+								var vyabs = Math.abs(vy);
+								var vzabs = Math.abs(vz);
+								var f     = Math.random() / 4;
+
+								if (vxabs !== 0) {
+
+									vx += (Math.random() * vx) | 0;
+
+									if (vxabs > vyabs && vxabs > vzabs) {
+										vy += (Math.random() * f * vx) | 0;
+										vy *= Math.random() > 0.5 ? -1 : 1;
+										vz += (Math.random() * f * vx) | 0;
+										vz *= Math.random() > 0.5 ? -1 : 1;
+									}
+
+								}
+
+								if (vyabs !== 0) {
+
+									vy += (Math.random() * vy) | 0;
+
+									if (vyabs > vxabs && vyabs > vzabs) {
+										vx += (Math.random() * f * vy) | 0;
+										vx *= Math.random() > 0.5 ? -1 : 1;
+										vz += (Math.random() * f * vy) | 0;
+										vz *= Math.random() > 0.5 ? -1 : 1;
+									}
+
+								}
+
+								if (vzabs !== 0) {
+
+									vz += (Math.random() * vz) | 0;
+
+									if (vzabs > vxabs && vzabs > vyabs) {
+										vx += (Math.random() * f * vz) | 0;
+										vx *= Math.random() > 0.5 ? -1 : 1;
+										vy += (Math.random() * f * vz) | 0;
+										vy *= Math.random() > 0.5 ? -1 : 1;
+									}
+
+								}
+
 
 								entity.velocity.x = vx;
 								entity.velocity.y = vy;
@@ -283,6 +341,26 @@ lychee.define('lychee.game.Emitter').requires([
 			if (type !== null) {
 
 				this.type = type;
+
+				return true;
+
+			}
+
+
+			return false;
+
+		},
+
+		setVelocity: function(velocity) {
+
+			velocity = velocity instanceof Object ? velocity : null;
+
+
+			if (velocity !== null) {
+
+				this.velocity.x = typeof velocity.x === 'number' ? velocity.x : this.velocity.x;
+				this.velocity.y = typeof velocity.y === 'number' ? velocity.y : this.velocity.y;
+				this.velocity.z = typeof velocity.z === 'number' ? velocity.z : this.velocity.z;
 
 				return true;
 
