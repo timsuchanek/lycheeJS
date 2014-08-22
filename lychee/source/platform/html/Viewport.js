@@ -194,26 +194,27 @@ lychee.define('Viewport').tags({
 			if (_enterFullscreen === null || _leaveFullscreen === null) {
 
 				var prefixes = [ 'moz', 'ms', 'webkit' ];
+				var prefix   = null;
 
 				for (var p = 0, pl = prefixes.length; p < pl; p++) {
 
 					if (typeof element[prefixes[p] + 'RequestFullScreen'] === 'function' && typeof document[prefixes[p] + 'CancelFullScreen'] === 'function') {
-
-						(function(document, element, prefix) {
-
-							_enterFullscreen = function() {
-								element[prefix + 'RequestFullScreen']();
-							};
-
-							_leaveFullscreen = function() {
-								document[prefix + 'CancelFullScreen']();
-							};
-
-						})(global.document, element, prefixes[p]);
-
+						prefix = prefixes[p];
 						break;
-
 					}
+
+				}
+
+
+				if (prefix !== null) {
+
+					_enterFullscreen = function() {
+						element[prefix + 'RequestFullScreen']();
+					};
+
+					_leaveFullscreen = function() {
+						global.document[prefix + 'CancelFullScreen']();
+					};
 
 				}
 

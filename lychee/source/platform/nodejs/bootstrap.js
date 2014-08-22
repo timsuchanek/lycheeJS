@@ -265,14 +265,14 @@
 			key.shift = true;
 
 		// Meta + Letter
-		} else if (parts = _keypress.METAKEYCODE.exec(str)) {
+		} else if ((parts = _keypress.METAKEYCODE.exec(str))) {
 
 			key.name = parts[1].toLowerCase();
 			key.meta = true;
 			key.shift = /^[A-Z]$/.test(parts[1]);
 
 		// Function Key (ANSI ESCAPE SEQUENCE)
-		} else if (parts = _keypress.FUNCTIONKEYCODE.exec(str)) {
+		} else if ((parts = _keypress.FUNCTIONKEYCODE.exec(str))) {
 
 			var code = (parts[1] || '') + (parts[2] || '') + (parts[4] || '') + (parts[6] || '');
 			var mod  = (parts[3] || parts[5] || 1) - 1;

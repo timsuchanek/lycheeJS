@@ -436,7 +436,7 @@
 
 	var _base64_to_bytes = function(str) {
 
-		if (str.length % 4 == 0) {
+		if (str.length % 4 === 0) {
 
 			// TODO: Might get performance increase switching to lastIndexOf('=');
 			var length       = str.length;

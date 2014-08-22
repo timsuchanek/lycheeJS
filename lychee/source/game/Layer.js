@@ -210,18 +210,18 @@ lychee.define('lychee.game.Layer').requires([
 		update: function(clock, delta) {
 
 			var entities = this.entities;
-			for (var e = 0, el = entities.length; e < el; e++) {
-				entities[e].update(clock, delta);
+			for (var en = 0, enl = entities.length; en < enl; en++) {
+				entities[en].update(clock, delta);
 			}
 
 			var effects = this.effects;
-			for (var e = 0, el = this.effects.length; e < el; e++) {
+			for (var ef = 0, efl = this.effects.length; ef < efl; ef++) {
 
-				var effect = this.effects[e];
+				var effect = this.effects[ef];
 				if (effect.update(this, clock, delta) === false) {
 					this.removeEffect(effect);
-					el--;
-					e--;
+					efl--;
+					ef--;
 				}
 
 			}
