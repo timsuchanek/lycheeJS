@@ -105,13 +105,13 @@ The documentation is available online at [http://lycheejs.org/docs](http://lyche
 # Roadmap
 
 You want to see what kind of fancy features will arrive next?
-Please take a look at the (ROADMAP.md)[ROADMAP.md] file.
+Please take a look at the [ROADMAP.md](ROADMAP.md) file.
 
 
 # Contribution
 
 You want to contribute to the project?
-Please take a look at the (CONTRIBUTING.md) file.
+Please take a look at the [CONTRIBUTING.md](CONTRIBUTING.md) file.
 
 
 # Other (unsupported) JavaScript Runtimes
