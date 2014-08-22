@@ -27,6 +27,7 @@
 			"entity": {
 				"Button":   [ "js" ],
 				"Circle":   [ "js", "snd" ],
+				"Particle": [ "js" ],
 				"lycheeJS": [ "js", "png" ]
 			},
 

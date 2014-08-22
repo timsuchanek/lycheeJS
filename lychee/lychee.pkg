@@ -125,6 +125,7 @@
 
 			"game": {
 				"Background": [ "js" ],
+				"Emitter":    [ "js" ],
 				"Entity":     [ "js" ],
 				"Jukebox":    [ "js" ],
 				"Layer":      [ "js" ],

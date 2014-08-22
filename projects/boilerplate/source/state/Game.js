@@ -1,11 +1,15 @@
 
 lychee.define('game.state.Game').requires([
+	'lychee.effect.Alpha',
+	'lychee.effect.Color',
 	'lychee.effect.Shake',
 	'lychee.game.Background',
+	'lychee.game.Emitter',
 	'lychee.ui.Button',
 	'lychee.ui.Layer',
 	'game.entity.Button',
-	'game.entity.Circle'
+	'game.entity.Circle',
+	'game.entity.Particle'
 ]).includes([
 	'lychee.game.State'
 ]).exports(function(lychee, game, global, attachments) {
@@ -43,30 +47,7 @@ lychee.define('game.state.Game').requires([
 		lychee.game.State.call(this, main);
 
 
-/*
-		this.emitter = new _lychee_game_Emitter({
-			type:     lychee.game.Emitter.TYPE.confetti,
-			amount:   10,
-			duration: 500,
-			entity:   new game.entity.Circle({
-				radius: 16
-				color:  '#ffffff'
-			}),
-			effects:  [
-				new lychee.effect.Blur({
-					type:     lychee.effect.Blur.TYPE.easeout,
-					delay:    500,
-					duration: 500
-				}),
-				new lychee.effect.Color({
-					type:     lychee.effect.Color.TYPE.bounceeaseout,
-					duration: 500,
-					color:    '#000000'
-				})
-			]
-		});
-*/
-
+		this.emitter    = null;
 		this.intervalId = null;
 
 
@@ -92,8 +73,11 @@ lychee.define('game.state.Game').requires([
 				var color      = this.queryLayer('ui', 'circle').color;
 				var layer      = this.getLayer('ui');
 				var background = this.queryLayer('background', 'background');
+				var emitter    = this.emitter;
 
-				if (layer.effects.length === 0) {
+
+				var action = (layer.effects.length === 0 && background.effects.length === 0);
+				if (action === true) {
 
 					layer.addEffect(new lychee.effect.Shake({
 						type:     lychee.effect.Shake.TYPE.bounceeaseout,
@@ -104,25 +88,64 @@ lychee.define('game.state.Game').requires([
 						}
 					}));
 
-				}
-
-				if (background.effects.length === 0) {
-
 					background.addEffect(new lychee.effect.Color({
 						type:     lychee.effect.Color.TYPE.bounceeaseout,
 						duration: 500,
 						color:    color
 					}));
 
+
+					if (emitter !== null) {
+						emitter.create(40);
+					}
+
 				}
 
+			}, this);
 
-/*
-				var emitter = this.emitter;
-				if (emitter.entities.length === 0) {
-					emitter.emit();
+
+			this.emitter = new lychee.game.Emitter({
+				type:     lychee.game.Emitter.TYPE.explosion,
+				duration: 500,
+				lifetime: 2000,
+				position: {
+					x:  0,
+					y: -100
+				},
+				entity:   lychee.serialize(new game.entity.Particle({
+					radius: 16,
+					color:  '#ffffff'
+				}))
+			});
+
+			this.emitter.bind('create', function(entity) {
+
+				entity.color = _random_color();
+
+				entity.addEffect(new lychee.effect.Color({
+					type:     lychee.effect.Color.TYPE.bounceeaseout,
+					duration: 500,
+					color:    '#000000'
+				}));
+
+				entity.addEffect(new lychee.effect.Alpha({
+					type:     lychee.effect.Alpha.TYPE.bounceeaseout,
+					duration: 500,
+					alpha:    0
+				}));
+
+				var layer = this.getLayer('background');
+				if (layer !== null) {
+					layer.addEntity(entity);
 				}
-*/
+
+			}, this);
+			this.emitter.bind('destroy', function(entity) {
+
+				var layer = this.getLayer('background');
+				if (layer !== null) {
+					layer.removeEntity(entity);
+				}
 
 			}, this);
 
@@ -148,6 +171,18 @@ lychee.define('game.state.Game').requires([
 				entity = this.queryLayer('ui', 'button');
 				entity.position.y = 1/2 * height - 42;
 
+			}
+
+		},
+
+		update: function(clock, delta) {
+
+			lychee.game.State.prototype.update.call(this, clock, delta);
+
+
+			var emitter = this.emitter;
+			if (emitter !== null) {
+				emitter.update(clock, delta);
 			}
 
 		},

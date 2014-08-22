@@ -103,12 +103,6 @@ lychee.define('game.entity.Circle').requires([
 
 		},
 
-		update: function(clock, delta) {
-
-			lychee.ui.Entity.prototype.update.call(this, clock, delta);
-
-		},
-
 		render: function(renderer, offsetX, offsetY) {
 
 			var alpha    = this.alpha;
@@ -134,6 +128,12 @@ lychee.define('game.entity.Circle').requires([
 			if (alpha !== 1) {
 				renderer.setAlpha(1);
 			}
+
+		},
+
+		update: function(clock, delta) {
+
+			lychee.ui.Entity.prototype.update.call(this, clock, delta);
 
 		},
 
