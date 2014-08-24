@@ -5,14 +5,70 @@
 <table>
 	<tr>
 		<td class="center">
-			<div class="ui-dropzone" data-name="images">
+			<div class="ui-dropzone ui-upload">
 				Drop Images here
 			</div>
 		</td>
 		<td>
-			<ol class="ui-dropzone-list" data-source="images">
+			<ol class="ui-upload-list">
 				<li>No Images uploaded</li>
 			</ol>
+		</td>
+	</tr>
+	<tr class="div"></tr>
+	<tr>
+		<td colspan="2">
+			Hint: The filenames of the uploaded images can trigger
+			additional functionality.
+			<br>
+			For example, the images [ default_01.png, yanimated_01.png, yanimated_02.png, znotanimated_02.png ]
+			will trigger the following generated state map (when you use "use image name" in both settings).
+		</td>
+	</tr>
+	<tr>
+		<td class="right" colspan="2">
+			<button class="ui-toggle" data-target="example01">Show Example</button>
+		</td>
+	</tr>
+	<tr id="example01" class="ui-state-hidden">
+		<td colspan="2">
+			The sprite algorithm optimizes the spritesheet automatically power-of-two, so the sprite image size
+			for this example is 128x128. Also, this example has used a tile-based setting (bounding box: use frame size).
+		</td>
+		<td colspan="2">
+			<pre class="javascript">
+{
+	"states": {
+		"default": {
+			"width":     64,
+			"height":    64,
+			"animation": false
+		},
+		"yanimated": {
+			"width":     64,
+			"height":    64,
+			"animation": true
+		},
+		"znotanimated": {
+			"width":     64,
+			"height":    64,
+			"animation": false
+		}
+	},
+	"map": {
+		"default": [
+			{ "x":  0, "y":  0, "w": 64, "h": 64 }
+		],
+		"yanimated": [
+			{ "x": 64, "y":  0, "w": 64, "h": 64 },
+			{ "x":  0, "y": 64, "w": 64, "h": 64 }
+		],
+		"znotanimated": [
+			{ "x": 64, "y": 64, "w": 64, "h": 64 }
+		]
+	}
+}
+			</pre>
 		</td>
 	</tr>
 	<tr class="div"></tr>
@@ -52,7 +108,26 @@
 			<select name="boundingbox">
 				<option value="image" selected>use image size</option>
 				<option value="frame">use frame size</option>
-				<option value="none">none</option>
+				<option value="none">no bounding box</option>
+			</select>
+		</td>
+	</tr>
+	<tr class="div"></tr>
+	<tr>
+		<th>State Map</th>
+		<td>
+			<select name="statemap">
+				<option value="image" selected>use image name</option>
+				<option value="none">no state map</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<th>State Animation</th>
+		<td>
+			<select name="stateanimation">
+				<option value="image" selected>use image name</option>
+				<option value="none">no state animations</option>
 			</select>
 		</td>
 	</tr>

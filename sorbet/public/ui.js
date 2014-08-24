@@ -388,6 +388,7 @@ var ui = (function(lychee, global) {
 		'nav':     'ul',
 		'menu':    'li',
 		'ul':      'li',
+		'ol':      'li',
 		'section': 'article'
 	};
 
@@ -1001,7 +1002,7 @@ var ui = (function(lychee, global) {
 		 * UI EVENTS
 		 */
 
-		dropzone: function(query, callback, scope, dynamic) {
+		upload: function(query, callback, scope, dynamic) {
 
 			query    = typeof query === 'string'    ? query    : null;
 			callback = callback instanceof Function ? callback : null;
@@ -1021,7 +1022,6 @@ var ui = (function(lychee, global) {
 				});
 
 				_bind_dropzone(_dropzones[length - 1]);
-//				_refresh_dropzones();
 
 				return true;
 

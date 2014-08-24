@@ -279,7 +279,7 @@ lychee.define('dashboard.data.Font').tags({
 
 	};
 
-	var _render = function(settings) {
+	var _parse = function(settings) {
 
 		var charset = [];
 		for (var c = settings.charset[0]; c < settings.charset[1]; c++) {
@@ -418,7 +418,7 @@ lychee.define('dashboard.data.Font').tags({
 		this.spacing    = 0;
 
 
-		_render.call(this, settings);
+		_parse.call(this, settings);
 
 		settings = null;
 

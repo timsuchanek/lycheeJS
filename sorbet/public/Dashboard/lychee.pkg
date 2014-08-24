@@ -25,7 +25,8 @@
 		"files": {
 
 			"data": {
-				"Font": [ "js" ]
+				"Font":   [ "js" ],
+				"Sprite": [ "js" ]
 			},
 
 			"net": {

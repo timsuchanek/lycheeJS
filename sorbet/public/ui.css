@@ -187,6 +187,15 @@ ul#ui-notifications li {
 
 
 
+.ui-state-default {
+}
+
+.ui-state-hidden {
+	display: none;
+}
+
+
+
 .ui-graph {
 	display: block;
 	background: #111111;
