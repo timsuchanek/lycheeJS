@@ -2,7 +2,7 @@
 <h2>Texture</h2>
 
 <div class="scrollarea">
-	<img src="{{texture}}">
+	<img src="{{preview}}">
 </div>
 
 <h2>Settings</h2>

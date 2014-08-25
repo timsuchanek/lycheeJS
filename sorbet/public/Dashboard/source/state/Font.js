@@ -17,11 +17,6 @@ lychee.define('dashboard.state.Font').requires([
 	 * HELPERS
 	 */
 
-	var _get_filename = function(data) {
-
-
-	};
-
 	var _on_submit = function(data) {
 
 		lychee.extend(this.content, data);
@@ -29,12 +24,8 @@ lychee.define('dashboard.state.Font').requires([
 		var content = new _Font(this.content).toJSON();
 		if (content.texture !== null) {
 
-			var filename = data.family.split(' ').join('_') + '_' + data.size + '.fnt';
-
-
 			ui.render('main > section > article.preview', {
-				filename:   filename,
-				texture:    content.texture,
+				preview:    content.preview,
 				charset:    content.charset,
 				map:        '[' + content.map.join(',') + ']',
 				baseline:   content.baseline,
@@ -62,10 +53,7 @@ lychee.define('dashboard.state.Font').requires([
 
 				if (result === true) {
 
-					this.main.setDownload(
-						filename,
-						new Buffer(JSON.stringify(content), 'utf8')
-					);
+					this.main.setDownload('Font.fnt', new Buffer(JSON.stringify(content), 'utf8'));
 
 				}
 

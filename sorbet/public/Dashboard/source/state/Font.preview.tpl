@@ -2,7 +2,7 @@
 <h2>Texture</h2>
 
 <div class="scrollarea">
-	<img src="{{texture}}">
+	<img src="{{preview}}">
 </div>
 
 <h2>Settings</h2>
@@ -35,7 +35,7 @@
 	<tr class="div"></tr>
 	<tr>
 		<td class="right" colspan="2">
-			<button class="download" data-identifier="{{filename}}">Download Font.fnt</button>
+			<button class="download" data-identifier="Font.fnt">Download Font.fnt</button>
 		</td>
 	</tr>
 </table>

@@ -240,7 +240,7 @@ lychee.define('dashboard.data.Sprite').exports(function(lychee, dashboard, globa
 
 	};
 
-	var _render_frames = function(frames) {
+	var _render_frames = function(frames, debug) {
 
 		for (var f = 0, fl = frames.length; f < fl; f++) {
 
@@ -263,12 +263,17 @@ lychee.define('dashboard.data.Sprite').exports(function(lychee, dashboard, globa
 					render.h
 				);
 
-				this.lineWidth   = 1;
-				this.strokeStyle = '#ff0000';
-				this.strokeRect(render.x, render.y, render.w, render.h);
 
-				this.strokeStyle = '#00ff00';
-				this.strokeRect(map.x, map.y, map.w, map.h);
+				if (debug === true) {
+
+					this.lineWidth   = 1;
+					this.strokeStyle = '#ff0000';
+					this.strokeRect(render.x, render.y, render.w, render.h);
+
+					this.strokeStyle = '#00ff00';
+					this.strokeRect(map.x, map.y, map.w, map.h);
+
+				}
 
 			}
 
@@ -291,13 +296,21 @@ lychee.define('dashboard.data.Sprite').exports(function(lychee, dashboard, globa
 		 * 2. Render Frames
 		 */
 
-		var buffer = new _buffer(settings.texturesize, settings.texturesize);
+		var texture = new _buffer(settings.texturesize, settings.texturesize);
+		var preview = new _buffer(settings.texturesize, settings.texturesize);
 
 		if (frames.length > 0) {
 
 			_render_frames.call(
-				buffer.ctx,
-				frames
+				texture.ctx,
+				frames,
+				false
+			);
+
+			_render_frames.call(
+				preview.ctx,
+				frames,
+				true
 			);
 
 		}
@@ -307,7 +320,8 @@ lychee.define('dashboard.data.Sprite').exports(function(lychee, dashboard, globa
 		 * Export Settings
 		 */
 
-		this.texture = buffer.toString();
+		this.texture = texture.toString();
+		this.preview = preview.toString();
 		this.map     = map;
 		this.states  = states;
 
@@ -348,6 +362,7 @@ lychee.define('dashboard.data.Sprite').exports(function(lychee, dashboard, globa
 
 			return {
 				texture: this.texture,
+				preview: this.preview,
 				map:     this.map,
 				states:  this.states
 			};

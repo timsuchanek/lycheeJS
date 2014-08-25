@@ -56,7 +56,7 @@ lychee.define('dashboard.state.Sprite').requires([
 
 
 			ui.render('main > section > article.preview', {
-				texture:    content.texture,
+				preview:    content.preview,
 				dimensions: dimensions,
 				map:        JSON.stringify(content.map,    null, '  '),
 				states:     JSON.stringify(content.states, null, '  ')
