@@ -739,7 +739,14 @@ var ui = (function(lychee, global) {
 							value = element.options[element.selectedIndex || 0].value;
 
 							if (options.indexOf(value) !== -1) {
-								data[name] = '' + value;
+
+								var val = parseInt(value, 10);
+								if (!isNaN(val)) {
+									data[name] = val;
+								} else {
+									data[name] = '' + value;
+								}
+
 							}
 
 						}
