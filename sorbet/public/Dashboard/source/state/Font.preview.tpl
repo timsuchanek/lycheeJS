@@ -35,7 +35,7 @@
 	<tr class="div"></tr>
 	<tr>
 		<td class="right" colspan="2">
-			<button class="download" data-identifier="{{filename}}">Download</button>
+			<button class="download" data-identifier="{{filename}}">Download Font.fnt</button>
 		</td>
 	</tr>
 </table>

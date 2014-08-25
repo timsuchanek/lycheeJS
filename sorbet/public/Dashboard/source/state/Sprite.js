@@ -36,8 +36,8 @@ lychee.define('dashboard.state.Sprite').requires([
 				texture: content.texture,
 				width:   content.width,
 				height:  content.height,
-				map:     JSON.stringify(content.map),
-				states:  JSON.stringify(content.states)
+				map:     JSON.stringify(content.map,    null, '  '),
+				states:  JSON.stringify(content.states, null, '  ')
 			}, _templates.preview);
 
 

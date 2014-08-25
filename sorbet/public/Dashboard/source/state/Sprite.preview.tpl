@@ -18,11 +18,11 @@
 	</tr>
 	<tr>
 		<td>Map</td>
-		<td>{{map}}</td>
+		<td><pre class="javascript">{{map}}</pre></td>
 	</tr>
 	<tr>
 		<td>States</td>
-		<td>{{states}}</td>
+		<td><pre class="javascript">{{states}}</pre></td>
 	</tr>
 	<tr class="div"></tr>
 	<tr>
