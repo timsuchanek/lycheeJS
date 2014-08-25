@@ -1048,78 +1048,43 @@ var ui = (function(lychee, global) {
 			if (filename !== null && buffer !== null) {
 
 				var ext  = filename.split('.').pop();
-				var type = null;
-				var url  = null;
-
-				switch(ext) {
-					case 'fnt': type = 'text/plain';               break;
-					case 'txt': type = 'application/json';         break;
-					case 'png': type = 'image/png';                break;
-					default:    type = 'application/octet-stream'; break;
+				var type = 'plain/text';
+				if (ext.match(/fnt|json/)) {
+					type = 'application/json';
+				} else if (ext.match(/png/)) {
+					type = 'image/png';
 				}
 
-
-				if (
-					   typeof Blob !== 'undefined'
-					&& typeof global.URL !== 'undefined'
-					&& typeof global.URL.createObjectURL === 'function'
-				) {
-
-					var blob = new Blob([ buffer.toString('utf8') ], {
-						type: type
-					});
-
-					url = global.URL.createObjectURL(blob);
-
-				} else {
-
-					url = 'data:' + type + ';base64,' + buffer.toString('base64');
-
-				}
+				var url     = 'data:' + type + ';base64,' + buffer.toString('base64');
+				var event   = _document.createEvent('MouseEvents');
+				var element = _document.createElement('a');
 
 
-				if (url !== null) {
+				element.download = filename;
+				element.href     = url;
 
-					var event   = _document.createEvent('MouseEvents');
-					var element = _document.createElement('a');
+				event.initMouseEvent(
+					'click',
+					true,
+					false,
+					window,
+					0,
+					0,
+					0,
+					0,
+					0,
+					false,
+					false,
+					false,
+					false,
+					0,
+					null
+				);
 
-					element.download = filename;
-					element.href     = url;
-
-					event.initMouseEvent(
-						'click',
-						true,
-						false,
-						window,
-						0,
-						0,
-						0,
-						0,
-						0,
-						false,
-						false,
-						false,
-						false,
-						0,
-						null
-					);
-
-					element.dispatchEvent(event);
+				element.dispatchEvent(event);
 
 
-					if (
-						   typeof global.URL !== 'undefined'
-						&& typeof global.URL.revokeObjectURL === 'function'
-					) {
-
-						global.URL.revokeObjectURL(url);
-
-					}
-
-
-					return true;
-
-				}
+				return true;
 
 			}
 

@@ -30,26 +30,14 @@ lychee.define('dashboard.state.Sprite').requires([
 
 
 		var content = new _Sprite(this.content).toJSON();
-
-console.log(content);
-
-return;
-
-		var content = new _Sprite(this.content).toJSON();
 		if (content.texture !== null) {
 
-			var filename = data.family.split(' ').join('_') + '_' + data.size + '.fnt';
-
-
 			ui.render('main > section > article.preview', {
-				filename:   filename,
-				texture:    content.texture,
-				charset:    content.charset,
-				map:        '[' + content.map.join(',') + ']',
-				baseline:   content.baseline,
-				lineheight: content.lineheight,
-				kerning:    content.kerning,
-				spacing:    content.spacing
+				texture: content.texture,
+				width:   content.width,
+				height:  content.height,
+				map:     JSON.stringify(content.map),
+				states:  JSON.stringify(content.states)
 			}, _templates.preview);
 
 
@@ -71,10 +59,15 @@ return;
 
 				if (result === true) {
 
-					this.main.setDownload(
-						filename,
-						new Buffer(JSON.stringify(content), 'utf8')
-					);
+					var index = 'data:image/png;base64,'.length;
+
+					this.main.setDownload('Sprite.png',  new Buffer(content.texture.substr(index), 'base64'));
+					this.main.setDownload('Sprite.json', new Buffer(JSON.stringify({
+						width:  content.width,
+						height: content.height,
+						map:    content.map,
+						states: content.states
+					}, null, '\t'), 'utf8'));
 
 				}
 
