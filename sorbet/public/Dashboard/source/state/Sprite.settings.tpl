@@ -73,16 +73,30 @@
 	</tr>
 	<tr class="div"></tr>
 	<tr>
+		<th>Texture Size</th>
+		<td>
+			<select name="texturesize">
+				<option value="128">128x128</option>
+				<option value="256">256x256</option>
+				<option value="512">512x512</option>
+				<option value="1024" selected>1024x1024</option>
+				<option value="2048">2048x2048</option>
+				<option value="4096">4096x4096</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
 		<th>Frame Size</th>
 		<td>
 			<select name="framesize">
-				<option value="16">16</option>
-				<option value="32">32</option>
-				<option value="64" selected>64</option>
-				<option value="128">128</option>
-				<option value="256">256</option>
-				<option value="512">512</option>
-				<option value="1024">1024</option>
+				<option value="image" selected>use image size</option>
+				<option value="16">16x16</option>
+				<option value="32">32x32</option>
+				<option value="64">64x64</option>
+				<option value="128">128x128</option>
+				<option value="256">256x256</option>
+				<option value="512">512x512</option>
+				<option value="1024">1024x1024</option>
 			</select>
 		</td>
 	</tr>
@@ -102,13 +116,21 @@
 			</select>
 		</td>
 	</tr>
+	<tr class="div"></tr>
 	<tr>
-		<th>Bounding Box</th>
+		<th>Static Bounding Box</th>
+		<td>
+			<input type="number" name="width" value="" placeholder="width">
+			<input type="number" name="height" value="" placeholder="height">
+			<input type="number" name="radius" value="" placeholder="radius">
+		</td>
+	</tr>
+	<tr>
+		<th>Dynamic Bounding Box</th>
 		<td>
 			<select name="boundingbox">
-				<option value="image" selected>use image size</option>
 				<option value="frame">use frame size</option>
-				<option value="none">no bounding box</option>
+				<option value="none" selected>no bounding box</option>
 			</select>
 		</td>
 	</tr>

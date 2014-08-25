@@ -43,58 +43,103 @@ lychee.define('dashboard.data.Sprite').exports(function(lychee, dashboard, globa
 
 
 
-	var _get_frames = function(statemap, framesize, framealign, files) {
+	var _get_frames = function(settings) {
 
+		var files  = settings.files;
 		var frames = [];
-		var size   = Math.round(Math.sqrt(files.length));
-		if (size % 2 !== 0) {
-			size++;
+		var alignx = settings.framealign.split('-')[1] || 'center';
+		var aligny = settings.framealign.split('-')[0] || 'center';
+		var framew = 0;
+		var frameh = 0;
+		var sizex  = 0;
+		var sizey  = 0;
+
+
+		var framesize = settings.framesize;
+		if (framesize === 'image') {
+
+			for (var fi = 0, fil = files.length; fi < fil; fi++) {
+				framew = Math.max(framew, files[fi].texture.buffer.width);
+				frameh = Math.max(frameh, files[fi].texture.buffer.height);
+			}
+
+			sizex = Math.floor(settings.texturesize / framew);
+			sizey = Math.floor(settings.texturesize / frameh);
+
+		} else {
+
+			var size = Math.round(Math.sqrt(files.length));
+			if (size % 2 !== 0) {
+				size++;
+			}
+
+
+			framew = framesize;
+			frameh = framesize;
+
+			sizex  = size;
+			sizey  = size;
+
 		}
 
-		var alignx = framealign.split('-')[1] || 'center';
-		var aligny = framealign.split('-')[0] || 'center';
 
+		var boundingbox = settings.boundingbox;
 
 		for (var f = 0, fl = files.length; f < fl; f++) {
 
 			var state   = files[f].name.split('_')[0].toLowerCase();
-			var width   = files[f].texture.buffer.width;
-			var height  = files[f].texture.buffer.height;
-			var offsetx = ( f % size)      * framesize;
-			var offsety = ((f / size) | 0) * framesize;
+			var bufferw = files[f].texture.buffer.width;
+			var bufferh = files[f].texture.buffer.height;
+			var offsetx = 0;
+			var offsety = 0;
+			var posx    = 0;
+			var posy    = 0;
+			var offsetx = ( f % sizex)      * framew;
+			var offsety = ((f / sizex) | 0) * frameh;
 
-			var dx = 0;
-			var dy = 0;
 
-			if (alignx === 'center') {
-				dx = (framesize / 2) - (width / 2);
-			} else if (alignx === 'right') {
-				dx = (framesize - width);
+			if (framesize !== 'image' || true) {
+
+				if (alignx === 'center') {
+					posx = (framew / 2) - (bufferw / 2);
+				} else if (alignx === 'right') {
+					posx = (framew - bufferw);
+				}
+
+				if (aligny === 'center') {
+					posy = (frameh / 2) - (bufferh / 2);
+				} else if (aligny === 'bottom') {
+					posy = (frameh - bufferh);
+				}
+
 			}
 
-			if (aligny === 'center') {
-				dy = (framesize / 2) - (height / 2);
-			} else if (aligny === 'bottom') {
-				dy = (framesize - height);
-			}
 
-
-			frames.push({
+			var frame = {
 				state:   state,
 				texture: files[f].texture || null,
 				map: {
 					x: offsetx,
 					y: offsety,
-					w: framesize,
-					h: framesize
+					w: framew,
+					h: frameh
 				},
 				render: {
-					x: offsetx + dx,
-					y: offsety + dy,
-					w: width,
-					h: height
+					x: offsetx + posx,
+					y: offsety + posy,
+					w: bufferw,
+					h: bufferh
 				}
-			});
+			};
+
+
+			if (boundingbox === 'frame') {
+				frame.map.width  = framew;
+				frame.map.height = frameh;
+			}
+
+
+			frames.push(frame);
 
 		}
 
@@ -203,19 +248,27 @@ lychee.define('dashboard.data.Sprite').exports(function(lychee, dashboard, globa
 			var texture = frame.texture;
 			if (texture !== null) {
 
-				var map = frame.render;
+				var map    = frame.map;
+				var render = frame.render;
 
 				this.drawImage(
 					texture.buffer,
 					0,
 					0,
-					map.w,
-					map.h,
-					map.x,
-					map.y,
-					map.w,
-					map.h
+					render.w,
+					render.h,
+					render.x,
+					render.y,
+					render.w,
+					render.h
 				);
+
+				this.lineWidth   = 1;
+				this.strokeStyle = '#ff0000';
+				this.strokeRect(render.x, render.y, render.w, render.h);
+
+				this.strokeStyle = '#00ff00';
+				this.strokeRect(map.x, map.y, map.w, map.h);
 
 			}
 
@@ -229,16 +282,7 @@ lychee.define('dashboard.data.Sprite').exports(function(lychee, dashboard, globa
 		 * 1. Get Frames and States from files
 		 */
 
-		var framesize = settings.framesize;
-		var size      = Math.round(Math.sqrt(settings.files.length));
-		if (size % 2 !== 0) {
-			size++;
-		}
-
-
-		var width  = size * framesize;
-		var height = size * framesize;
-		var frames = _get_frames(settings.statemap, settings.framesize,      settings.framealign, settings.files);
+		var frames = _get_frames(settings);
 		var states = _get_states(settings.statemap, settings.stateanimation, settings.files);
 		var map    = _get_map(settings.statemap, states, frames);
 
@@ -247,7 +291,7 @@ lychee.define('dashboard.data.Sprite').exports(function(lychee, dashboard, globa
 		 * 2. Render Frames
 		 */
 
-		var buffer = new _buffer(width, height);
+		var buffer = new _buffer(settings.texturesize, settings.texturesize);
 
 		if (frames.length > 0) {
 
@@ -264,8 +308,6 @@ lychee.define('dashboard.data.Sprite').exports(function(lychee, dashboard, globa
 		 */
 
 		this.texture = buffer.toString();
-		this.width   = width;
-		this.height  = height;
 		this.map     = map;
 		this.states  = states;
 
@@ -280,6 +322,7 @@ lychee.define('dashboard.data.Sprite').exports(function(lychee, dashboard, globa
 	var Class = function(data) {
 
 		var settings = lychee.extend({
+			texturesize:    1024,
 			framesize:      64,
 			framealign:     'center-center',
 			boundingbox:    'image',
@@ -288,8 +331,6 @@ lychee.define('dashboard.data.Sprite').exports(function(lychee, dashboard, globa
 		}, data);
 
 
-		this.width  = 0;
-		this.height = 0;
 		this.map    = {};
 		this.states = {};
 
@@ -307,8 +348,6 @@ lychee.define('dashboard.data.Sprite').exports(function(lychee, dashboard, globa
 
 			return {
 				texture: this.texture,
-				width:   this.width,
-				height:  this.height,
 				map:     this.map,
 				states:  this.states
 			};

@@ -711,6 +711,15 @@ var ui = (function(lychee, global) {
 										data[name] = '' + value;
 									}
 
+								} else if (type === 'number') {
+
+									var val = parseInt(value, 10);
+									if (!isNaN(val)) {
+										data[name] = val;
+									} else {
+										delete data[name];
+									}
+
 								} else if (type === 'range') {
 
 									var min = parseInt(element.min, 10); min = isNaN(min) ? -Infinity : min;
@@ -718,6 +727,8 @@ var ui = (function(lychee, global) {
 									var val = parseInt(value, 10);
 									if (val >= min && val <= max) {
 										data[name] = val;
+									} else {
+										delete data[name];
 									}
 
 								}

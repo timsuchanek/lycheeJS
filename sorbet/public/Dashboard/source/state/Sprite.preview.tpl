@@ -8,14 +8,13 @@
 <h2>Settings</h2>
 
 <table class="fixed">
+	{{for dimensions}}
 	<tr>
-		<td>Width</td>
-		<td>{{width}}</td>
+		<td>{{dimensions[$].type}}</td>
+		<td>{{dimensions[$].value}}</td>
 	</tr>
-	<tr>
-		<td>Height</td>
-		<td>{{height}}</td>
-	</tr>
+	{{/for dimensions}}
+	<tr class="div"></tr>
 	<tr>
 		<td>Map</td>
 		<td><pre class="javascript">{{map}}</pre></td>
