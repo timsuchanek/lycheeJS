@@ -122,22 +122,30 @@ lychee.define('game.state.Game').requires([
 
 			var ox = layer.offset.x;
 			var oy = layer.offset.y;
+			var tx = ox + swipe.x;
+			var ty = oy + swipe.y;
+			var dx = Math.abs(layer.width  - this.renderer.width);
+			var dy = Math.abs(layer.height - this.renderer.height);
+
+
+			var tx2 = Math.min(Math.max(tx, -1/2 * dx - _tilew / 2),            1/2 * dx + _tilew / 2);
+			var ty2 = Math.min(Math.max(ty, -1/2 * dy + (_tileh - _tiled) / 2), 1/2 * dy - _tiled);
+
+			var type = lychee.effect.Offset.TYPE.easeout;
+			if (tx !== tx2 || ty !== ty2) {
+				type = lychee.effect.Offset.TYPE.bounceeaseout;
+			}
+
 
 			layer.addEffect(new lychee.effect.Offset({
-				type:     lychee.effect.Offset.TYPE.easeout,
+				type:     type,
 				duration: 500,
 				offset:   {
-					x: ox + swipe.x
+					x: tx2,
+					y: ty2
 				}
 			}));
 
-			layer.addEffect(new lychee.effect.Offset({
-				type:     lychee.effect.Offset.TYPE.easeout,
-				duration: 500,
-				offset:   {
-					y: oy + swipe.y
-				}
-			}));
 
 			this.__locked = true;
 
