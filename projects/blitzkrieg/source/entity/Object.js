@@ -1,5 +1,5 @@
 
-lychee.define('game.entity.Terrain').includes([
+lychee.define('game.entity.Object').includes([
 	'lychee.game.Sprite'
 ]).exports(function(lychee, game, global, attachments) {
 
@@ -7,22 +7,14 @@ lychee.define('game.entity.Terrain').includes([
 	var _config  = attachments["json"].buffer;
 
 	var _TYPES   = {
-		 1: 'dirt-bound',
-		 2: 'dirt-free',
-		 3: 'grass-bound',
-		 4: 'grass-free',
-		 5: 'lava-bound',
-		 6: 'lava-free',
-		 7: 'rock-bound',
-		 8: 'rock-free',
-		 9: 'sand-bound',
-		10: 'sand-free',
-		11: 'snow-bound',
-		12: 'snow-free',
-		13: 'stone-bound',
-		14: 'stone-free',
-		15: 'water-bound',
-		16: 'water-free'
+		 1: 'dirt-house',
+		 2: 'grass-house',
+		 3: 'lava-house',
+		 4: 'rock-house',
+		 5: 'sand-house',
+		 6: 'snow-house',
+		 7: 'stone-house',
+		 8: 'water-house'
 	};
 
 

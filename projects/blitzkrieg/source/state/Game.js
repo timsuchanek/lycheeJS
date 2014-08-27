@@ -6,6 +6,7 @@ lychee.define('game.state.Game').requires([
 	'lychee.game.Layer',
 	'game.ui.Cursor',
 	'game.ui.Layer',
+	'game.entity.Object',
 	'game.entity.Terrain',
 	'game.entity.lycheeJS'
 ]).includes([
@@ -54,7 +55,8 @@ lychee.define('game.state.Game').requires([
 			var level = {
 				width:   0,
 				height:  0,
-				terrain: []
+				terrain: [],
+				objects: []
 			};
 
 
@@ -72,28 +74,68 @@ lychee.define('game.state.Game').requires([
 			}
 
 
+			var x, y, posx, posy, type;
+
+
 			if (data.terrain instanceof Array) {
 
-				for (var y = 0; y < data.terrain.length; y++) {
+				for (y = 0; y < data.terrain.length; y++) {
 
-					for (var x = 0; x < data.terrain[0].length; x++) {
+					for (x = 0; x < data.terrain[0].length; x++) {
 
-						var type = data.terrain[y][x];
-						var posx = Math.round(offsetx + x * _tilew);
-						var posy = Math.round(offsety + y * _tiled);
+						type = data.terrain[y][x];
+						posx = Math.round(offsetx + x * _tilew);
+						posy = Math.round(offsety + y * _tiled);
 
 						if (y % 2 === 1) {
 							posx += Math.round(_tilew / 2);
 						}
 
 
-						level.terrain.push(new game.entity.Terrain({
-							type:     type,
-							position: {
-								x: posx,
-								y: posy
-							}
-						}));
+						if (type > 0) {
+
+							level.terrain.push(new game.entity.Terrain({
+								type:     type,
+								position: {
+									x: posx,
+									y: posy
+								}
+							}));
+
+						}
+
+					}
+
+				}
+
+			}
+
+			if (data.objects instanceof Array) {
+
+				for (y = 0; y < data.objects.length; y++) {
+
+					for (x = 0; x < data.objects[0].length; x++) {
+
+						type = data.objects[y][x];
+						posx = Math.round(offsetx + x * _tilew);
+						posy = Math.round(offsety + y * _tiled);
+
+						if (y % 2 === 1) {
+							posx += Math.round(_tilew / 2);
+						}
+
+
+						if (type > 0) {
+
+							level.objects.push(new game.entity.Object({
+								type:     type,
+								position: {
+									x: posx,
+									y: posy
+								}
+							}));
+
+						}
 
 					}
 
@@ -115,21 +157,44 @@ lychee.define('game.state.Game').requires([
 
 	var _process_swipe = function(id, state, position, delta, swipe) {
 
-		var layer  = this.queryLayer('game', 'terrain');
-		var locked = this.__locked;
+		var terrain = this.queryLayer('game', 'terrain');
+		var objects = this.queryLayer('game', 'objects');
+		var locked  = this.__locked;
 
 		if (locked === false && state === 'end') {
 
-			var ox = layer.offset.x;
-			var oy = layer.offset.y;
+			var ox = terrain.offset.x;
+			var oy = terrain.offset.y;
 			var tx = ox + swipe.x;
 			var ty = oy + swipe.y;
-			var dx = Math.abs(layer.width  - this.renderer.width);
-			var dy = Math.abs(layer.height - this.renderer.height);
+			var dx = this.renderer.width  - terrain.width;
+			var dy = this.renderer.height - terrain.height;
 
 
-			var tx2 = Math.min(Math.max(tx, -1/2 * dx - _tilew / 2),            1/2 * dx + _tilew / 2);
-			var ty2 = Math.min(Math.max(ty, -1/2 * dy + (_tileh - _tiled) / 2), 1/2 * dy - _tiled);
+			var bx1 = -1/2 * Math.abs(dx);
+			var bx2 =  1/2 * Math.abs(dx);
+			if (dx < 0) {
+				bx1 -= _tilew / 2;
+				bx2 += _tilew / 2;
+			} else {
+				bx1 += _tilew / 2;
+				bx2 -= _tilew / 2;
+			}
+
+
+			var by1 = -1/2 * Math.abs(dy);
+			var by2 =  1/2 * Math.abs(dy);
+			if ((dy - _tiled) < 0) {
+				by1 -= (_tileh - _tiled) / 2;
+				by2 += _tiled;
+			} else {
+				by1 += (_tileh - _tiled) / 2;
+				by2 -= _tiled;
+			}
+
+			var tx2 = Math.min(Math.max(tx, bx1), bx2);
+			var ty2 = Math.min(Math.max(ty, by1), by2);
+
 
 			var type = lychee.effect.Offset.TYPE.easeout;
 			if (tx !== tx2 || ty !== ty2) {
@@ -137,7 +202,16 @@ lychee.define('game.state.Game').requires([
 			}
 
 
-			layer.addEffect(new lychee.effect.Offset({
+			terrain.addEffect(new lychee.effect.Offset({
+				type:     type,
+				duration: 500,
+				offset:   {
+					x: tx2,
+					y: ty2
+				}
+			}));
+
+			objects.addEffect(new lychee.effect.Offset({
 				type:     type,
 				duration: 500,
 				offset:   {
@@ -233,19 +307,30 @@ lychee.define('game.state.Game').requires([
 
 				var terrain = this.queryLayer('game', 'terrain');
 				if (terrain !== null) {
-					terrain.width    = level.width  * _tilew;
-					terrain.height   = level.height * _tileh;
-					terrain.offset.y = _tileh;
+
+					terrain.setReshape(true);
+
+					for (var t = 0, tl = level.terrain.length; t < tl; t++) {
+						terrain.addEntity(level.terrain[t]);
+					}
+
+					terrain.setReshape(false);
+
 				}
 
+				var objects = this.queryLayer('game', 'objects');
+				if (objects !== null) {
 
-				terrain.setReshape(true);
+					if (terrain !== null) {
+						objects.width  = terrain.width;
+						objects.height = terrain.height;
+					}
 
-				for (var t = 0, tl = level.terrain.length; t < tl; t++) {
-					terrain.addEntity(level.terrain[t]);
+					for (var o = 0, ol = level.objects.length; o < ol; o++) {
+						objects.addEntity(level.objects[o]);
+					}
+
 				}
-
-				terrain.setReshape(false);
 
 			}
 

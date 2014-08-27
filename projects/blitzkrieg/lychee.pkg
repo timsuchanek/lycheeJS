@@ -25,6 +25,7 @@
 		"files": {
 
 			"entity": {
+				"Object":   [ "js", "json", "png" ],
 				"Terrain":  [ "js", "json", "png" ],
 				"lycheeJS": [ "js", "png" ]
 			},

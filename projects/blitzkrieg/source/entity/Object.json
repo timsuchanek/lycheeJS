@@ -1,0 +1,96 @@
+{
+	"map": {
+		"dirt-house": [
+			{
+				"x": 0,
+				"y": 0,
+				"w": 65,
+				"h": 90
+			}
+		],
+		"grass-house": [
+			{
+				"x": 65,
+				"y": 0,
+				"w": 65,
+				"h": 90
+			}
+		],
+		"lava-house": [
+			{
+				"x": 130,
+				"y": 0,
+				"w": 65,
+				"h": 90
+			}
+		],
+		"rock-house": [
+			{
+				"x": 0,
+				"y": 90,
+				"w": 65,
+				"h": 90
+			}
+		],
+		"sand-house": [
+			{
+				"x": 65,
+				"y": 90,
+				"w": 65,
+				"h": 90
+			}
+		],
+		"snow-house": [
+			{
+				"x": 130,
+				"y": 90,
+				"w": 65,
+				"h": 90
+			}
+		],
+		"stone-house": [
+			{
+				"x": 0,
+				"y": 180,
+				"w": 65,
+				"h": 90
+			}
+		],
+		"water-house": [
+			{
+				"x": 65,
+				"y": 180,
+				"w": 65,
+				"h": 90
+			}
+		]
+	},
+	"states": {
+		"dirt-house": {
+			"animation": false
+		},
+		"grass-house": {
+			"animation": false
+		},
+		"lava-house": {
+			"animation": false
+		},
+		"rock-house": {
+			"animation": false
+		},
+		"sand-house": {
+			"animation": false
+		},
+		"snow-house": {
+			"animation": false
+		},
+		"stone-house": {
+			"animation": false
+		},
+		"water-house": {
+			"animation": false
+		}
+	},
+	"width": 65,
+	"height": 90
+}
