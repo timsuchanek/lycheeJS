@@ -37,8 +37,19 @@
 			}
 		},
 		"ui": {
-			"constructor": "lychee.ui.Layer",
-			"arguments": [{}]
+			"constructor": "game.ui.Layer",
+			"arguments": [{}],
+			"blob": {
+				"entities": [{
+					"constructor": "game.ui.Cursor",
+					"arguments": [{
+						"state": "active"
+					}]
+				}],
+				"map": {
+					"cursor": 0
+				}
+			}
 		}
 	}
 }

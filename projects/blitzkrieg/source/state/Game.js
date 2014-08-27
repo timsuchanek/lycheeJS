@@ -1,11 +1,11 @@
 
 lychee.define('game.state.Game').requires([
-	'lychee.effect.Alpha',
-	'lychee.effect.Color',
+	'lychee.effect.Offset',
 	'lychee.effect.Shake',
 	'lychee.game.Background',
 	'lychee.game.Layer',
-	'lychee.ui.Layer',
+	'game.ui.Cursor',
+	'game.ui.Layer',
 	'game.entity.Terrain',
 	'game.entity.lycheeJS'
 ]).includes([
@@ -28,8 +28,24 @@ lychee.define('game.state.Game').requires([
 	 * HELPERS
 	 */
 
-	var _tilew = 65;
-	var _tileh = 90;
+	var _tilew = 0;
+	var _tileh = 0;
+	var _tiled = 0;
+
+	(function() {
+
+		var entity = new game.entity.Terrain({
+			state: 'grass-free'
+		});
+
+		_tilew = entity.width;
+		_tileh = entity.height;
+
+		// _tiled = _tileh - 41; // This is correct
+		_tiled = _tileh - 36; // This looks cooler
+
+	})();
+
 
 	var _deserialize_level = function(data) {
 
@@ -47,12 +63,12 @@ lychee.define('game.state.Game').requires([
 
 			if (typeof data.width === 'number') {
 				level.width = data.width;
-				offsetx     = -1/2 * level.width * _tilew;
+				offsetx     = -1/2 * level.width * _tilew + _tilew / 4;
 			}
 
 			if (typeof data.height === 'number') {
 				level.height = data.height;
-				offsety      = -1/2 * level.height * _tileh;
+				offsety      = -1/2 * level.height * _tileh + _tileh;
 			}
 
 
@@ -64,7 +80,7 @@ lychee.define('game.state.Game').requires([
 
 						var type = data.terrain[y][x];
 						var posx = Math.round(offsetx + x * _tilew);
-						var posy = Math.round(offsety + y * (_tileh * 8/14));
+						var posy = Math.round(offsety + y * _tiled);
 
 						if (y % 2 === 1) {
 							posx += Math.round(_tilew / 2);
@@ -99,22 +115,35 @@ lychee.define('game.state.Game').requires([
 
 	var _process_swipe = function(id, state, position, delta, swipe) {
 
-		var layer = this.queryLayer('game', 'terrain');
+		var layer  = this.queryLayer('game', 'terrain');
+		var locked = this.__locked;
 
-		if (state === 'start') {
+		if (locked === false && state === 'end') {
 
-			this.__drag.x = layer.offset.x;
-			this.__drag.y = layer.offset.y;
+			var ox = layer.offset.x;
+			var oy = layer.offset.y;
 
-		} else if (state === 'move') {
+			layer.addEffect(new lychee.effect.Offset({
+				type:     lychee.effect.Offset.TYPE.easeout,
+				duration: 500,
+				offset:   {
+					x: ox + swipe.x
+				}
+			}));
 
-			layer.offset.x = this.__drag.x + swipe.x;
-			layer.offset.y = this.__drag.y + swipe.y;
+			layer.addEffect(new lychee.effect.Offset({
+				type:     lychee.effect.Offset.TYPE.easeout,
+				duration: 500,
+				offset:   {
+					y: oy + swipe.y
+				}
+			}));
 
-		} else if (state === 'end') {
+			this.__locked = true;
 
-			this.__drag.x = 0;
-			this.__drag.y = 0;
+			this.loop.setTimeout(500, function() {
+				this.__locked = false;
+			}, this);
 
 		}
 
@@ -131,7 +160,7 @@ lychee.define('game.state.Game').requires([
 		lychee.game.State.call(this, main);
 
 
-		this.__drag = { x: 0, y: 0 };
+		this.__locked = false;
 
 
 		this.deserialize(_blob);
@@ -196,18 +225,19 @@ lychee.define('game.state.Game').requires([
 
 				var terrain = this.queryLayer('game', 'terrain');
 				if (terrain !== null) {
-					terrain.width  = level.width  * _tilew;
-					terrain.height = level.height * _tileh;
+					terrain.width    = level.width  * _tilew;
+					terrain.height   = level.height * _tileh;
+					terrain.offset.y = _tileh;
 				}
 
 
-				terrain.offset.x = terrain.width  / 2;
-				terrain.offset.y = terrain.height / 2;
-
+				terrain.setReshape(true);
 
 				for (var t = 0, tl = level.terrain.length; t < tl; t++) {
 					terrain.addEntity(level.terrain[t]);
 				}
+
+				terrain.setReshape(false);
 
 			}
 

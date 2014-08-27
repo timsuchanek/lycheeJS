@@ -112,6 +112,7 @@
 			"effect": {
 				"Alpha":    [ "js" ],
 				"Color":    [ "js" ],
+				"Offset":   [ "js" ],
 				"Position": [ "js" ],
 				"Radius":   [ "js" ],
 				"Shake":    [ "js" ],

@@ -49,6 +49,11 @@
 				"Menu": [ "js", "json", "headline.fnt", "normal.fnt" ]
 			},
 
+			"ui": {
+				"Cursor": [ "js", "json", "png" ],
+				"Layer":  [ "js" ]
+			},
+
 			"Main": [ "js" ]
 
 		}
