@@ -59,9 +59,6 @@ lychee.define('game.net.client.Highscore').requires([
 		this.bind('sync',      _on_sync,      this);
 		this.bind('multicast', _on_multicast, this);
 
-
-window._SERVICE = this;
-
 	};
 
 

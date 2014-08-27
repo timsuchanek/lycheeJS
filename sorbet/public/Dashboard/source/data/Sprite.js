@@ -87,7 +87,7 @@ lychee.define('dashboard.data.Sprite').exports(function(lychee, dashboard, globa
 
 		for (var f = 0, fl = files.length; f < fl; f++) {
 
-			var state   = files[f].name.split('_')[0].toLowerCase();
+			var state   = files[f].name.toLowerCase().split('_')[0].split('.')[0];
 			var bufferw = files[f].texture.buffer.width;
 			var bufferh = files[f].texture.buffer.height;
 			var offsetx = 0;
@@ -193,7 +193,7 @@ lychee.define('dashboard.data.Sprite').exports(function(lychee, dashboard, globa
 
 			for (f = 0, fl = files.length; f < fl; f++) {
 
-				var state = files[f].name.split('_')[0].toLowerCase();
+				var state = files[f].name.toLowerCase().split('_')[0].split('.')[0];
 
 				if (states[state] === undefined) {
 

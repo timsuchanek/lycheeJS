@@ -78,15 +78,18 @@ lychee.define('lychee.ui.Layer').includes([
 		this.offset   = { x: 0, y: 0 };
 		this.visible  = true;
 
-		this.__map    = {};
+		this.__map     = {};
+		this.__reshape = true;
 
 
 		this.setEntities(settings.entities);
 		this.setOffset(settings.offset);
+		this.setReshape(settings.reshape);
 		this.setVisible(settings.visible);
 
 		delete settings.entities;
 		delete settings.offset;
+		delete settings.reshape;
 		delete settings.visible;
 
 
@@ -171,7 +174,8 @@ lychee.define('lychee.ui.Layer').includes([
 
 			}
 
-			if (this.visible !== true)   settings.visible  = this.visible;
+			if (this.__reshape !== true) settings.reshape = this.__reshape;
+			if (this.visible !== true)   settings.visible = this.visible;
 
 
 			var entities = [];
@@ -284,37 +288,39 @@ lychee.define('lychee.ui.Layer').includes([
 
 		reshape: function() {
 
-			var hwidth  = this.width  / 2;
-			var hheight = this.height / 2;
+			if (this.__reshape === true) {
+
+				var hwidth  = this.width  / 2;
+				var hheight = this.height / 2;
+
+				for (var e = 0, el = this.entities.length; e < el; e++) {
+
+					var entity = this.entities[e];
+					if (typeof entity.reshape === 'function') {
+						entity.reshape();
+					}
 
 
-			for (var e = 0, el = this.entities.length; e < el; e++) {
+					var boundx = Math.abs(entity.position.x + this.offset.x);
+					var boundy = Math.abs(entity.position.y + this.offset.y);
 
-				var entity = this.entities[e];
-				if (typeof entity.reshape === 'function') {
-					entity.reshape();
+					if (entity.shape === lychee.ui.Entity.SHAPE.circle) {
+						boundx += entity.radius;
+						boundy += entity.radius;
+					} else if (entity.shape === lychee.ui.Entity.SHAPE.rectangle) {
+						boundx += entity.width  / 2;
+						boundy += entity.height / 2;
+					}
+
+					hwidth  = Math.max(hwidth,  boundx);
+					hheight = Math.max(hheight, boundy);
+
 				}
 
-
-				var boundx = Math.abs(entity.position.x + this.offset.x);
-				var boundy = Math.abs(entity.position.y + this.offset.y);
-
-				if (entity.shape === lychee.ui.Entity.SHAPE.circle) {
-					boundx += entity.radius;
-					boundy += entity.radius;
-				} else if (entity.shape === lychee.ui.Entity.SHAPE.rectangle) {
-					boundx += entity.width  / 2;
-					boundy += entity.height / 2;
-				}
-
-				hwidth  = Math.max(hwidth,  boundx);
-				hheight = Math.max(hheight, boundy);
+				this.width  = hwidth  * 2;
+				this.height = hheight * 2;
 
 			}
-
-
-			this.width  = hwidth  * 2;
-			this.height = hheight * 2;
 
 		},
 
@@ -468,6 +474,21 @@ lychee.define('lychee.ui.Layer').includes([
 				this.offset.y = typeof offset.y === 'number' ? offset.y : this.offset.y;
 
 				this.reshape();
+
+				return true;
+
+			}
+
+
+			return false;
+
+		},
+
+		setReshape: function(reshape) {
+
+			if (reshape === true || reshape === false) {
+
+				this.__reshape = reshape;
 
 				return true;
 

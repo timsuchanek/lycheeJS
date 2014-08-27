@@ -9,7 +9,6 @@ back into master, tagged and published.
 ### v0.8.3
 
 - sorbet service compliance (start/stop/restart with PID cache)
-- Sprite Generator for Dashboard
 - Game Boilerplate needs broadcast demo *Touch to create random Highscore*
 - RTS Boilerplate with basic tanks interaction
 

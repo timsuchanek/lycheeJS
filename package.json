@@ -22,9 +22,9 @@
 
 	"scripts": {
 		"postinstall": "./tool/configure.js",
-		"start":       "./tool/Sorbet.js start --profile=localhost",
+		"start":       "./tool/Sorbet.js start --profile=\"./sorbet/profile/localhost.json\"",
 		"stop":        "./tool/Sorbet.js stop",
-		"restart":     "./tool/Sorbet.js restart --profile=localhost"
+		"start":       "./tool/Sorbet.js restart --profile=\"./sorbet/profile/localhost.json\""
 	},
 
 	"bin": {

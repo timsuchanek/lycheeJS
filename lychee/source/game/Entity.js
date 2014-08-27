@@ -96,8 +96,8 @@ lychee.define('lychee.game.Entity').exports(function(lychee, global) {
 
 			if (this.alpha !== 1)                         settings.alpha     = this.alpha;
 			if (this.collision !== Class.COLLISION.none)  settings.collision = this.collision;
-			if (this.shape     !== Class.SHAPE.rectangle) settings.shape     = this.shape;
-			if (this.state     !== _default_state)        settings.state     = this.state;
+			if (this.shape !== Class.SHAPE.rectangle)     settings.shape     = this.shape;
+			if (this.state !== _default_state)            settings.state     = this.state;
 			if (this.__states !== _default_states)        settings.states    = this.__states;
 
 
