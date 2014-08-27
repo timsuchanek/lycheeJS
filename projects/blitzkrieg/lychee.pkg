@@ -1,0 +1,58 @@
+{
+
+	"build": {
+
+		"environments": {
+
+		},
+
+		"files": {
+
+		}
+
+	},
+
+	"source": {
+
+		"environments": {
+
+		},
+
+		"tags": {
+
+		},
+
+		"files": {
+
+			"entity": {
+				"Terrain":  [ "js", "json", "png" ],
+				"lycheeJS": [ "js", "png" ]
+			},
+
+			"net": {
+
+				"client": {
+					"Multiplayer": [ "js" ]
+				},
+
+				"remote": {
+					"Multiplayer": [ "js" ]
+				},
+
+				"Client": [ "js" ],
+				"Server": [ "js" ]
+
+			},
+
+			"state": {
+				"Game": [ "js", "json", "headline.fnt", "normal.fnt", "debug.json" ],
+				"Menu": [ "js", "json", "headline.fnt", "normal.fnt" ]
+			},
+
+			"Main": [ "js" ]
+
+		}
+
+	}
+
+}
