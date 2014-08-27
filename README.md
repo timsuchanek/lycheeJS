@@ -19,14 +19,14 @@ and extract its contents to **~/lycheeJS**.
 
 ### < Important >
 
-The *nodejs* command on Linux is the new NodeJS version (with included npm).
-You should always use that on Linux, because *node* is probably an old NodeJS build.
-Other operating systems may use the *node* command, so you might to replace it there accordingly.
-
 The port range 0-1024 is reserved for root user. To prevent running nodejs as root
 (for exploit and remote shell prevention reasons), you might want to allow nodejs to
 bind to those ports in production to serve port 80 successfully without getting an
 *EACCESS* error.
+
+On Windows, you have to enable Ephermal Ports, so you need to install the Registry Key
+located in *./tool/windows/ActivateEphermalPorts.reg*. It will allow using the ports
+49152-65535 which are required for the dynamic WebSocket peer-to-peer Network Architecture.
 
 ```bash
 
