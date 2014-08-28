@@ -166,13 +166,41 @@ lychee.define('game.state.Game').requires([
 
 
 
+	var _process_touch = function(id, position, delta, swipe) {
+
+		this.loop.setTimeout(200, function() {
+
+			if (this.__swiping === false) {
+
+				var tilex = position.x;
+				var tiley = position.y;
+
+console.log('TOUCH');
+
+console.log('tile', tilex, tiley);
+
+			}
+
+		}, this);
+
+	};
+
 	var _process_swipe = function(id, state, position, delta, swipe) {
 
 		var terrain = this.queryLayer('game', 'terrain');
 		var objects = this.queryLayer('game', 'objects');
-		var locked  = this.__locked;
+		var ui      = this.queryLayer('ui',   'game');
 
-		if (locked === false && state === 'end') {
+		if (this.__scrolling === false && state === 'move') {
+			this.__swiping = true;
+		}
+
+		if (this.__scrolling === false && state === 'end') {
+
+			if (Math.abs(swipe.x) < _tilew && Math.abs(swipe.y) < _tiled) {
+				return;
+			}
+
 
 			var ox = terrain.offset.x;
 			var oy = terrain.offset.y;
@@ -196,11 +224,9 @@ lychee.define('game.state.Game').requires([
 			var by1 = -1/2 * Math.abs(dy);
 			var by2 =  1/2 * Math.abs(dy);
 			if ((dy - _tiled) < 0) {
-console.log('one', by1, by2);
 				by1 -= (_tileh - _tiled) / 2;
 				by2 += _tiled;
 			} else {
-console.log('two');
 				by1 += (_tileh - _tiled) / 2;
 				by2 -= _tiled;
 			}
@@ -233,11 +259,21 @@ console.log('two');
 				}
 			}));
 
+			ui.addEffect(new lychee.effect.Offset({
+				type:     type,
+				duration: 500,
+				offset:   {
+					x: tx2,
+					y: ty2
+				}
+			}));
 
-			this.__locked = true;
+
+			this.__scrolling = true;
 
 			this.loop.setTimeout(500, function() {
-				this.__locked = false;
+				this.__swiping   = false;
+				this.__scrolling = false;
 			}, this);
 
 		}
@@ -255,7 +291,8 @@ console.log('two');
 		lychee.game.State.call(this, main);
 
 
-		this.__locked = false;
+		this.__swiping   = false;
+		this.__scrolling = false;
 
 
 		this.deserialize(_blob);
@@ -333,10 +370,8 @@ console.log('two');
 				var objects = this.queryLayer('game', 'objects');
 				if (objects !== null) {
 
-					if (terrain !== null) {
-						objects.width  = terrain.width;
-						objects.height = terrain.height;
-					}
+					objects.width  = level.layer.width;
+					objects.height = level.layer.height;
 
 					for (var o = 0, ol = level.objects.length; o < ol; o++) {
 						objects.addEntity(level.objects[o]);
@@ -344,6 +379,21 @@ console.log('two');
 
 				}
 
+
+				var ui = this.queryLayer('ui', 'game');
+				if (ui !== null) {
+
+					ui.width  = level.layer.width;
+					ui.height = level.layer.height;
+
+				}
+
+			}
+
+
+			var uilayer = this.queryLayer('ui', 'game');
+			if (uilayer !== null) {
+				uilayer.bind('touch', _process_touch, this);
 			}
 
 
@@ -354,6 +404,12 @@ console.log('two');
 		leave: function() {
 
 			lychee.game.State.prototype.leave.call(this);
+
+
+			var uilayer = this.queryLayer('ui', 'game');
+			if (uilayer !== null) {
+				uilayer.unbind('touch', _process_touch, this);
+			}
 
 
 			this.input.unbind('swipe', _process_swipe, this);
