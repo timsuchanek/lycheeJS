@@ -55,9 +55,15 @@ lychee.define('game.state.Game').requires([
 			var level = {
 				width:   0,
 				height:  0,
+				layer:   {
+					width:  0,
+					height: 0
+				},
 				terrain: [],
 				objects: []
 			};
+
+
 
 
 			var offsetx = 0;
@@ -70,8 +76,13 @@ lychee.define('game.state.Game').requires([
 
 			if (typeof data.height === 'number') {
 				level.height = data.height;
-				offsety      = -1/2 * level.height * _tileh + _tileh;
+				// Note: 3/4 results of half of each tile bottom to next "real" tile bottom
+				offsety      = -1/2 * level.height * _tiled + (_tileh - _tiled) * 3/4;
 			}
+
+
+			level.layer.width  = level.width  * _tilew + (_tilew / 2);
+			level.layer.height = level.height * _tiled + (_tileh - _tiled);
 
 
 			var x, y, posx, posy, type;
@@ -185,9 +196,11 @@ lychee.define('game.state.Game').requires([
 			var by1 = -1/2 * Math.abs(dy);
 			var by2 =  1/2 * Math.abs(dy);
 			if ((dy - _tiled) < 0) {
+console.log('one', by1, by2);
 				by1 -= (_tileh - _tiled) / 2;
 				by2 += _tiled;
 			} else {
+console.log('two');
 				by1 += (_tileh - _tiled) / 2;
 				by2 -= _tiled;
 			}
@@ -308,13 +321,12 @@ lychee.define('game.state.Game').requires([
 				var terrain = this.queryLayer('game', 'terrain');
 				if (terrain !== null) {
 
-					terrain.setReshape(true);
+					terrain.width  = level.layer.width;
+					terrain.height = level.layer.height;
 
 					for (var t = 0, tl = level.terrain.length; t < tl; t++) {
 						terrain.addEntity(level.terrain[t]);
 					}
-
-					terrain.setReshape(false);
 
 				}
 
