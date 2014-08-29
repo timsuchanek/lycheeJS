@@ -1,5 +1,6 @@
 
 lychee.define('game.Main').requires([
+	'game.Logic',
 	'game.net.Client',
 	'game.state.Game',
 	'game.state.Menu'
@@ -76,8 +77,7 @@ lychee.define('game.Main').requires([
 			}
 
 
-// TODO: Game Logic
-//			this.logic = new game.Logic(this);
+			this.logic = new game.Logic(this);
 
 
 			this.setState('game', new game.state.Game(this));

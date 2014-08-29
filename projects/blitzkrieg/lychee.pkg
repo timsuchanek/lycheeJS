@@ -55,7 +55,8 @@
 				"Layer":  [ "js" ]
 			},
 
-			"Main": [ "js" ]
+			"Logic": [ "js" ],
+			"Main":  [ "js" ]
 
 		}
 

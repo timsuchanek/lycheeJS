@@ -48,9 +48,6 @@ lychee.define('game.state.Game').requires([
 	})();
 
 
-console.log(_tilew, _tileh, _tiled);
-
-
 	var _deserialize_level = function(data) {
 
 		if (data instanceof Object) {
@@ -171,49 +168,45 @@ console.log(_tilew, _tileh, _tiled);
 
 	var _process_touch = function(id, position, delta, swipe) {
 
-		this.loop.setTimeout(200, function() {
+		var logic = this.logic;
+		if (logic !== null) {
 
-			if (this.__swiping === false || true) {
+			this.loop.setTimeout(200, function() {
 
-				var layer = this.queryLayer('game', 'objects');
-				if (layer !== null) {
+				if (this.__swiping === false || true) {
 
-					var x = position.x;
-					var y = position.y;
+					var layer = this.queryLayer('game', 'objects');
+					if (layer !== null) {
 
-					x -= -1/2 * (layer.width  -  _tilew / 2);
-					y -= -1/2 * (layer.height - (_tileh - _tiled) * 1/4);
-
-					x += _tilew / 4;
-
-					x /= _tilew;
-					y /= _tiled;
-
-					y |= 0;
-
-					if (y % 2 === 1) {
-						x -= 0.5;
-					}
-
-					x |= 0;
+						var tile = {
+							x: (position.x - (-1/2 * (layer.width  -  _tilew / 2)) + _tilew / 4) / _tilew,
+							y: (position.y - (-1/2 * (layer.height - (_tileh - _tiled) * 1/4)) ) / _tiled
+						};
 
 
-					var entity = layer.getEntity(null, position);
-					if (entity !== null) {
+						tile.y |= 0;
 
-console.log('OBJECT TOUCHED', entity, x, y);
+						if (tile.y % 2 === 1) {
+							tile.x -= 0.5;
+						}
 
-					} else {
+						tile.x |= 0;
 
-console.log('TERRAIN TOUCHED', x, y);
+
+						var entity = layer.getEntity(null, position);
+						if (entity !== null) {
+							logic.trigger('select', [ entity, tile ]);
+						} else {
+							logic.trigger('select', [ entity, tile ]);
+						}
 
 					}
 
 				}
 
-			}
+			}, this);
 
-		}, this);
+		}
 
 	};
 
@@ -245,25 +238,8 @@ console.log('TERRAIN TOUCHED', x, y);
 
 			var bx1 = -1/2 * Math.abs(dx);
 			var bx2 =  1/2 * Math.abs(dx);
-			if (dx < 0) {
-				bx1 -= _tilew / 2;
-				bx2 += _tilew / 2;
-			} else {
-				bx1 += _tilew / 2;
-				bx2 -= _tilew / 2;
-			}
-
-
 			var by1 = -1/2 * Math.abs(dy);
 			var by2 =  1/2 * Math.abs(dy);
-			if ((dy - _tiled) < 0) {
-				by1 -= (_tileh - _tiled) / 2;
-				by2 += _tiled;
-			} else {
-				by1 += (_tileh - _tiled) / 2;
-				by2 -= _tiled;
-			}
-
 			var tx2 = Math.min(Math.max(tx, bx1), bx2);
 			var ty2 = Math.min(Math.max(ty, by1), by2);
 
@@ -332,25 +308,6 @@ console.log('TERRAIN TOUCHED', x, y);
 
 		this.deserialize(_blob);
 		this.reshape();
-
-
-// TODO: This has to be integrated with game logic
-
-/*
-this.bind('select', function(tile, entity) {
-
-	var x = tile.x;
-	var y = tile.y;
-
-
-	if (entity === null) {
-		console.log('EMPTY TILE at ', x, y);
-	} else {
-		console.log('ENTITY at ', x, y, entity);
-	}
-
-}, this);
-*/
 
 	};
 
