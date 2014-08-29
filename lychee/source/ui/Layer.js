@@ -35,12 +35,10 @@ lychee.define('lychee.ui.Layer').includes([
 		}, delta ];
 
 
-		for (var e = this.entities.length - 1; e >= 0; e--) {
+		var entity = this.getEntity(null, args[1]);
+		if (entity !== null) {
 
-			var entity = this.entities[e];
-			if (entity.visible === false) continue;
-
-			if (typeof entity.trigger === 'function' && entity.isAtPosition(args[1]) === true) {
+			if (typeof entity.trigger === 'function') {
 
 				args[1].x -= entity.position.x;
 				args[1].y -= entity.position.y;
@@ -48,10 +46,8 @@ lychee.define('lychee.ui.Layer').includes([
 				var result = entity.trigger('touch', args);
 				if (result === true) {
 					triggered = entity;
-					break;
 				} else if (result !== false) {
 					triggered = result;
-					break;
 				}
 
 			}
@@ -383,17 +379,48 @@ lychee.define('lychee.ui.Layer').includes([
 
 		},
 
-		getEntity: function(id) {
+		getEntity: function(id, position) {
 
-			id = typeof id === 'string' ? id : null;
+			id        = typeof id === 'string'    ? id       : null;
+			position = position instanceof Object ? position : null;
 
 
-			if (id !== null && this.__map[id] !== undefined) {
-				return this.__map[id];
+			var found = null;
+
+
+			if (id !== null) {
+
+				if (this.__map[id] !== undefined) {
+					found = this.__map[id];
+				}
+
+			} else if (position !== null) {
+
+				if (typeof position.x === 'number' && typeof position.y === 'number') {
+
+					var pos = {
+						x: position.x - this.offset.x,
+						y: position.y - this.offset.y
+					};
+
+					for (var e = this.entities.length - 1; e >= 0; e--) {
+
+						var entity = this.entities[e];
+						if (entity.visible === false) continue;
+
+						if (entity.isAtPosition(pos) === true) {
+							found = entity;
+							break;
+						}
+
+					}
+
+				}
+
 			}
 
 
-			return null;
+			return found;
 
 		},
 

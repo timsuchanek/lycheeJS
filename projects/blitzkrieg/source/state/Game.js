@@ -48,6 +48,9 @@ lychee.define('game.state.Game').requires([
 	})();
 
 
+console.log(_tilew, _tileh, _tiled);
+
+
 	var _deserialize_level = function(data) {
 
 		if (data instanceof Object) {
@@ -170,14 +173,43 @@ lychee.define('game.state.Game').requires([
 
 		this.loop.setTimeout(200, function() {
 
-			if (this.__swiping === false) {
+			if (this.__swiping === false || true) {
 
-				var tilex = position.x;
-				var tiley = position.y;
+				var layer = this.queryLayer('game', 'objects');
+				if (layer !== null) {
 
-console.log('TOUCH');
+					var x = position.x;
+					var y = position.y;
 
-console.log('tile', tilex, tiley);
+					x -= -1/2 * (layer.width  -  _tilew / 2);
+					y -= -1/2 * (layer.height - (_tileh - _tiled) * 1/4);
+
+					x += _tilew / 4;
+
+					x /= _tilew;
+					y /= _tiled;
+
+					y |= 0;
+
+					if (y % 2 === 1) {
+						x -= 0.5;
+					}
+
+					x |= 0;
+
+
+					var entity = layer.getEntity(null, position);
+					if (entity !== null) {
+
+console.log('OBJECT TOUCHED', entity, x, y);
+
+					} else {
+
+console.log('TERRAIN TOUCHED', x, y);
+
+					}
+
+				}
 
 			}
 
@@ -198,6 +230,7 @@ console.log('tile', tilex, tiley);
 		if (this.__scrolling === false && state === 'end') {
 
 			if (Math.abs(swipe.x) < _tilew && Math.abs(swipe.y) < _tiled) {
+				this.__swiping = false;
 				return;
 			}
 
@@ -291,12 +324,33 @@ console.log('tile', tilex, tiley);
 		lychee.game.State.call(this, main);
 
 
+		this.logic = main.logic || null;
+
 		this.__swiping   = false;
 		this.__scrolling = false;
 
 
 		this.deserialize(_blob);
 		this.reshape();
+
+
+// TODO: This has to be integrated with game logic
+
+/*
+this.bind('select', function(tile, entity) {
+
+	var x = tile.x;
+	var y = tile.y;
+
+
+	if (entity === null) {
+		console.log('EMPTY TILE at ', x, y);
+	} else {
+		console.log('ENTITY at ', x, y, entity);
+	}
+
+}, this);
+*/
 
 	};
 

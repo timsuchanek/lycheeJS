@@ -195,6 +195,10 @@ lychee.define('lychee.game.Layer').requires([
 
 			if (lychee.debug === true) {
 
+				ox = position.x + offsetX;
+				oy = position.y + offsetY;
+
+
 				var hwidth   = this.width  / 2;
 				var hheight  = this.height / 2;
 
@@ -378,17 +382,48 @@ lychee.define('lychee.game.Layer').requires([
 
 		},
 
-		getEntity: function(id) {
+		getEntity: function(id, position) {
 
-			id = typeof id === 'string' ? id : null;
+			id        = typeof id === 'string'    ? id       : null;
+			position = position instanceof Object ? position : null;
 
 
-			if (id !== null && this.__map[id] !== undefined) {
-				return this.__map[id];
+			var found = null;
+
+
+			if (id !== null) {
+
+				if (this.__map[id] !== undefined) {
+					found = this.__map[id];
+				}
+
+			} else if (position !== null) {
+
+				if (typeof position.x === 'number' && typeof position.y === 'number') {
+
+					var pos = {
+						x: position.x - this.offset.x,
+						y: position.y - this.offset.y
+					};
+
+					for (var e = this.entities.length - 1; e >= 0; e--) {
+
+						var entity = this.entities[e];
+						if (entity.visible === false) continue;
+
+						if (entity.isAtPosition(pos) === true) {
+							found = entity;
+							break;
+						}
+
+					}
+
+				}
+
 			}
 
 
-			return null;
+			return found;
 
 		},
 

@@ -76,6 +76,10 @@ lychee.define('game.Main').requires([
 			}
 
 
+// TODO: Game Logic
+//			this.logic = new game.Logic(this);
+
+
 			this.setState('game', new game.state.Game(this));
 			this.setState('menu', new game.state.Menu(this));
 			this.changeState('game');
