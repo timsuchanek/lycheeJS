@@ -216,6 +216,10 @@ console.log('DESELECT');
 		}, this);
 
 
+		this.bind('blitz', function() {
+console.log('BLITZ');
+		}, this);
+
 		this.bind('attack', function() {
 console.log('ATTACK');
 		}, this);

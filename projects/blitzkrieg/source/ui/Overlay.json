@@ -8,20 +8,24 @@
 				"h": 128
 			}
 		],
-		"bar-red": [
+		"blitz-bar": [
 			{
 				"x": 0,
 				"y": 128,
 				"w": 160,
-				"h": 16
+				"h": 16,
+				"width": 160,
+				"height": 16
 			}
 		],
-		"bar-blue": [
+		"drop-bar": [
 			{
 				"x": 0,
 				"y": 144,
 				"w": 160,
-				"h": 16
+				"h": 16,
+				"width": 160,
+				"height": 16
 			}
 		]
 	},
@@ -29,10 +33,10 @@
 		"background": {
 			"animation": false
 		},
-		"bar-blue": {
+		"blitz-bar": {
 			"animation": false
 		},
-		"bar-red": {
+		"drop-bar": {
 			"animation": false
 		}
 	}

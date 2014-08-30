@@ -7,7 +7,7 @@
 				"entities": [{
 					"constructor": "lychee.game.Background",
 					"arguments": [{
-						"color": "#000000"
+						"color": "#eee7cd"
 					}]
 				}],
 				"map": {
@@ -63,7 +63,7 @@
 							"arguments": [{
 								"state": "attack-disabled",
 								"position": {
-									"y": -32
+									"y": 0
 								}
 							}]
 						}, {
@@ -71,7 +71,7 @@
 							"arguments": [{
 								"state": "move-disabled",
 								"position": {
-									"y": -32
+									"y": 0
 								}
 							}]
 						}, {
@@ -79,7 +79,7 @@
 							"arguments": [{
 								"state": "drop",
 								"position": {
-									"y": 32
+									"y": 0
 								}
 							}]
 						}, {
@@ -87,7 +87,7 @@
 							"arguments": [{
 								"state": "deselect",
 								"position": {
-									"y": 32
+									"y": 0
 								}
 							}]
 

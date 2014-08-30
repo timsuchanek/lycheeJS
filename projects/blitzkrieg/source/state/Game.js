@@ -28,15 +28,6 @@ lychee.define('game.state.Game').requires([
 	 * HELPERS
 	 */
 
-	var _process_action = function(action) {
-
-		var logic = this.logic;
-		if (logic !== null) {
-			logic.trigger(action, [ ]);
-		}
-
-	};
-
 	var _process_touch = function(id, position, delta, swipe) {
 
 		this.loop.setTimeout(200, function() {
@@ -188,6 +179,10 @@ lychee.define('game.state.Game').requires([
 				var height = renderer.height;
 
 
+				entity = this.getLayer('background');
+				entity.width  = width;
+				entity.height = height;
+
 				entity = this.queryLayer('background', 'background');
 				entity.width  = width;
 				entity.height = height;
@@ -228,12 +223,6 @@ lychee.define('game.state.Game').requires([
 			lychee.game.State.prototype.enter.call(this);
 
 
-			var entity = null;
-
-			entity = this.queryLayer('background', 'background');
-			entity.setColor('#000000');
-
-
 			var logic = this.logic;
 			if (logic !== null) {
 
@@ -243,6 +232,7 @@ lychee.define('game.state.Game').requires([
 					logic.enter(this, level);
 
 
+
 					var ui_game = this.queryLayer('ui', 'game');
 					if (ui_game !== null) {
 						ui_game.width  = level.width;
@@ -250,16 +240,22 @@ lychee.define('game.state.Game').requires([
 						ui_game.bind('touch', _process_touch, this);
 					}
 
-
 					var ui_overlay = this.queryLayer('ui', 'overlay');
 					if (ui_overlay !== null) {
-						ui_overlay.bind('action', _process_action, this);
+
+						ui_overlay.bind('action', function(action) {
+							this.trigger(action, []);
+						}, logic);
+
+						logic.bind('refresh', function(data) {
+							this.trigger('refresh', [ data ]);
+						}, ui_overlay);
+
 					}
 
 				}
 
 			}
-
 
 
 			this.input.bind('swipe', _process_swipe, this);
@@ -271,10 +267,16 @@ lychee.define('game.state.Game').requires([
 			lychee.game.State.prototype.leave.call(this);
 
 
-			var ui = this.queryLayer('ui', 'game');
-			if (ui !== null) {
-				ui.unbind('touch', _process_touch, this);
+			var ui_game = this.queryLayer('ui', 'game');
+			if (ui_game !== null) {
+				ui_game.unbind('touch', _process_touch, this);
 			}
+
+			var ui_overlay = this.queryLayer('ui', 'overlay');
+			if (ui_overlay !== null) {
+				ui_overlay.bind('action', _process_action, this);
+			}
+
 
 			var logic = this.logic;
 			if (logic !== null) {
