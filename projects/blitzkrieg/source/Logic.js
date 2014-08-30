@@ -9,6 +9,99 @@ lychee.define('game.Logic').requires([
 	 * HELPERS
 	 */
 
+	var _screen_to_tile_position = function(screenposition, offset) {
+
+		offset = offset === true;
+
+
+		var state = this.state;
+		var tile  = this.TILE;
+		if (state !== null && tile !== null) {
+
+			var layer = state.queryLayer('game', 'objects');
+			if (layer !== null) {
+
+				var tileposition = {
+					x: screenposition.x,
+					y: screenposition.y
+				};
+
+				if (offset === true) {
+					tileposition.x -= layer.offset.x;
+					tileposition.y -= layer.offset.y;
+				}
+
+				tileposition.x -= -1/2 * (layer.width - tile.width / 2) + tile.width / 4;
+				tileposition.y -= -1/2 * (layer.height - (tile.height - tile.offset) * 1/4);
+
+				tileposition.x /= tile.width;
+				tileposition.y /= tile.offset;
+
+				tileposition.y |= 0;
+
+				if (tileposition.y % 2 === 1) {
+					tileposition.x -= 0.5;
+				}
+
+				tileposition.x = Math.round(tileposition.x) | 0;
+
+
+				return tileposition;
+
+			}
+
+		}
+
+
+		return null;
+
+	};
+
+	var _tile_to_screen_position = function(tileposition, offset) {
+
+		offset = offset === true;
+
+
+		var state = this.state;
+		var tile  = this.TILE;
+		if (state !== null && tile !== null) {
+
+			var layer = state.queryLayer('game', 'objects');
+			if (layer !== null) {
+
+				var screenposition = {
+					x: tileposition.x,
+					y: tileposition.y
+				};
+
+				if (screenposition.y % 2 === 1) {
+					screenposition.x += 0.5;
+				}
+
+				screenposition.x *= tile.width;
+				screenposition.y *= tile.offset;
+
+
+				screenposition.x += -1/2 * (layer.width - tile.width / 2) + tile.width / 4;
+				screenposition.y += -1/2 * (layer.height - (tile.height - tile.offset) * 1/4);
+
+				if (offset === true) {
+					screenposition.x += layer.offset.x;
+					screenposition.y += layer.offset.y;
+				}
+
+
+				return screenposition;
+
+			}
+
+		}
+
+
+		return null;
+
+	};
+
 	var _enter = function() {
 
 		var state = this.state;
@@ -17,6 +110,11 @@ lychee.define('game.Logic').requires([
 
 
 		if (state !== null && level !== null) {
+
+			if (state.main !== null) {
+				this.TILE = state.main.TILE;
+			}
+
 
 			layer = state.queryLayer('game', 'terrain');
 
@@ -50,6 +148,12 @@ lychee.define('game.Logic').requires([
 				this.__blitzes.push(level.blitzes[b]);
 			}
 
+
+			var cursor = state.queryLayer('ui', 'game > cursor');
+			if (cursor !== null) {
+				this.__cursor = cursor;
+			}
+
 		}
 
 	};
@@ -65,10 +169,13 @@ lychee.define('game.Logic').requires([
 		var settings = lychee.extend({}, data);
 
 
+		this.TILE  = null;
+
 		this.state = null;
 		this.level = null;
 
 		this.__blitzes = [];
+		this.__cursor  = null;
 
 
 		lychee.event.Emitter.call(this);
@@ -81,11 +188,16 @@ lychee.define('game.Logic').requires([
 		 * INITIALIZATION
 		 */
 
-		this.bind('select', function(entity, position) {
+		this.bind('select', function(entity, tileposition) {
+
+			var screenposition = this.toScreenPosition(tileposition, false);
 
 // TODO: game.entity.Tank, game.entity.Tower
 
-console.log('SELECT', entity, position);
+			var cursor = this.__cursor;
+			if (cursor !== null) {
+				cursor.setPosition(screenposition);
+			}
 
 		}, this);
 
@@ -99,6 +211,7 @@ console.log('SELECT', entity, position);
 		 */
 
 		update: function(clock, delta) {
+
 		},
 
 		enter: function(state, level) {
@@ -127,6 +240,20 @@ console.log('SELECT', entity, position);
 
 // TODO: leave() should cleanup all layers in State
 
+		},
+
+
+
+		/*
+		 * CUSTOM API
+		 */
+
+		toTilePosition: function(position, offset) {
+			return _screen_to_tile_position.call(this, position, offset);
+		},
+
+		toScreenPosition: function(position, offset) {
+			return _tile_to_screen_position.call(this, position, offset);
 		}
 
 	};

@@ -29,46 +29,25 @@ lychee.define('game.state.Game').requires([
 
 	var _process_touch = function(id, position, delta, swipe) {
 
-		var logic = this.logic;
-		if (logic !== null) {
+		this.loop.setTimeout(200, function() {
 
-			this.loop.setTimeout(200, function() {
+			if (this.__swiping === false) {
 
-				if (this.__swiping === false || true) {
+				var logic = this.logic;
+				var layer = this.queryLayer('game', 'objects');
+				if (logic !== null && layer !== null) {
 
-					var layer = this.queryLayer('game', 'objects');
-					if (layer !== null) {
+					var tileposition   = logic.toTilePosition(position, true);
+					var screenposition = logic.toScreenPosition(tileposition, false);
+					var entity         = layer.getEntity(null, screenposition);
 
-						var tile = this.main.TILE;
-						var tileposition = {
-							x: (position.x - (-1/2 * (layer.width  -  tile.width / 2)) + tile.width / 4) / tile.width,
-							y: (position.y - (-1/2 * (layer.height - (tile.height - tile.offset) * 1/4)) ) / tile.offset
-						};
-
-
-						tileposition.y |= 0;
-
-						if (tileposition.y % 2 === 1) {
-							tileposition.x -= 0.5;
-						}
-
-						tileposition.x |= 0;
-
-
-						var entity = layer.getEntity(null, position);
-						if (entity !== null) {
-							logic.trigger('select', [ entity, tileposition ]);
-						} else {
-							logic.trigger('select', [ entity, tileposition ]);
-						}
-
-					}
+					logic.trigger('select', [ entity, tileposition ]);
 
 				}
 
-			}, this);
+			}
 
-		}
+		}, this);
 
 	};
 
