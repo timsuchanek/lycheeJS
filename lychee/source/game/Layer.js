@@ -401,17 +401,10 @@ lychee.define('lychee.game.Layer').requires([
 
 				if (typeof position.x === 'number' && typeof position.y === 'number') {
 
-					var pos = {
-						x: position.x - this.offset.x,
-						y: position.y - this.offset.y
-					};
-
 					for (var e = this.entities.length - 1; e >= 0; e--) {
 
 						var entity = this.entities[e];
-						if (entity.visible === false) continue;
-
-						if (entity.isAtPosition(pos) === true) {
+						if (entity.isAtPosition(position) === true) {
 							found = entity;
 							break;
 						}
