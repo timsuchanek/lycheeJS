@@ -23,7 +23,8 @@ lychee.define('game.Logic').requires([
 
 				var tileposition = {
 					x: screenposition.x,
-					y: screenposition.y
+					y: screenposition.y,
+					z: 0
 				};
 
 				if (offset === true) {
@@ -88,6 +89,11 @@ lychee.define('game.Logic').requires([
 				if (offset === true) {
 					screenposition.x += layer.offset.x;
 					screenposition.y += layer.offset.y;
+				}
+
+
+				if (tileposition.z !== 0) {
+					screenposition.y -= tileposition.z * (tile.height - tile.offset);
 				}
 
 
@@ -190,14 +196,30 @@ lychee.define('game.Logic').requires([
 
 		this.bind('select', function(entity, tileposition) {
 
-			var screenposition = this.toScreenPosition(tileposition, false);
+console.log('SELECT', entity, tileposition);
 
 // TODO: Selection of Entity
 
 			var cursor = this.__cursor;
 			if (cursor !== null) {
+
+				var cursorposition = {
+					x: tileposition.x,
+					y: tileposition.y,
+					z: tileposition.z
+				};
+
+
+				if (entity !== null) {
+					cursor.setState('active');
+					cursorposition.z = 1;
+				} else {
+					cursor.setState('default');
+				}
+
 				cursor.setVisible(true);
-				cursor.setPosition(screenposition);
+				cursor.setPosition(this.toScreenPosition(cursorposition));
+
 			}
 
 		}, this);
