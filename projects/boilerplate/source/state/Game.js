@@ -140,6 +140,7 @@ lychee.define('game.state.Game').requires([
 				}
 
 			}, this);
+
 			this.emitter.bind('destroy', function(entity) {
 
 				var layer = this.getLayer('background');

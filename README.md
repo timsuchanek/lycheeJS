@@ -24,10 +24,6 @@ The port range 0-1024 is reserved for root user. To prevent running nodejs as ro
 bind to those ports in production to serve port 80 successfully without getting an
 *EACCESS* error.
 
-On Windows, you have to enable Ephermal Ports, so you need to install the Registry Key
-located in *./tool/windows/ActivateEphermalPorts.reg*. It will allow using the ports
-49152-65535 which are required for the dynamic WebSocket peer-to-peer Network Architecture.
-
 ```bash
 
 # DO NOT EXECUTE THIS IF YOU DON'T KNOW WHAT IT DOES. READ ABOVE
@@ -38,6 +34,10 @@ user@box:~$ sudo setcap cap_net_bind_service=+ep /usr/bin/nodejs
 user@box:~$ sudo getcap /usr/bin/nodejs
 /usr/bin/nodejs = cap_net_bind_service+ep
 ```
+
+On Windows, you have to enable Ephermal Ports, so you need to install the Registry Key
+located in *./tool/windows/ActivateEphermalPorts.reg*. It will allow using the ports
+49152-65535 which are required for the dynamic WebSocket peer-to-peer Network Architecture.
 
 ### < / Important >
 
