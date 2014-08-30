@@ -34,15 +34,19 @@ lychee.define('game.state.Game').requires([
 
 			if (this.__swiping === false) {
 
-				var logic = this.logic;
-				var layer = this.queryLayer('game', 'objects');
+				var logic   = this.logic;
+				var layer   = this.queryLayer('game', 'objects');
+				var overlay = this.queryLayer('ui', 'overlay');
+
 				if (logic !== null && layer !== null) {
 
 					var tileposition   = logic.toTilePosition(position, true);
 					var screenposition = logic.toScreenPosition(tileposition, false);
 					var entity         = layer.getEntity(null, screenposition);
 
-					logic.trigger('select', [ entity, tileposition ]);
+
+					logic.trigger('select',   [ entity, tileposition ]);
+					overlay.trigger('select', [ entity, tileposition ]);
 
 				}
 
@@ -198,18 +202,6 @@ lychee.define('game.state.Game').requires([
 				entity.reshape();
 
 			}
-
-		},
-
-		render: function(clock, delta) {
-
-			lychee.game.State.prototype.render.call(this, clock, delta);
-
-		},
-
-		update: function(clock, delta) {
-
-			lychee.game.State.prototype.update.call(this, clock, delta);
 
 		},
 

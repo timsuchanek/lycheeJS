@@ -77,9 +77,51 @@ lychee.define('game.ui.Overlay').includes([
 			this.__drop.duration  = drop;
 			this.__drop.ready     = false;
 
-			var entity = this.getEntity('drop');
+
+			var button = null;
+
+			button = this.getEntity('drop');
+			button.setState('drop-disabled');
+
+		}, this);
+
+		this.bind('select', function(entity, tileposition) {
+
+			var button    = null;
+			var dropready = this.__drop.ready;
+
+
 			if (entity !== null) {
-				entity.setState('drop-disabled');
+
+				if (entity.can('attack') === true) {
+					button = this.getEntity('attack');
+					button.setState('attack');
+				}
+
+				if (entity.can('move') === true) {
+					button = this.getEntity('move');
+					button.setState('move');
+				}
+
+				if (dropready === true) {
+					button = this.getEntity('drop');
+					button.setState('drop-disabled');
+				}
+
+			} else {
+
+				button = this.getEntity('attack');
+				button.setState('attack-disabled');
+
+				button = this.getEntity('move');
+				button.setState('move-disabled');
+
+
+				if (dropready === true) {
+					button = this.getEntity('drop');
+					button.setState('drop');
+				}
+
 			}
 
 		}, this);

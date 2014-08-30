@@ -41,6 +41,10 @@ lychee.define('game.entity.Object').includes([
 
 	Class.prototype = {
 
+		can: function(action) {
+			return false;
+		}
+
 	};
 
 
