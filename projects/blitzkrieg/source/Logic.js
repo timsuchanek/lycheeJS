@@ -70,6 +70,9 @@ lychee.define('game.Logic').requires([
 			var layer = state.queryLayer('game', 'objects');
 			if (layer !== null) {
 
+				tileposition.z = typeof tileposition.z === 'number' ? (tileposition.z | 0) : 0;
+
+
 				var screenposition = {
 					x: tileposition.x,
 					y: tileposition.y

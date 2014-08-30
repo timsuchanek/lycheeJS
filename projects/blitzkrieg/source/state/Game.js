@@ -35,14 +35,14 @@ lychee.define('game.state.Game').requires([
 			if (this.__swiping === false) {
 
 				var logic   = this.logic;
-				var layer   = this.queryLayer('game', 'objects');
+				var objects = this.queryLayer('game', 'objects');
 				var overlay = this.queryLayer('ui', 'overlay');
 
-				if (logic !== null && layer !== null) {
+				if (logic !== null && objects !== null) {
 
 					var tileposition   = logic.toTilePosition(position, true);
 					var screenposition = logic.toScreenPosition(tileposition, false);
-					var entity         = layer.getEntity(null, screenposition);
+					var entity         = objects.getEntity(null, screenposition);
 
 
 					logic.trigger('select',   [ entity, tileposition ]);
