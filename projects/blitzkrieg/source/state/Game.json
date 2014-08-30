@@ -47,15 +47,62 @@
 						"entities": [{
 							"constructor": "game.ui.Cursor",
 							"arguments": [{
+								"visible": false
 							}]
 						}],
 						"map": {
 							"cursor": 0
 						}
 					}
+				}, {
+					"constructor": "game.ui.Overlay",
+					"arguments": [{}],
+					"blob": {
+						"entities": [{
+							"constructor": "game.ui.Button",
+							"arguments": [{
+								"state": "attack-disabled",
+								"position": {
+									"y": -32
+								}
+							}]
+						}, {
+							"constructor": "game.ui.Button",
+							"arguments": [{
+								"state": "move-disabled",
+								"position": {
+									"y": -32
+								}
+							}]
+						}, {
+							"constructor": "game.ui.Button",
+							"arguments": [{
+								"state": "drop",
+								"position": {
+									"y": 32
+								}
+							}]
+						}, {
+							"constructor": "game.ui.Button",
+							"arguments": [{
+								"state": "deselect",
+								"position": {
+									"y": 32
+								}
+							}]
+
+						}],
+						"map": {
+							"attack": 0,
+							"move": 1,
+							"drop": 2,
+							"deselect": 3
+						}
+					}
 				}],
 				"map": {
-					"game": 0
+					"game": 0,
+					"overlay": 1
 				}
 			}
 		}

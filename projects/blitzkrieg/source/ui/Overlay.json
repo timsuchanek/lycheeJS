@@ -1,0 +1,39 @@
+{
+	"map": {
+		"background": [
+			{
+				"x": 0,
+				"y": 0,
+				"w": 256,
+				"h": 128
+			}
+		],
+		"bar-red": [
+			{
+				"x": 0,
+				"y": 128,
+				"w": 160,
+				"h": 16
+			}
+		],
+		"bar-blue": [
+			{
+				"x": 0,
+				"y": 144,
+				"w": 160,
+				"h": 16
+			}
+		]
+	},
+	"states": {
+		"background": {
+			"animation": false
+		},
+		"bar-blue": {
+			"animation": false
+		},
+		"bar-red": {
+			"animation": false
+		}
+	}
+}

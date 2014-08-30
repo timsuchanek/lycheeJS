@@ -192,13 +192,40 @@ lychee.define('game.Logic').requires([
 
 			var screenposition = this.toScreenPosition(tileposition, false);
 
-// TODO: game.entity.Tank, game.entity.Tower
+// TODO: Selection of Entity
 
 			var cursor = this.__cursor;
 			if (cursor !== null) {
+				cursor.setVisible(true);
 				cursor.setPosition(screenposition);
 			}
 
+		}, this);
+
+		this.bind('deselect', function() {
+
+console.log('DESELECT');
+
+// TODO: Deselection of Entity
+
+			var cursor = this.__cursor;
+			if (cursor !== null) {
+				cursor.setVisible(false);
+			}
+
+		}, this);
+
+
+		this.bind('attack', function() {
+console.log('ATTACK');
+		}, this);
+
+		this.bind('move', function() {
+console.log('MOVE');
+		}, this);
+
+		this.bind('drop', function() {
+console.log('DROP');
 		}, this);
 
 	};

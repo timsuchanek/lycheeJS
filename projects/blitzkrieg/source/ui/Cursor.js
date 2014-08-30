@@ -12,6 +12,14 @@ lychee.define('game.ui.Cursor').includes([
 		var settings = lychee.extend({}, data);
 
 
+		this.visible = true;
+
+
+		this.setVisible(settings.visible);
+
+		delete settings.visible;
+
+
 		settings.texture = _texture;
 		settings.width   = _config.width;
 		settings.height  = _config.height;
@@ -25,6 +33,30 @@ lychee.define('game.ui.Cursor').includes([
 
 
 	Class.prototype = {
+
+		render: function(renderer, offsetX, offsetY) {
+
+			var visible = this.visible;
+			if (visible === true) {
+				lychee.game.Sprite.prototype.render.call(this, renderer, offsetX, offsetY);
+			}
+
+		},
+
+		setVisible: function(visible) {
+
+			if (visible === true || visible === false) {
+
+				this.visible = visible;
+
+				return true;
+
+			}
+
+
+			return false;
+
+		}
 
 	};
 

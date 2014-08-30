@@ -56,8 +56,9 @@
 			},
 
 			"ui": {
-				"Cursor": [ "js", "json", "png" ],
-				"Layer":  [ "js" ]
+				"Button":  [ "js", "json", "png" ],
+				"Cursor":  [ "js", "json", "png" ],
+				"Overlay": [ "js", "json", "png" ]
 			},
 
 			"Logic": [ "js" ],

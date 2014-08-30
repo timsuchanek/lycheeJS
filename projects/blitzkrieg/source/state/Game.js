@@ -4,8 +4,9 @@ lychee.define('game.state.Game').requires([
 	'lychee.effect.Shake',
 	'lychee.game.Background',
 	'lychee.game.Layer',
+	'game.ui.Button',
 	'game.ui.Cursor',
-	'game.ui.Layer',
+	'game.ui.Overlay',
 	'game.entity.lycheeJS'
 ]).includes([
 	'lychee.game.State'
@@ -26,6 +27,15 @@ lychee.define('game.state.Game').requires([
 	/*
 	 * HELPERS
 	 */
+
+	var _process_action = function(action) {
+
+		var logic = this.logic;
+		if (logic !== null) {
+			logic.trigger(action, [ ]);
+		}
+
+	};
 
 	var _process_touch = function(id, position, delta, swipe) {
 
@@ -182,6 +192,16 @@ lychee.define('game.state.Game').requires([
 				entity.width  = width;
 				entity.height = height;
 
+				entity = this.getLayer('ui');
+				entity.width  = width;
+				entity.height = height;
+
+				entity = this.queryLayer('ui', 'overlay');
+				entity.width      = width;
+				entity.height     = 128;
+				entity.position.y = height / 2 - 64;
+				entity.reshape();
+
 			}
 
 		},
@@ -223,16 +243,23 @@ lychee.define('game.state.Game').requires([
 					logic.enter(this, level);
 
 
-					var ui = this.queryLayer('ui', 'game');
-					if (ui !== null) {
-						ui.width  = level.width;
-						ui.height = level.height;
-						ui.bind('touch', _process_touch, this);
+					var ui_game = this.queryLayer('ui', 'game');
+					if (ui_game !== null) {
+						ui_game.width  = level.width;
+						ui_game.height = level.height;
+						ui_game.bind('touch', _process_touch, this);
+					}
+
+
+					var ui_overlay = this.queryLayer('ui', 'overlay');
+					if (ui_overlay !== null) {
+						ui_overlay.bind('action', _process_action, this);
 					}
 
 				}
 
 			}
+
 
 
 			this.input.bind('swipe', _process_swipe, this);
