@@ -49,6 +49,18 @@ lychee.define('game.entity.Terrain').includes([
 
 	Class.prototype = {
 
+		isFree: function() {
+
+			var state = this.state;
+			if (state.match(/free/) && !state.match(/water|lava/)) {
+				return true;
+			}
+
+
+			return false;
+
+		}
+
 	};
 
 

@@ -31,9 +31,9 @@ lychee.define('game.Main').requires([
 			},
 
 			renderer: {
-				id:     'boilerplate',
-				width:  null,
-				height: null
+				id:         'boilerplate',
+				width:      null,
+				height:     null
 			},
 
 			viewport: {
@@ -44,6 +44,13 @@ lychee.define('game.Main').requires([
 
 
 		lychee.game.Main.call(this, settings);
+
+
+		this.TILE = {
+			width:  65,
+			height: 90,
+			offset: 90 - 36
+		};
 
 	};
 

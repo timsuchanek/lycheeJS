@@ -30,6 +30,11 @@
 				"lycheeJS": [ "js", "png" ]
 			},
 
+			"logic": {
+				"Blitz": [ "js" ],
+				"Level": [ "js" ]
+			},
+
 			"net": {
 
 				"client": {
