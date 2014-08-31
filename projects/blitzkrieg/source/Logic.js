@@ -15,108 +15,6 @@ lychee.define('game.Logic').requires([
 	 * HELPERS
 	 */
 
-	var _screen_to_tile_position = function(screenposition, offset) {
-
-		offset = offset === true;
-
-
-		var state = this.state;
-		var tile  = this.TILE;
-		if (state !== null && tile !== null) {
-
-			var layer = state.queryLayer('game', 'objects');
-			if (layer !== null) {
-
-				var tileposition = {
-					x: screenposition.x,
-					y: screenposition.y,
-					z: 0
-				};
-
-				if (offset === true) {
-					tileposition.x -= layer.offset.x;
-					tileposition.y -= layer.offset.y;
-				}
-
-				tileposition.x -= -1/2 * (layer.width - tile.width / 2) + tile.width / 4;
-				tileposition.y -= -1/2 * (layer.height - (tile.height - tile.offset) * 1/4);
-
-				tileposition.x /= tile.width;
-				tileposition.y /= tile.offset;
-
-				tileposition.y |= 0;
-
-				if (tileposition.y % 2 === 1) {
-					tileposition.x -= 0.5;
-				}
-
-				tileposition.x = Math.round(tileposition.x) | 0;
-
-
-				return tileposition;
-
-			}
-
-		}
-
-
-		return null;
-
-	};
-
-	var _tile_to_screen_position = function(tileposition, offset) {
-
-		offset = offset === true;
-
-
-		var state = this.state;
-		var tile  = this.TILE;
-		if (state !== null && tile !== null) {
-
-			var layer = state.queryLayer('game', 'objects');
-			if (layer !== null) {
-
-				tileposition.z = typeof tileposition.z === 'number' ? (tileposition.z | 0) : 0;
-
-
-				var screenposition = {
-					x: tileposition.x,
-					y: tileposition.y
-				};
-
-				if (screenposition.y % 2 === 1) {
-					screenposition.x += 0.5;
-				}
-
-				screenposition.x *= tile.width;
-				screenposition.y *= tile.offset;
-
-
-				screenposition.x += -1/2 * (layer.width - tile.width / 2) + tile.width / 4;
-				screenposition.y += -1/2 * (layer.height - (tile.height - tile.offset) * 1/4);
-
-				if (offset === true) {
-					screenposition.x += layer.offset.x;
-					screenposition.y += layer.offset.y;
-				}
-
-
-				if (tileposition.z !== 0) {
-					screenposition.y -= tileposition.z * (tile.height - tile.offset);
-				}
-
-
-				return screenposition;
-
-			}
-
-		}
-
-
-		return null;
-
-	};
-
 	var _enter = function() {
 
 		var state = this.state;
@@ -209,23 +107,21 @@ lychee.define('game.Logic').requires([
 
 		this.bind('select', function(entity, tileposition) {
 
-console.log('SELECT', entity, tileposition);
-
-// TODO: Selection of Entity
 
 			var cursor = this.__cursor;
 			if (cursor !== null) {
 
-				var cursorposition = {
+				var screenposition = this.toScreenPosition({
 					x: tileposition.x,
-					y: tileposition.y,
-					z: tileposition.z
-				};
+					y: tileposition.y
+				}, 'sky');
+
+
+console.log('SELECT', tileposition, screenposition);
 
 
 				if (entity !== null) {
 					cursor.setState('active');
-					cursorposition.z = 1;
 				} else {
 					cursor.setState('default');
 				}
@@ -234,17 +130,13 @@ console.log('SELECT', entity, tileposition);
 
 				cursor.addEffect(new lychee.effect.Position({
 					type:     lychee.effect.Position.TYPE.easeout,
-					position: this.toScreenPosition(cursorposition)
+					position: screenposition
 				}));
 
 				cursor.addEffect(new lychee.effect.Lightning({
 					type:     lychee.effect.Lightning.TYPE.bounceeaseout,
 					duration: 500,
-					position: this.toScreenPosition({
-						x: cursorposition.x,
-						y: cursorposition.y,
-						z: 0
-					})
+					position: screenposition
 				}));
 
 			}
@@ -253,7 +145,6 @@ console.log('SELECT', entity, tileposition);
 			this.__focus.entity     = entity;
 			this.__focus.position.x = tileposition.x;
 			this.__focus.position.y = tileposition.y;
-			this.__focus.position.z = 0;
 
 		}, this);
 
@@ -262,7 +153,6 @@ console.log('SELECT', entity, tileposition);
 			this.__focus.entity     = null;
 			this.__focus.position.x = null;
 			this.__focus.position.y = null;
-			this.__focus.position.z = null;
 
 console.log('DESELECT');
 
@@ -300,38 +190,18 @@ console.log('MOVE');
 				&& position.y !== null
 			) {
 
-
 				var terrain = state.queryLayer('game', 'terrain');
 				var objects = state.queryLayer('game', 'objects');
 				if (terrain !== null && objects !== null) {
 
-					var tile   = terrain.getEntity(null, this.toScreenPosition(position));
-					var object = objects.getEntity(null, this.toScreenPosition(position));
+					var tile   = terrain.getEntity(null, this.toScreenPosition(position, 'terrain'));
+					var object = objects.getEntity(null, this.toScreenPosition(position, 'objects'));
 
 					if (
 						   tile !== null
 						&& tile.isFree()
 						&& object === null
 					) {
-
-
-						var shake = {
-							x: Math.random() > 0.5 ? (Math.random() * 30) : (Math.random() * -30),
-							y: Math.random() > 0.5 ? (Math.random() * 30) : (Math.random() * -30)
-						};
-
-						terrain.addEffect(new lychee.effect.Shake({
-							type:     lychee.effect.Shake.TYPE.bounceeaseout,
-							duration: 1000,
-							shake:    shake
-						}));
-
-						objects.addEffect(new lychee.effect.Shake({
-							type:     lychee.effect.Shake.TYPE.bounceeaseout,
-							duration: 1000,
-							shake:    shake
-						}));
-
 
 						var ui = state.getLayer('ui');
 						if (ui !== null) {
@@ -366,7 +236,7 @@ console.log('MOVE');
 							ui.addEffect(new lychee.effect.Shake({
 								type:     lychee.effect.Shake.TYPE.bounceeaseout,
 								duration: 1000,
-								shake:    { y: Math.random() * -30 }
+								shake:    { y: -20 + Math.random() * -30 }
 							}));
 
 						}
@@ -375,11 +245,7 @@ console.log('MOVE');
 						entity   = new game.entity.Tank({
 							alpha:    0.1,
 							color:    'red',
-							position: this.toScreenPosition({
-								x: position.x,
-								y: position.y,
-								z: -1
-							})
+							position: this.toScreenPosition(position, 'objects')
 						});
 
 						entity.addEffect(new lychee.effect.Lightning({
@@ -402,25 +268,37 @@ console.log('MOVE');
 						entity.addEffect(new lychee.effect.Shake({
 							type:     lychee.effect.Shake.TYPE.linear,
 							delay:    200,
-							duration: 200,
+							duration: 500,
 							shake:    { y: 30 }
 						}));
 
 
 						tile.addEffect(new lychee.effect.Shake({
 							type:     lychee.effect.Shake.TYPE.linear,
-							duration: 200,
+							duration: 500,
 							shake:    { y: 20 }
 						}));
 
 
-						var tiles = this.getSurrounding(terrain, position);
-						for (var t = 0, tl = tiles.length; t < tl; t++) {
+						var sterrain = this.getSurrounding(position, 'terrain');
+						for (var st = 0, stl = sterrain.length; st < stl; st++) {
 
-							tiles[t].addEffect(new lychee.effect.Shake({
+							sterrain[st].addEffect(new lychee.effect.Shake({
 								type:     lychee.effect.Shake.TYPE.linear,
-								delay:    150,
-								duration: 200,
+								delay:    300,
+								duration: 500,
+								shake:    { y: 10 }
+							}));
+
+						}
+
+						var sobjects = this.getSurrounding(position, 'objects');
+						for (var so = 0, sol = sobjects.length; so < sol; so++) {
+
+							sobjects[so].addEffect(new lychee.effect.Shake({
+								type:     lychee.effect.Shake.TYPE.linear,
+								delay:    300,
+								duration: 500,
 								shake:    { y: 10 }
 							}));
 
@@ -484,41 +362,45 @@ console.log('MOVE');
 		 * CUSTOM API
 		 */
 
-		getSurrounding: function(layer, position) {
+		getSurrounding: function(position, layerid) {
 
 			var filtered = [];
 			var entity   = null;
 
+			var layer = this.state.queryLayer('game', layerid);
+			if (layer !== null) {
 
-			var coords = [];
-			var x0     = position.x;
-			var y0     = position.y;
-			var x1     = position.x - 1;
-			var y1     = position.y - 1;
-			var x2     = position.x + 1;
-			var y2     = position.y + 1;
-
-
-			coords.push({ x: x1, y: y0 });
-			coords.push({ x: x2, y: y0 });
-			coords.push({ x: x0, y: y1 });
-			coords.push({ x: x0, y: y2 });
+				var coords = [];
+				var x0     = position.x;
+				var y0     = position.y;
+				var x1     = position.x - 1;
+				var y1     = position.y - 1;
+				var x2     = position.x + 1;
+				var y2     = position.y + 1;
 
 
-			if (y0 % 2 === 1) {
-				coords.push({ x: x2, y: y1 });
-				coords.push({ x: x2, y: y2 });
-			} else {
-				coords.push({ x: x1, y: y1 });
-				coords.push({ x: x1, y: y2 });
-			}
+				coords.push({ x: x1, y: y0 });
+				coords.push({ x: x2, y: y0 });
+				coords.push({ x: x0, y: y1 });
+				coords.push({ x: x0, y: y2 });
 
 
-			for (var c = 0, cl = coords.length; c < cl; c++) {
+				if (y0 % 2 === 1) {
+					coords.push({ x: x2, y: y1 });
+					coords.push({ x: x2, y: y2 });
+				} else {
+					coords.push({ x: x1, y: y1 });
+					coords.push({ x: x1, y: y2 });
+				}
 
-				var entity = layer.getEntity(null, this.toScreenPosition(coords[c]));
-				if (entity !== null) {
-					filtered.push(entity);
+
+				for (var c = 0, cl = coords.length; c < cl; c++) {
+
+					var entity = layer.getEntity(null, this.toScreenPosition(coords[c], layerid));
+					if (entity !== null) {
+						filtered.push(entity);
+					}
+
 				}
 
 			}
@@ -528,12 +410,130 @@ console.log('MOVE');
 
 		},
 
-		toTilePosition: function(position, offset) {
-			return _screen_to_tile_position.call(this, position, offset);
+		toScreenPosition: function(position, layerid) {
+
+			layerid = typeof layerid === 'string' ? layerid : 'terrain';
+
+
+			var tile = this.TILE;
+			if (tile !== null) {
+
+				var layer = this.state.queryLayer('game', 'terrain');
+				if (layer !== null) {
+
+					var bb = 0;
+					var z  = 0;
+
+					if (layerid === 'objects') {
+						bb = 64;
+						z  = 1;
+					} else if (layerid === 'sky') {
+						bb = 64;
+						z  = 2;
+					}
+
+
+					var screenposition = {
+						x: position.x,
+						y: position.y
+					};
+
+					if (screenposition.y % 2 === 1) {
+						screenposition.x += 0.5;
+					}
+
+					screenposition.x *= tile.width;
+					screenposition.y *= tile.offset;
+
+					screenposition.x += -1/2 * (layer.width - tile.width / 2) + tile.width / 4;
+					screenposition.y += -1/2 * (layer.height - (tile.height - tile.offset) * 1/4);
+
+
+					if (z !== 0) {
+						screenposition.y -= z * (tile.height - tile.offset);
+					}
+
+					if (bb !== 0) {
+						screenposition.y += bb;
+//						screenposition.y += bb - (tile.height - tile.offset);
+					}
+
+
+					return screenposition;
+
+				}
+
+			}
+
+
+			return null;
+
 		},
 
-		toScreenPosition: function(position, offset) {
-			return _tile_to_screen_position.call(this, position, offset);
+		toTilePosition: function(position, layerid) {
+
+			layerid = typeof layerid === 'string' ? layerid : 'terrain';
+
+
+			var tile  = this.TILE;
+			if (tile !== null) {
+
+				var layer = this.state.queryLayer('game', 'terrain');
+				if (layer !== null) {
+
+					var bb = 0;
+					var z  = 0;
+
+					if (layerid === 'objects') {
+						bb = 64;
+						z  = 1;
+					} else if (layerid === 'sky') {
+						bb = 64;
+						z  = 2;
+					}
+
+
+					var tileposition = {
+						x: position.x,
+						y: position.y,
+						z: z
+					};
+
+
+					if (z !== 0) {
+						tileposition.y += z * (tile.height - tile.offset);
+					}
+
+					if (bb !== 0) {
+						tileposition.y -= bb;
+//						tileposition.y += bb - (tile.height - tile.offset);
+					}
+
+
+					tileposition.x -= -1/2 * (layer.width - tile.width / 2) + tile.width / 4;
+					tileposition.y -= -1/2 * (layer.height - (tile.height - tile.offset) * 1/4);
+
+					tileposition.x /= tile.width;
+					tileposition.y /= tile.offset;
+
+					tileposition.y |= 0;
+
+					if (tileposition.y % 2 === 1) {
+						tileposition.x -= 0.5;
+					}
+
+					tileposition.x = Math.round(tileposition.x) | 0;
+
+
+					return tileposition;
+
+				}
+
+			}
+
+
+			return null;
+
 		}
 
 	};

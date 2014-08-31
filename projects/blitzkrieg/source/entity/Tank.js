@@ -19,6 +19,8 @@ lychee.define('game.entity.Tank').includes([
 		settings.width   = _config.width;
 		settings.height  = _config.height;
 		settings.map     = _config.map;
+		settings.radius  = _config.radius;
+		settings.shape   = _config.shape;
 		settings.states  = _config.states;
 		settings.state   = this.color + '-01';
 
@@ -36,15 +38,13 @@ lychee.define('game.entity.Tank').includes([
 
 	Class.prototype = {
 
-		can: function(action) {
-			return false;
-		},
-
-
-
 		/*
 		 * CUSTOM API
 		 */
+
+		can: function(action) {
+			return false;
+		},
 
 		setColor: function(color) {
 

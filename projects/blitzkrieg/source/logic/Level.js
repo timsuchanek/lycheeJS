@@ -29,6 +29,7 @@ lychee.define('game.logic.Level').requires([
 			for (y = 0; y < data.terrain.length; y++) {
 
 				this.map.terrain[y] = [];
+				this.map.objects[y] = [];
 
 				for (x = 0; x < data.terrain[0].length; x++) {
 
@@ -51,6 +52,7 @@ lychee.define('game.logic.Level').requires([
 							}
 						});
 
+						this.map.objects[y].push(terrain.isFree() ? 0 : 1);
 						this.map.terrain[y].push(terrain);
 						this.terrain.push(terrain);
 

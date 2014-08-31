@@ -27,8 +27,10 @@ lychee.define('game.entity.Object').includes([
 		settings.width   = _config.width;
 		settings.height  = _config.height;
 		settings.map     = _config.map;
+		settings.radius  = _config.radius;
+		settings.shape   = _config.shape;
 		settings.states  = _config.states;
-		settings.state   = _TYPES[settings.type] || 'default';
+		settings.state   = _TYPES[settings.type] || 'dirt-house';
 
 
 		delete settings.type;
@@ -40,6 +42,10 @@ lychee.define('game.entity.Object').includes([
 
 
 	Class.prototype = {
+
+		/*
+		 * CUSTOM API
+		 */
 
 		can: function(action) {
 			return false;

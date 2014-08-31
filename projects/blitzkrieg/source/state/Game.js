@@ -40,9 +40,12 @@ lychee.define('game.state.Game').requires([
 
 				if (logic !== null && objects !== null) {
 
-					var tileposition   = logic.toTilePosition(position, true);
-					var screenposition = logic.toScreenPosition(tileposition, false);
-					var entity         = objects.getEntity(null, screenposition);
+					position.x -= objects.offset.x;
+					position.y -= objects.offset.y;
+
+
+					var tileposition = logic.toTilePosition(position, 'terrain');
+					var entity       = objects.getEntity(null, logic.toScreenPosition(tileposition, 'objects'));
 
 
 					logic.trigger('select',   [ entity, tileposition ]);
