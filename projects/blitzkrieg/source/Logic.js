@@ -26,9 +26,6 @@ lychee.define('game.Logic').requires([
 			game_layer.height = layer.length    * tile.offset + (tile.height - tile.offset);
 
 
-			var offsetx = (tile.width / 4);
-			var offsety = (tile.height - tile.offset);
-
 			for (var y = 0; y < layer.length; y++) {
 
 				for (var x = 0; x < layer[y].length; x++) {
@@ -38,9 +35,6 @@ lychee.define('game.Logic').requires([
 
 						var position = this.toScreenPosition(entity.position, layerid);
 						if (position !== null) {
-
-							position.x += offsetx;
-							position.y += offsety;
 
 							entity.setPosition(position);
 							game_layer.addEntity(entity);
@@ -104,18 +98,13 @@ lychee.define('game.Logic').requires([
 
 		this.bind('select', function(entity, tileposition) {
 
-console.log('SELECT', tileposition);
-
 			var cursor = this.__cursor;
 			if (cursor !== null) {
 
 				var screenposition = this.toScreenPosition({
 					x: tileposition.x,
 					y: tileposition.y
-				}, 'objects');
-
-
-console.log('SELECT', tileposition, screenposition);
+				}, 'sky');
 
 
 				if (entity !== null) {
@@ -252,8 +241,8 @@ console.log('MOVE');
 							position: this.toScreenPosition({
 								x: position.x,
 								y: position.y,
-								z: 20
-							})
+								z: 30
+							}, 'custom')
 						}));
 
 						entity.addEffect(new lychee.effect.Alpha({
@@ -422,12 +411,16 @@ console.log('MOVE');
 					var bb = 0;
 					var z  = 0;
 
-					if (layerid === 'objects') {
+					if (layerid === 'terrain') {
+						z  = 0;
+					} else if (layerid === 'objects') {
 						bb = 64;
 						z  = 1;
 					} else if (layerid === 'sky') {
 						bb = 64;
 						z  = 2;
+					} else {
+						z  = position.z;
 					}
 
 
@@ -444,10 +437,10 @@ console.log('MOVE');
 					screenposition.y *= tile.offset;
 
 					screenposition.x += -1/2 * layer.width;
-//					screenposition.x += tile.width / 4;
+					screenposition.x += tile.width / 2;
 
 					screenposition.y += -1/2 * layer.height;
-					screenposition.y += (tile.height - tile.offset) / 4;
+					screenposition.y += (tile.offset / 2) + (tile.height - tile.offset) / 2;
 
 
 					if (z !== 0) {
@@ -484,7 +477,9 @@ console.log('MOVE');
 					var bb = 0;
 					var z  = 0;
 
-					if (layerid === 'objects') {
+					if (layerid === 'terrain') {
+						z  = 0;
+					} else if (layerid === 'objects') {
 						bb = 64;
 						z  = 1;
 					} else if (layerid === 'sky') {
@@ -509,11 +504,8 @@ console.log('MOVE');
 					}
 
 
-//					tileposition.x -= tile.width / 4;
 					tileposition.x -= -1/2 * layer.width;
-
 					tileposition.y -= -1/2 * layer.height;
-					tileposition.y -=  1/8 * (tile.height - tile.offset);
 
 					tileposition.x /= tile.width;
 					tileposition.y /= tile.offset;
