@@ -1,0 +1,184 @@
+{
+	"map": {
+		"green-01": [
+			{
+				"x": 0,
+				"y": 0,
+				"w": 65,
+				"h": 90
+			}
+		],
+		"green-02": [
+			{
+				"x": 65,
+				"y": 0,
+				"w": 65,
+				"h": 90
+			}
+		],
+		"green-03": [
+			{
+				"x": 130,
+				"y": 0,
+				"w": 65,
+				"h": 90
+			}
+		],
+		"green-04": [
+			{
+				"x": 195,
+				"y": 0,
+				"w": 65,
+				"h": 90
+			}
+		],
+		"green-05": [
+			{
+				"x": 260,
+				"y": 0,
+				"w": 65,
+				"h": 90
+			}
+		],
+		"green-06": [
+			{
+				"x": 325,
+				"y": 0,
+				"w": 65,
+				"h": 90
+			}
+		],
+		"green-07": [
+			{
+				"x": 390,
+				"y": 0,
+				"w": 65,
+				"h": 90
+			}
+		],
+		"green-08": [
+			{
+				"x": 0,
+				"y": 90,
+				"w": 65,
+				"h": 90
+			}
+		],
+		"red-01": [
+			{
+				"x": 65,
+				"y": 90,
+				"w": 65,
+				"h": 90
+			}
+		],
+		"red-02": [
+			{
+				"x": 130,
+				"y": 90,
+				"w": 65,
+				"h": 90
+			}
+		],
+		"red-03": [
+			{
+				"x": 195,
+				"y": 90,
+				"w": 65,
+				"h": 90
+			}
+		],
+		"red-04": [
+			{
+				"x": 260,
+				"y": 90,
+				"w": 65,
+				"h": 90
+			}
+		],
+		"red-05": [
+			{
+				"x": 325,
+				"y": 90,
+				"w": 65,
+				"h": 90
+			}
+		],
+		"red-06": [
+			{
+				"x": 390,
+				"y": 90,
+				"w": 65,
+				"h": 90
+			}
+		],
+		"red-07": [
+			{
+				"x": 0,
+				"y": 180,
+				"w": 65,
+				"h": 90
+			}
+		],
+		"red-08": [
+			{
+				"x": 65,
+				"y": 180,
+				"w": 65,
+				"h": 90
+			}
+		]
+	},
+	"states": {
+		"green-01": {
+			"animation": false
+		},
+		"green-02": {
+			"animation": false
+		},
+		"green-03": {
+			"animation": false
+		},
+		"green-04": {
+			"animation": false
+		},
+		"green-05": {
+			"animation": false
+		},
+		"green-06": {
+			"animation": false
+		},
+		"green-07": {
+			"animation": false
+		},
+		"green-08": {
+			"animation": false
+		},
+		"red-01": {
+			"animation": false
+		},
+		"red-02": {
+			"animation": false
+		},
+		"red-03": {
+			"animation": false
+		},
+		"red-04": {
+			"animation": false
+		},
+		"red-05": {
+			"animation": false
+		},
+		"red-06": {
+			"animation": false
+		},
+		"red-07": {
+			"animation": false
+		},
+		"red-08": {
+			"animation": false
+		}
+	},
+	"width": 65,
+	"height": 90
+}

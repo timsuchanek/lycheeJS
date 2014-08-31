@@ -1,7 +1,9 @@
 
 lychee.define('game.Logic').requires([
+	'lychee.effect.Alpha',
 	'lychee.effect.Lightning',
 	'lychee.effect.Position',
+	'game.entity.Tank',
 	'game.logic.Level'
 ]).includes([
 	'lychee.event.Emitter'
@@ -187,6 +189,10 @@ lychee.define('game.Logic').requires([
 
 		this.__blitzes = [];
 		this.__cursor  = null;
+		this.__focus   = {
+			entity:   null,
+			position: { x: null, y: null }
+		};
 
 
 		lychee.event.Emitter.call(this);
@@ -241,9 +247,20 @@ console.log('SELECT', entity, tileposition);
 
 			}
 
+
+			this.__focus.entity     = entity;
+			this.__focus.position.x = tileposition.x;
+			this.__focus.position.y = tileposition.y;
+			this.__focus.position.z = 0;
+
 		}, this);
 
 		this.bind('deselect', function() {
+
+			this.__focus.entity     = null;
+			this.__focus.position.x = null;
+			this.__focus.position.y = null;
+			this.__focus.position.z = null;
 
 console.log('DESELECT');
 
@@ -270,7 +287,52 @@ console.log('MOVE');
 		}, this);
 
 		this.bind('drop', function() {
-console.log('DROP');
+
+			var state    = this.state;
+			var entity   = this.__focus.entity;
+			var position = this.__focus.position;
+			if (
+				   state !== null
+				&& entity === null
+				&& position.x !== null
+				&& position.y !== null
+			) {
+
+				entity   = new game.entity.Tank({
+					alpha:    0.1,
+					color:    'red',
+					position: this.toScreenPosition({
+						x: position.x,
+						y: position.y,
+						z: -1
+					})
+				});
+
+				entity.addEffect(new lychee.effect.Lightning({
+					type:     lychee.effect.Lightning.TYPE.bounceeaseout,
+					duration: 750,
+					position: this.toScreenPosition({
+						x: position.x,
+						y: position.y,
+						z: 20
+					})
+				}));
+
+				entity.addEffect(new lychee.effect.Alpha({
+					type:     lychee.effect.Alpha.TYPE.easeout,
+					delay:    250,
+					duration: 500,
+					alpha:    1
+				}));
+
+
+				var layer = state.queryLayer('game', 'objects');
+				if (layer !== null) {
+					layer.addEntity(entity);
+				}
+
+			}
+
 		}, this);
 
 	};

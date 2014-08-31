@@ -49,7 +49,7 @@ lychee.define('game.ui.Overlay').includes([
 
 		this.__drop = {
 			start:    null,
-			duration: 60000,
+			duration: 1000,
 			ready:    false,
 			map:      lychee.extend({}, _get_map('drop-bar'))
 		};
@@ -66,7 +66,7 @@ lychee.define('game.ui.Overlay').includes([
 		this.bind('refresh', function(data) {
 
 			var blitz = typeof data.blitz === 'number' ? (data.blitz | 0) : 30000;
-			var drop  = typeof data.drop === 'number'  ? (data.drop  | 0) : 60000;
+			var drop  = typeof data.drop === 'number'  ? (data.drop  | 0) : 30000;
 
 
 			this.__blitz.start    = null;

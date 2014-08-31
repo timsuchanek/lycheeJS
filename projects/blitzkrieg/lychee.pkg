@@ -26,6 +26,7 @@
 
 			"entity": {
 				"Object":   [ "js", "json", "png" ],
+				"Tank":     [ "js", "json", "png" ],
 				"Terrain":  [ "js", "json", "png" ],
 				"lycheeJS": [ "js", "png" ]
 			},
