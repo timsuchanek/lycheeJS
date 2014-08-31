@@ -231,12 +231,18 @@ lychee.define('game.state.Game').requires([
 					logic.enter(this, level);
 
 
+					var game_terrain = this.queryLayer('game', 'terrain');
+					var ui_game      = this.queryLayer('ui', 'game');
 
-					var ui_game = this.queryLayer('ui', 'game');
-					if (ui_game !== null) {
-						ui_game.width  = level.width;
-						ui_game.height = level.height;
+					if (
+						   game_terrain !== null
+						&& ui_game !== null
+					) {
+
+						ui_game.width  = game_terrain.width;
+						ui_game.height = game_terrain.height;
 						ui_game.bind('touch', _process_touch, this);
+
 					}
 
 					var ui_overlay = this.queryLayer('ui', 'overlay');

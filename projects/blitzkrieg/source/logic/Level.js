@@ -1,5 +1,6 @@
 
 lychee.define('game.logic.Level').requires([
+	'game.logic.Blitz',
 	'game.entity.Object',
 	'game.entity.Terrain'
 ]).exports(function(lychee, game, global, attachments) {
@@ -8,95 +9,69 @@ lychee.define('game.logic.Level').requires([
 	 * HELPERS
 	 */
 
-	var _parse = function(data, tile) {
+	var _parse_layer = function(layer, type) {
 
-		var tilewidth  = tile.width;
-		var tileheight = tile.height;
-		var tileoffset = tile.offset;
+		for (var y = 0; y < layer.length; y++) {
 
-		var offsetx = -1/2 * data.width  * tilewidth  + tilewidth / 4;
-		var offsety = -1/2 * data.height * tileoffset + (tileheight - tileoffset) * 3/4;
+			for (var x = 0; x < layer[y].length; x++) {
 
-		this.width  = data.width  * tilewidth  + (tilewidth / 2);
-		this.height = data.height * tileoffset + (tileheight - tileoffset);
+				var value = layer[y][x];
 
 
-		var x, y, posx, posy, type;
+				if (type === 'terrain') {
 
+					this.terrain[y][x] = new game.entity.Terrain({
+						type:     value,
+						position: {
+							x: x,
+							y: y
+						}
+					});
 
-		if (data.terrain instanceof Array) {
-
-			for (y = 0; y < data.terrain.length; y++) {
-
-				this.map.terrain[y] = [];
-				this.map.objects[y] = [];
-
-				for (x = 0; x < data.terrain[0].length; x++) {
-
-					type = data.terrain[y][x];
-					posx = Math.round(offsetx + x * tilewidth);
-					posy = Math.round(offsety + y * tileoffset);
-
-					if (y % 2 === 1) {
-						posx += Math.round(tilewidth / 2);
+					if (this.terrain[y][x].isFree()) {
+						this.bitmap[y][x]  = 0;
+					} else {
+						this.objects[y][x] = this.terrain[y][x];
+						this.bitmap[y][x]  = 2;
 					}
 
+				} else if (type === 'blitzes') {
 
-					if (type > 0) {
+					if (value > 0) {
 
-						var terrain = new game.entity.Terrain({
-							type:     type,
+						this.blitzes[y][x] = new game.logic.Blitz({
+							type:     value,
 							position: {
-								x: posx,
-								y: posy
+								x: x,
+								y: y
 							}
 						});
 
-						this.map.objects[y].push(terrain.isFree() ? 0 : 1);
-						this.map.terrain[y].push(terrain);
-						this.terrain.push(terrain);
+					} else {
+
+						this.blitzes[y][x] = null;
 
 					}
 
-				}
+				} else if (type === 'objects') {
 
-			}
+					if (value > 0) {
 
-		}
-
-
-		if (data.objects instanceof Array) {
-
-			for (y = 0; y < data.objects.length; y++) {
-
-				for (x = 0; x < data.objects[0].length; x++) {
-
-					type = data.objects[y][x];
-					posx = Math.round(offsetx + x * tilewidth);
-					posy = Math.round(offsety + y * tileoffset);
-
-					if (y % 2 === 1) {
-						posx += Math.round(tilewidth / 2);
-					}
-
-
-					if (type > 0) {
-
-						var object = new game.entity.Object({
-							type:     type,
+						this.objects[y][x] = new game.entity.Object({
+							type:     value,
 							position: {
-								x: posx,
-								y: posy
+								x: x,
+								y: y
 							}
 						});
 
-
-						var isfree = this.map.terrain[y][x].isFree();
-						if (isfree === 0) {
-							this.map.objects[y][x] = 2;
+						if (this.bitmap[y][x] === 0) {
+							this.bitmap[y][x] = 1;
 						}
 
-						this.objects.push(object);
+					} else {
+
+						this.objects[y][x] = null;
 
 					}
 
@@ -108,13 +83,29 @@ lychee.define('game.logic.Level').requires([
 
 	};
 
+	var _parse = function(data, tile) {
+
+		for (var y = 0; y < data.height; y++) {
+			this.terrain[y] = new Array(data.width);
+			this.blitzes[y] = new Array(data.width);
+			this.objects[y] = new Array(data.width);
+			this.bitmap[y]  = new Array(data.width);
+		}
+
+
+		_parse_layer.call(this, data.terrain, 'terrain');
+		_parse_layer.call(this, data.blitzes, 'blitzes');
+		_parse_layer.call(this, data.objects, 'objects');
+
+	};
+
 
 
 	/*
 	 * IMPLEMENTATION
 	 */
 
-	var Class = function(data, tile) {
+	var Class = function(data) {
 
 		this.width   = 0;
 		this.height  = 0;
@@ -123,19 +114,10 @@ lychee.define('game.logic.Level').requires([
 		this.objects = [];
 		this.blitzes = [];
 
-		this.map     = {
-			terrain: [],
-			objects: [],
-			blitzes: []
-		};
+		this.bitmap  = [];
 
 
-		_parse.call(this, lychee.extend({
-		}, data), lychee.extend({
-			width:  65,
-			height: 90,
-			offset: 90 - 36
-		}, tile));
+		_parse.call(this, data);
 
 
 		settings = null;

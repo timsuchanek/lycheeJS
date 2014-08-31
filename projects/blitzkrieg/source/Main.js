@@ -31,9 +31,9 @@ lychee.define('game.Main').requires([
 			},
 
 			renderer: {
-				id:         'boilerplate',
-				width:      null,
-				height:     null
+				id:     'boilerplate',
+				width:  null,
+				height: null
 			},
 
 			viewport: {

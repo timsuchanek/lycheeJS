@@ -15,58 +15,57 @@ lychee.define('game.Logic').requires([
 	 * HELPERS
 	 */
 
-	var _enter = function() {
+	var _parse_layer = function(layer, layerid) {
 
-		var state = this.state;
-		var level = this.level;
-		var layer = null;
+		var tile       = this.TILE;
+		var game_layer = this.state.queryLayer('game', layerid);
 
+		if (game_layer !== null) {
 
-		if (state !== null && level !== null) {
-
-			if (state.main !== null) {
-				this.TILE = state.main.TILE;
-			}
+			game_layer.width  = layer[0].length * tile.width  + (tile.width / 2);
+			game_layer.height = layer.length    * tile.offset + (tile.height - tile.offset);
 
 
-			layer = state.queryLayer('game', 'terrain');
+			var offsetx = (tile.width / 4);
+			var offsety = (tile.height - tile.offset);
 
-			if (layer !== null) {
+			for (var y = 0; y < layer.length; y++) {
 
-				layer.width  = level.width;
-				layer.height = level.height;
+				for (var x = 0; x < layer[y].length; x++) {
 
-				for (var t = 0, tl = level.terrain.length; t < tl; t++) {
-					layer.addEntity(level.terrain[t]);
+					var entity = layer[y][x];
+					if (entity !== null) {
+
+						var position = this.toScreenPosition(entity.position, layerid);
+						if (position !== null) {
+
+							position.x += offsetx;
+							position.y += offsety;
+
+							entity.setPosition(position);
+							game_layer.addEntity(entity);
+
+						}
+
+					}
+
 				}
 
 			}
 
+		}
 
-			layer = state.queryLayer('game', 'objects');
+	};
 
-			if (layer !== null) {
+	var _enter = function(level) {
 
-				layer.width  = level.width;
-				layer.height = level.height;
-
-				for (var o = 0, ol = level.objects.length; o < ol; o++) {
-					layer.addEntity(level.objects[o]);
-				}
-
-			}
+		_parse_layer.call(this, level.terrain, 'terrain');
+		_parse_layer.call(this, level.objects, 'objects');
 
 
-			for (var b = 0, bl = level.blitzes.length; b < bl; b++) {
-				this.__blitzes.push(level.blitzes[b]);
-			}
-
-
-			var cursor = state.queryLayer('ui', 'game > cursor');
-			if (cursor !== null) {
-				this.__cursor = cursor;
-			}
-
+		var cursor = this.state.queryLayer('ui', 'game > cursor');
+		if (cursor !== null) {
+			this.__cursor = cursor;
 		}
 
 	};
@@ -83,9 +82,7 @@ lychee.define('game.Logic').requires([
 
 
 		this.TILE  = null;
-
 		this.state = null;
-		this.level = null;
 
 		this.__blitzes = [];
 		this.__cursor  = null;
@@ -107,6 +104,7 @@ lychee.define('game.Logic').requires([
 
 		this.bind('select', function(entity, tileposition) {
 
+console.log('SELECT', tileposition);
 
 			var cursor = this.__cursor;
 			if (cursor !== null) {
@@ -114,7 +112,7 @@ lychee.define('game.Logic').requires([
 				var screenposition = this.toScreenPosition({
 					x: tileposition.x,
 					y: tileposition.y
-				}, 'sky');
+				}, 'objects');
 
 
 console.log('SELECT', tileposition, screenposition);
@@ -337,9 +335,9 @@ console.log('MOVE');
 			if (state !== null && level !== null) {
 
 				this.state = state;
-				this.level = level;
+				this.TILE  = state.main.TILE;
 
-				_enter.call(this);
+				_enter.call(this, level);
 
 				return true;
 
@@ -445,8 +443,11 @@ console.log('MOVE');
 					screenposition.x *= tile.width;
 					screenposition.y *= tile.offset;
 
-					screenposition.x += -1/2 * (layer.width - tile.width / 2) + tile.width / 4;
-					screenposition.y += -1/2 * (layer.height - (tile.height - tile.offset) * 1/4);
+					screenposition.x += -1/2 * layer.width;
+//					screenposition.x += tile.width / 4;
+
+					screenposition.y += -1/2 * layer.height;
+					screenposition.y += (tile.height - tile.offset) / 4;
 
 
 					if (z !== 0) {
@@ -454,8 +455,7 @@ console.log('MOVE');
 					}
 
 					if (bb !== 0) {
-						screenposition.y += bb;
-//						screenposition.y += bb - (tile.height - tile.offset);
+						screenposition.y += ((tile.height - tile.offset) - (bb - tile.offset));
 					}
 
 
@@ -505,16 +505,19 @@ console.log('MOVE');
 					}
 
 					if (bb !== 0) {
-						tileposition.y -= bb;
-//						tileposition.y += bb - (tile.height - tile.offset);
+						tileposition.y -= ((tile.height - tile.offset) - (bb - tile.offset));
 					}
 
 
-					tileposition.x -= -1/2 * (layer.width - tile.width / 2) + tile.width / 4;
-					tileposition.y -= -1/2 * (layer.height - (tile.height - tile.offset) * 1/4);
+//					tileposition.x -= tile.width / 4;
+					tileposition.x -= -1/2 * layer.width;
+
+					tileposition.y -= -1/2 * layer.height;
+					tileposition.y -=  1/8 * (tile.height - tile.offset);
 
 					tileposition.x /= tile.width;
 					tileposition.y /= tile.offset;
+
 
 					tileposition.y |= 0;
 
@@ -522,7 +525,7 @@ console.log('MOVE');
 						tileposition.x -= 0.5;
 					}
 
-					tileposition.x = Math.round(tileposition.x) | 0;
+					tileposition.x |= 0;
 
 
 					return tileposition;
