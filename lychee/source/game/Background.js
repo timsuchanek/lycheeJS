@@ -88,6 +88,7 @@ lychee.define('lychee.game.Background').includes([
 
 		render: function(renderer, offsetX, offsetY) {
 
+			var alpha    = this.alpha;
 			var color    = this.color;
 			var texture  = this.texture;
 			var position = this.position;
@@ -98,6 +99,11 @@ lychee.define('lychee.game.Background').includes([
 			var y1 = position.y + offsetY - this.height / 2;
 			var x2 = x1 + this.width;
 			var y2 = y1 + this.height;
+
+
+			if (alpha !== 1) {
+				renderer.setAlpha(alpha);
+			}
 
 
 			if (color !== null) {
@@ -111,10 +117,7 @@ lychee.define('lychee.game.Background').includes([
 					true
 				);
 
-			}
-
-
-			if (texture !== null && map !== null) {
+			} else if (texture !== null && map !== null) {
 
 				if (this.__buffer === null) {
 
@@ -186,6 +189,11 @@ lychee.define('lychee.game.Background').includes([
 					buffer
 				);
 
+			}
+
+
+			if (alpha !== 1) {
+				renderer.setAlpha(1);
 			}
 
 
