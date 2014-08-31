@@ -24,8 +24,6 @@ lychee.define('game.entity.Object').includes([
 
 
 		settings.texture = _texture;
-		settings.width   = _config.width;
-		settings.height  = _config.height;
 		settings.map     = _config.map;
 		settings.radius  = _config.radius;
 		settings.shape   = _config.shape;
