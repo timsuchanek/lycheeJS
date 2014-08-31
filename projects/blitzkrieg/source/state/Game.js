@@ -195,6 +195,10 @@ lychee.define('game.state.Game').requires([
 				entity.width  = width;
 				entity.height = height;
 
+				entity = this.queryLayer('ui', 'background');
+				entity.width  = width;
+				entity.height = height;
+
 				entity = this.queryLayer('ui', 'overlay');
 				entity.width      = width;
 				entity.height     = 128;

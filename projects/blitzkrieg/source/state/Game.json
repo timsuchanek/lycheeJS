@@ -41,6 +41,12 @@
 			"arguments": [{}],
 			"blob": {
 				"entities": [{
+					"constructor": "lychee.game.Background",
+					"arguments": [{
+						"color": "#000000",
+						"alpha": 0
+					}]
+				}, {
 					"constructor": "lychee.ui.Layer",
 					"arguments": [{}],
 					"blob": {
@@ -101,8 +107,9 @@
 					}
 				}],
 				"map": {
-					"game": 0,
-					"overlay": 1
+					"background": 0,
+					"game": 1,
+					"overlay": 2
 				}
 			}
 		}

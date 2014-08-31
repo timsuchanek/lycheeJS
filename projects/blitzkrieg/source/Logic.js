@@ -1,8 +1,10 @@
 
 lychee.define('game.Logic').requires([
 	'lychee.effect.Alpha',
+	'lychee.effect.Color',
 	'lychee.effect.Lightning',
 	'lychee.effect.Position',
+	'lychee.effect.Shake',
 	'game.entity.Tank',
 	'game.logic.Level'
 ]).includes([
@@ -298,37 +300,137 @@ console.log('MOVE');
 				&& position.y !== null
 			) {
 
-				entity   = new game.entity.Tank({
-					alpha:    0.1,
-					color:    'red',
-					position: this.toScreenPosition({
-						x: position.x,
-						y: position.y,
-						z: -1
-					})
-				});
 
-				entity.addEffect(new lychee.effect.Lightning({
-					type:     lychee.effect.Lightning.TYPE.bounceeaseout,
-					duration: 750,
-					position: this.toScreenPosition({
-						x: position.x,
-						y: position.y,
-						z: 20
-					})
-				}));
+				var terrain = state.queryLayer('game', 'terrain');
+				var objects = state.queryLayer('game', 'objects');
+				if (terrain !== null && objects !== null) {
 
-				entity.addEffect(new lychee.effect.Alpha({
-					type:     lychee.effect.Alpha.TYPE.easeout,
-					delay:    250,
-					duration: 500,
-					alpha:    1
-				}));
+					var tile   = terrain.getEntity(null, this.toScreenPosition(position));
+					var object = objects.getEntity(null, this.toScreenPosition(position));
+
+					if (
+						   tile !== null
+						&& tile.isFree()
+						&& object === null
+					) {
 
 
-				var layer = state.queryLayer('game', 'objects');
-				if (layer !== null) {
-					layer.addEntity(entity);
+						var shake = {
+							x: Math.random() > 0.5 ? (Math.random() * 30) : (Math.random() * -30),
+							y: Math.random() > 0.5 ? (Math.random() * 30) : (Math.random() * -30)
+						};
+
+						terrain.addEffect(new lychee.effect.Shake({
+							type:     lychee.effect.Shake.TYPE.bounceeaseout,
+							duration: 1000,
+							shake:    shake
+						}));
+
+						objects.addEffect(new lychee.effect.Shake({
+							type:     lychee.effect.Shake.TYPE.bounceeaseout,
+							duration: 1000,
+							shake:    shake
+						}));
+
+
+						var ui = state.getLayer('ui');
+						if (ui !== null) {
+
+							var background = ui.getEntity('background');
+							if (background !== null) {
+
+								background.alpha = 0;
+								background.color = '#000000';
+
+								background.addEffect(new lychee.effect.Color({
+									type:     lychee.effect.Color.TYPE.bounceeaseout,
+									duration: 250,
+									color:    '#ffffff'
+								}));
+
+								background.addEffect(new lychee.effect.Alpha({
+									type:     lychee.effect.Alpha.TYPE.bounceeaseout,
+									duration: 250,
+									alpha:    0.5
+								}));
+
+								background.addEffect(new lychee.effect.Alpha({
+									type:     lychee.effect.Alpha.TYPE.bounceeaseout,
+									delay:    250,
+									duration: 250,
+									alpha:    0
+								}));
+
+							}
+
+							ui.addEffect(new lychee.effect.Shake({
+								type:     lychee.effect.Shake.TYPE.bounceeaseout,
+								duration: 1000,
+								shake:    { y: Math.random() * -30 }
+							}));
+
+						}
+
+
+						entity   = new game.entity.Tank({
+							alpha:    0.1,
+							color:    'red',
+							position: this.toScreenPosition({
+								x: position.x,
+								y: position.y,
+								z: -1
+							})
+						});
+
+						entity.addEffect(new lychee.effect.Lightning({
+							type:     lychee.effect.Lightning.TYPE.bounceeaseout,
+							duration: 1000,
+							position: this.toScreenPosition({
+								x: position.x,
+								y: position.y,
+								z: 20
+							})
+						}));
+
+						entity.addEffect(new lychee.effect.Alpha({
+							type:     lychee.effect.Alpha.TYPE.easeout,
+							delay:    500,
+							duration: 500,
+							alpha:    1
+						}));
+
+						entity.addEffect(new lychee.effect.Shake({
+							type:     lychee.effect.Shake.TYPE.linear,
+							delay:    200,
+							duration: 200,
+							shake:    { y: 30 }
+						}));
+
+
+						tile.addEffect(new lychee.effect.Shake({
+							type:     lychee.effect.Shake.TYPE.linear,
+							duration: 200,
+							shake:    { y: 20 }
+						}));
+
+
+						var tiles = this.getSurrounding(terrain, position);
+						for (var t = 0, tl = tiles.length; t < tl; t++) {
+
+							tiles[t].addEffect(new lychee.effect.Shake({
+								type:     lychee.effect.Shake.TYPE.linear,
+								delay:    150,
+								duration: 200,
+								shake:    { y: 10 }
+							}));
+
+						}
+
+
+						objects.addEntity(entity);
+
+					}
+
 				}
 
 			}
@@ -381,6 +483,50 @@ console.log('MOVE');
 		/*
 		 * CUSTOM API
 		 */
+
+		getSurrounding: function(layer, position) {
+
+			var filtered = [];
+			var entity   = null;
+
+
+			var coords = [];
+			var x0     = position.x;
+			var y0     = position.y;
+			var x1     = position.x - 1;
+			var y1     = position.y - 1;
+			var x2     = position.x + 1;
+			var y2     = position.y + 1;
+
+
+			coords.push({ x: x1, y: y0 });
+			coords.push({ x: x2, y: y0 });
+			coords.push({ x: x0, y: y1 });
+			coords.push({ x: x0, y: y2 });
+
+
+			if (y0 % 2 === 1) {
+				coords.push({ x: x2, y: y1 });
+				coords.push({ x: x2, y: y2 });
+			} else {
+				coords.push({ x: x1, y: y1 });
+				coords.push({ x: x1, y: y2 });
+			}
+
+
+			for (var c = 0, cl = coords.length; c < cl; c++) {
+
+				var entity = layer.getEntity(null, this.toScreenPosition(coords[c]));
+				if (entity !== null) {
+					filtered.push(entity);
+				}
+
+			}
+
+
+			return filtered;
+
+		},
 
 		toTilePosition: function(position, offset) {
 			return _screen_to_tile_position.call(this, position, offset);
