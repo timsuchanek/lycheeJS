@@ -115,6 +115,9 @@ lychee.define('lychee.game.Sprite').includes([
 
 		render: function(renderer, offsetX, offsetY) {
 
+			lychee.game.Entity.prototype.render.call(this, renderer, offsetX, offsetY);
+
+
 			var texture = this.texture;
 			if (texture !== null) {
 

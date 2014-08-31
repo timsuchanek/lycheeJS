@@ -1,5 +1,7 @@
 
 lychee.define('game.Logic').requires([
+	'lychee.effect.Lightning',
+	'lychee.effect.Position',
 	'game.logic.Level'
 ]).includes([
 	'lychee.event.Emitter'
@@ -221,7 +223,21 @@ console.log('SELECT', entity, tileposition);
 				}
 
 				cursor.setVisible(true);
-				cursor.setPosition(this.toScreenPosition(cursorposition));
+
+				cursor.addEffect(new lychee.effect.Position({
+					type:     lychee.effect.Position.TYPE.easeout,
+					position: this.toScreenPosition(cursorposition)
+				}));
+
+				cursor.addEffect(new lychee.effect.Lightning({
+					type:     lychee.effect.Lightning.TYPE.bounceeaseout,
+					duration: 500,
+					position: this.toScreenPosition({
+						x: cursorposition.x,
+						y: cursorposition.y,
+						z: 0
+					})
+				}));
 
 			}
 

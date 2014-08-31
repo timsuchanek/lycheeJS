@@ -110,13 +110,14 @@
 			},
 
 			"effect": {
-				"Alpha":    [ "js" ],
-				"Color":    [ "js" ],
-				"Offset":   [ "js" ],
-				"Position": [ "js" ],
-				"Radius":   [ "js" ],
-				"Shake":    [ "js" ],
-				"Velocity": [ "js" ]
+				"Alpha":     [ "js" ],
+				"Color":     [ "js" ],
+				"Lightning": [ "js" ],
+				"Offset":    [ "js" ],
+				"Position":  [ "js" ],
+				"Radius":    [ "js" ],
+				"Shake":     [ "js" ],
+				"Velocity":  [ "js" ]
 			},
 
 			"event": {

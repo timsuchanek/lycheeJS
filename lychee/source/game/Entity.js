@@ -131,7 +131,14 @@ lychee.define('lychee.game.Entity').exports(function(lychee, global) {
 		},
 
 		// HINT: Renderer skips if no render() method exists
-		// render: function(renderer, offsetX, offsetY) {},
+		render: function(renderer, offsetX, offsetY) {
+
+			var effects = this.effects;
+			for (var e = 0, el = this.effects.length; e < el; e++) {
+				this.effects[e].render(renderer, offsetX, offsetY);
+			}
+
+		},
 
 		update: function(clock, delta) {
 
