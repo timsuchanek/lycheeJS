@@ -57,74 +57,6 @@ lychee.define('game.ui.Overlay').includes([
 
 		lychee.ui.Layer.call(this, settings);
 
-
-
-		/*
-		 * INITIALIZATION
-		 */
-
-		this.bind('select', function(object, terrain, tileposition) {
-
-			var entity    = null;
-			var dropready = this.__drop.ready;
-
-			if (object !== null) {
-
-				if (object.canAction('attack') === true) {
-					entity = this.getEntity('attack');
-					entity.setState('attack');
-				}
-
-				if (object.canAction('move') === true) {
-					entity = this.getEntity('move');
-					entity.setState('move');
-				}
-
-
-				entity = this.getEntity('drop');
-				entity.setState('drop-disabled');
-
-			} else {
-
-				entity = this.getEntity('attack');
-				entity.setState('attack-disabled');
-
-				entity = this.getEntity('move');
-				entity.setState('move-disabled');
-
-
-				if (terrain !== null) {
-
-					if (terrain.isFree() && dropready === true) {
-						entity = this.getEntity('drop');
-						entity.setState('drop');
-					} else {
-						entity = this.getEntity('drop');
-						entity.setState('drop-disabled');
-					}
-
-				}
-
-			}
-
-		}, this);
-
-		this.bind('deselect', function() {
-
-			var entity = null;
-
-
-			entity = this.getEntity('attack');
-			entity.setState('attack-disabled');
-
-			entity = this.getEntity('move');
-			entity.setState('move-disabled');
-
-			entity = this.getEntity('drop');
-			entity.setState('drop-disabled');
-
-		}, this);
-
 	};
 
 
@@ -351,6 +283,48 @@ lychee.define('game.ui.Overlay').includes([
 				}
 
 			}
+
+		},
+
+
+
+		/*
+		 * CUSTOM API
+		 */
+
+		showAction: function(action) {
+
+			var entity = this.getEntity(action);
+			if (entity !== null) {
+
+				if (action === 'drop' && this.__drop.ready === false) {
+					return false;
+				}
+
+				entity.setState(action);
+
+				return true;
+
+			}
+
+
+			return false;
+
+		},
+
+		hideAction: function(action) {
+
+			var entity = this.getEntity(action);
+			if (entity !== null) {
+
+				entity.setState(action + '-disabled');
+
+				return true;
+
+			}
+
+
+			return false;
 
 		}
 

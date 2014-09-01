@@ -244,14 +244,6 @@ lychee.define('game.state.Game').requires([
 
 					if (ui_overlay !== null) {
 
-						logic.bind('select', function(object, terrain, tileposition) {
-							this.trigger('select', [ object, terrain, tileposition ]);
-						}, ui_overlay);
-
-						logic.bind('deselect', function() {
-							this.trigger('deselect', []);
-						}, ui_overlay);
-
 						ui_overlay.bind('#action', function(overlay, action) {
 							this.trigger(action, []);
 						}, logic);

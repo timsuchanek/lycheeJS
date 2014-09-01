@@ -109,9 +109,14 @@ lychee.define('game.Logic').requires([
 		}
 
 
-		var cursor = this.state.queryLayer('ui', 'game > cursor');
-		if (cursor !== null) {
-			this.__cursor = cursor;
+		var ui_cursor = this.state.queryLayer('ui', 'game > cursor');
+		if (ui_cursor !== null) {
+			this.__ui.cursor = ui_cursor;
+		}
+
+		var ui_overlay = this.state.queryLayer('ui', 'overlay');
+		if (ui_overlay !== null) {
+			this.__ui.overlay = ui_overlay;
 		}
 
 	};
@@ -130,13 +135,21 @@ lychee.define('game.Logic').requires([
 		this.TILE    = null;
 		this.state   = null;
 
+		this.__actions = [];
 		this.__blitzes = [];
-		this.__cursor  = null;
+		this.__ui      = {
+			cursor:  null,
+			overlay: null
+		};
 		this.__focus   = {
 			object:   null,
 			position: { x: null, y: null }
 		};
 		this.__map     = {};
+		this.__mode    = {
+			object: null,
+			action: null
+		};
 
 
 		lychee.event.Emitter.call(this);
@@ -149,7 +162,7 @@ lychee.define('game.Logic').requires([
 
 		this.bind('select', function(object, terrain, tileposition) {
 
-			var cursor = this.__cursor;
+			var cursor = this.__ui.cursor;
 			if (cursor !== null) {
 
 				var screenposition = this.toScreenPosition({
@@ -180,6 +193,45 @@ lychee.define('game.Logic').requires([
 			}
 
 
+			var overlay = this.__ui.overlay;
+			if (overlay !== null) {
+
+				var actionobject = this.__mode.object;
+				if (actionobject === null) {
+					actionobject = object;
+				}
+
+
+				if (actionobject === null) {
+
+					overlay.hideAction('attack');
+					overlay.hideAction('move');
+
+					if (terrain !== null && terrain.isFree()) {
+						overlay.showAction('drop');
+					} else {
+						overlay.hideAction('drop');
+					}
+
+				} else {
+
+					if (actionobject.canAction('attack')) {
+						overlay.showAction('attack');
+					} else {
+						overlay.hideAction('attack');
+					}
+
+					if (actionobject.canAction('move')) {
+						overlay.showAction('move');
+					} else {
+						overlay.hideAction('move');
+					}
+
+				}
+
+			}
+
+
 			this.__focus.object     = object;
 			this.__focus.position.x = tileposition.x;
 			this.__focus.position.y = tileposition.y;
@@ -191,11 +243,19 @@ lychee.define('game.Logic').requires([
 			this.__focus.object     = null;
 			this.__focus.position.x = null;
 			this.__focus.position.y = null;
+			this.__mode.action      = null;
+			this.__mode.object      = null;
 
 
-			var cursor = this.__cursor;
+			var cursor = this.__ui.cursor;
 			if (cursor !== null) {
 				cursor.setVisible(false);
+			}
+
+			var overlay = this.__ui.overlay;
+			if (overlay !== null) {
+				overlay.hideAction('attack');
+				overlay.hideAction('move');
 			}
 
 		}, this);
@@ -223,15 +283,44 @@ lychee.define('game.Logic').requires([
 
 		this.bind('attack', function() {
 
-			var object = this.__focus.object;
-			if (object !== null) {
-			}
-
 console.log('ATTACK');
+
 		}, this);
 
 		this.bind('move', function() {
-console.log('MOVE');
+
+			var focus = this.__focus;
+			var mode  = this.__mode;
+
+			if (mode.action !== 'move') {
+
+				if (
+					   focus.object !== null
+					&& focus.object.canAction('move')
+				) {
+					mode.object = focus.object;
+					mode.action = 'move';
+				}
+
+// TODO: deactivate attack button
+console.log('MOVE MODE ACTIVATED', focus.object, mode);
+
+			} else if (mode.action === 'move') {
+
+console.log('MOVE ENTITY NAO TO ', focus.position);
+
+				if (focus.position !== null) {
+
+					this.__actions.push({
+						type:   'move',
+						entity: mode.entity,
+						target: focus.position
+					});
+
+				}
+
+			}
+
 		}, this);
 
 		this.bind('drop', function() {
