@@ -28,13 +28,6 @@ lychee.define('game.logic.Level').requires([
 						}
 					});
 
-					if (this.terrain[y][x].isFree()) {
-						this.bitmap[y][x]  = 0;
-					} else {
-						this.objects[y][x] = this.terrain[y][x];
-						this.bitmap[y][x]  = 2;
-					}
-
 				} else if (type === 'blitzes') {
 
 					if (value > 0) {
@@ -65,10 +58,6 @@ lychee.define('game.logic.Level').requires([
 							}
 						});
 
-						if (this.bitmap[y][x] === 0) {
-							this.bitmap[y][x] = 1;
-						}
-
 					} else {
 
 						this.objects[y][x] = null;
@@ -89,7 +78,6 @@ lychee.define('game.logic.Level').requires([
 			this.terrain[y] = new Array(data.width);
 			this.blitzes[y] = new Array(data.width);
 			this.objects[y] = new Array(data.width);
-			this.bitmap[y]  = new Array(data.width);
 		}
 
 
@@ -113,8 +101,6 @@ lychee.define('game.logic.Level').requires([
 		this.terrain = [];
 		this.objects = [];
 		this.blitzes = [];
-
-		this.bitmap  = [];
 
 
 		_parse.call(this, data);

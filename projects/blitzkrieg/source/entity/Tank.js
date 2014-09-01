@@ -12,7 +12,12 @@ lychee.define('game.entity.Tank').includes([
 		var settings = lychee.extend({}, data);
 
 
-		this.color = 'red';
+		this.action = 'idle';
+		this.color  = 'red';
+		this.path   = {
+			current: null,
+			stack:   []
+		};
 
 
 		settings.texture = _texture;
@@ -23,6 +28,7 @@ lychee.define('game.entity.Tank').includes([
 		settings.state   = this.color + '-01';
 
 
+		this.setAction(settings.action);
 		this.setColor(settings.color);
 
 
@@ -52,7 +58,18 @@ lychee.define('game.entity.Tank').includes([
 		},
 
 		setAction: function(action) {
+
+			if (action === 'idle' || action === 'attack' || action === 'move') {
+
+				this.action = action;
+
+				return true;
+
+			}
+
+
 			return false;
+
 		},
 
 		setColor: function(color) {

@@ -43,7 +43,7 @@ lychee.define('game.ui.Overlay').includes([
 
 		this.__blitz = {
 			start:    null,
-			duration: 30000,
+			duration: 10000,
 			map:      lychee.extend({}, _get_map('blitz-bar'))
 		};
 

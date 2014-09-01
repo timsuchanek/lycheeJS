@@ -231,12 +231,10 @@ lychee.define('game.state.Game').requires([
 
 
 					var game_terrain = this.queryLayer('game', 'terrain');
-					var ui_game      = this.queryLayer('ui', 'game');
+					var ui_game      = this.queryLayer('ui',   'game');
+					var ui_overlay   = this.queryLayer('ui',   'overlay');
 
-					if (
-						   game_terrain !== null
-						&& ui_game !== null
-					) {
+					if (game_terrain !== null && ui_game !== null) {
 
 						ui_game.width  = game_terrain.width;
 						ui_game.height = game_terrain.height;
@@ -244,7 +242,6 @@ lychee.define('game.state.Game').requires([
 
 					}
 
-					var ui_overlay = this.queryLayer('ui', 'overlay');
 					if (ui_overlay !== null) {
 
 						logic.bind('select', function(object, terrain, tileposition) {
@@ -252,7 +249,7 @@ lychee.define('game.state.Game').requires([
 						}, ui_overlay);
 
 						logic.bind('deselect', function() {
-							this.trigger('deselect', [ ]);
+							this.trigger('deselect', []);
 						}, ui_overlay);
 
 						ui_overlay.bind('#action', function(overlay, action) {

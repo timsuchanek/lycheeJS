@@ -21,7 +21,7 @@ lychee.define('game.Logic').requires([
 	 * HELPERS
 	 */
 
-	var _depth_sort = function() {
+	var _refresh_map = function() {
 
 		var state = this.state;
 		if (state !== null) {
@@ -31,7 +31,7 @@ lychee.define('game.Logic').requires([
 
 				terrain.entities.sort(function(a, b) {
 					if (a.position.y < b.position.y) return -1;
-					if (a.position.y > b.position.y) return 1;
+					if (a.position.y > b.position.y) return  1;
 					return 0;
 				});
 
@@ -63,6 +63,7 @@ lychee.define('game.Logic').requires([
 						if (position !== null) {
 
 							entity.setPosition(position);
+							this.set({ x: x, y: y }, entity, layerid);
 							game_layer.addEntity(entity);
 
 						}
@@ -90,13 +91,12 @@ lychee.define('game.Logic').requires([
 				var blitz = level.blitzes[y][x];
 				if (blitz !== null) {
 
-					var center  = this.get({ x: x, y: y }, 'terrain');
+					var center  = this.get({ x: x, y: y },            'terrain');
 					var terrain = this.getSurrounding({ x: x, y: y }, 'terrain');
 					var objects = this.getSurrounding({ x: x, y: y }, 'objects');
 					if (center !== null) {
 
 						blitz.setCenter(center);
-						blitz.setTerrain(terrain);
 						blitz.setLogic(this);
 						this.__blitzes.push(blitz);
 
@@ -124,9 +124,9 @@ lychee.define('game.Logic').requires([
 
 	var Class = function(main) {
 
-		this.main    = main      || null;
+		this.main    = main         || null;
 		this.jukebox = main.jukebox || null;
-		this.loop    = main.loop || null;
+		this.loop    = main.loop    || null;
 		this.TILE    = null;
 		this.state   = null;
 
@@ -136,6 +136,7 @@ lychee.define('game.Logic').requires([
 			object:   null,
 			position: { x: null, y: null }
 		};
+		this.__map     = {};
 
 
 		lychee.event.Emitter.call(this);
@@ -216,7 +217,7 @@ lychee.define('game.Logic').requires([
 			}
 
 
-			this.loop.setTimeout(delay, _depth_sort, this);
+			this.loop.setTimeout(delay, _refresh_map, this);
 
 		}, this);
 
@@ -276,8 +277,7 @@ console.log('MOVE');
 						this.strikeEarthquake(this.get(position, 'terrain'));
 
 
-// this.trigger('select') ...
-
+						this.set(position, object, 'objects');
 						this.state.queryLayer('game', 'objects').addEntity(object);
 
 					}
@@ -335,14 +335,57 @@ console.log('MOVE');
 		 * CUSTOM API
 		 */
 
-		get: function(position, layerid) {
+		set: function(position, entity, layerid) {
 
 			var layer = this.state.queryLayer('game', layerid);
 			if (layer !== null) {
 
-				var entity = layer.getEntity(null, this.toScreenPosition(position, layerid));
-				if (entity !== null) {
-					return entity;
+				var map = this.__map[layerid] || null;
+				if (map === null) {
+					map = this.__map[layerid] = {};
+				}
+
+
+				var x = position.x || null;
+				var y = position.y || null;
+				if (x !== null && y !== null) {
+
+					if (map[x] === undefined) {
+						map[x] = {};
+					}
+
+					map[x][y] = entity;
+
+
+					return true;
+
+				}
+
+			}
+
+
+			return false;
+
+		},
+
+		get: function(position, layerid) {
+
+			var map = this.__map[layerid] || null;
+			if (map !== null) {
+
+				var x = position.x || null;
+				var y = position.y || null;
+
+				if (x !== null && y !== null) {
+
+					if (map[x] !== undefined) {
+
+						if (map[x][y] !== undefined) {
+							return map[x][y];
+						}
+
+					}
+
 				}
 
 			}
@@ -391,14 +434,7 @@ console.log('MOVE');
 
 
 				for (var c = 0, cl = coords.length; c < cl; c++) {
-
-					var entity = layer.getEntity(null, this.toScreenPosition(coords[c], layerid));
-					if (entity !== null) {
-						filtered.push(entity);
-					} else {
-						filtered.push(null);
-					}
-
+					filtered.push(this.get(coords[c], layerid));
 				}
 
 			}
