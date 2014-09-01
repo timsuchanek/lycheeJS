@@ -84,6 +84,7 @@ lychee.define('dashboard.state.Sprite').requires([
 					var index  = 'data:image/png;base64,'.length;
 					var config = {
 						map:    content.map,
+						shape:  0,
 						states: content.states
 					};
 
@@ -92,10 +93,12 @@ lychee.define('dashboard.state.Sprite').requires([
 
 						config.width  = width;
 						config.height = height;
+						config.shape  = 1;
 
 					} else if (radius !== 'not set') {
 
-						config.radius = content.radius;
+						config.radius = radius;
+						config.shape  = 0;
 
 					}
 
