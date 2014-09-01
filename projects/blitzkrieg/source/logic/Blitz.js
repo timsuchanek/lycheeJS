@@ -13,16 +13,17 @@ lychee.define('game.logic.Blitz').requires([
 
 	var _move_to_position = function(entity, position) {
 
-		var x = position.x || null;
-		var y = position.y || null;
+		var x = position.x;
+		var y = position.y;
 
 
 		entity.addEffect(new lychee.effect.Position({
 			type:     lychee.effect.Position.TYPE.linear,
+			delay:    100,
 			duration: 500,
 			position: {
-				x: x !== null ? (entity.position.x)       : null,
-				y: y !== null ? (entity.position.y + 200) : null
+				x: entity.position.x,
+				y: entity.position.y + 200
 			}
 		}));
 
@@ -50,7 +51,6 @@ lychee.define('game.logic.Blitz').requires([
 		this.logic    = null;
 		this.center   = null;
 		this.terrain  = [];
-		this.objects  = [];
 
 	};
 
@@ -79,8 +79,13 @@ lychee.define('game.logic.Blitz').requires([
 				var logic = this.logic;
 				if (logic !== null) {
 
-					var center = this.center;
+					var objects   = [];
+					var positions = [];
+					var center    = this.center;
+
 					if (center !== null) {
+
+						objects = logic.getSurrounding(logic.toTilePosition(center.position, 'terrain'), 'objects');
 
 						logic.strikeLightning(center);
 
@@ -90,8 +95,6 @@ lychee.define('game.logic.Blitz').requires([
 
 					}
 
-
-					var positions = [];
 
 					for (var p = 0, pl = this.terrain.length; p < pl; p++) {
 
@@ -110,32 +113,28 @@ lychee.define('game.logic.Blitz').requires([
 
 					for (var t = 0, tl = this.terrain.length; t < tl; t++) {
 
-						var terrain = this.terrain[t];
+						var terrain  = this.terrain[t];
+						var position = positions[(t + 1) % positions.length];
+
 						if (terrain !== null) {
-							_move_to_position(terrain, logic.toScreenPosition(positions[(t + 1) % positions.length], 'terrain'));
+							_move_to_position(terrain, logic.toScreenPosition(position, 'terrain'));
 						}
 
 					}
 
-/*
-					for (var o = 0, ol = this.objects.length; o < ol; o++) {
+					for (var o = 0, ol = objects.length; o < ol; o++) {
 
-						var object  = this.objects[o];
-						var terrain = this.terrain[o];
+						var object   = objects[o];
+						var terrain  = this.terrain[o];
+
 						if (
 							   terrain !== null
 							&& object !== null
 						) {
-
-							_move_to_position(
-								object,
-								logic.toScreenPosition(logic.toTilePosition(positions[(o + 1) % positions.length], 'terrain'), 'objects')
-							);
-
+							_move_to_position(object, logic.toScreenPosition(positions[(o + 1) % positions.length], 'objects'));
 						}
 
 					}
-*/
 
 				}
 
@@ -157,24 +156,6 @@ lychee.define('game.logic.Blitz').requires([
 			if (entity !== null) {
 
 				this.center = entity;
-
-				return true;
-
-			}
-
-
-			return false;
-
-		},
-
-		setObjects: function(objects) {
-
-			objects = objects instanceof Array ? objects : null;
-
-
-			if (objects !== null) {
-
-				this.objects = objects;
 
 				return true;
 

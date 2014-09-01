@@ -97,7 +97,6 @@ lychee.define('game.Logic').requires([
 
 						blitz.setCenter(center);
 						blitz.setTerrain(terrain);
-						blitz.setObjects(terrain);
 						blitz.setLogic(this);
 						this.__blitzes.push(blitz);
 
