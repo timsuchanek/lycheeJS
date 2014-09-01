@@ -97,8 +97,17 @@ lychee.define('lychee.effect.Alpha').exports(function(lychee, global, attachment
 		update: function(entity, clock, delta) {
 
 			if (this.__start === null) {
+				this.__start = clock + this.delay;
+			}
 
-				this.__start  = clock + this.delay;
+
+			var t = (clock - this.__start) / this.duration;
+			if (t < 0) {
+
+				return true;
+
+			} else {
+
 				this.__origin = entity.alpha || 1;
 
 			}
@@ -108,12 +117,6 @@ lychee.define('lychee.effect.Alpha').exports(function(lychee, global, attachment
 			var alpha  = this.alpha;
 
 			var a      = origin;
-
-
-			var t = (clock - this.__start) / this.duration;
-			if (t < 0) {
-				return true;
-			}
 
 			if (t <= 1) {
 

@@ -157,47 +157,43 @@ lychee.define('lychee.effect.Lightning').exports(function(lychee, global, attach
 
 		render: function(renderer, offsetX, offsetY) {
 
-			if (this.__start !== null) {
+			var t = (this.__clock - this.__start) / this.duration;
+			if (t > 0 && t <= 1) {
 
-				var t = (this.__clock - this.__start) / this.duration;
-				if (t >= 0 && t <= 1) {
+				var origin   = this.__origin;
+				var position = this.position;
 
-					var origin   = this.__origin;
-					var position = this.position;
-
-					var x1 = origin.x   + offsetX;
-					var y1 = origin.y   + offsetY;
-					var x2 = position.x + offsetX;
-					var y2 = position.y + offsetY;
+				var x1 = origin.x   + offsetX;
+				var y1 = origin.y   + offsetY;
+				var x2 = position.x + offsetX;
+				var y2 = position.y + offsetY;
 
 
-					renderer.setAlpha(this.__alpha);
+				renderer.setAlpha(this.__alpha);
 
 
-					_draw_strike.call(
-						renderer,
-						x1,
-						y1,
-						x2,
-						y2,
-						'#557788',
-						'#7799aa'
-					);
+				_draw_strike.call(
+					renderer,
+					x1,
+					y1,
+					x2,
+					y2,
+					'#557788',
+					'#7799aa'
+				);
 
-					_draw_strike.call(
-						renderer,
-						x1,
-						y1,
-						x2,
-						y2,
-						'#cfefff',
-						'#ffffff'
-					);
+				_draw_strike.call(
+					renderer,
+					x1,
+					y1,
+					x2,
+					y2,
+					'#cfefff',
+					'#ffffff'
+				);
 
 
-					renderer.setAlpha(1);
-
-				}
+				renderer.setAlpha(1);
 
 			}
 
@@ -209,8 +205,17 @@ lychee.define('lychee.effect.Lightning').exports(function(lychee, global, attach
 
 
 			if (this.__start === null) {
+				this.__start = clock + this.delay;
+			}
 
-				this.__start        = clock + this.delay;
+
+			var t = (clock - this.__start) / this.duration;
+			if (t < 0) {
+
+				return true;
+
+			} else {
+
 				this.__origin.alpha = 1;
 
 				if (this.__origin.x === null) {
@@ -228,12 +233,6 @@ lychee.define('lychee.effect.Lightning').exports(function(lychee, global, attach
 			var alpha  = 0;
 
 			var a      = origin;
-
-
-			var t = (clock - this.__start) / this.duration;
-			if (t < 0) {
-				return true;
-			}
 
 			if (t <= 1) {
 

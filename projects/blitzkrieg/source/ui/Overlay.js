@@ -43,7 +43,7 @@ lychee.define('game.ui.Overlay').includes([
 
 		this.__blitz = {
 			start:    null,
-			duration: 30000,
+			duration: 5000,
 			map:      lychee.extend({}, _get_map('blitz-bar'))
 		};
 
@@ -93,12 +93,12 @@ lychee.define('game.ui.Overlay').includes([
 
 			if (entity !== null) {
 
-				if (entity.can('attack') === true) {
+				if (entity.canAction('attack') === true) {
 					button = this.getEntity('attack');
 					button.setState('attack');
 				}
 
-				if (entity.can('move') === true) {
+				if (entity.canAction('move') === true) {
 					button = this.getEntity('move');
 					button.setState('move');
 				}

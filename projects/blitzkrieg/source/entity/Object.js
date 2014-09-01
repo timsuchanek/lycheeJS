@@ -45,7 +45,11 @@ lychee.define('game.entity.Object').includes([
 		 * CUSTOM API
 		 */
 
-		can: function(action) {
+		canAction: function(action) {
+			return false;
+		},
+
+		setAction: function(action) {
 			return false;
 		}
 

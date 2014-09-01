@@ -40,7 +40,11 @@ lychee.define('game.entity.Tank').includes([
 		 * CUSTOM API
 		 */
 
-		can: function(action) {
+		canAction: function(action) {
+			return false;
+		},
+
+		setAction: function(action) {
 			return false;
 		},
 

@@ -97,6 +97,12 @@ lychee.define('lychee.effect.Shake').exports(function(lychee, global, attachment
 			}
 
 
+			var t = (clock - this.__start) / this.duration;
+			if (t < 0) {
+				return true;
+			}
+
+
 			var origin   = this.__origin;
 			var shake    = this.shake;
 
@@ -111,12 +117,6 @@ lychee.define('lychee.effect.Shake').exports(function(lychee, global, attachment
 			var x        = originx;
 			var y        = originy;
 			var z        = originz;
-
-
-			var t = (clock - this.__start) / this.duration;
-			if (t < 0) {
-				return true;
-			}
 
 			if (t <= 1) {
 

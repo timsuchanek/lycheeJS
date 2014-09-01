@@ -57,6 +57,31 @@ lychee.define('game.Logic').requires([
 		_parse_layer.call(this, level.objects, 'objects');
 
 
+		for (var y = 0; y < level.blitzes.length; y++) {
+
+			for (var x = 0; x < level.blitzes[y].length; x++) {
+
+				var blitz = level.blitzes[y][x];
+				if (blitz !== null) {
+
+					var center      = this.get({ x: x, y: y }, 'terrain');
+					var surrounding = this.getSurrounding({ x: x, y: y }, 'terrain');
+					if (center !== null && surrounding.length) {
+
+						blitz.setCenter(center);
+						blitz.setEntities(surrounding);
+						blitz.setLogic(this);
+						this.__blitzes.push(blitz);
+
+					}
+
+				}
+
+			}
+
+		}
+
+
 		var cursor = this.state.queryLayer('ui', 'game > cursor');
 		if (cursor !== null) {
 			this.__cursor = cursor;
@@ -70,11 +95,10 @@ lychee.define('game.Logic').requires([
 	 * IMPLEMENTATION
 	 */
 
-	var Class = function(data) {
+	var Class = function(main) {
 
-		var settings = lychee.extend({}, data);
-
-
+		this.main  = main      || null;
+		this.loop  = main.loop || null;
 		this.TILE  = null;
 		this.state = null;
 
@@ -87,8 +111,6 @@ lychee.define('game.Logic').requires([
 
 
 		lychee.event.Emitter.call(this);
-
-		settings = null;
 
 
 
@@ -154,7 +176,41 @@ console.log('DESELECT');
 
 
 		this.bind('blitz', function() {
-console.log('BLITZ');
+
+			var delay = 0;
+
+			var blitzes = this.__blitzes;
+			for (var b = 0, bl = blitzes.length; b < bl; b++) {
+
+				var blitz = blitzes[b];
+				if (blitz.canAction('blitz') === true) {
+					delay = Math.max(delay, blitz.duration);
+					blitz.setAction('blitz');
+				}
+
+			}
+
+
+			this.loop.setTimeout(delay - delay / 5, function() {
+
+				var state = this.state;
+				if (state !== null) {
+
+					var terrain = state.queryLayer('game', 'terrain');
+					if (terrain !== null) {
+
+						terrain.entities.sort(function(a, b) {
+							if (a.position.y < b.position.y) return -1;
+							if (a.position.y > b.position.y) return 1;
+							return 0;
+						});
+
+					}
+
+				}
+
+			}, this);
+
 		}, this);
 
 		this.bind('attack', function() {
@@ -190,60 +246,11 @@ console.log('MOVE');
 						&& object === null
 					) {
 
-						var ui = state.getLayer('ui');
-						if (ui !== null) {
-
-							var background = ui.getEntity('background');
-							if (background !== null) {
-
-								background.alpha = 0;
-								background.color = '#000000';
-
-								background.addEffect(new lychee.effect.Color({
-									type:     lychee.effect.Color.TYPE.bounceeaseout,
-									duration: 250,
-									color:    '#ffffff'
-								}));
-
-								background.addEffect(new lychee.effect.Alpha({
-									type:     lychee.effect.Alpha.TYPE.bounceeaseout,
-									duration: 250,
-									alpha:    0.5
-								}));
-
-								background.addEffect(new lychee.effect.Alpha({
-									type:     lychee.effect.Alpha.TYPE.bounceeaseout,
-									delay:    250,
-									duration: 250,
-									alpha:    0
-								}));
-
-							}
-
-							ui.addEffect(new lychee.effect.Shake({
-								type:     lychee.effect.Shake.TYPE.bounceeaseout,
-								duration: 1000,
-								shake:    { y: -20 + Math.random() * -30 }
-							}));
-
-						}
-
-
-						entity   = new game.entity.Tank({
+						entity = new game.entity.Tank({
 							alpha:    0.1,
 							color:    'red',
 							position: this.toScreenPosition(position, 'objects')
 						});
-
-						entity.addEffect(new lychee.effect.Lightning({
-							type:     lychee.effect.Lightning.TYPE.bounceeaseout,
-							duration: 1000,
-							position: this.toScreenPosition({
-								x: position.x,
-								y: position.y,
-								z: 30
-							}, 'custom')
-						}));
 
 						entity.addEffect(new lychee.effect.Alpha({
 							type:     lychee.effect.Alpha.TYPE.easeout,
@@ -259,12 +266,14 @@ console.log('MOVE');
 							shake:    { y: 30 }
 						}));
 
-
 						tile.addEffect(new lychee.effect.Shake({
 							type:     lychee.effect.Shake.TYPE.linear,
 							duration: 500,
 							shake:    { y: 20 }
 						}));
+
+
+						this.strikeLightning(entity);
 
 
 						var sterrain = this.getSurrounding(position, 'terrain');
@@ -348,6 +357,23 @@ console.log('MOVE');
 		/*
 		 * CUSTOM API
 		 */
+
+		get: function(position, layerid) {
+
+			var layer = this.state.queryLayer('game', layerid);
+			if (layer !== null) {
+
+				var entity = layer.getEntity(null, this.toScreenPosition(position, layerid));
+				if (entity !== null) {
+					return entity;
+				}
+
+			}
+
+
+			return null;
+
+		},
 
 		getSurrounding: function(position, layerid) {
 
@@ -528,6 +554,61 @@ console.log('MOVE');
 
 
 			return null;
+
+		},
+
+		strikeLightning: function(entity) {
+
+			var ui = this.state.getLayer('ui');
+			if (ui !== null && ui.effects.length === 0) {
+
+				var background = ui.getEntity('background');
+				if (background !== null) {
+
+					background.alpha = 0;
+					background.color = '#000000';
+
+					background.addEffect(new lychee.effect.Color({
+						type:     lychee.effect.Color.TYPE.bounceeaseout,
+						duration: 250,
+						color:    '#ffffff'
+					}));
+
+					background.addEffect(new lychee.effect.Alpha({
+						type:     lychee.effect.Alpha.TYPE.bounceeaseout,
+						duration: 250,
+						alpha:    0.5
+					}));
+
+					background.addEffect(new lychee.effect.Alpha({
+						type:     lychee.effect.Alpha.TYPE.bounceeaseout,
+						delay:    250,
+						duration: 250,
+						alpha:    0
+					}));
+
+				}
+
+				ui.addEffect(new lychee.effect.Shake({
+					type:     lychee.effect.Shake.TYPE.bounceeaseout,
+					duration: 1000,
+					shake:    { y: -20 + Math.random() * -30 }
+				}));
+
+			}
+
+
+			var position = this.toTilePosition(entity.position, 'objects');
+
+			entity.addEffect(new lychee.effect.Lightning({
+				type:     lychee.effect.Lightning.TYPE.bounceeaseout,
+				duration: 1000,
+				position: this.toScreenPosition({
+					x: position.x,
+					y: position.y,
+					z: 30
+				}, 'custom')
+			}));
 
 		}
 
