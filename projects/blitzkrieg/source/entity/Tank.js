@@ -41,7 +41,14 @@ lychee.define('game.entity.Tank').includes([
 		 */
 
 		canAction: function(action) {
+
+			if (action === 'attack' || action === 'move') {
+				return true;
+			}
+
+
 			return false;
+
 		},
 
 		setAction: function(action) {

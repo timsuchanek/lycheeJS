@@ -34,22 +34,21 @@ lychee.define('game.state.Game').requires([
 
 			if (this.__swiping === false) {
 
-				var logic   = this.logic;
-				var objects = this.queryLayer('game', 'objects');
-				var overlay = this.queryLayer('ui', 'overlay');
+				var logic        = this.logic;
+				var game_terrain = this.queryLayer('game', 'terrain');
+				var ui_overlay   = this.queryLayer('ui',   'overlay');
 
-				if (logic !== null && objects !== null) {
+				if (logic !== null && game_terrain !== null && ui_overlay !== null) {
 
-					position.x -= objects.offset.x;
-					position.y -= objects.offset.y;
+					position.x -= game_terrain.offset.x;
+					position.y -= game_terrain.offset.y;
 
 
 					var tileposition = logic.toTilePosition(position, 'terrain');
-					var entity       = objects.getEntity(null, logic.toScreenPosition(tileposition, 'objects'));
+					var object       = logic.get(tileposition, 'objects');
+					var terrain      = logic.get(tileposition, 'terrain');
 
-
-					logic.trigger('select',   [ entity, tileposition ]);
-					overlay.trigger('select', [ entity, tileposition ]);
+					logic.trigger('select', [ object, terrain, tileposition ]);
 
 				}
 
@@ -248,13 +247,17 @@ lychee.define('game.state.Game').requires([
 					var ui_overlay = this.queryLayer('ui', 'overlay');
 					if (ui_overlay !== null) {
 
-						ui_overlay.bind('action', function(action) {
+						logic.bind('select', function(object, terrain, tileposition) {
+							this.trigger('select', [ object, terrain, tileposition ]);
+						}, ui_overlay);
+
+						logic.bind('deselect', function() {
+							this.trigger('deselect', [ ]);
+						}, ui_overlay);
+
+						ui_overlay.bind('#action', function(overlay, action) {
 							this.trigger(action, []);
 						}, logic);
-
-						logic.bind('refresh', function(data) {
-							this.trigger('refresh', [ data ]);
-						}, ui_overlay);
 
 					}
 

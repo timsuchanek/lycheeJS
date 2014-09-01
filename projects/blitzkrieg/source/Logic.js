@@ -133,7 +133,7 @@ lychee.define('game.Logic').requires([
 		this.__blitzes = [];
 		this.__cursor  = null;
 		this.__focus   = {
-			entity:   null,
+			object:   null,
 			position: { x: null, y: null }
 		};
 
@@ -146,7 +146,7 @@ lychee.define('game.Logic').requires([
 		 * INITIALIZATION
 		 */
 
-		this.bind('select', function(entity, tileposition) {
+		this.bind('select', function(object, terrain, tileposition) {
 
 			var cursor = this.__cursor;
 			if (cursor !== null) {
@@ -157,7 +157,7 @@ lychee.define('game.Logic').requires([
 				}, 'sky');
 
 
-				if (entity !== null) {
+				if (object !== null) {
 					cursor.setState('active');
 				} else {
 					cursor.setState('default');
@@ -179,7 +179,7 @@ lychee.define('game.Logic').requires([
 			}
 
 
-			this.__focus.entity     = entity;
+			this.__focus.object     = object;
 			this.__focus.position.x = tileposition.x;
 			this.__focus.position.y = tileposition.y;
 
@@ -187,13 +187,10 @@ lychee.define('game.Logic').requires([
 
 		this.bind('deselect', function() {
 
-			this.__focus.entity     = null;
+			this.__focus.object     = null;
 			this.__focus.position.x = null;
 			this.__focus.position.y = null;
 
-console.log('DESELECT');
-
-// TODO: Deselection of Entity
 
 			var cursor = this.__cursor;
 			if (cursor !== null) {
@@ -224,6 +221,11 @@ console.log('DESELECT');
 		}, this);
 
 		this.bind('attack', function() {
+
+			var object = this.__focus.object;
+			if (object !== null) {
+			}
+
 console.log('ATTACK');
 		}, this);
 
@@ -234,11 +236,11 @@ console.log('MOVE');
 		this.bind('drop', function() {
 
 			var state    = this.state;
-			var entity   = this.__focus.entity;
+			var object   = this.__focus.object;
 			var position = this.__focus.position;
 			if (
 				   state !== null
-				&& entity === null
+				&& object === null
 				&& position.x !== null
 				&& position.y !== null
 			) {
@@ -249,20 +251,20 @@ console.log('MOVE');
 
 					if (terrain.isFree()) {
 
-						entity = new game.entity.Tank({
+						object = new game.entity.Tank({
 							alpha:    0.1,
 							color:    'red',
 							position: this.toScreenPosition(position, 'objects')
 						});
 
-						entity.addEffect(new lychee.effect.Alpha({
+						object.addEffect(new lychee.effect.Alpha({
 							type:     lychee.effect.Alpha.TYPE.easeout,
 							delay:    500,
 							duration: 500,
 							alpha:    1
 						}));
 
-						entity.addEffect(new lychee.effect.Shake({
+						object.addEffect(new lychee.effect.Shake({
 							type:     lychee.effect.Shake.TYPE.linear,
 							delay:    200,
 							duration: 500,
@@ -270,11 +272,13 @@ console.log('MOVE');
 						}));
 
 
-						this.strikeLightning(entity);
+						this.strikeLightning(object);
 						this.strikeEarthquake(this.get(position, 'terrain'));
 
 
-						this.state.queryLayer('game', 'objects').addEntity(entity);
+// this.trigger('select') ...
+
+						this.state.queryLayer('game', 'objects').addEntity(object);
 
 					}
 

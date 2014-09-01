@@ -63,66 +63,65 @@ lychee.define('game.ui.Overlay').includes([
 		 * INITIALIZATION
 		 */
 
-		this.bind('refresh', function(data) {
+		this.bind('select', function(object, terrain, tileposition) {
 
-			var blitz = typeof data.blitz === 'number' ? (data.blitz | 0) : 30000;
-			var drop  = typeof data.drop === 'number'  ? (data.drop  | 0) : 30000;
-
-
-			this.__blitz.start    = null;
-			this.__blitz.duration = blitz;
-
-
-			this.__drop.start     = null;
-			this.__drop.duration  = drop;
-			this.__drop.ready     = false;
-
-
-			var button = null;
-
-			button = this.getEntity('drop');
-			button.setState('drop-disabled');
-
-		}, this);
-
-		this.bind('select', function(entity, tileposition) {
-
-			var button    = null;
+			var entity    = null;
 			var dropready = this.__drop.ready;
 
+			if (object !== null) {
 
-			if (entity !== null) {
-
-				if (entity.canAction('attack') === true) {
-					button = this.getEntity('attack');
-					button.setState('attack');
+				if (object.canAction('attack') === true) {
+					entity = this.getEntity('attack');
+					entity.setState('attack');
 				}
 
-				if (entity.canAction('move') === true) {
-					button = this.getEntity('move');
-					button.setState('move');
+				if (object.canAction('move') === true) {
+					entity = this.getEntity('move');
+					entity.setState('move');
 				}
 
-				if (dropready === true) {
-					button = this.getEntity('drop');
-					button.setState('drop-disabled');
-				}
+
+				entity = this.getEntity('drop');
+				entity.setState('drop-disabled');
 
 			} else {
 
-				button = this.getEntity('attack');
-				button.setState('attack-disabled');
+				entity = this.getEntity('attack');
+				entity.setState('attack-disabled');
 
-				button = this.getEntity('move');
-				button.setState('move-disabled');
+				entity = this.getEntity('move');
+				entity.setState('move-disabled');
 
 
-				if (dropready === true) {
-					button = this.getEntity('drop');
-					button.setState('drop');
+				if (terrain !== null) {
+
+					if (terrain.isFree() && dropready === true) {
+						entity = this.getEntity('drop');
+						entity.setState('drop');
+					} else {
+						entity = this.getEntity('drop');
+						entity.setState('drop-disabled');
+					}
+
 				}
 
 			}
+
+		}, this);
+
+		this.bind('deselect', function() {
+
+			var entity = null;
+
+
+			entity = this.getEntity('attack');
+			entity.setState('attack-disabled');
+
+			entity = this.getEntity('move');
+			entity.setState('move-disabled');
+
+			entity = this.getEntity('drop');
+			entity.setState('drop-disabled');
 
 		}, this);
 
