@@ -26,8 +26,8 @@ lychee.define('game.Main').requires([
 			},
 
 			jukebox: {
-				music: false,
-				sound: false
+				music: true,
+				sound: true
 			},
 
 			renderer: {

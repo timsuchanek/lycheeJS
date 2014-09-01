@@ -11,6 +11,11 @@ lychee.define('game.Logic').requires([
 	'lychee.event.Emitter'
 ]).exports(function(lychee, game, global, attachments) {
 
+	var _music  = {
+		battle:    attachments['battle.msc'],
+		commando:  attachments['commando.msc']
+	};
+
 	var _sounds = {
 		lightning: attachments['lightning.snd']
 	};
@@ -401,18 +406,17 @@ console.log('MOVE ENTITY NAO TO ', focus.position);
 				this.state = state;
 				this.TILE  = state.main.TILE;
 
+				this.jukebox.play(_music.commando);
+
 				_enter.call(this, level);
 
-				return true;
-
 			}
-
-
-			return false;
 
 		},
 
 		leave: function() {
+
+			this.jukebox.stop(null);
 
 // TODO: leave() should cleanup all layers in State
 
@@ -676,6 +680,7 @@ console.log('MOVE ENTITY NAO TO ', focus.position);
 
 			entity.addEffect(new lychee.effect.Shake({
 				type:     lychee.effect.Shake.TYPE.linear,
+				delay:    500,
 				duration: 500,
 				shake:    { y: 20 }
 			}));
@@ -688,7 +693,7 @@ console.log('MOVE ENTITY NAO TO ', focus.position);
 
 					sterrain[st].addEffect(new lychee.effect.Shake({
 						type:     lychee.effect.Shake.TYPE.linear,
-						delay:    300,
+						delay:    750,
 						duration: 500,
 						shake:    { y: 10 }
 					}));
@@ -704,7 +709,7 @@ console.log('MOVE ENTITY NAO TO ', focus.position);
 
 					sobjects[so].addEffect(new lychee.effect.Shake({
 						type:     lychee.effect.Shake.TYPE.linear,
-						delay:    300,
+						delay:    750,
 						duration: 500,
 						shake:    { y: 10 }
 					}));
