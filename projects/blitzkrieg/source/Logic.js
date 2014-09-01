@@ -11,6 +11,12 @@ lychee.define('game.Logic').requires([
 	'lychee.event.Emitter'
 ]).exports(function(lychee, game, global, attachments) {
 
+	var _sounds = {
+		lightning: attachments['lightning.snd']
+	};
+
+
+
 	/*
 	 * HELPERS
 	 */
@@ -119,10 +125,11 @@ lychee.define('game.Logic').requires([
 
 	var Class = function(main) {
 
-		this.main  = main      || null;
-		this.loop  = main.loop || null;
-		this.TILE  = null;
-		this.state = null;
+		this.main    = main      || null;
+		this.jukebox = main.jukebox || null;
+		this.loop    = main.loop || null;
+		this.TILE    = null;
+		this.state   = null;
 
 		this.__blitzes = [];
 		this.__cursor  = null;
@@ -266,6 +273,7 @@ console.log('MOVE');
 
 						this.strikeLightning(entity);
 						this.strikeEarthquake(this.get(position, 'terrain'));
+
 
 						this.state.queryLayer('game', 'objects').addEntity(entity);
 
@@ -535,6 +543,7 @@ console.log('MOVE');
 
 			if (entity === null) return false;
 
+
 			var position = this.toTilePosition(entity.position, 'terrain');
 
 			entity.addEffect(new lychee.effect.Shake({
@@ -584,6 +593,9 @@ console.log('MOVE');
 		strikeLightning: function(entity) {
 
 			if (entity === null) return false;
+
+
+			this.jukebox.play(_sounds.lightning);
 
 
 			var ui = this.state.getLayer('ui');

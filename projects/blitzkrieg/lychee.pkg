@@ -62,7 +62,7 @@
 				"Overlay": [ "js", "json", "png" ]
 			},
 
-			"Logic": [ "js" ],
+			"Logic": [ "js", "lightning.snd" ],
 			"Main":  [ "js" ]
 
 		}
