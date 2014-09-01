@@ -15,6 +15,26 @@ lychee.define('game.Logic').requires([
 	 * HELPERS
 	 */
 
+	var _depth_sort = function() {
+
+		var state = this.state;
+		if (state !== null) {
+
+			var terrain = state.queryLayer('game', 'terrain');
+			if (terrain !== null) {
+
+				terrain.entities.sort(function(a, b) {
+					if (a.position.y < b.position.y) return -1;
+					if (a.position.y > b.position.y) return 1;
+					return 0;
+				});
+
+			}
+
+		}
+
+	};
+
 	var _parse_layer = function(layer, layerid) {
 
 		var tile       = this.TILE;
@@ -64,12 +84,14 @@ lychee.define('game.Logic').requires([
 				var blitz = level.blitzes[y][x];
 				if (blitz !== null) {
 
-					var center      = this.get({ x: x, y: y }, 'terrain');
-					var surrounding = this.getSurrounding({ x: x, y: y }, 'terrain');
-					if (center !== null && surrounding.length) {
+					var center  = this.get({ x: x, y: y }, 'terrain');
+					var terrain = this.getSurrounding({ x: x, y: y }, 'terrain');
+					var objects = this.getSurrounding({ x: x, y: y }, 'objects');
+					if (center !== null) {
 
 						blitz.setCenter(center);
-						blitz.setEntities(surrounding);
+						blitz.setTerrain(terrain);
+						blitz.setObjects(terrain);
 						blitz.setLogic(this);
 						this.__blitzes.push(blitz);
 
@@ -191,25 +213,7 @@ console.log('DESELECT');
 			}
 
 
-			this.loop.setTimeout(delay - delay / 5, function() {
-
-				var state = this.state;
-				if (state !== null) {
-
-					var terrain = state.queryLayer('game', 'terrain');
-					if (terrain !== null) {
-
-						terrain.entities.sort(function(a, b) {
-							if (a.position.y < b.position.y) return -1;
-							if (a.position.y > b.position.y) return 1;
-							return 0;
-						});
-
-					}
-
-				}
-
-			}, this);
+			this.loop.setTimeout(delay, _depth_sort, this);
 
 		}, this);
 
@@ -233,18 +237,11 @@ console.log('MOVE');
 				&& position.y !== null
 			) {
 
-				var terrain = state.queryLayer('game', 'terrain');
-				var objects = state.queryLayer('game', 'objects');
-				if (terrain !== null && objects !== null) {
+				var terrain = this.get(position, 'terrain');
+				var object  = this.get(position, 'objects');
+				if (terrain !== null && object === null) {
 
-					var tile   = terrain.getEntity(null, this.toScreenPosition(position, 'terrain'));
-					var object = objects.getEntity(null, this.toScreenPosition(position, 'objects'));
-
-					if (
-						   tile !== null
-						&& tile.isFree()
-						&& object === null
-					) {
+					if (terrain.isFree()) {
 
 						entity = new game.entity.Tank({
 							alpha:    0.1,
@@ -266,42 +263,11 @@ console.log('MOVE');
 							shake:    { y: 30 }
 						}));
 
-						tile.addEffect(new lychee.effect.Shake({
-							type:     lychee.effect.Shake.TYPE.linear,
-							duration: 500,
-							shake:    { y: 20 }
-						}));
-
 
 						this.strikeLightning(entity);
+						this.strikeEarthquake(this.get(position, 'terrain'));
 
-
-						var sterrain = this.getSurrounding(position, 'terrain');
-						for (var st = 0, stl = sterrain.length; st < stl; st++) {
-
-							sterrain[st].addEffect(new lychee.effect.Shake({
-								type:     lychee.effect.Shake.TYPE.linear,
-								delay:    300,
-								duration: 500,
-								shake:    { y: 10 }
-							}));
-
-						}
-
-						var sobjects = this.getSurrounding(position, 'objects');
-						for (var so = 0, sol = sobjects.length; so < sol; so++) {
-
-							sobjects[so].addEffect(new lychee.effect.Shake({
-								type:     lychee.effect.Shake.TYPE.linear,
-								delay:    300,
-								duration: 500,
-								shake:    { y: 10 }
-							}));
-
-						}
-
-
-						objects.addEntity(entity);
+						this.state.queryLayer('game', 'objects').addEntity(entity);
 
 					}
 
@@ -392,18 +358,24 @@ console.log('MOVE');
 				var y2     = position.y + 1;
 
 
-				coords.push({ x: x1, y: y0 });
-				coords.push({ x: x2, y: y0 });
-				coords.push({ x: x0, y: y1 });
-				coords.push({ x: x0, y: y2 });
-
-
 				if (y0 % 2 === 1) {
+
 					coords.push({ x: x2, y: y1 });
+					coords.push({ x: x2, y: y0 });
 					coords.push({ x: x2, y: y2 });
+					coords.push({ x: x0, y: y2 });
+					coords.push({ x: x1, y: y0 });
+					coords.push({ x: x0, y: y1 });
+
 				} else {
-					coords.push({ x: x1, y: y1 });
+
+					coords.push({ x: x0, y: y1 });
+					coords.push({ x: x2, y: y0 });
+					coords.push({ x: x0, y: y2 });
 					coords.push({ x: x1, y: y2 });
+					coords.push({ x: x1, y: y0 });
+					coords.push({ x: x1, y: y1 });
+
 				}
 
 
@@ -412,6 +384,8 @@ console.log('MOVE');
 					var entity = layer.getEntity(null, this.toScreenPosition(coords[c], layerid));
 					if (entity !== null) {
 						filtered.push(entity);
+					} else {
+						filtered.push(null);
 					}
 
 				}
@@ -557,7 +531,60 @@ console.log('MOVE');
 
 		},
 
+		strikeEarthquake: function(entity) {
+
+			if (entity === null) return false;
+
+			var position = this.toTilePosition(entity.position, 'terrain');
+
+			entity.addEffect(new lychee.effect.Shake({
+				type:     lychee.effect.Shake.TYPE.linear,
+				duration: 500,
+				shake:    { y: 20 }
+			}));
+
+
+			var sterrain = this.getSurrounding(position, 'terrain');
+			for (var st = 0, stl = sterrain.length; st < stl; st++) {
+
+				if (sterrain[st] !== null) {
+
+					sterrain[st].addEffect(new lychee.effect.Shake({
+						type:     lychee.effect.Shake.TYPE.linear,
+						delay:    300,
+						duration: 500,
+						shake:    { y: 10 }
+					}));
+
+				}
+
+			}
+
+			var sobjects = this.getSurrounding(position, 'objects');
+			for (var so = 0, sol = sobjects.length; so < sol; so++) {
+
+				if (sobjects[so] !== null) {
+
+					sobjects[so].addEffect(new lychee.effect.Shake({
+						type:     lychee.effect.Shake.TYPE.linear,
+						delay:    300,
+						duration: 500,
+						shake:    { y: 10 }
+					}));
+
+				}
+
+			}
+
+
+			return true;
+
+		},
+
 		strikeLightning: function(entity) {
+
+			if (entity === null) return false;
+
 
 			var ui = this.state.getLayer('ui');
 			if (ui !== null && ui.effects.length === 0) {
@@ -609,6 +636,9 @@ console.log('MOVE');
 					z: 30
 				}, 'custom')
 			}));
+
+
+			return true;
 
 		}
 
