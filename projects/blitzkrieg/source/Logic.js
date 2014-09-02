@@ -225,51 +225,53 @@ lychee.define('game.Logic').requires([
 			}
 
 
+			this.__focus.object     = object;
+			this.__focus.position.x = tileposition.x;
+			this.__focus.position.y = tileposition.y;
+
+
 			var overlay = this.__ui.overlay;
+			var action  = this.__mode.action;
 			if (overlay !== null) {
 
-				var actionobject = this.__mode.object;
-				if (actionobject === null) {
-					actionobject = object;
-				}
+				if (action === null) {
 
+					object = this.__mode.object || object;
 
-				overlay.setObject(actionobject);
+					if (object === null) {
 
+						overlay.setObject(null);
 
-				if (actionobject === null) {
-
-					overlay.hideAction('attack');
-					overlay.hideAction('move');
-
-					if (terrain !== null && terrain.isFree()) {
-						overlay.showAction('drop');
-					} else {
-						overlay.hideAction('drop');
-					}
-
-				} else {
-
-					if (actionobject.canAction('attack')) {
-						overlay.showAction('attack');
-					} else {
 						overlay.hideAction('attack');
-					}
-
-					if (actionobject.canAction('move')) {
-						overlay.showAction('move');
-					} else {
 						overlay.hideAction('move');
+
+						if (terrain !== null && terrain.isFree()) {
+							overlay.showAction('drop');
+						} else {
+							overlay.hideAction('drop');
+						}
+
+					} else {
+
+						overlay.setObject(object);
+
+						if (object.canAction('attack')) {
+							overlay.showAction('attack');
+						} else {
+							overlay.hideAction('attack');
+						}
+
+						if (object.canAction('move')) {
+							overlay.showAction('move');
+						} else {
+							overlay.hideAction('move');
+						}
+
 					}
 
 				}
 
 			}
-
-
-			this.__focus.object     = object;
-			this.__focus.position.x = tileposition.x;
-			this.__focus.position.y = tileposition.y;
 
 		}, this);
 
@@ -318,15 +320,55 @@ lychee.define('game.Logic').requires([
 
 		this.bind('attack', function() {
 
-this.jukebox.play(_sounds.voice_attack);
-console.log('ATTACK');
+			var focus   = this.__focus;
+			var mode    = this.__mode;
+			var overlay = this.__ui.overlay;
+
+			if (mode.action !== 'attack') {
+
+				if (
+					   focus.object !== null
+					&& focus.object.canAction('attack')
+				) {
+
+					mode.object = focus.object;
+					mode.action = 'attack';
+
+					if (overlay !== null) {
+						overlay.hideAction('move');
+					}
+
+				}
+
+			} else if (mode.action === 'attack') {
+
+				if (focus.object !== null) {
+
+					if (focus.object.color !== mode.object.color) {
+
+						this.jukebox.play(_sounds.voice_attack);
+
+						this.__actions.push({
+							type:   'attack',
+							object: mode.object,
+							target: focus.object
+						});
+
+						this.trigger('deselect', []);
+
+					}
+
+				}
+
+			}
 
 		}, this);
 
 		this.bind('move', function() {
 
-			var focus = this.__focus;
-			var mode  = this.__mode;
+			var focus   = this.__focus;
+			var mode    = this.__mode;
+			var overlay = this.__ui.overlay;
 
 			if (mode.action !== 'move') {
 
@@ -334,26 +376,34 @@ console.log('ATTACK');
 					   focus.object !== null
 					&& focus.object.canAction('move')
 				) {
+
 					mode.object = focus.object;
 					mode.action = 'move';
-				}
 
-// TODO: deactivate attack button
-console.log('MOVE MODE ACTIVATED', focus.object, mode);
+					if (overlay !== null) {
+						overlay.hideAction('attack');
+					}
+
+				}
 
 			} else if (mode.action === 'move') {
 
-console.log('MOVE ENTITY NAO TO ', focus.position);
-
 				if (focus.position !== null) {
 
-					this.jukebox.play(_sounds.voice_move);
+					var terrain = this.get(focus.position, 'terrain');
+					if (terrain !== null && terrain.isFree()) {
 
-					this.__actions.push({
-						type:   'move',
-						entity: mode.entity,
-						target: focus.position
-					});
+						this.jukebox.play(_sounds.voice_move);
+
+						this.__actions.push({
+							type:   'move',
+							entity: mode.entity,
+							target: focus.position
+						});
+
+						this.trigger('deselect', []);
+
+					}
 
 				}
 

@@ -245,6 +245,21 @@ lychee.define('game.ui.Overlay').includes([
 				}
 
 
+				x1 = x0 + 296;
+				y1 = y0 + 38;
+
+				renderer.setAlpha(0.5);
+				renderer.drawBox(
+					x1,
+					y1,
+					x1 + 64,
+					y1 + 64,
+					'#000000',
+					true
+				);
+				renderer.setAlpha(alpha);
+
+
 				var object = this.__object;
 				if (object !== null) {
 
@@ -276,22 +291,6 @@ lychee.define('game.ui.Overlay').includes([
 						);
 
 					}
-
-				} else {
-
-					x1 = x0 + 296;
-					y1 = y0 + 38;
-
-					renderer.setAlpha(0.5);
-					renderer.drawBox(
-						x1,
-						y1,
-						x1 + 64,
-						y1 + 64,
-						'#000000',
-						true
-					);
-					renderer.setAlpha(alpha);
 
 				}
 
