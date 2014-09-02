@@ -17,7 +17,9 @@ lychee.define('game.Logic').requires([
 	};
 
 	var _sounds = {
-		lightning: attachments['lightning.snd']
+		select_tank:     attachments['select-tank.snd'],
+		select_position: attachments['select-position.snd'],
+		lightning:       attachments['lightning.snd']
 	};
 
 
@@ -176,10 +178,23 @@ lychee.define('game.Logic').requires([
 				}, 'sky');
 
 
+				if (screenposition.x !== cursor.position.x || screenposition.y !== cursor.position.y) {
+					this.jukebox.play(_sounds.select_position);
+				}
+
+
 				if (object !== null) {
+
+					if (object instanceof game.entity.Tank) {
+						this.jukebox.play(_sounds.select_tank);
+					}
+
 					cursor.setState('active');
+
 				} else {
+
 					cursor.setState('default');
+
 				}
 
 				cursor.setVisible(true);
@@ -590,6 +605,10 @@ console.log('MOVE ENTITY NAO TO ', focus.position);
 					if (bb !== 0) {
 						screenposition.y += ((tile.height - tile.offset) - (bb - tile.offset));
 					}
+
+
+					screenposition.x |= 0;
+					screenposition.y |= 0;
 
 
 					return screenposition;
