@@ -23,6 +23,11 @@ lychee.define('game.entity.Object').includes([
 		var settings = lychee.extend({}, data);
 
 
+		this.action = 'idle';
+		this.color  = 'grey';
+		this.health = 100;
+
+
 		settings.texture = _texture;
 		settings.map     = _config.map;
 		settings.radius  = _config.radius;

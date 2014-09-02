@@ -234,6 +234,9 @@ lychee.define('game.Logic').requires([
 				}
 
 
+				overlay.setObject(actionobject);
+
+
 				if (actionobject === null) {
 
 					overlay.hideAction('attack');

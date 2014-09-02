@@ -14,6 +14,7 @@ lychee.define('game.entity.Tank').includes([
 
 		this.action = 'idle';
 		this.color  = 'red';
+		this.health = 100;
 		this.path   = {
 			current: null,
 			stack:   []

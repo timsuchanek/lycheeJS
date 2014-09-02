@@ -20,7 +20,7 @@ lychee.define('game.ui.Overlay').includes([
 		if (state !== null) {
 
 			if (_config.map[state] instanceof Array) {
-				return _config.map[state][0];
+				return _config.map[state];
 			}
 
 		}
@@ -36,22 +36,41 @@ lychee.define('game.ui.Overlay').includes([
 	 * IMPLEMENTATION
 	 */
 
+	var _width  = 384;
+	var _height = 128;
+
 	var Class = function(data) {
 
 		var settings = lychee.extend({}, data);
 
 
+		this.__background = {
+			map: _get_map('background')[0]
+		};
+
 		this.__blitz = {
 			start:    null,
-			duration: 10000,
-			map:      lychee.extend({}, _get_map('blitz-bar'))
+			duration: 30000,
+			map:      lychee.extend({}, _get_map('bar-blitz')[0])
 		};
 
 		this.__drop = {
 			start:    null,
-			duration: 1000,
+			duration: 10000,
 			ready:    false,
-			map:      lychee.extend({}, _get_map('drop-bar'))
+			map:      lychee.extend({}, _get_map('bar-drop')[0])
+		};
+
+		this.__health = {
+			map:      lychee.extend({}, _get_map('bar-health')[0])
+		};
+
+		this.__object    = null;
+		this.__scanlines = {
+			start:    null,
+			duration: 1500,
+			frame:    0,
+			map:      _get_map('scanlines')
 		};
 
 
@@ -164,6 +183,8 @@ lychee.define('game.ui.Overlay').includes([
 				var position = this.position;
 
 				var map = null;
+				var x0  = position.x + offsetX - _width  / 2;
+				var y0  = position.y + offsetY - _height / 2;
 				var x1  = 0;
 				var y1  = 0;
 
@@ -173,12 +194,12 @@ lychee.define('game.ui.Overlay').includes([
 				}
 
 
-				map = _get_map('background');
+				map = this.__background.map || null;
 
 				if (map !== null) {
 
-					x1 = position.x + offsetX - map.w / 2;
-					y1 = position.y + offsetY - map.h / 2;
+					x1 = x0;
+					y1 = y0;
 
 					renderer.drawSprite(
 						x1,
@@ -194,8 +215,8 @@ lychee.define('game.ui.Overlay').includes([
 
 				if (map !== null) {
 
-					x1 = position.x + offsetX - map.width / 2;
-					y1 = position.y + offsetY - 12;
+					x1 = x0 + 55;
+					y1 = y0 + 52;
 
 					renderer.drawSprite(
 						x1,
@@ -211,8 +232,8 @@ lychee.define('game.ui.Overlay').includes([
 
 				if (map !== null) {
 
-					x1 = position.x + offsetX - map.width / 2;
-					y1 = position.y + offsetY + 20;
+					x1 = x0 + 55;
+					y1 = y0 + 84;
 
 					renderer.drawSprite(
 						x1,
@@ -220,6 +241,76 @@ lychee.define('game.ui.Overlay').includes([
 						texture,
 						map
 					);
+
+				}
+
+
+				var object = this.__object;
+				if (object !== null) {
+
+					x1 = x0 + 296 - object.position.x + 32;
+					y1 = y0 + 38  - object.position.y + 32;
+
+					object.render(
+						renderer,
+						x1,
+						y1
+					);
+
+
+					map   = this.__health.map || null;
+
+					if (map !== null) {
+
+						x1 = x0 + 295;
+						y1 = y0 + 106;
+
+
+						map.w = (object.health || 100) / 100 * map.width;
+
+						renderer.drawSprite(
+							x1,
+							y1,
+							texture,
+							map
+						);
+
+					}
+
+				} else {
+
+					x1 = x0 + 296;
+					y1 = y0 + 38;
+
+					renderer.setAlpha(0.5);
+					renderer.drawBox(
+						x1,
+						y1,
+						x1 + 64,
+						y1 + 64,
+						'#000000',
+						true
+					);
+					renderer.setAlpha(alpha);
+
+				}
+
+
+				map = this.__scanlines.map[this.__scanlines.frame] || null;
+
+				if (map !== null) {
+
+					x1 = x0 + 296;
+					y1 = y0 + 38;
+
+					renderer.setAlpha(0.5);
+					renderer.drawSprite(
+						x1,
+						y1,
+						texture,
+						map
+					);
+					renderer.setAlpha(alpha);
 
 				}
 
@@ -284,6 +375,20 @@ lychee.define('game.ui.Overlay').includes([
 
 			}
 
+
+			var scanlines = this.__scanlines;
+			if (scanlines.start === null) {
+				scanlines.start = clock;
+			}
+
+			var st = (clock - scanlines.start) / scanlines.duration;
+			if (st <= 1) {
+				scanlines.frame = Math.max(0, Math.ceil(st * 16) - 1);
+			} else {
+				scanlines.start = clock;
+				scanlines.frame = 0;
+			}
+
 		},
 
 
@@ -291,6 +396,16 @@ lychee.define('game.ui.Overlay').includes([
 		/*
 		 * CUSTOM API
 		 */
+
+		setObject: function(object) {
+
+			object = object instanceof Object ? object : null;
+
+			this.__object = object;
+
+			return true;
+
+		},
 
 		showAction: function(action) {
 
