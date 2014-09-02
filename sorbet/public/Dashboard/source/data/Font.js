@@ -83,21 +83,21 @@ lychee.define('dashboard.data.Font').tags({
 		y2 = typeof y2 === 'number' ? y2 : 0;
 
 
-		var data      = this.getImageData(x1, y1, x2, y2);
+		var data      = this.getImageData(x1, y1, x2 - x1, y2 - y1);
 		var baselines = [];
 		var margin    = settings.spacing;
 
 		for (var c = 0; c < charset.length; c++) {
 
-			var baseline = y2;
+			var baseline = data.height;
 
 			for (var x = margin; x < margin + widthmap[c]; x++) {
 
-				for (var y = y1; y < (y2 - y1) / 2; y++) {
+				for (var y = y1; y < data.height / 2; y++) {
 
 					if (baseline > y) {
 
-						if (data.data[y * (y2 - y1) * 4 + x * 4 + 3]) {
+						if (data.data[y * data.height * 4 + x * 4 + 3]) {
 							baseline = y;
 							break;
 						}
@@ -116,39 +116,15 @@ lychee.define('dashboard.data.Font').tags({
 		}
 
 
-		var rating = {};
-		for (var b = 0; b < baselines.length; b++) {
-
-			if (rating[baselines[b]] === undefined) {
-				rating[baselines[b]] = 0;
-			} else {
-				rating[baselines[b]]++;
-			}
-
-		}
+		baselines.sort(function(a, b) {
+			if (a < b) return -1;
+			if (a > b) return  1;
+			return 0;
+		});
 
 
-		var amount  = 0;
-		var current = 0;
-
-		for (var r in rating) {
-
-			var baseline = parseInt(r, 10);
-
-			if (rating[r] > amount) {
-				amount  = rating[r];
-				current = baseline;
-			} else if (
-				rating[r] === current
-				&& baseline < current
-			) {
-				current = baseline;
-			}
-
-		}
-
-
-		return current;
+		// returns the minimum baseline
+		return baselines[0];
 
 	};
 
@@ -160,61 +136,38 @@ lychee.define('dashboard.data.Font').tags({
 		y2 = typeof y2 === 'number' ? y2 : 0;
 
 
-		var margin = {
-			top:    0,
-			bottom: 0
-		};
-
-
-		var data  = this.getImageData(x1, y1, x2, y2);
-		var x     = 0;
-		var y     = 0;
+		var data  = this.getImageData(x1, y1, x2 - x1, y2 - y1);
 		var found = false;
 
+		var mtop    = 96;
+		var mbottom = 0;
 
-		for (y = y1; y < y2; y++) {
+		for (var d = 0, dl = data.data.length; d < dl; d += 4) {
 
-			found = false;
-
-			for (x = x1; x < x2; x++) {
-
-				if (data.data[y * (y2 - y1) * 4 + x * 4 + 3]) {
-					found = true;
-					break;
-				}
-
+			// var x = (d / 4) % data.width;
+			var y = Math.floor((d / 4) / data.width);
+			if (y < mtop && data.data[d + 3] > 0) {
+				mtop = y;
 			}
 
-			if (found === true) {
-				margin.top = y;
+		}
+
+		for (var d = data.data.length - 1; d >= 0; d -= 4) {
+
+			// var x = (d / 4) % data.width;
+			var y = Math.floor((d / 4) / data.width);
+			if (y > mbottom && data.data[d + 3] > 0) {
+				mbottom = y;
 				break;
 			}
 
 		}
 
 
-		for (y = y2 - 1; y >= 0; y--) {
-
-			found = false;
-
-			for (x = x1; x < x2; x++) {
-
-				if (data.data[y * (y2 - y1) * 4 + x * 4 + 3]) {
-					found = true;
-					break;
-				}
-
-			}
-
-			if (found === true) {
-				margin.bottom = y + 1;
-				break;
-			}
-
-		}
-
-
-		return margin;
+		return {
+			top:    y1 + mtop,
+			bottom: y2 - mbottom
+		};
 
 	};
 
@@ -365,10 +318,11 @@ lychee.define('dashboard.data.Font').tags({
 		var margin = _measure_margin.call(texture.ctx, 0, 0, width, height);
 		if (margin.top > 0 || margin.bottom > 0) {
 
-			var h   = height - margin.top - (height - margin.bottom);
+			var h   = height - margin.top - margin.bottom;
 			height  = h;
 			texture = new _buffer(width, height);
 			preview = new _buffer(width, height);
+
 
 			if (settings.outline > 0) {
 
@@ -424,6 +378,7 @@ lychee.define('dashboard.data.Font').tags({
 			width,
 			height
 		);
+
 
 
 		/*
