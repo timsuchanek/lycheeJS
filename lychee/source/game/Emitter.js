@@ -26,6 +26,7 @@ lychee.define('lychee.game.Emitter').requires([
 
 		this.setDuration(settings.duration);
 		this.setEntity(settings.entity);
+		this.setLifetime(settings.lifetime);
 		this.setPosition(settings.position);
 		this.setType(settings.type);
 		this.setVelocity(settings.velocity);
