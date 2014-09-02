@@ -17,9 +17,15 @@ lychee.define('game.Logic').requires([
 	};
 
 	var _sounds = {
+
 		select_tank:     attachments['select-tank.snd'],
 		select_position: attachments['select-position.snd'],
-		lightning:       attachments['lightning.snd']
+		lightning:       attachments['lightning.snd'],
+
+		voice_idle:      attachments['voice-idle.snd'],
+		voice_move:      attachments['voice-move.snd'],
+		voice_attack:    attachments['voice-attack.snd']
+
 	};
 
 
@@ -186,7 +192,13 @@ lychee.define('game.Logic').requires([
 				if (object !== null) {
 
 					if (object instanceof game.entity.Tank) {
+
 						this.jukebox.play(_sounds.select_tank);
+
+						if (object.action === 'idle') {
+							this.jukebox.play(_sounds.voice_idle);
+						}
+
 					}
 
 					cursor.setState('active');
@@ -303,6 +315,7 @@ lychee.define('game.Logic').requires([
 
 		this.bind('attack', function() {
 
+this.jukebox.play(_sounds.voice_attack);
 console.log('ATTACK');
 
 		}, this);
@@ -330,6 +343,8 @@ console.log('MOVE MODE ACTIVATED', focus.object, mode);
 console.log('MOVE ENTITY NAO TO ', focus.position);
 
 				if (focus.position !== null) {
+
+					this.jukebox.play(_sounds.voice_move);
 
 					this.__actions.push({
 						type:   'move',
