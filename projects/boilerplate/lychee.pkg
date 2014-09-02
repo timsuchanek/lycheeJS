@@ -54,6 +54,11 @@
 				"Menu":      [ "js", "json", "headline.fnt", "normal.fnt" ]
 			},
 
+			"ui": {
+				"Button": [ "js", "json", "png", "fnt" ],
+				"Layer":  [ "js", "json", "png", "fnt" ]
+			},
+
 			"DeviceSpecificHacks": [ "js" ],
 			"Main":                [ "js" ]
 

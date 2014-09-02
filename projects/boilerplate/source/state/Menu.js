@@ -1,17 +1,16 @@
 
 lychee.define('game.state.Menu').requires([
+	'lychee.effect.Alpha',
+	'lychee.effect.Position',
+	'lychee.game.Background',
 	'game.entity.lycheeJS',
-	'lychee.ui.Layer',
-	'lychee.ui.Label'
+	'game.ui.Button',
+	'game.ui.Layer'
 ]).includes([
 	'lychee.game.State'
 ]).exports(function(lychee, game, global, attachments) {
 
-	var _blob  = attachments["json"].buffer;
-	var _fonts = {
-		headline: attachments["headline.fnt"],
-		normal:   attachments["normal.fnt"]
-	};
+	var _blob = attachments["json"].buffer;
 
 
 	var Class = function(main) {
@@ -32,73 +31,148 @@ lychee.define('game.state.Menu').requires([
 			lychee.game.State.prototype.deserialize.call(this, blob);
 
 
-			var root   = this.queryLayer('ui', 'root');
 			var entity = null;
+			var height = this.renderer.height;
 
 
-			this.queryLayer('ui', 'root > welcome > title').setLabel(this.main.settings.title);
 
-			this.queryLayer('ui', 'root > welcome > newgame').bind('touch', function() {
+			/*
+			 * WELCOME LAYER
+			 */
+
+			entity = this.queryLayer('ui', 'welcome > newgame');
+			entity.bind('touch', function() {
 				this.main.changeState('game');
 			}, this);
 
-			this.queryLayer('ui', 'root > welcome > highscore').bind('touch', function() {
+			entity = this.queryLayer('ui', 'welcome > highscore');
+			entity.bind('touch', function() {
 				this.main.changeState('highscore');
 			}, this);
 
-			this.queryLayer('ui', 'root > welcome > settings').bind('touch', function() {
-				this.setPosition({ x: -1/4 * this.width });
-			}, root);
+			entity = this.queryLayer('ui', 'welcome > settings');
+			entity.bind('touch', function() {
 
-			this.queryLayer('ui', 'root > settings > title').bind('touch', function() {
-				this.setPosition({ x: 1/4 * this.width });
-			}, root);
+				var height   = this.renderer.height;
+				var welcome  = this.queryLayer('ui', 'welcome');
+				var settings = this.queryLayer('ui', 'settings');
 
+				if (welcome !== null && settings !== null) {
 
-			entity = this.queryLayer('ui', 'root > settings > fullscreen');
-			entity.setLabel('Fullscreen: ' + ((this.main.viewport.fullscreen === true) ? 'On': 'Off'));
-			entity.bind('#touch', function(entity) {
+					settings.setPosition({
+						y: -1 * height
+					});
 
-				var viewport   = this.main.viewport;
-				var fullscreen = !viewport.fullscreen;
+					settings.addEffect(new lychee.effect.Position({
+						type:     lychee.effect.Position.TYPE.easeout,
+						duration: 500,
+						position: {
+							y: 0
+						}
+					}));
 
-				entity.setLabel('Fullscreen: ' + ((fullscreen === true) ? 'On': 'Off'));
-				viewport.setFullscreen(fullscreen);
+					welcome.addEffect(new lychee.effect.Position({
+						type:     lychee.effect.Position.TYPE.easeout,
+						duration: 500,
+						position: {
+							y: 1 * height
+						}
+					}));
+
+				}
 
 			}, this);
 
-			entity = this.queryLayer('ui', 'root > settings > music');
-			entity.setLabel('Music: ' + ((this.main.jukebox.music === true) ? 'On': 'Off'));
+
+
+			/*
+			 * SETTINGS LAYER
+			 */
+
+			entity = this.queryLayer('ui', 'settings');
+			entity.position.y = -1 * height;
+
+
+			var isfullscreen = this.main.viewport.fullscreen === true;
+
+			entity = this.queryLayer('ui', 'settings > fullscreen');
+			entity.setLabel('Fullscreen ' + (isfullscreen ? 'On' : 'Off'));
+			entity.setState((isfullscreen ? 'active' : 'default'));
+			entity.bind('#touch', function(entity) {
+
+				var viewport = this.main.viewport;
+				var toggle   = !viewport.fullscreen;
+
+				entity.setLabel('Fullscreen ' + (toggle ? 'On': 'Off'));
+				entity.setState((toggle ? 'active' : 'default'));
+				viewport.setFullscreen(toggle);
+
+			}, this);
+
+
+			var issound = this.main.jukebox.sound === true;
+
+			entity = this.queryLayer('ui', 'settings > sound');
+			entity.setLabel('Sound ' + (issound ? 'On' : 'Off'));
+			entity.setState((issound ? 'active' : 'default'));
 			entity.bind('#touch', function(entity) {
 
 				var jukebox = this.main.jukebox;
-				var music   = !jukebox.music;
+				var toggle  = !jukebox.sound;
 
-				entity.setLabel('Music: ' + ((music === true) ? 'On': 'Off'));
-				jukebox.setMusic(music);
-
-			}, this);
-
-			entity = this.queryLayer('ui', 'root > settings > sound');
-			entity.setLabel('Sound: ' + ((this.main.jukebox.sound === true) ? 'On': 'Off'));
-			entity.bind('#touch', function(entity) {
-
-				var jukebox = this.main.jukebox;
-				var sound   = !jukebox.sound;
-
-				entity.setLabel('Sound: ' + ((sound === true) ? 'On': 'Off'));
-				jukebox.setSound(sound);
+				entity.setLabel('Sound ' + (toggle ? 'On': 'Off'));
+				entity.setState((toggle ? 'active' : 'default'));
+				jukebox.setSound(toggle);
 
 			}, this);
 
-			entity = this.queryLayer('ui', 'root > settings > debug');
-			entity.setLabel('Debug: ' + ((lychee.debug === true) ? 'On': 'Off'));
+
+			var isdebug = lychee.debug === true;
+
+			entity = this.queryLayer('ui', 'settings > debug');
+			entity.setLabel('Debug ' + (isdebug ? 'On' : 'Off'));
+			entity.setState((isdebug ? 'active' : 'default'));
 			entity.bind('#touch', function(entity) {
 
-				var debug = !lychee.debug;
+				var toggle = !lychee.debug;
 
-				entity.setLabel('Debug: ' + ((debug === true) ? 'On': 'Off'));
-				lychee.debug = debug;
+				entity.setLabel('Debug ' + (toggle ? 'On': 'Off'));
+				entity.setState((toggle ? 'active' : 'default'));
+				lychee.debug = toggle;
+
+			}, this);
+
+
+			entity = this.queryLayer('ui', 'settings > back');
+			entity.bind('touch', function() {
+
+				var height   = this.renderer.height;
+				var welcome  = this.queryLayer('ui', 'welcome');
+				var settings = this.queryLayer('ui', 'settings');
+
+				if (welcome !== null && settings !== null) {
+
+					welcome.setPosition({
+						y: -1 * height
+					});
+
+					welcome.addEffect(new lychee.effect.Position({
+						type:     lychee.effect.Position.TYPE.easeout,
+						duration: 500,
+						position: {
+							y: 0
+						}
+					}));
+
+					settings.addEffect(new lychee.effect.Position({
+						type:     lychee.effect.Position.TYPE.easeout,
+						duration: 500,
+						position: {
+							y: 1 * height
+						}
+					}));
+
+				}
 
 			}, this);
 
@@ -114,38 +188,12 @@ lychee.define('game.state.Menu').requires([
 				var height = renderer.height;
 
 
-				var root = this.queryLayer('ui', 'root');
-
-				root.width  = width * 2;
-				root.height = height;
-
+				entity = this.queryLayer('background', 'background');
+				entity.width  = width;
+				entity.height = height;
 
 				entity = this.queryLayer('background', 'lycheeJS');
 				entity.position.y = 1/2 * height - 32;
-
-
-				entity = this.queryLayer('ui', 'root > welcome');
-				entity.width      = width;
-				entity.height     = height;
-				entity.position.x = -1/2 * width;
-
-
-				entity = this.queryLayer('ui', 'root > welcome > title');
-				entity.position.y = -1/2 * height + 64;
-
-
-				entity = this.queryLayer('ui', 'root > settings');
-				entity.width      = width;
-				entity.height     = height;
-				entity.position.x = 1/2 * width;
-
-
-				entity = this.queryLayer('ui', 'root > settings > title');
-				entity.position.y = -1/2 * height + 64;
-
-
-				this.getLayer('ui').reshape();
-				root.setPosition({ x: 1/2 * width });
 
 			}
 
@@ -157,18 +205,6 @@ lychee.define('game.state.Menu').requires([
 		enter: function(data) {
 
 			lychee.game.State.prototype.enter.call(this);
-
-
-			var renderer = this.renderer;
-			if (renderer !== null) {
-
-				var width = renderer.width;
-				var root  = this.queryLayer('ui', 'root');
-				if (root !== null) {
-					root.setPosition({ x: 1/2 * width });
-				}
-
-			}
 
 		}
 
