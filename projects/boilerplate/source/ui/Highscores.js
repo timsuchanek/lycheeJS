@@ -68,7 +68,7 @@ lychee.define('game.ui.Highscores').requires([
 
 			var font  = this.font;
 			var table = this.__table;
-			if (font !== null && table.length > 0) {
+			if (font !== null) {
 
 				var hw = this.width  / 2;
 				var hh = this.height / 2;
@@ -78,29 +78,47 @@ lychee.define('game.ui.Highscores').requires([
 				var y2 = position.y + offsetY + hh;
 
 
-				for (var t = 0, tl = table.length; t < tl; t++) {
+				if (table.length > 0) {
 
-					var user   = table[t][0];
-					var score  = table[t][1];
+					var ox = table[0][1].length * 12;
+					var oy = 0;
 
-					var offset = t * 24;
-					if (y1 + offset < y2) {
+					for (var t = 0, tl = table.length; t < tl; t++) {
 
-						renderer.drawText(
-							x1,
-							y1 + offset,
-							user,
-							font
-						);
+						var user   = table[t][0];
+						var score  = table[t][1];
 
-						renderer.drawText(
-							x2 - hw,
-							y1 + offset,
-							score,
-							font
-						);
+						oy = t * 24;
+
+						if (y1 + oy < y2) {
+
+							renderer.drawText(
+								x1,
+								y1 + oy,
+								user,
+								font
+							);
+
+							renderer.drawText(
+								x2 - ox,
+								y1 + oy,
+								score,
+								font
+							);
+
+						}
 
 					}
+
+				} else {
+
+					renderer.drawText(
+						x1 + hw,
+						y1 + hh,
+						'Waiting for Multicast ...',
+						font,
+						true
+					);
 
 				}
 
