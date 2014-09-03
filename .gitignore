@@ -1,6 +1,7 @@
 
 /projects/*
 /projects/*/build
+/projects/*/lychee.store
 !/projects/README.md
 !/projects/blitzkrieg
 !/projects/boilerplate
