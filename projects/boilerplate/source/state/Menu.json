@@ -41,7 +41,7 @@
 						}, {
 							"constructor": "game.ui.Button",
 							"arguments": [{
-								"label": "Highscores",
+								"label": "High Scores",
 								"position": {
 									"x": 0,
 									"y": 80
@@ -59,7 +59,7 @@
 						}],
 						"map": {
 							"newgame": 0,
-							"highscore": 1,
+							"highscores": 1,
 							"settings": 2
 						}
 					}
@@ -116,10 +116,52 @@
 							"debug": 3
 						}
 					}
+				}, {
+					"constructor": "game.ui.Layer",
+					"arguments": [{
+						"label": "High Scores"
+					}],
+					"blob": {
+						"entities": [{
+							"constructor": "game.ui.Button",
+							"arguments": [{
+								"state": "back",
+								"position": {
+									"x": -192,
+									"y": -96
+								}
+							}]
+						}, {
+							"constructor": "game.ui.Button",
+							"arguments": [{
+								"label": "Create Score",
+								"position": {
+									"x": 0,
+									"y": -32
+								}
+							}]
+						}, {
+							"constructor": "game.ui.Highscores",
+							"arguments": [{
+								"width": 416,
+								"height": 192,
+								"position": {
+									"x": 0,
+									"y": 112
+								}
+							}, "#MAIN" ]
+						}],
+						"map": {
+							"back": 0,
+							"button": 1,
+							"layer": 2
+						}
+					}
 				}],
 				"map": {
 					"welcome": 0,
-					"settings": 1
+					"settings": 1,
+					"highscores": 2
 				}
 			}
 		}

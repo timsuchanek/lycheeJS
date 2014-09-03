@@ -48,14 +48,14 @@
 			},
 
 			"state": {
-				"Game":      [ "js", "json", "fnt" ],
-				"Highscore": [ "js", "json" ],
-				"Menu":      [ "js", "json" ]
+				"Game": [ "js", "json", "fnt" ],
+				"Menu": [ "js", "json" ]
 			},
 
 			"ui": {
-				"Button": [ "js", "json", "png", "fnt" ],
-				"Layer":  [ "js", "json", "png", "fnt" ]
+				"Button":     [ "js", "json", "png", "fnt" ],
+				"Highscores": [ "js", "fnt" ],
+				"Layer":      [ "js", "json", "png", "fnt" ]
 			},
 
 			"DeviceSpecificHacks": [ "js" ],

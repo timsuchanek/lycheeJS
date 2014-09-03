@@ -2,7 +2,6 @@
 lychee.define('game.Main').requires([
 	'game.net.Client',
 	'game.state.Game',
-	'game.state.Highscore',
 	'game.state.Menu',
 	'game.DeviceSpecificHacks'
 ]).includes([
@@ -81,9 +80,8 @@ lychee.define('game.Main').requires([
 			}
 
 
-			this.setState('game',      new game.state.Game(this));
-//			this.setState('highscore', new game.state.Highscore(this));
-			this.setState('menu',      new game.state.Menu(this));
+			this.setState('game', new game.state.Game(this));
+			this.setState('menu', new game.state.Menu(this));
 			this.changeState('menu');
 
 		}

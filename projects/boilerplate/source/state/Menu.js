@@ -6,6 +6,7 @@ lychee.define('game.state.Menu').requires([
 	'lychee.game.Background',
 	'game.entity.lycheeJS',
 	'game.ui.Button',
+	'game.ui.Highscores',
 	'game.ui.Layer'
 ]).includes([
 	'lychee.game.State'
@@ -13,8 +14,51 @@ lychee.define('game.state.Menu').requires([
 
 	var _blob = attachments["json"].buffer;
 
+
+
+	/*
+	 * HELPERS
+	 */
+
 	var _COLOR_CYCLE = [ '#3f7cb6', '#5ad2f0', '#434343' ];
 
+	var _change_submenu = function(current, next) {
+
+		var height    = this.renderer.height;
+		var curr_menu = this.queryLayer('ui', current);
+		var next_menu = this.queryLayer('ui', next);
+
+		if (curr_menu !== null && next_menu !== null) {
+
+			next_menu.setPosition({
+				y: -1 * height
+			});
+
+			next_menu.addEffect(new lychee.effect.Position({
+				type:     lychee.effect.Position.TYPE.easeout,
+				duration: 500,
+				position: {
+					y: 0
+				}
+			}));
+
+			curr_menu.addEffect(new lychee.effect.Position({
+				type:     lychee.effect.Position.TYPE.easeout,
+				duration: 500,
+				position: {
+					y: 1 * height
+				}
+			}));
+
+		}
+
+	};
+
+
+
+	/*
+	 * IMPLEMENTATION
+	 */
 
 	var Class = function(main) {
 
@@ -51,42 +95,14 @@ lychee.define('game.state.Menu').requires([
 				this.main.changeState('game');
 			}, this);
 
-			entity = this.queryLayer('ui', 'welcome > highscore');
+			entity = this.queryLayer('ui', 'welcome > highscores');
 			entity.bind('touch', function() {
-				this.main.changeState('highscore');
+				_change_submenu.call(this, 'welcome', 'highscores');
 			}, this);
 
 			entity = this.queryLayer('ui', 'welcome > settings');
 			entity.bind('touch', function() {
-
-				var height   = this.renderer.height;
-				var welcome  = this.queryLayer('ui', 'welcome');
-				var settings = this.queryLayer('ui', 'settings');
-
-				if (welcome !== null && settings !== null) {
-
-					settings.setPosition({
-						y: -1 * height
-					});
-
-					settings.addEffect(new lychee.effect.Position({
-						type:     lychee.effect.Position.TYPE.easeout,
-						duration: 500,
-						position: {
-							y: 0
-						}
-					}));
-
-					welcome.addEffect(new lychee.effect.Position({
-						type:     lychee.effect.Position.TYPE.easeout,
-						duration: 500,
-						position: {
-							y: 1 * height
-						}
-					}));
-
-				}
-
+				_change_submenu.call(this, 'welcome', 'settings');
 			}, this);
 
 
@@ -98,9 +114,12 @@ lychee.define('game.state.Menu').requires([
 			entity = this.queryLayer('ui', 'settings');
 			entity.position.y = -1 * height;
 
+			entity = this.queryLayer('ui', 'settings > back');
+			entity.bind('touch', function() {
+				_change_submenu.call(this, 'settings', 'welcome');
+			}, this);
 
 			var isfullscreen = this.main.viewport.fullscreen === true;
-
 			entity = this.queryLayer('ui', 'settings > fullscreen');
 			entity.setLabel('Fullscreen ' + (isfullscreen ? 'On' : 'Off'));
 			entity.setState((isfullscreen ? 'active' : 'default'));
@@ -115,9 +134,7 @@ lychee.define('game.state.Menu').requires([
 
 			}, this);
 
-
 			var issound = this.main.jukebox.sound === true;
-
 			entity = this.queryLayer('ui', 'settings > sound');
 			entity.setLabel('Sound ' + (issound ? 'On' : 'Off'));
 			entity.setState((issound ? 'active' : 'default'));
@@ -132,9 +149,7 @@ lychee.define('game.state.Menu').requires([
 
 			}, this);
 
-
 			var isdebug = lychee.debug === true;
-
 			entity = this.queryLayer('ui', 'settings > debug');
 			entity.setLabel('Debug ' + (isdebug ? 'On' : 'Off'));
 			entity.setState((isdebug ? 'active' : 'default'));
@@ -149,34 +164,36 @@ lychee.define('game.state.Menu').requires([
 			}, this);
 
 
-			entity = this.queryLayer('ui', 'settings > back');
+
+			/*
+			 * HIGHSCORES LAYER
+			 */
+
+			entity = this.queryLayer('ui', 'highscores');
+			entity.position.y = -1 * height;
+
+			entity = this.queryLayer('ui', 'highscores > back');
+			entity.bind('touch', function() {
+				_change_submenu.call(this, 'highscores', 'welcome');
+			}, this);
+
+			entity = this.queryLayer('ui', 'highscores > button');
 			entity.bind('touch', function() {
 
-				var height   = this.renderer.height;
-				var welcome  = this.queryLayer('ui', 'welcome');
-				var settings = this.queryLayer('ui', 'settings');
+				var service = this.client.getService('highscore');
+				if (service !== null) {
 
-				if (welcome !== null && settings !== null) {
+					// Highscore Service is probably not ready when we deserialize
+					var layer = this.queryLayer('ui', 'highscores > layer');
+					if (layer !== null) {
+						layer.refresh();
+					}
 
-					welcome.setPosition({
-						y: -1 * height
-					});
 
-					welcome.addEffect(new lychee.effect.Position({
-						type:     lychee.effect.Position.TYPE.easeout,
-						duration: 500,
-						position: {
-							y: 0
-						}
-					}));
+					var user  = 'user' + ('' + Date.now()).substr(10);
+					var score = (Math.random() * 100000) | 0;
 
-					settings.addEffect(new lychee.effect.Position({
-						type:     lychee.effect.Position.TYPE.easeout,
-						duration: 500,
-						position: {
-							y: 1 * height
-						}
-					}));
+					service.save(user, score);
 
 				}
 
