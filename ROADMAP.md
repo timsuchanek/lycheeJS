@@ -9,8 +9,7 @@ back into master, tagged and published.
 ### v0.8.3
 
 - sorbet service compliance (start/stop/restart with PID cache)
-- Game Boilerplate needs broadcast demo *Touch to create random Highscore*
-- RTS Boilerplate with basic tanks interaction
+- Blitzkrieg Game with basic tanks interaction
 
 ### v0.8.4
 
