@@ -1,8 +1,7 @@
 
 lychee.define('game.state.Highscore').requires([
 	'lychee.ui.Button',
-	'lychee.ui.Label',
-	'game.entity.Button'
+	'lychee.ui.Label'
 ]).includes([
 	'lychee.game.State'
 ]).exports(function(lychee, game, global, attachments) {

@@ -1,6 +1,7 @@
 
 lychee.define('game.state.Menu').requires([
 	'lychee.effect.Alpha',
+	'lychee.effect.Color',
 	'lychee.effect.Position',
 	'lychee.game.Background',
 	'game.entity.lycheeJS',
@@ -12,10 +13,15 @@ lychee.define('game.state.Menu').requires([
 
 	var _blob = attachments["json"].buffer;
 
+	var _COLOR_CYCLE = [ '#3f7cb6', '#5ad2f0', '#434343' ];
+
 
 	var Class = function(main) {
 
 		lychee.game.State.call(this, main);
+
+
+		this.__index = 0;
 
 
 		this.deserialize(_blob);
@@ -199,6 +205,35 @@ lychee.define('game.state.Menu').requires([
 
 
 			lychee.game.State.prototype.reshape.call(this, orientation, rotation);
+
+		},
+
+		update: function(clock, delta) {
+
+
+			var background = this.queryLayer('background', 'background');
+			if (background !== null) {
+
+				if (background.effects.length === 0) {
+
+					var index = (this.__index++) % _COLOR_CYCLE.length;
+					var color = _COLOR_CYCLE[index] || null;
+					if (color !== null) {
+
+						background.addEffect(new lychee.effect.Color({
+							type:     lychee.effect.Color.TYPE.linear,
+							duration: 5000,
+							color:    color
+						}));
+
+					}
+
+				}
+
+			}
+
+
+			lychee.game.State.prototype.update.call(this, clock, delta);
 
 		},
 

@@ -25,7 +25,6 @@
 		"files": {
 
 			"entity": {
-				"Button":   [ "js" ],
 				"Circle":   [ "js", "snd" ],
 				"Particle": [ "js" ],
 				"lycheeJS": [ "js", "png" ]
@@ -49,9 +48,9 @@
 			},
 
 			"state": {
-				"Game":      [ "js", "json", "headline.fnt", "normal.fnt" ],
+				"Game":      [ "js", "json", "fnt" ],
 				"Highscore": [ "js", "json" ],
-				"Menu":      [ "js", "json", "headline.fnt", "normal.fnt" ]
+				"Menu":      [ "js", "json" ]
 			},
 
 			"ui": {
