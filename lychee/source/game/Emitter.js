@@ -109,6 +109,11 @@ lychee.define('lychee.game.Emitter').requires([
 				}
 
 
+				var px = this.position.x;
+				var py = this.position.y;
+				var pz = this.position.z;
+
+
 				var t = (clock - this.__start) / this.duration;
 				if (t > 0 && t <= 1) {
 
@@ -197,6 +202,11 @@ lychee.define('lychee.game.Emitter').requires([
 								entity.velocity.z = vz;
 
 							}
+
+
+							entity.position.x = px;
+							entity.position.y = py;
+							entity.position.z = pz;
 
 						}
 
