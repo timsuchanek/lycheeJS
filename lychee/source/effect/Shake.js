@@ -104,12 +104,11 @@ lychee.define('lychee.effect.Shake').exports(function(lychee, global, attachment
 
 
 			var origin   = this.__origin;
-			var shake    = this.shake;
-
 			var originx  = origin.x;
 			var originy  = origin.y;
 			var originz  = origin.z;
 
+			var shake    = this.shake;
 			var shakex   = shake.x;
 			var shakey   = shake.y;
 			var shakez   = shake.z;

@@ -88,17 +88,8 @@ lychee.define('lychee.effect.Position').exports(function(lychee, global, attachm
 		update: function(entity, clock, delta) {
 
 			if (this.__start === null) {
-				this.__start = clock + this.delay;
-			}
 
-
-			var t = (clock - this.__start) / this.duration;
-			if (t < 0) {
-
-				return true;
-
-			} else {
-
+				this.__start    = clock + this.delay;
 				this.__origin.x = entity.position.x;
 				this.__origin.y = entity.position.y;
 				this.__origin.z = entity.position.z;
@@ -106,13 +97,18 @@ lychee.define('lychee.effect.Position').exports(function(lychee, global, attachm
 			}
 
 
-			var origin    = this.__origin;
-			var position  = this.position;
+			var t = (clock - this.__start) / this.duration;
+			if (t < 0) {
+				return true;
+			}
 
+
+			var origin    = this.__origin;
 			var originx   = origin.x;
 			var originy   = origin.y;
 			var originz   = origin.z;
 
+			var position  = this.position;
 			var positionx = position.x;
 			var positiony = position.y;
 			var positionz = position.z;

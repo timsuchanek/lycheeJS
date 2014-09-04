@@ -88,17 +88,8 @@ lychee.define('lychee.effect.Velocity').exports(function(lychee, global, attachm
 		update: function(entity, clock, delta) {
 
 			if (this.__start === null) {
-				this.__start = clock + this.delay;
-			}
 
-
-			var t = (clock - this.__start) / this.duration;
-			if (t < 0) {
-
-				return true;
-
-			} else {
-
+				this.__start    = clock + this.delay;
 				this.__origin.x = entity.velocity.x;
 				this.__origin.y = entity.velocity.y;
 				this.__origin.z = entity.velocity.z;
@@ -106,13 +97,18 @@ lychee.define('lychee.effect.Velocity').exports(function(lychee, global, attachm
 			}
 
 
-			var origin    = this.__origin;
-			var velocity  = this.velocity;
+			var t = (clock - this.__start) / this.duration;
+			if (t < 0) {
+				return true;
+			}
 
+
+			var origin    = this.__origin;
 			var originx   = origin.x;
 			var originy   = origin.y;
 			var originz   = origin.z;
 
+			var velocity  = this.velocity;
 			var velocityx = velocity.x;
 			var velocityy = velocity.y;
 			var velocityz = velocity.z;

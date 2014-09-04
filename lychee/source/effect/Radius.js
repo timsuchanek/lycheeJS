@@ -76,19 +76,14 @@ lychee.define('lychee.effect.Radius').exports(function(lychee, global, attachmen
 		update: function(entity, clock, delta) {
 
 			if (this.__start === null) {
-				this.__start = clock + this.delay;
+				this.__start  = clock + this.delay;
+				this.__origin = entity.radius || 0;
 			}
 
 
 			var t = (clock - this.__start) / this.duration;
 			if (t < 0) {
-
 				return true;
-
-			} else {
-
-				this.__origin = entity.radius || 0;
-
 			}
 
 
