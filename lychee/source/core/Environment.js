@@ -690,11 +690,12 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 		}
 
 
+		this.setSandbox(settings.sandbox);
 		this.setDebug(settings.debug);
+
 		this.setDefinitions(settings.definitions);
 		this.setId(settings.id);
 		this.setPackages(settings.packages);
-		this.setSandbox(settings.sandbox);
 		this.setTags(settings.tags);
 		this.setTimeout(settings.timeout);
 
