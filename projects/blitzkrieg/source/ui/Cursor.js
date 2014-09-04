@@ -5,6 +5,7 @@ lychee.define('game.ui.Cursor').includes([
 
 	var _texture = attachments["png"];
 	var _config  = attachments["json"].buffer;
+	var _font    = attachments["fnt"];
 
 
 	var Class = function(data) {
@@ -12,6 +13,7 @@ lychee.define('game.ui.Cursor').includes([
 		var settings = lychee.extend({}, data);
 
 
+		this.label   = null;
 		this.visible = true;
 
 
@@ -38,8 +40,46 @@ lychee.define('game.ui.Cursor').includes([
 
 			var visible = this.visible;
 			if (visible === true) {
+
+
+				var label = this.label;
+				if (label !== null) {
+
+					var x = this.position.x + offsetX;
+					var y = this.position.y + offsetY - this.height / 2;
+
+					renderer.drawText(
+						x,
+						y,
+						label,
+						_font,
+						true
+					);
+
+				}
+
+
 				lychee.game.Sprite.prototype.render.call(this, renderer, offsetX, offsetY);
+
 			}
+
+		},
+
+		setLabel: function(label) {
+
+			label = typeof label === 'string' ? label : null;
+
+
+			if (label !== null) {
+
+				this.label = label;
+
+				return true;
+
+			}
+
+
+			return false;
 
 		},
 

@@ -55,9 +55,15 @@
 							"arguments": [{
 								"visible": false
 							}]
+						}, {
+							"constructor": "game.ui.Path",
+							"arguments": [{
+								"visible": false
+							}]
 						}],
 						"map": {
-							"cursor": 0
+							"cursor": 0,
+							"path": 1
 						}
 					}
 				}, {

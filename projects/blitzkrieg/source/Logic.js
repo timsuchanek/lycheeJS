@@ -6,7 +6,8 @@ lychee.define('game.Logic').requires([
 	'lychee.effect.Position',
 	'lychee.effect.Shake',
 	'game.entity.Tank',
-	'game.logic.Level'
+	'game.logic.Level',
+	'game.logic.Path'
 ]).includes([
 	'lychee.event.Emitter'
 ]).exports(function(lychee, game, global, attachments) {
@@ -127,6 +128,12 @@ lychee.define('game.Logic').requires([
 			this.__ui.cursor = ui_cursor;
 		}
 
+		var ui_path = this.state.queryLayer('ui', 'game > path');
+		if (ui_path !== null) {
+			ui_path.setLogic(this);
+			this.__ui.path = ui_path;
+		}
+
 		var ui_overlay = this.state.queryLayer('ui', 'overlay');
 		if (ui_overlay !== null) {
 			this.__ui.overlay = ui_overlay;
@@ -150,9 +157,11 @@ lychee.define('game.Logic').requires([
 
 		this.__actions = [];
 		this.__blitzes = [];
+		this.__locked  = false;
 		this.__ui      = {
 			cursor:  null,
-			overlay: null
+			overlay: null,
+			path:    null
 		};
 		this.__focus   = {
 			object:   null,
@@ -160,8 +169,8 @@ lychee.define('game.Logic').requires([
 		};
 		this.__map     = {};
 		this.__mode    = {
-			object: null,
-			action: null
+			action: null,
+			object: null
 		};
 
 
@@ -210,6 +219,7 @@ lychee.define('game.Logic').requires([
 				}
 
 				cursor.setVisible(true);
+				cursor.setLabel(tileposition.x + 'x' + tileposition.y);
 
 				cursor.addEffect(new lychee.effect.Position({
 					type:     lychee.effect.Position.TYPE.easeout,
@@ -228,6 +238,25 @@ lychee.define('game.Logic').requires([
 			this.__focus.object     = object;
 			this.__focus.position.x = tileposition.x;
 			this.__focus.position.y = tileposition.y;
+
+
+			var path = this.__ui.path;
+			if (path !== null) {
+
+				var mode = this.__mode;
+				if (mode.action === 'attack') {
+
+					path.setPosition(tileposition);
+					path.setVisible(true);
+
+				} else if (mode.action === 'move') {
+
+					path.setPosition(tileposition);
+					path.setVisible(true);
+
+				}
+
+			}
 
 
 			var overlay = this.__ui.overlay;
@@ -289,6 +318,11 @@ lychee.define('game.Logic').requires([
 				cursor.setVisible(false);
 			}
 
+			var path = this.__ui.path;
+			if (path !== null) {
+				path.setVisible(false);
+			}
+
 			var overlay = this.__ui.overlay;
 			if (overlay !== null) {
 				overlay.hideAction('attack');
@@ -300,21 +334,30 @@ lychee.define('game.Logic').requires([
 
 		this.bind('blitz', function() {
 
-			var delay = 0;
+			if (this.__locked === false) {
 
-			var blitzes = this.__blitzes;
-			for (var b = 0, bl = blitzes.length; b < bl; b++) {
+				var delay = 0;
 
-				var blitz = blitzes[b];
-				if (blitz.canAction('blitz') === true) {
-					delay = Math.max(delay, blitz.duration);
-					blitz.setAction('blitz');
+				var blitzes = this.__blitzes;
+				for (var b = 0, bl = blitzes.length; b < bl; b++) {
+
+					var blitz = blitzes[b];
+					if (blitz.canAction('blitz') === true) {
+						delay = Math.max(delay, blitz.duration);
+						blitz.setAction('blitz');
+					}
+
 				}
 
+
+				this.__locked = true;
+
+				this.loop.setTimeout(delay, function() {
+					_refresh_map.call(this);
+					this.__locked = false;
+				}, this);
+
 			}
-
-
-			this.loop.setTimeout(delay, _refresh_map, this);
 
 		}, this);
 
@@ -369,6 +412,7 @@ lychee.define('game.Logic').requires([
 			var focus   = this.__focus;
 			var mode    = this.__mode;
 			var overlay = this.__ui.overlay;
+			var path    = this.__ui.path;
 
 			if (mode.action !== 'move') {
 
@@ -379,6 +423,11 @@ lychee.define('game.Logic').requires([
 
 					mode.object = focus.object;
 					mode.action = 'move';
+
+					if (path !== null) {
+						path.setOrigin(this.toTilePosition(focus.object.position, 'objects'));
+						path.setPosition(focus.position);
+					}
 
 					if (overlay !== null) {
 						overlay.hideAction('attack');
@@ -413,49 +462,51 @@ lychee.define('game.Logic').requires([
 
 		this.bind('drop', function() {
 
-			var state    = this.state;
-			var object   = this.__focus.object;
-			var position = this.__focus.position;
-			if (
-				   state !== null
-				&& object === null
-				&& position.x !== null
-				&& position.y !== null
-			) {
+			if (this.__locked === false) {
 
-				var terrain = this.get(position, 'terrain');
-				var object  = this.get(position, 'objects');
-				if (terrain !== null && object === null) {
+				var object   = this.__focus.object;
+				var position = this.__focus.position;
+				if (
+					   object === null
+					&& position.x !== null
+					&& position.y !== null
+				) {
 
-					if (terrain.isFree()) {
+					var terrain = this.get(position, 'terrain');
+					var object  = this.get(position, 'objects');
+					if (terrain !== null && object === null) {
 
-						object = new game.entity.Tank({
-							alpha:    0.1,
-							color:    'red',
-							position: this.toScreenPosition(position, 'objects')
-						});
+						if (terrain.isFree()) {
 
-						object.addEffect(new lychee.effect.Alpha({
-							type:     lychee.effect.Alpha.TYPE.easeout,
-							delay:    500,
-							duration: 500,
-							alpha:    1
-						}));
+							object = new game.entity.Tank({
+								alpha:    0.1,
+								color:    'red',
+								position: this.toScreenPosition(position, 'objects')
+							});
 
-						object.addEffect(new lychee.effect.Shake({
-							type:     lychee.effect.Shake.TYPE.linear,
-							delay:    200,
-							duration: 500,
-							shake:    { y: 30 }
-						}));
+							object.addEffect(new lychee.effect.Alpha({
+								type:     lychee.effect.Alpha.TYPE.easeout,
+								delay:    500,
+								duration: 500,
+								alpha:    1
+							}));
 
-
-						this.strikeLightning(object);
-						this.strikeEarthquake(this.get(position, 'terrain'));
+							object.addEffect(new lychee.effect.Shake({
+								type:     lychee.effect.Shake.TYPE.linear,
+								delay:    200,
+								duration: 500,
+								shake:    { y: 30 }
+							}));
 
 
-						this.set(position, object, 'objects');
-						this.state.queryLayer('game', 'objects').addEntity(object);
+							this.strikeLightning(object);
+							this.strikeEarthquake(this.get(position, 'terrain'));
+
+
+							this.set(position, object, 'objects');
+							this.state.queryLayer('game', 'objects').addEntity(object);
+
+						}
 
 					}
 
@@ -763,45 +814,55 @@ lychee.define('game.Logic').requires([
 			if (entity === null) return false;
 
 
-			var position = this.toTilePosition(entity.position, 'terrain');
+			if (this.__locked === false) {
 
-			entity.addEffect(new lychee.effect.Shake({
-				type:     lychee.effect.Shake.TYPE.linear,
-				delay:    500,
-				duration: 500,
-				shake:    { y: 20 }
-			}));
+				var position = this.toTilePosition(entity.position, 'terrain');
+
+				entity.addEffect(new lychee.effect.Shake({
+					type:     lychee.effect.Shake.TYPE.linear,
+					delay:    500,
+					duration: 500,
+					shake:    { y: 20 }
+				}));
 
 
-			var sterrain = this.getSurrounding(position, 'terrain');
-			for (var st = 0, stl = sterrain.length; st < stl; st++) {
+				var sterrain = this.getSurrounding(position, 'terrain');
+				for (var st = 0, stl = sterrain.length; st < stl; st++) {
 
-				if (sterrain[st] !== null) {
+					if (sterrain[st] !== null) {
 
-					sterrain[st].addEffect(new lychee.effect.Shake({
-						type:     lychee.effect.Shake.TYPE.linear,
-						delay:    750,
-						duration: 500,
-						shake:    { y: 10 }
-					}));
+						sterrain[st].addEffect(new lychee.effect.Shake({
+							type:     lychee.effect.Shake.TYPE.linear,
+							delay:    750,
+							duration: 500,
+							shake:    { y: 10 }
+						}));
+
+					}
+
+				}
+
+				var sobjects = this.getSurrounding(position, 'objects');
+				for (var so = 0, sol = sobjects.length; so < sol; so++) {
+
+					if (sobjects[so] !== null) {
+
+						sobjects[so].addEffect(new lychee.effect.Shake({
+							type:     lychee.effect.Shake.TYPE.linear,
+							delay:    750,
+							duration: 500,
+							shake:    { y: 10 }
+						}));
+
+					}
 
 				}
 
-			}
 
-			var sobjects = this.getSurrounding(position, 'objects');
-			for (var so = 0, sol = sobjects.length; so < sol; so++) {
-
-				if (sobjects[so] !== null) {
-
-					sobjects[so].addEffect(new lychee.effect.Shake({
-						type:     lychee.effect.Shake.TYPE.linear,
-						delay:    750,
-						duration: 500,
-						shake:    { y: 10 }
-					}));
-
-				}
+				this.__locked = true;
+				this.loop.setTimeout(1250, function() {
+					this.__locked = false;
+				}, this);
 
 			}
 
@@ -822,7 +883,7 @@ lychee.define('game.Logic').requires([
 			if (ui !== null && ui.effects.length === 0) {
 
 				var background = ui.getEntity('background');
-				if (background !== null) {
+				if (background !== null && background.effects.length === 0) {
 
 					background.alpha = 0;
 					background.color = '#000000';

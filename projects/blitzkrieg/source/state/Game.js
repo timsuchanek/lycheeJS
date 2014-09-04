@@ -7,6 +7,7 @@ lychee.define('game.state.Game').requires([
 	'game.ui.Button',
 	'game.ui.Cursor',
 	'game.ui.Overlay',
+	'game.ui.Path',
 	'game.entity.lycheeJS'
 ]).includes([
 	'lychee.game.State'

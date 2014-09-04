@@ -33,7 +33,8 @@
 
 			"logic": {
 				"Blitz": [ "js" ],
-				"Level": [ "js" ]
+				"Level": [ "js" ],
+				"Path":  [ "js" ]
 			},
 
 			"net": {
@@ -58,8 +59,9 @@
 
 			"ui": {
 				"Button":  [ "js", "json", "png" ],
-				"Cursor":  [ "js", "json", "png" ],
-				"Overlay": [ "js", "json", "png" ]
+				"Cursor":  [ "js", "json", "png", "fnt" ],
+				"Overlay": [ "js", "json", "png" ],
+				"Path":    [ "js" ]
 			},
 
 			"Logic": [
