@@ -35,7 +35,7 @@ lychee.define('game.Logic').requires([
 	 * HELPERS
 	 */
 
-	var _refresh_map = function() {
+	var _depth_sort = function() {
 
 		var state = this.state;
 		if (state !== null) {
@@ -181,6 +181,10 @@ lychee.define('game.Logic').requires([
 		/*
 		 * INITIALIZATION
 		 */
+
+		this.bind('resort', function() {
+			_depth_sort.call(this);
+		}, this);
 
 		this.bind('select', function(object, terrain, tileposition) {
 
@@ -353,7 +357,7 @@ lychee.define('game.Logic').requires([
 				this.__locked = true;
 
 				this.loop.setTimeout(delay, function() {
-					_refresh_map.call(this);
+					this.trigger('resort', []);
 					this.__locked = false;
 				}, this);
 

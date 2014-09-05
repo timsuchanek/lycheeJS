@@ -1,5 +1,7 @@
 
-lychee.define('game.ui.Path').includes([
+lychee.define('game.ui.Path').requires([
+	'lychee.effect.Shake'
+]).includes([
 	'lychee.ui.Entity',
 	'game.logic.Path'
 ]).exports(function(lychee, game, global, attachments) {
@@ -14,51 +16,67 @@ lychee.define('game.ui.Path').includes([
 
 	Class.prototype = {
 
+		/*
+		 * ENTITY API
+		 */
+
 		render: function(renderer, offsetX, offsetY) {
 
-			if (this.visible === false) return;
+		},
+
+		update: function(clock, delta) {
+
+		},
 
 
-			var logic = this.logic;
-			if (logic !== null) {
 
-				var buffer = this.buffer;
-				if (buffer.length > 1) {
+		/*
+		 * CUSTOM API
+		 */
 
-					var lastposition = logic.toScreenPosition(this.origin, 'terrain');
+		setPosition: function(position) {
 
-					for (var b = 1, bl = buffer.length; b < bl; b++) {
+			var buffer = this.buffer;
+			var logic  = this.logic;
 
-						var position = logic.toScreenPosition(buffer[b], 'terrain');
+			var result = game.logic.Path.prototype.setPosition.call(this, position);
+			if (logic !== null && result === true) {
 
+				var b, bl, terrain;
 
-						var x1 = lastposition.x + offsetX;
-						var y1 = lastposition.y + offsetY;
-						var x2 = position.x     + offsetX;
-						var y2 = position.y     + offsetY;
+				for (b = 0, bl = buffer.length; b < bl; b++) {
 
+					terrain = logic.get(buffer[b], 'terrain');
 
-						renderer.drawLine(
-							x1,
-							y1,
-							x2,
-							y2,
-							'#ff0000',
-							10
-						);
+					if (terrain !== null) {
+						terrain.removeEffects();
+					}
+
+				}
 
 
-						lastposition = position;
+				for (var b = 0, bl = this.buffer.length; b < bl; b++) {
+
+					terrain = logic.get(this.buffer[b], 'terrain');
+
+					if (terrain !== null && terrain.effects.length === 0) {
+
+						terrain.addEffect(new lychee.effect.Shake({
+							type:     lychee.effect.Shake.TYPE.linear,
+							delay:    b * 50,
+							duration: 250,
+							shake:    { y: 20 }
+						}));
 
 					}
 
 				}
 
+
+				logic.trigger('resort', []);
+
 			}
 
-		},
-
-		update: function(clock, delta) {
 		}
 
 	};

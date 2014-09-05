@@ -70,7 +70,7 @@ lychee.define('game.logic.Path').exports(function(lychee, game, global, attachme
 
 	};
 
-	var _node = function(parent, position, terrain) {
+	var _node = function(parent, position) {
 
 		this.id       = position.x + 'x' + position.y;
 		this.f        = 0;
@@ -78,7 +78,6 @@ lychee.define('game.logic.Path').exports(function(lychee, game, global, attachme
 
 		this.parent   = parent;
 		this.position = position;
-		this.terrain  = terrain;
 
 	};
 
@@ -100,7 +99,14 @@ lychee.define('game.logic.Path').exports(function(lychee, game, global, attachme
 				if (object === null) {
 
 					if (terrain !== null && terrain.isFree()) {
-						suggestions.push(logic.toTilePosition(terrain.position, 'terrain'));
+
+						var tileposition = logic.toTilePosition(terrain.position, 'terrain');
+
+						suggestions.push({
+							x: tileposition.x,
+							y: tileposition.y
+						});
+
 					}
 
 				}
@@ -167,9 +173,8 @@ lychee.define('game.logic.Path').exports(function(lychee, game, global, attachme
 					while (tmp !== null) {
 
 						result.push({
-							x:       tmp.position.x,
-							y:       tmp.position.y,
-							terrain: tmp.terrain
+							x: tmp.position.x,
+							y: tmp.position.y
 						});
 
 						tmp = tmp.parent;
@@ -188,7 +193,7 @@ lychee.define('game.logic.Path').exports(function(lychee, game, global, attachme
 					var suggestions = _get_suggestions.call(this, node.position);
 					for (var s = 0, sl = suggestions.length; s < sl; s++) {
 
-						tmp = new _node(node, suggestions[s], logic.get(suggestions[s], 'terrain'));
+						tmp = new _node(node, suggestions[s]);
 
 						if (visited[tmp.id] !== 1) {
 
@@ -227,6 +232,7 @@ lychee.define('game.logic.Path').exports(function(lychee, game, global, attachme
 
 		this.logic    = null;
 
+		this.buffer   = [];
 		this.origin   = { x: 0, y: 0 };
 		this.position = { x: 0, y: 0 };
 
@@ -278,9 +284,6 @@ lychee.define('game.logic.Path').exports(function(lychee, game, global, attachme
 				this.position.y = typeof position.y === 'number' ? position.y : this.position.y;
 
 				this.buffer = _refresh_path.call(this);
-
-
-console.log('NEW PATH', this.buffer);
 
 
 				return true;
