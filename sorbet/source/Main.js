@@ -166,17 +166,22 @@ lychee.define('sorbet.Main').requires([
 
 		rawrequest.on('end', function() {
 
-			var response = that.process(rawrequest, rawbody);
-			if (response.async === true) {
-
-				response.ready = function() {
+			var response = {
+				async:   false,
+				status:  0,
+				header:  {},
+				content: '',
+				ready:   function() {
 					_response_handler(rawrequest, rawresponse, response);
-				};
+				}
+			};
 
-			} else {
 
-				_response_handler(rawrequest, rawresponse, response);
+			that.process(rawrequest, response, rawbody);
 
+
+			if (response.async === false) {
+				response.ready();
 			}
 
 		});
@@ -363,18 +368,7 @@ lychee.define('sorbet.Main').requires([
 
 		},
 
-		process: function(request, blob) {
-
-			var response = {
-				async:   false,
-				status:  0,
-				header:  {},
-				content: '',
-				ready:   function() {
-					this.async = false;
-				}
-			};
-
+		process: function(request, response, blob) {
 
 			var _blacklist = this.modules.get('Blacklist');
 			var _error     = this.modules.get('Error');
