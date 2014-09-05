@@ -75,7 +75,7 @@ lychee.define('sorbet.data.Filesystem').includes([
 
 			});
 
-		};
+		}
 
 
 		if (trigger === true) {

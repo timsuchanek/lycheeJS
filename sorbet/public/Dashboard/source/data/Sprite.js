@@ -90,8 +90,6 @@ lychee.define('dashboard.data.Sprite').exports(function(lychee, dashboard, globa
 			var state   = files[f].name.toLowerCase().split('_')[0].split('.')[0];
 			var bufferw = files[f].texture.buffer.width;
 			var bufferh = files[f].texture.buffer.height;
-			var offsetx = 0;
-			var offsety = 0;
 			var posx    = 0;
 			var posy    = 0;
 			var offsetx = ( f % sizex)      * framew;

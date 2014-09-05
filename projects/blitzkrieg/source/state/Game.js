@@ -95,10 +95,7 @@ lychee.define('game.state.Game').requires([
 
 
 			var type = lychee.effect.Offset.TYPE.easeout;
-			if (
-				   (tx !== tx2 && Math.abs(ty) > Math.abs(tx))
-				|| (ty !== ty2 && Math.abs(tx) > Math.abs(ty))
-			) {
+			if ((tx !== tx2 && Math.abs(ty) > Math.abs(tx)) || (ty !== ty2 && Math.abs(tx) > Math.abs(ty))) {
 				type = lychee.effect.Offset.TYPE.bounceeaseout;
 			}
 

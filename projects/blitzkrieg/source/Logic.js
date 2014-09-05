@@ -369,10 +369,7 @@ lychee.define('game.Logic').requires([
 
 			if (mode.action !== 'attack') {
 
-				if (
-					   focus.object !== null
-					&& focus.object.canAction('attack')
-				) {
+				if (focus.object !== null && focus.object.canAction('attack')) {
 
 					mode.object = focus.object;
 					mode.action = 'attack';
@@ -416,10 +413,7 @@ lychee.define('game.Logic').requires([
 
 			if (mode.action !== 'move') {
 
-				if (
-					   focus.object !== null
-					&& focus.object.canAction('move')
-				) {
+				if (focus.object !== null && focus.object.canAction('move')) {
 
 					mode.object = focus.object;
 					mode.action = 'move';
@@ -464,16 +458,14 @@ lychee.define('game.Logic').requires([
 
 			if (this.__locked === false) {
 
-				var object   = this.__focus.object;
-				var position = this.__focus.position;
-				if (
-					   object === null
-					&& position.x !== null
-					&& position.y !== null
-				) {
+				var focus = this.__focus;
 
-					var terrain = this.get(position, 'terrain');
-					var object  = this.get(position, 'objects');
+				if (focus.object === null && focus.position.x !== null && focus.position.y !== null) {
+
+					var position = focus.position;
+					var terrain  = this.get(position, 'terrain');
+					var object   = this.get(position, 'objects');
+
 					if (terrain !== null && object === null) {
 
 						if (terrain.isFree()) {

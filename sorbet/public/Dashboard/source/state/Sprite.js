@@ -195,12 +195,12 @@ lychee.define('dashboard.state.Sprite').requires([
 							return 0;
 						});
 
+					}
 
-						var labels = [];
-						for (var f = 0, fl = this.__files.length; f < fl; f++) {
-							labels.push(this.__files[f].name);
-						}
 
+					var labels = [];
+					for (var f = 0, fl = this.__files.length; f < fl; f++) {
+						labels.push(this.__files[f].name);
 					}
 
 

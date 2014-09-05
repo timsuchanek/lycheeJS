@@ -142,20 +142,24 @@ lychee.define('dashboard.data.Font').tags({
 		var mtop    = 96;
 		var mbottom = 0;
 
-		for (var d = 0, dl = data.data.length; d < dl; d += 4) {
+		var d, dl, y;
+
+		for (d = 0, dl = data.data.length; d < dl; d += 4) {
 
 			// var x = (d / 4) % data.width;
-			var y = Math.floor((d / 4) / data.width);
+			y = Math.floor((d / 4) / data.width);
+
 			if (y < mtop && data.data[d + 3] > 0) {
 				mtop = y;
 			}
 
 		}
 
-		for (var d = data.data.length - 1; d >= 0; d -= 4) {
+		for (d = data.data.length - 1; d >= 0; d -= 4) {
 
 			// var x = (d / 4) % data.width;
-			var y = Math.floor((d / 4) / data.width);
+			y = Math.floor((d / 4) / data.width);
+
 			if (y > mbottom && data.data[d + 3] > 0) {
 				mbottom = y;
 				break;
