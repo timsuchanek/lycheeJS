@@ -24,10 +24,7 @@ lychee.define('sorbet.module.Server').requires([
 		for (var id in vhost.projects) {
 
 			var project = vhost.projects[id];
-			if (
-				   project.sorbet === true
-				&& project.server === null
-			) {
+			if (project.sorbet === true && project.server === null) {
 				this.queue.add(project);
 			}
 

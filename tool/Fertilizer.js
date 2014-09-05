@@ -12,12 +12,12 @@ var _print_help = function() {
 
 	console.log('                                                                                            ');
 	console.log('============================================================================================');
-	console.log('               ,   _                                                                        ');
-	console.log('              { \\/`o;====-  ,_(\'--,                 lycheeJS v0.8 Fertilizer              ');
-	console.log('         .----\'-/`-/          (.--; ,--\')_,                                               ');
-	console.log('          `\'-..-| /               | ;--.)     @   (Cross-Compiler and CI-Builder)          ');
-	console.log('               /\\/\\           .-. |.| .-.    <|>                                *O*       ');
-	console.log('               `--`               \|\|/         |                                 \\|/      ');
+	console.log('                   _                                                                        ');
+	console.log('              {+~/`o;==-    ,_(+--,                 lycheeJS v0.8 Fertilizer                ');
+	console.log('         .----+-/`-/          (+--; ,--+)_,                                                 ');
+	console.log('          `+-..-| /               | ;--+)     @   (Cross-Compiler and CI-Builder)           ');
+	console.log('               /|/|           .-. |.| .-.    <|>                                            ');
+	console.log('               `--`              ~| |~        |                                             ');
 	console.log('    ^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^     ');
 	console.log('                                                                                            ');
 	console.log('                                                                                            ');
@@ -279,13 +279,7 @@ var _sandbox     = null;
 	 * INITIALIZATION
 	 */
 
-	if (
-		   mode !== null
-		&& environment !== null
-		&& fertilizer !== null
-		&& sandbox !== null
-	) {
-
+	if (mode !== null && environment !== null && fertilizer !== null && sandbox !== null) {
 
 		var template = new Template(mode, environment, fertilizer, sandbox);
 		if (template.configure() === true) {

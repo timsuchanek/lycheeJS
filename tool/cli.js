@@ -52,11 +52,14 @@ var _root = require('path').resolve(__dirname, '../');
 		this.__sandbox    = '/tmp/lycheejs';
 
 
+		var stat;
+
 		if (typeof fertilizer === 'string') {
 
 			try {
 
-				var stat = _fs.statSync(fertilizer);
+				stat = _fs.statSync(fertilizer);
+
 				if (stat.isDirectory()) {
 					this.__fertilizer = fertilizer;
 				}
@@ -70,7 +73,8 @@ var _root = require('path').resolve(__dirname, '../');
 
 			try {
 
-				var stat = _fs.statSync(sandbox);
+				stat = _fs.statSync(sandbox);
+
 				if (stat.isDirectory()) {
 					this.__sandbox = sandbox;
 				}
@@ -209,9 +213,10 @@ var _root = require('path').resolve(__dirname, '../');
 				}
 
 
+				var result = false;
+
 				if (encoding === 'utf8') {
 
-					var result = false;
 					try {
 						_fs.writeFileSync(this.__sandbox + '/' + path, data, 'utf8');
 						result = true;
@@ -230,7 +235,6 @@ var _root = require('path').resolve(__dirname, '../');
 
 				} else if (encoding === 'binary') {
 
-					var result = false;
 					try {
 						_fs.writeFileSync(this.__sandbox + '/' + path, data.toString('binary'), 'binary');
 						result = true;
