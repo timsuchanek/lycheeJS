@@ -8,16 +8,32 @@ lychee.define('game.logic.Path').exports(function(lychee, game, global, attachme
 	var _MAX_SPEED = 10;
 	var _MIN_SPEED = 1 / _MAX_SPEED;
 
-	var _approximate_distance = function(from, to) {
+	var _approximate_distance = function(suggestion, node) {
 
-		var dx = to.position.x - from.position.x;
-		var dy = to.position.y - from.position.y;
+		var sx = suggestion.x;
+		var sy = suggestion.y;
 
-		return Math.sqrt(dx * dx + dy * dy) / _MAX_SPEED;
+		var px = node.position.x;
+		var py = node.position.y;
+
+		if (sy % 2 === 1) {
+			sx += 0.5;
+		}
+
+		if (py % 2 === 1) {
+			px += 0.5;
+		}
+
+
+		var dx = px - sx;
+		var dy = py - sy;
+
+
+		return Math.sqrt(dx * dx + dy * dy);
 
 	};
 
-	var _real_distance = function(from, to, terrain) {
+	var _real_distance = function(suggestion, node) {
 
 		var speed = 1;
 
@@ -28,8 +44,24 @@ lychee.define('game.logic.Path').exports(function(lychee, game, global, attachme
 
 		} else {
 
-			var dx = to.position.x - from.position.x;
-			var dy = to.position.y - from.position.y;
+			var sx = suggestion.x;
+			var sy = suggestion.y;
+
+			var px = node.position.x;
+			var py = node.position.y;
+
+			if (sy % 2 === 1) {
+				sx += 0.5;
+			}
+
+			if (py % 2 === 1) {
+				px += 0.5;
+			}
+
+
+			var dx = px - sx;
+			var dy = py - sy;
+
 
 			return Math.sqrt(dx * dx + dy * dy) / speed;
 
@@ -52,6 +84,38 @@ lychee.define('game.logic.Path').exports(function(lychee, game, global, attachme
 
 	};
 
+	var _get_suggestions = function(position) {
+
+		var suggestions = [];
+		var logic       = this.logic;
+
+		if (logic !== null) {
+
+			var objects  = logic.getSurrounding(position, 'objects');
+			var terrains = logic.getSurrounding(position, 'terrain');
+
+			for (var i = 0, l = terrains.length; i < l; i++) {
+
+				var object  = objects[i];
+				var terrain = terrains[i];
+
+				if (object === null) {
+
+					if (terrain !== null && terrain.isFree()) {
+						suggestions.push(logic.toTilePosition(terrain.position, 'terrain'));
+					}
+
+				}
+
+			}
+
+		}
+
+
+		return suggestions;
+
+	};
+
 	var _refresh_path = function() {
 
 		var result = [];
@@ -64,12 +128,13 @@ lychee.define('game.logic.Path').exports(function(lychee, game, global, attachme
 
 			var dx = this.position.x - this.origin.x;
 			var dy = this.position.y - this.origin.y;
-			if (dx === 0 || dy === 0) {
-				return;
+			if (dx === 0 && dy === 0) {
+				return result;
 			}
 
 
-			var limit   = 2 * Math.sqrt(dx * dx + dy * dy) / _MIN_SPEED;
+			var limit   = 200 * 200;
+//			var limit   = 2 * Math.sqrt(dx * dx + dy * dy) / _MIN_SPEED;
 			var visited = {};
 			var open    = [ start ];
 			var closed  = [];
@@ -104,7 +169,10 @@ lychee.define('game.logic.Path').exports(function(lychee, game, global, attachme
 					while (tmp !== null) {
 
 						result.push({
-							x:       tmp.positon.x,
+// TODO: Remove this from result
+g:       tmp.g,
+f:       tmp.f,
+							x:       tmp.position.x,
 							y:       tmp.position.y,
 							terrain: tmp.terrain
 						});
@@ -129,7 +197,7 @@ lychee.define('game.logic.Path').exports(function(lychee, game, global, attachme
 
 						if (visited[tmp.value] !== 1) {
 
-							tmp.g = node.g + _real_distance(suggestions[s], node, terrain);
+							tmp.g = node.g + _real_distance(suggestions[s], node);
 							tmp.f = tmp.g  + _approximate_distance(suggestions[s], stop);
 
 							visited[tmp.value] = 1;
@@ -215,6 +283,9 @@ lychee.define('game.logic.Path').exports(function(lychee, game, global, attachme
 				this.position.y = typeof position.y === 'number' ? position.y : this.position.y;
 
 				this.buffer = _refresh_path.call(this);
+
+
+console.log('NEW PATH', this.buffer);
 
 
 				return true;

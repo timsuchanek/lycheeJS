@@ -22,23 +22,37 @@ lychee.define('game.ui.Path').includes([
 			var logic = this.logic;
 			if (logic !== null) {
 
-				var origin   = logic.toScreenPosition(this.origin,   'terrain');
-				var position = logic.toScreenPosition(this.position, 'terrain');
+				var buffer = this.buffer;
+				if (buffer.length > 1) {
 
-				var x1 = origin.x   + offsetX;
-				var x2 = position.x + offsetX;
-				var y1 = origin.y   + offsetY;
-				var y2 = position.y + offsetY;
+					var lastposition = logic.toScreenPosition(this.origin, 'terrain');
+
+					for (var b = 1, bl = buffer.length; b < bl; b++) {
+
+						var position = logic.toScreenPosition(buffer[b], 'terrain');
 
 
-				renderer.drawLine(
-					x1,
-					y1,
-					x2,
-					y2,
-					'#ff0000',
-					10
-				);
+						var x1 = lastposition.x + offsetX;
+						var y1 = lastposition.y + offsetY;
+						var x2 = position.x     + offsetX;
+						var y2 = position.y     + offsetY;
+
+
+						renderer.drawLine(
+							x1,
+							y1,
+							x2,
+							y2,
+							'#ff0000',
+							10
+						);
+
+
+						lastposition = position;
+
+					}
+
+				}
 
 			}
 

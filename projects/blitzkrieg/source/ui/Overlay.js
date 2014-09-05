@@ -56,7 +56,7 @@ lychee.define('game.ui.Overlay').includes([
 
 		this.__drop = {
 			start:    null,
-			duration: 10000,
+			duration: 1000,
 			ready:    false,
 			map:      lychee.extend({}, _get_map('bar-drop')[0])
 		};
