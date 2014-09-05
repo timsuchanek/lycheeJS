@@ -369,7 +369,10 @@ lychee.define('sorbet.Main').requires([
 				async:   false,
 				status:  0,
 				header:  {},
-				content: ''
+				content: '',
+				ready:   function() {
+					this.async = false;
+				}
 			};
 
 
