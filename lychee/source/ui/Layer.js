@@ -488,6 +488,23 @@ lychee.define('lychee.ui.Layer').includes([
 
 		},
 
+		removeEntities: function() {
+
+			var entities = this.entities;
+
+			for (var e = 0, el = entities.length; e < el; e++) {
+
+				this.removeEntity(entities[e]);
+
+				el--;
+				e--;
+
+			}
+
+			return true;
+
+		},
+
 		setOffset: function(offset) {
 
 			if (offset instanceof Object) {

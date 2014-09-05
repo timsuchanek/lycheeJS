@@ -245,6 +245,25 @@ lychee.define('lychee.ui.Entity').includes([
 
 		},
 
+		removeEffects: function() {
+
+			var effects = this.effects;
+
+			for (var e = 0, el = effects.length; e < el; e++) {
+
+				effects[e].update(this, Infinity, 0);
+				this.removeEffect(effects[e]);
+
+				el--;
+				e--;
+
+			}
+
+
+			return true;
+
+		},
+
 		setPosition: function(position) {
 
 			if (position instanceof Object) {

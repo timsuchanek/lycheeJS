@@ -323,6 +323,25 @@ lychee.define('lychee.game.Layer').requires([
 
 		},
 
+		removeEffects: function() {
+
+			var effects = this.effects;
+
+			for (var e = 0, el = effects.length; e < el; e++) {
+
+				effects[e].update(this, Infinity, 0);
+				this.removeEffect(effects[e]);
+
+				el--;
+				e--;
+
+			}
+
+
+			return true;
+
+		},
+
 		addEntity: function(entity) {
 
 			entity = _validate_entity(entity) === true ? entity : null;
@@ -429,14 +448,11 @@ lychee.define('lychee.game.Layer').requires([
 
 				var found = false;
 
-				for (var e = 0, el = this.entities.length; e < el; e++) {
+				var index = this.entities.indexOf(entity);
+				if (index !== -1) {
 
-					if (this.entities[e] === entity) {
-						this.entities.splice(e, 1);
-						found = true;
-						el--;
-						e--;
-					}
+					this.entities.splice(index, 1);
+					found = true;
 
 				}
 
@@ -444,8 +460,10 @@ lychee.define('lychee.game.Layer').requires([
 				for (var id in this.__map) {
 
 					if (this.__map[id] === entity) {
+
 						delete this.__map[id];
 						found = true;
+
 					}
 
 				}
@@ -484,6 +502,23 @@ lychee.define('lychee.game.Layer').requires([
 
 
 			return all;
+
+		},
+
+		removeEntities: function() {
+
+			var entities = this.entities;
+
+			for (var e = 0, el = entities.length; e < el; e++) {
+
+				this.removeEntity(entities[e]);
+
+				el--;
+				e--;
+
+			}
+
+			return true;
 
 		},
 

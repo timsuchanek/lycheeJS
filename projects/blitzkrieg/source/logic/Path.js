@@ -35,6 +35,7 @@ lychee.define('game.logic.Path').exports(function(lychee, game, global, attachme
 
 	var _real_distance = function(suggestion, node) {
 
+		// TODO: speed integration
 		var speed = 1;
 
 
@@ -71,16 +72,13 @@ lychee.define('game.logic.Path').exports(function(lychee, game, global, attachme
 
 	var _node = function(parent, position, terrain) {
 
-		// Values horizontal and vertical distances the same way
-		var value = Math.sqrt(position.x * position.x + position.y * position.y);
-
+		this.id       = position.x + 'x' + position.y;
+		this.f        = 0;
+		this.g        = 0;
 
 		this.parent   = parent;
 		this.position = position;
-		this.value    = value;
 		this.terrain  = terrain;
-		this.f        = 0;
-		this.g        = 0;
 
 	};
 
@@ -126,15 +124,15 @@ lychee.define('game.logic.Path').exports(function(lychee, game, global, attachme
 			var start = new _node(null, this.origin,   logic.get(this.origin,   'terrain'));
 			var stop  = new _node(null, this.position, logic.get(this.position, 'terrain'));
 
-			var dx = this.position.x - this.origin.x;
-			var dy = this.position.y - this.origin.y;
+			var dx = Math.abs(this.position.x - this.origin.x);
+			var dy = Math.abs(this.position.y - this.origin.y);
 			if (dx === 0 && dy === 0) {
 				return result;
 			}
 
 
+			// This is enough for performance reasons, can be width * height of map
 			var limit   = 200 * 200;
-//			var limit   = 2 * Math.sqrt(dx * dx + dy * dy) / _MIN_SPEED;
 			var visited = {};
 			var open    = [ start ];
 			var closed  = [];
@@ -160,7 +158,7 @@ lychee.define('game.logic.Path').exports(function(lychee, game, global, attachme
 
 				var tmp;
 				var node = open.splice(min, 1)[0];
-				if (node.value === stop.value) {
+				if (node.id === stop.id) {
 
 					closed.push(node);
 					tmp = node;
@@ -169,9 +167,6 @@ lychee.define('game.logic.Path').exports(function(lychee, game, global, attachme
 					while (tmp !== null) {
 
 						result.push({
-// TODO: Remove this from result
-g:       tmp.g,
-f:       tmp.f,
 							x:       tmp.position.x,
 							y:       tmp.position.y,
 							terrain: tmp.terrain
@@ -195,12 +190,12 @@ f:       tmp.f,
 
 						tmp = new _node(node, suggestions[s], logic.get(suggestions[s], 'terrain'));
 
-						if (visited[tmp.value] !== 1) {
+						if (visited[tmp.id] !== 1) {
 
 							tmp.g = node.g + _real_distance(suggestions[s], node);
 							tmp.f = tmp.g  + _approximate_distance(suggestions[s], stop);
 
-							visited[tmp.value] = 1;
+							visited[tmp.id] = 1;
 							open.push(tmp);
 
 						}

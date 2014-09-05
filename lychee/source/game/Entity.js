@@ -375,6 +375,25 @@ lychee.define('lychee.game.Entity').exports(function(lychee, global) {
 
 		},
 
+		removeEffects: function() {
+
+			var effects = this.effects;
+
+			for (var e = 0, el = effects.length; e < el; e++) {
+
+				effects[e].update(this, Infinity, 0);
+				this.removeEffect(effects[e]);
+
+				el--;
+				e--;
+
+			}
+
+
+			return true;
+
+		},
+
 		setPosition: function(position) {
 
 			position = position instanceof Object ? position : null;
