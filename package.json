@@ -6,15 +6,17 @@
 	"description": "Environment-Independent Cross-Platform JavaScript engine (NodeJS, NodeJS SDL2, HTML5, Apache Cordova, WebGL, native OpenGL)",
 
 	"keywords": [
+		"lycheejs",
 		"game",
 		"engine",
 		"nodejs",
 		"webgl",
 		"opengl",
-		"android",
 		"cordova",
+		"android",
 		"ios",
-		"libsdl"
+		"libsdl",
+		"sdl"
 	],
 
 	"main":           "./lychee/build/nodejs/core.js",
@@ -33,7 +35,7 @@
 	},
 
 	"author": {
-		"name":  "LazerUnicorns Ltd.",
+		"name":  "The lycheeJS project and its contributors",
 		"email": "support@lazerunicorns.com"
 	},
 
