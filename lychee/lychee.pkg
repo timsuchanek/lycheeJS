@@ -132,8 +132,10 @@
 				"Entity":     [ "js" ],
 				"Jukebox":    [ "js" ],
 				"Layer":      [ "js" ],
+				"Logic":      [ "js" ],
 				"Loop":       [ "js" ],
 				"Main":       [ "js" ],
+				"Physic":     [ "js" ],
 				"Sprite":     [ "js" ],
 				"State":      [ "js" ]
 			},

@@ -9,6 +9,23 @@ lychee.define('lychee.game.State').requires([
 	 * HELPERS
 	 */
 
+	var _get_layer_id = function(layer) {
+
+		var found = null;
+
+		for (var lid in this.__layers) {
+
+			if (this.__layers[lid] === layer) {
+				found = lid;
+				break;
+			}
+
+		}
+
+		return found;
+
+	};
+
 	var _trace_entity_offset = function(entity, layer, offsetX, offsetY) {
 
 		if (offsetX === undefined || offsetY === undefined) {
@@ -72,10 +89,10 @@ lychee.define('lychee.game.State').requires([
 		this.jukebox  = main.jukebox  || null;
 		this.loop     = main.loop     || null;
 		this.renderer = main.renderer || null;
-		this.logics   = [];
 
 
 		this.__layers  = {};
+		this.__logics  = [];
 		this.__focus   = null;
 		this.__touches = [
 			{ entity: null, layer: null, offset: { x: 0, y: 0 } },
@@ -101,8 +118,33 @@ lychee.define('lychee.game.State').requires([
 
 		deserialize: function(blob) {
 
-			for (var id in blob.layers) {
-				this.setLayer(id, lychee.deserialize(blob.layers[id]));
+			for (var laid in blob.layers) {
+				this.setLayer(laid, lychee.deserialize(blob.layers[laid]));
+			}
+
+			for (var l = 0, ll = blob.logics.length; b < bl; b++) {
+
+				var data = blob.logics[l];
+				if (data.blob !== null && data.blob.layers.length > 0) {
+
+					data.arguments[0].layers = [];
+
+					for (var la = 0, lal = data.blob.layers.length; la < lal; la++) {
+
+						var layer = this.getLayer(data.blob.layers[la]);
+						if (layer !== null) {
+							data.arguments[0].layers[la] = layer;
+						}
+
+					}
+
+					delete data.blob.layers;
+
+				}
+
+
+				this.addLogic(lychee.deserialize(data));
+
 			}
 
 		},
@@ -117,8 +159,43 @@ lychee.define('lychee.game.State').requires([
 
 				blob.layers = {};
 
-				for (var id in this.__layers) {
-					blob.layers[id] = lychee.serialize(this.__layers[id]);
+				for (var lid in this.__layers) {
+					blob.layers[lid] = lychee.serialize(this.__layers[lid]);
+				}
+
+			}
+
+
+			if (this.__logics.length > 0) {
+
+				blob.logics = [];
+
+				for (var l = 0, ll = this.__logics.length; l < ll; l++) {
+
+					var logic  = this.__logics[l];
+					var layers = [];
+
+					if (logic.layers.length > 0) {
+
+						for (var la = 0, lal = logic.layers.length; la < lal; la++) {
+
+							var llid = _get_layer_id.call(this, logic.layers[la]);
+							if (llid !== null) {
+								layers.push(llid);
+							}
+
+						}
+
+					}
+
+
+					var data = lychee.serialize(logic);
+					if (data.blob !== null) {
+						data.blob.layers = layers;
+					}
+
+					blob.logics.push(data);
+
 				}
 
 			}
@@ -139,6 +216,11 @@ lychee.define('lychee.game.State').requires([
 				input.bind('key',   this.processKey,   this);
 				input.bind('touch', this.processTouch, this);
 				input.bind('swipe', this.processSwipe, this);
+			}
+
+			var logics = this.__logics;
+			for (var l = 0, ll = logics.length; l < ll; l++) {
+				logics[l].enter(data);
 			}
 
 		},
@@ -170,6 +252,11 @@ lychee.define('lychee.game.State').requires([
 				input.unbind('swipe', this.processSwipe, this);
 				input.unbind('touch', this.processTouch, this);
 				input.unbind('key',   this.processKey,   this);
+			}
+
+			var logics = this.__logics;
+			for (var l = 0, ll = logics.length; l < ll; l++) {
+				logics[l].leave();
 			}
 
 		},
@@ -248,7 +335,7 @@ lychee.define('lychee.game.State').requires([
 			}
 
 
-			var logics = this.logics;
+			var logics = this.__logics;
 			for (var l = 0, ll = logics.length; l < ll; l++) {
 				logics[l].update(clock, delta);
 			}
@@ -363,10 +450,10 @@ lychee.define('lychee.game.State').requires([
 
 			if (logic !== null) {
 
-				var index = this.logics.indexOf(logic);
+				var index = this.__logics.indexOf(logic);
 				if (index === -1) {
 
-					this.logics.push(logic);
+					this.__logics.push(logic);
 
 					return true;
 
@@ -386,10 +473,10 @@ lychee.define('lychee.game.State').requires([
 
 			if (logic !== null) {
 
-				var index = this.logics.indexOf(logic);
+				var index = this.__logics.indexOf(logic);
 				if (index !== -1) {
 
-					this.logics.splice(index, 1);
+					this.__logics.splice(index, 1);
 
 					return true;
 
@@ -399,6 +486,45 @@ lychee.define('lychee.game.State').requires([
 
 
 			return false;
+
+		},
+
+		setLogics: function(logics) {
+
+			var all = true;
+
+			if (logics instanceof Array) {
+
+				for (var l = 0, ll = logics.length; l < ll; l++) {
+
+					var result = this.addLogic(logics[l]);
+					if (result === false) {
+						all = false;
+					}
+
+				}
+
+			}
+
+
+			return all;
+
+		},
+
+		removeLogics: function() {
+
+			var logics = this.__logics;
+
+			for (var l = 0, ll = logics.length; l < ll; l++) {
+
+				this.removeLogic(logics[l]);
+
+				ll--;
+				l--;
+
+			}
+
+			return true;
 
 		},
 

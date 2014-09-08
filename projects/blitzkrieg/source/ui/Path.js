@@ -55,7 +55,7 @@ lychee.define('game.ui.Path').requires([
 				}
 
 
-				for (var b = 0, bl = this.buffer.length; b < bl; b++) {
+				for (b = 0, bl = this.buffer.length; b < bl; b++) {
 
 					terrain = logic.get(this.buffer[b], 'terrain');
 
