@@ -1,6 +1,7 @@
 
 lychee.define('lychee.game.State').requires([
 	'lychee.game.Layer',
+	'lychee.game.Logic',
 	'lychee.ui.Layer'
 ]).exports(function(lychee, global) {
 
@@ -71,6 +72,7 @@ lychee.define('lychee.game.State').requires([
 		this.jukebox  = main.jukebox  || null;
 		this.loop     = main.loop     || null;
 		this.renderer = main.renderer || null;
+		this.logics   = [];
 
 
 		this.__layers  = {};
@@ -245,6 +247,12 @@ lychee.define('lychee.game.State').requires([
 
 			}
 
+
+			var logics = this.logics;
+			for (var l = 0, ll = logics.length; l < ll; l++) {
+				logics[l].update(clock, delta);
+			}
+
 		},
 
 
@@ -343,6 +351,62 @@ lychee.define('lychee.game.State').requires([
 			return false;
 
 		},
+
+		/*
+		 * LOGIC API
+		 */
+
+		addLogic: function(logic) {
+
+			logic = lychee.interfaceof(lychee.game.Logic, logic) ? logic : null;
+
+
+			if (logic !== null) {
+
+				var index = this.logics.indexOf(logic);
+				if (index === -1) {
+
+					this.logics.push(logic);
+
+					return true;
+
+				}
+
+			}
+
+
+			return false;
+
+		},
+
+		removeLogic: function(logic) {
+
+			logic = lychee.interfaceof(lychee.game.Logic, logic) ? logic : null;
+
+
+			if (logic !== null) {
+
+				var index = this.logics.indexOf(logic);
+				if (index !== -1) {
+
+					this.logics.splice(index, 1);
+
+					return true;
+
+				}
+
+			}
+
+
+			return false;
+
+		},
+
+
+
+		/*
+		 * EVENT API
+		 */
 
 		processKey: function(key, name, delta) {
 

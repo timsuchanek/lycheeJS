@@ -12,45 +12,54 @@ and its developer tools.
 
 # Installation
 
-- Download and install the newest stable release of NodeJS from [nodejs.org](http://nodejs.org).
+### 1. Download
 
-- Download lycheeJS via [zip-file](https://github.com/LazerUnicorns/lycheeJS/archive/master.zip)
+- Download and install the newest stable release of
+NodeJS from [nodejs.org](http://nodejs.org).
+
+- Install lycheeJS via [zip-file](https://github.com/LazerUnicorns/lycheeJS/archive/master.zip)
 and extract its contents to **~/lycheeJS**.
+Make sure the lycheeJS-master folder contained in the
+zip-file is renamed to lycheeJS to follow up with the
+tutorials.
 
-### < Important >
+### 2a. On Linux or Mac OSX
 
-The port range 0-1024 is reserved for root user. To prevent running nodejs as root
-(for exploit and remote shell prevention reasons), you might want to allow nodejs to
-bind to those ports in production to serve port 80 successfully without getting an
-*EACCESS* error.
+The port range 0-1024 is reserved for root user. It is
+recommended to not run nodejs as root user in order to
+prevent exploits or remote shell processes. You need
+to allow nodejs to bind those ports in production to
+serve port 80 successfully without getting an
+**EACCESS** error.
 
 ```bash
-
-# DO NOT EXECUTE THIS IF YOU DON'T KNOW WHAT IT DOES. READ ABOVE
-
-user@box:~$ which nodejs
-/usr/bin/nodejs
-user@box:~$ sudo setcap cap_net_bind_service=+ep /usr/bin/nodejs
-user@box:~$ sudo getcap /usr/bin/nodejs
-/usr/bin/nodejs = cap_net_bind_service+ep
+user@box:~$ which node;
+/usr/bin/node
+user@box:~$ sudo setcap cap_net_bind_service=+ep /usr/bin/node;
+user@box:~$ sudo getcap /usr/bin/node;
+/usr/bin/node = cap_net_bind_service+ep
 ```
 
-On Windows, you have to enable Ephermal Ports, so you need to install the Registry Key
-located in *./tool/windows/ActivateEphermalPorts.reg*. It will allow using the ports
-49152-65535 which are required for the dynamic WebSocket peer-to-peer Network Architecture.
+### 2b. On Windows
 
-### < / Important >
+The port range for WebSockets are so-called Ephermal Ports,
+which are deactivated on Windows by default for user processes.
 
+You need to install the Registry Key located at **~/lycheeJS/tool/windows/ActivateEphermalPorts.reg**.
+It will allow using the port range 49152-65535, which is the
+recommended RFC specification.
 
-- Navigate to the folder in the shell (or PowerShell) and execute the configure script
-to build the lycheeJS core:
+### 3. Start Sorbet
+
+- Navigate to the **~/lycheeJS** folder in Bash (or PowerShell)
+and execute the configure script to build the lycheeJS core.
 
 ```bash
 cd ~/lycheeJS;
 nodejs ./tool/configure.js; # Important: current working directory is lycheeJS root folder
 ```
 
-- After building the core, you are ready to go. Start Sorbet via:
+- After building the core, you are ready to go. Start Sorbet.
 
 ```bash
 cd ~/lycheeJS;
@@ -60,8 +69,8 @@ npm start;
 # nodejs ./tool/Sorbet.js start --profile="./sorbet/profile/localhost.json";
 ```
 
-- Open your Web Browser, navigate to **http://localhost:8080** or try out the Dashboard
-at [http://dashboard.lycheejs.org](http://dashboard.lycheejs.org) and have fun :)
+- Open your Web Browserand navigate to **http://localhost:8080**
+to open the lycheeJS Dashboard.
 
 Those games show you how to develop real cross-platform games and the best practices
 in high-performant JavaScript code. [Link to projects folder](./projects)

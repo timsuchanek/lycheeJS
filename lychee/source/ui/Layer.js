@@ -327,19 +327,8 @@ lychee.define('lychee.ui.Layer').includes([
 
 			if (entity !== null) {
 
-				var found = false;
-
-				for (var e = 0, el = this.entities.length; e < el; e++) {
-
-					if (this.entities[e] === entity) {
-						found = true;
-						break;
-					}
-
-				}
-
-
-				if (found === false) {
+				var index = this.entities.indexOf(entity);
+				if (index === -1) {
 
 					this.entities.push(entity);
 					this.reshape();
