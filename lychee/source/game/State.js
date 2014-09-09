@@ -124,21 +124,26 @@ lychee.define('lychee.game.State').requires([
 
 			for (var l = 0, ll = blob.logics.length; b < bl; b++) {
 
-				var data = blob.logics[l];
-				if (data.blob !== null && data.blob.layers.length > 0) {
+				var data   = blob.logics[l];
+				var layers = [];
 
-					data.arguments[0].layers = [];
+				if (data.injections instanceof Object) {
 
-					for (var la = 0, lal = data.blob.layers.length; la < lal; la++) {
+					for (var l = 0, ll = data.injections.layers.length; l < ll; l++) {
 
-						var layer = this.getLayer(data.blob.layers[la]);
-						if (layer !== null) {
-							data.arguments[0].layers[la] = layer;
+						var query = data.injections.layers[l];
+						if (query.charAt(0) === '~') {
+
+							var layer = this.queryLayer(query.substr(1, query.indexOf(':') - 1));
+							if (layer !== null) {
+								layers.push(layer);
+							}
+
 						}
 
 					}
 
-					delete data.blob.layers;
+					data.arguments[0].layers = layers;
 
 				}
 
@@ -172,16 +177,16 @@ lychee.define('lychee.game.State').requires([
 
 				for (var l = 0, ll = this.__logics.length; l < ll; l++) {
 
-					var logic  = this.__logics[l];
-					var layers = [];
+					var logic   = this.__logics[l];
+					var queries = [];
 
 					if (logic.layers.length > 0) {
 
 						for (var la = 0, lal = logic.layers.length; la < lal; la++) {
 
-							var llid = _get_layer_id.call(this, logic.layers[la]);
-							if (llid !== null) {
-								layers.push(llid);
+							var query = _get_layer_id.call(this, logic.layers[la]);
+							if (query !== null) {
+								queries.push(query);
 							}
 
 						}
@@ -190,9 +195,9 @@ lychee.define('lychee.game.State').requires([
 
 
 					var data = lychee.serialize(logic);
-					if (data.blob !== null) {
-						data.blob.layers = layers;
-					}
+
+					data.injections = { layers: queries };
+					delete data.arguments[0].layers;
 
 					blob.logics.push(data);
 

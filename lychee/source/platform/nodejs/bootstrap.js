@@ -73,7 +73,11 @@
 
 	console.log = function() {
 
-		var args = [].slice.call(arguments, 0);
+		var al   = arguments.length;
+		var args = new Array(al);
+		for (var a = 0; a < al; a++) {
+			args[a] = arguments[a];
+		}
 
 		args.reverse();
 		args.push('\u001b[40m');
@@ -88,7 +92,11 @@
 
 	console.info = function() {
 
-		var args = [].slice.call(arguments, 0);
+		var al   = arguments.length;
+		var args = new Array(al);
+		for (var a = 0; a < al; a++) {
+			args[a] = arguments[a];
+		}
 
 		args.reverse();
 		args.push('\u001b[42m');
@@ -103,7 +111,11 @@
 
 	console.warn = function() {
 
-		var args = [].slice.call(arguments, 0);
+		var al   = arguments.length;
+		var args = new Array(al);
+		for (var a = 0; a < al; a++) {
+			args[a] = arguments[a];
+		}
 
 		args.reverse();
 		args.push('\u001b[43m');
@@ -118,7 +130,11 @@
 
 	console.error = function() {
 
-		var args = [].slice.call(arguments, 0);
+		var al   = arguments.length;
+		var args = new Array(al);
+		for (var a = 0; a < al; a++) {
+			args[a] = arguments[a];
+		}
 
 		args.reverse();
 		args.push('\u001b[41m');
