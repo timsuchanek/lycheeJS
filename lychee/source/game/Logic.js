@@ -194,14 +194,11 @@ lychee.define('lychee.game.Logic').requires([
 
 		},
 
-		update: function(clock, delta) {
 
-			var physic = this.physic;
-			if (physic !== null) {
-				physic.update(clock, delta);
-			}
 
-		},
+		/*
+		 * STATE API
+		 */
 
 		enter: function(data) {
 
@@ -217,6 +214,15 @@ lychee.define('lychee.game.Logic').requires([
 			var layers = this.__layers;
 			for (var l = 0, ll = layers.length; l < ll; l++) {
 				_unproject_layer(layers[l]);
+			}
+
+		},
+
+		update: function(clock, delta) {
+
+			var physic = this.physic;
+			if (physic !== null) {
+				physic.update(clock, delta);
 			}
 
 		},

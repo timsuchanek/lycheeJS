@@ -9,23 +9,6 @@ lychee.define('lychee.game.State').requires([
 	 * HELPERS
 	 */
 
-	var _get_layer_id = function(layer) {
-
-		var found = null;
-
-		for (var lid in this.__layers) {
-
-			if (this.__layers[lid] === layer) {
-				found = lid;
-				break;
-			}
-
-		}
-
-		return found;
-
-	};
-
 	var _trace_entity_offset = function(entity, layer, offsetX, offsetY) {
 
 		if (offsetX === undefined || offsetY === undefined) {
@@ -123,33 +106,7 @@ lychee.define('lychee.game.State').requires([
 			}
 
 			for (var l = 0, ll = blob.logics.length; b < bl; b++) {
-
-				var data   = blob.logics[l];
-				var layers = [];
-
-				if (data.injections instanceof Object) {
-
-					for (var l = 0, ll = data.injections.layers.length; l < ll; l++) {
-
-						var query = data.injections.layers[l];
-						if (query.charAt(0) === '~') {
-
-							var layer = this.queryLayer(query.substr(1, query.indexOf(':') - 1));
-							if (layer !== null) {
-								layers.push(layer);
-							}
-
-						}
-
-					}
-
-					data.arguments[0].layers = layers;
-
-				}
-
-
-				this.addLogic(lychee.deserialize(data));
-
+				this.addLogic(lychee.deserialize(blob.logics[l]));
 			}
 
 		},
@@ -176,31 +133,7 @@ lychee.define('lychee.game.State').requires([
 				blob.logics = [];
 
 				for (var l = 0, ll = this.__logics.length; l < ll; l++) {
-
-					var logic   = this.__logics[l];
-					var queries = [];
-
-					if (logic.layers.length > 0) {
-
-						for (var la = 0, lal = logic.layers.length; la < lal; la++) {
-
-							var query = _get_layer_id.call(this, logic.layers[la]);
-							if (query !== null) {
-								queries.push(query);
-							}
-
-						}
-
-					}
-
-
-					var data = lychee.serialize(logic);
-
-					data.injections = { layers: queries };
-					delete data.arguments[0].layers;
-
-					blob.logics.push(data);
-
+					blob.logics.push(lychee.serialize(this.__logics[l]));
 				}
 
 			}
