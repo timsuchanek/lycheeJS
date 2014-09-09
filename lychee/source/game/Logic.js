@@ -1,22 +1,150 @@
 
 lychee.define('lychee.game.Logic').requires([
+	'lychee.game.Entity',
 	'lychee.game.Layer',
 	'lychee.game.Physic'
 ]).exports(function(lychee, global, attachments) {
+
+	/*
+	 * HELPERS
+	 */
+
+	var _sphere = lychee.game.Entity.SHAPE.sphere;
+	var _cuboid = lychee.game.Entity.SHAPE.cuboid;
+
+	var _project_layer = function(layer) {
+
+		var projection = this.projection;
+		var entities   = layer.entities;
+
+		for (var e = 0, el = entities.length; e < el; e++) {
+
+			var entity = entities[e];
+			var shape  = entity.shape;
+			var is3d   = shape === _sphere || shape === _cuboid;
+
+			var x      = entity.position.x;
+			var y      = entity.position.y;
+			var z      = entity.position.z;
+
+			var width  = entity.width  || (entity.radius * 2);
+			var height = entity.height || (entity.radius * 2);
+			var depth  = entity.depth  || (entity.radius * 2);
+
+			if (projection === Class.PROJECTION.tile) {
+
+				x *= width;
+				y *= height;
+				z *= depth;
+
+			} else if (projection === Class.PROJECTION.isometry) {
+
+// TODO: isometric projection
+
+			} else if (projection === Class.PROJECTION.hexagon) {
+
+// TODO: hexagon projection
+
+			}
+
+
+			if (is3d === true) {
+
+				entity.setPosition({
+					x: x,
+					y: y,
+					z: z
+				});
+
+			} else {
+
+				entity.setPosition({
+					x: x,
+					y: y
+				});
+
+			}
+
+		}
+
+	};
+
+	var _unproject_layer = function(layer) {
+
+		var projection = this.projection;
+		var entities   = layer.entities;
+
+		for (var e = 0, el = entities.length; e < el; e++) {
+
+			var entity = entities[e];
+			var shape  = entity.shape;
+			var is3d   = shape === _sphere || shape === _cuboid;
+
+			var x      = entity.position.x;
+			var y      = entity.position.y;
+			var z      = entity.position.z;
+
+			var width  = entity.width  || (entity.radius * 2);
+			var height = entity.height || (entity.radius * 2);
+			var depth  = entity.depth  || (entity.radius * 2);
+
+			if (projection === Class.PROJECTION.tile) {
+
+				x /= width;
+				y /= height;
+				z /= depth;
+
+			} else if (projection === Class.PROJECTION.isometry) {
+
+// TODO: isometric projection
+
+			} else if (projection === Class.PROJECTION.hexagon) {
+
+// TODO: hexagon projection
+
+			}
+
+
+			if (is3d === true) {
+
+				entity.setPosition({
+					x: x,
+					y: y,
+					z: z
+				});
+
+			} else {
+
+				entity.setPosition({
+					x: x,
+					y: y
+				});
+
+			}
+
+		}
+
+	};
+
+
+
+	/*
+	 * IMPLEMENTATION
+	 */
 
 	var Class = function(data) {
 
 		var settings = lychee.extend({}, data);
 
 
-		this.layers     = [];
 		this.physic     = null;
 		this.projection = Class.PROJECTION.pixel;
+
+		this.__layers   = [];
 
 
 		this.setPhysic(settings.physic);
 		this.setProjection(settings.projection);
-		this.setLayers(settings.layers);
 
 
 		settings = null;
@@ -40,15 +168,7 @@ lychee.define('lychee.game.Logic').requires([
 
 		deserialize: function(blob) {
 
-			var layers = [];
-			for (var bl = 0, bll = blob.layers.length; bl < bll; bl++) {
-				layers.push(lychee.deserialize(blob.layers[bl]));
-			}
-
-
-			for (var l = 0, ll = layers.length; l < ll; l++) {
-				this.addLayer(layers[l]);
-			}
+			// TODO: Deserialize layer query paths
 
 		},
 
@@ -58,18 +178,11 @@ lychee.define('lychee.game.Logic').requires([
 			var blob     = {};
 
 
-			if (this.__reshape !== true) settings.reshape = this.__reshape;
-			if (this.visible !== true)   settings.visible = this.visible;
+			if (this.physic !== null)                       settings.physic     = this.physic;
+			if (this.projection !== Class.PROJECTION.pixel) settings.projection = this.projection;
 
-
-			if (this.layers.length > 0) {
-
-				blob.layers = [];
-
-				for (var l = 0, ll = this.layers.length; l < ll; l++) {
-					blob.layers.push(lychee.serialize(this.layers[l]));
-				}
-
+			if (this.__layers.length > 0) {
+				// TODO: Serialize layers and their query paths
 			}
 
 
@@ -83,7 +196,28 @@ lychee.define('lychee.game.Logic').requires([
 
 		update: function(clock, delta) {
 
-// TODO: Logic projection and physics update()
+			var physic = this.physic;
+			if (physic !== null) {
+				physic.update(clock, delta);
+			}
+
+		},
+
+		enter: function(data) {
+
+			var layers = this.__layers;
+			for (var l = 0, ll = layers.length; l < ll; l++) {
+				_project_layer(layers[l]);
+			}
+
+		},
+
+		leave: function(data) {
+
+			var layers = this.__layers;
+			for (var l = 0, ll = layers.length; l < ll; l++) {
+				_unproject_layer(layers[l]);
+			}
 
 		},
 
@@ -100,10 +234,10 @@ lychee.define('lychee.game.Logic').requires([
 
 			if (layer !== null) {
 
-				var index = this.layers.indexOf(layer);
+				var index = this.__layers.indexOf(layer);
 				if (index === -1) {
 
-					this.layers.push(layer);
+					this.__layers.push(layer);
 
 					return true;
 
@@ -123,10 +257,10 @@ lychee.define('lychee.game.Logic').requires([
 
 			if (layer !== null) {
 
-				var index = this.layers.indexOf(layer);
+				var index = this.__layers.indexOf(layer);
 				if (index !== -1) {
 
-					this.layers.splice(index, 1);
+					this.__layers.splice(index, 1);
 
 					return true;
 
@@ -163,7 +297,7 @@ lychee.define('lychee.game.Logic').requires([
 
 		removeLayers: function() {
 
-			var layers = this.layers;
+			var layers = this.__layers;
 
 			for (var l = 0, ll = layers.length; l < ll; l++) {
 
@@ -176,6 +310,48 @@ lychee.define('lychee.game.Logic').requires([
 
 			return true;
 
+		},
+
+		setPhysic: function(physic) {
+
+			physic = lychee.interfaceof(lychee.game.Physic, physic) ? physic : null;
+
+
+			if (physic !== null) {
+
+				this.physic = physic;
+
+				return true;
+
+			}
+
+
+			return false;
+
+		},
+
+		setProjection: function(projection) {
+
+			projection = lychee.enumof(Class.PROJECTION, projection) ? projection : null;
+
+
+			if (projection !== null) {
+
+				this.projection = projection;
+
+				return true;
+
+			}
+
+
+			return false;
+
+		},
+
+		toLayerPosition: function(position) {
+		},
+
+		toProjectionPosition: function(position) {
 		}
 
 	};
