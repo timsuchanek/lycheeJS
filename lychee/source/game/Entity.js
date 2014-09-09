@@ -2,6 +2,77 @@
 lychee.define('lychee.game.Entity').exports(function(lychee, global) {
 
 	/*
+	 * HELPERS
+	 */
+
+	var _sphere_sphere = function(a, b) {
+
+		var dx  = Math.sqrt(Math.pow(b.position.x - a.position.x, 2));
+		var dy  = Math.sqrt(Math.pow(b.position.y - a.position.y, 2));
+		var dz  = Math.sqrt(Math.pow(b.position.z - a.position.z, 2));
+
+		var rxy = 0;
+		var rxz = 0;
+
+		if (a.shape === Class.SHAPE.sphere) {
+			rxy += a.radius;
+			rxz += a.radius;
+		}
+
+		if (b.shape === Class.SHAPE.sphere) {
+			rxy += b.radius;
+			rxz += b.radius;
+		}
+
+		return ((dx + dy) <= rxy && (dx + dz) <= rxz);
+
+	};
+
+	var _sphere_cuboid = function(a, b) {
+
+		var r  = a.radius;
+		var hw = b.width  / 2;
+		var hh = b.height / 2;
+		var hd = b.depth  / 2;
+
+		var ax = a.position.x;
+		var ay = a.position.y;
+		var az = a.position.z;
+
+		var bx = b.position.x;
+		var by = b.position.y;
+		var bz = b.position.z;
+
+		var colx = (ax + r >= bx - hw) && (ax - r <= bx + hw);
+		var coly = (ay + r >= by - hh) && (ay - r <= by + hh);
+
+		if (a.shape === Class.SHAPE.circle) {
+			r = 0;
+		}
+
+		var colz = (az + r >= bz - hd) && (az - r <= bz + hd);
+
+		return (colx && coly && colz);
+
+	};
+
+	var _cuboid_cuboid = function(a, b) {
+
+		var dx = Math.abs(b.position.x - a.position.x);
+		var dy = Math.abs(b.position.y - a.position.y);
+		var dz = Math.abs(b.position.z - a.position.z);
+
+		var hw = (a.width  + b.width)  / 2;
+		var hh = (a.height + b.height) / 2;
+		var hd = (a.depth  + b.depth)  / 2;
+
+		return (dx <= hw && dy <= hh && dz <= hd);
+
+	};
+
+
+
+	/*
 	 * IMPLEMENTATION
 	 */
 
@@ -69,10 +140,9 @@ lychee.define('lychee.game.Entity').exports(function(lychee, global) {
 	// Same ENUM values as lychee.ui.Entity
 	Class.SHAPE = {
 		circle:    0,
-		sphere:    1,
-		rectangle: 2,
-		cuboid:    3,
-		polygon:   4
+		rectangle: 1,
+		sphere:    2,
+		cuboid:    3
 	};
 
 
@@ -242,53 +312,27 @@ lychee.define('lychee.game.Entity').exports(function(lychee, global) {
 			}
 
 
-			var shapeA = this.shape;
-			var shapeB = entity.shape;
-			var posA   = this.position;
-			var posB   = entity.position;
-			var colX   = false;
-			var colY   = false;
+			var circle    = Class.SHAPE.circle;
+			var sphere    = Class.SHAPE.sphere;
+			var rectangle = Class.SHAPE.rectangle;
+			var cuboid    = Class.SHAPE.cuboid;
 
+			var shapeA    = this.shape;
+			var shapeB    = entity.shape;
 
-			var radius  = 0;
-			var hwidth  = 0;
-			var hheight = 0;
+			var issphereA = shapeA === circle    || shapeA === sphere;
+			var issphereB = shapeB === circle    || shapeB === sphere;
+			var iscuboidA = shapeA === rectangle || shapeA === cuboid;
+			var iscuboidB = shapeB === rectangle || shapeB === cuboid;
 
-			if (shapeA === Class.SHAPE.circle && shapeB === Class.SHAPE.circle) {
-
-				if (Math.sqrt(Math.pow(posB.x - posA.x, 2) + Math.pow(posB.y - posA.y, 2)) <= (this.radius + entity.radius)) {
-					return true;
-				}
-
-			} else if (shapeA === Class.SHAPE.circle && shapeB === Class.SHAPE.rectangle) {
-
-				radius  = this.radius;
-				hwidth  = entity.width  / 2;
-				hheight = entity.height / 2;
-				colX    = (posA.x + radius > posB.x - hwidth)  && (posA.x - radius < posB.x + hwidth);
-				colY    = (posA.y + radius > posB.y - hheight) && (posA.y - radius < posB.y + hheight);
-
-				return colX && colY;
-
-			} else if (shapeA === Class.SHAPE.rectangle && shapeB === Class.SHAPE.circle) {
-
-				radius  = entity.radius;
-				hwidth  = this.width  / 2;
-				hheight = this.height / 2;
-				colX    = (posB.x + radius > posA.x - hwidth)  && (posB.x - radius < posA.x + hwidth);
-				colY    = (posB.y + radius > posA.y - hheight) && (posB.y - radius < posA.y + hheight);
-
-				return colX && colY;
-
-			} else if (shapeA === Class.SHAPE.rectangle && shapeB === Class.SHAPE.rectangle) {
-
-				hwidth  = Math.abs(posA.x - posB.x);
-				hheight = Math.abs(posA.y - posB.y);
-				colX    = hwidth  * 2 < (this.width  + entity.width);
-				colY    = hheight * 2 < (this.height + entity.height);
-
-				return colX && colY;
-
+			if (issphereA && issphereB) {
+				return _sphere_sphere(this, entity);
+			} else if (iscuboidA && iscuboidB) {
+				return _cuboid_cuboid(this, entity);
+			} else if (issphereA && iscuboidB) {
+				return _sphere_cuboid(this, entity);
+			} else if (iscuboidA && issphereB) {
+				return _sphere_cuboid(entity, this);
 			}
 
 
