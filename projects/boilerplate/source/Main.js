@@ -46,6 +46,25 @@ lychee.define('game.Main').requires([
 
 		lychee.game.Main.call(this, settings);
 
+
+		// Overwrite client with game.net.Client
+		var clientsettings   = this.settings.client;
+		this.settings.client = null;
+
+
+		this.bind('init', function() {
+
+			if (clientsettings !== null) {
+				this.client = new game.net.Client(clientsettings, this);
+			}
+
+
+			this.setState('game', new game.state.Game(this));
+			this.setState('menu', new game.state.Menu(this));
+			this.changeState('menu');
+
+		}, this, true);
+
 	};
 
 
@@ -63,26 +82,6 @@ lychee.define('game.Main').requires([
 			game.DeviceSpecificHacks.call(this);
 
 			lychee.game.Main.prototype.reshape.call(this, orientation, rotation);
-
-		},
-
-		init: function() {
-
-			// Overwrite client with game.net.Client
-			var clientsettings   = this.settings.client;
-			this.settings.client = null;
-
-			lychee.game.Main.prototype.init.call(this);
-
-
-			if (clientsettings !== null) {
-				this.client = new game.net.Client(clientsettings, this);
-			}
-
-
-			this.setState('game', new game.state.Game(this));
-			this.setState('menu', new game.state.Menu(this));
-			this.changeState('menu');
 
 		}
 

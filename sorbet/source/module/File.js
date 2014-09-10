@@ -132,10 +132,8 @@ lychee.define('sorbet.module.File').exports(function(lychee, sorbet, global, att
 
 							if (buffer !== null) {
 
-								response.status                  = 206;
-								response.header['Accept-Ranges'] = 'bytes';
-								response.header['Content-Range'] = '0-' + (buffer.length - 1) + '/' + buffer.length;
-								response.content                 = buffer;
+								response.status  = 200;
+								response.content = buffer;
 
 							} else {
 

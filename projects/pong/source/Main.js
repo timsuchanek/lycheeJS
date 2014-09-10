@@ -50,6 +50,10 @@ lychee.define('game.Main').requires([
 
 		init: function() {
 
+			this.bind('init', function() {
+
+			}, this, true);
+
 			lychee.game.Main.prototype.init.call(this);
 
 			this.reshape();

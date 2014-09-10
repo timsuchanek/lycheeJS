@@ -101,12 +101,20 @@ lychee.define('lychee.game.State').requires([
 
 		deserialize: function(blob) {
 
-			for (var laid in blob.layers) {
-				this.setLayer(laid, lychee.deserialize(blob.layers[laid]));
+			if (blob.layers) {
+
+				for (var laid in blob.layers) {
+					this.setLayer(laid, lychee.deserialize(blob.layers[laid]));
+				}
+
 			}
 
-			for (var l = 0, ll = blob.logics.length; b < bl; b++) {
-				this.addLogic(lychee.deserialize(blob.logics[l]));
+			if (blob.logics) {
+
+				for (var l = 0, ll = blob.logics.length; b < bl; b++) {
+					this.addLogic(lychee.deserialize(blob.logics[l]));
+				}
+
 			}
 
 		},
