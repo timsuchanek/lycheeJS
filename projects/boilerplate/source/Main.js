@@ -47,17 +47,19 @@ lychee.define('game.Main').requires([
 		lychee.game.Main.call(this, settings);
 
 
-		// Overwrite client with game.net.Client
-		var clientsettings   = this.settings.client;
-		this.settings.client = null;
+		this.bind('load', function() {
 
+			this.settings.gameclient = this.settings.client;
+			this.settings.client     = null;
+
+		}, this, true);
 
 		this.bind('init', function() {
 
-			if (clientsettings !== null) {
-				this.client = new game.net.Client(clientsettings, this);
+			var settings = this.settings.gameclient || null;
+			if (settings !== null) {
+				this.client = new game.net.Client(settings, this);
 			}
-
 
 			this.setState('game', new game.state.Game(this));
 			this.setState('menu', new game.state.Menu(this));
@@ -69,13 +71,6 @@ lychee.define('game.Main').requires([
 
 
 	Class.prototype = {
-
-		load: function() {
-
-			// 1. Initialize Client via Sorbet Gateway
-			lychee.game.Main.prototype.load.call(this);
-
-		},
 
 		reshape: function(orientation, rotation) {
 

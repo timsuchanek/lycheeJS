@@ -34,29 +34,30 @@ lychee.define('game.Main').requires([
 
 		lychee.game.Main.call(this, settings);
 
-	};
 
+		this.bind('load', function() {
 
-	Class.prototype = {
+			this.settings.gameclient = this.settings.client;
+			this.settings.client     = null;
 
-		init: function() {
+		}, this, true);
 
-			// Overwrite client with game.Client
-			var clientsettings   = this.settings.client;
-			this.settings.client = null;
+		this.bind('init', function() {
 
-			lychee.game.Main.prototype.init.call(this);
-
-
-			if (clientsettings !== null) {
+			var settings = this.settings.gameclient || null;
+			if (settings !== null) {
 				this.client = new game.net.Client(clientsettings, this);
 			}
-
 
 			this.setState('game', new game.state.Game(this));
 			this.changeState('game');
 
-		}
+		}, this, true);
+
+	};
+
+
+	Class.prototype = {
 
 	};
 

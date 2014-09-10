@@ -19,8 +19,8 @@
 			// This allows using #MAIN in JSON files
 			sandbox.MAIN = new {{build}}();
 
-			if (typeof sandbox.MAIN.load === 'function') {
-				sandbox.MAIN.load();
+			if (typeof sandbox.MAIN.init === 'function') {
+				sandbox.MAIN.init();
 			}
 
 		});

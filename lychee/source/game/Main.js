@@ -51,6 +51,9 @@ lychee.define('lychee.game.Main').requires([
 
 	var _initialize = function() {
 
+		this.trigger('load', []);
+
+
 		var settings = this.settings;
 
 		if (settings.client !== null) {

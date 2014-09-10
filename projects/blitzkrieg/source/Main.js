@@ -53,20 +53,21 @@ lychee.define('game.Main').requires([
 		};
 
 
-		// Overwrite client with game.net.Client
-		var clientsettings   = this.settings.client;
-		this.settings.client = null;
+		this.bind('load', function() {
 
+			this.settings.gameclient = this.settings.client;
+			this.settings.client     = null;
+
+		}, this, true);
 
 		this.bind('init', function() {
 
-			if (clientsettings !== null) {
-				this.client = new game.net.Client(clientsettings, this);
+			var settings = this.settings.gameclient || null;
+			if (settings !== null) {
+				this.client = new game.net.Client(settings, this);
 			}
 
-
 			this.logic = new game.Logic(this);
-
 
 			this.setState('game', new game.state.Game(this));
 			this.setState('menu', new game.state.Menu(this));
