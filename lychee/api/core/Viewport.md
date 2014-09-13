@@ -1,5 +1,5 @@
 
-===#constructor
+={constructor}
 
 # new lychee.Viewport(settings);
 
@@ -26,7 +26,7 @@ than 1, it is treated as its *orientation* is *portrait*.
 
 
 
-===#events-reshape
+={events-reshape}
 
 # new lychee.Viewport().bind('reshape', function(orientation, rotation) {}, scope);
 
@@ -57,7 +57,7 @@ viewport.bind('reshape', function(orientation, rotation) {
 
 
 
-===#events-show
+={events-show}
 
 # new lychee.Viewport().bind('show', function() {}, scope);
 
@@ -79,7 +79,7 @@ viewport.bind('hide', function() {
 
 
 
-===#events-hide
+={events-hide}
 
 # new lychee.Viewport().bind('hide', function() {}, scope);
 
@@ -101,7 +101,7 @@ viewport.bind('hide', function() {
 
 
 
-===#properties-fullscreen
+={properties-fullscreen}
 
 # (Boolean) new lychee.Viewport().fullscreen;
 
@@ -125,7 +125,7 @@ viewport.bind('reshape', function() {
 
 
 
-===#properties-width
+={properties-width}
 
 # (Number) new lychee.Viewport().width;
 
@@ -141,7 +141,7 @@ viewport.bind('reshape', function() {
 
 
 
-===#properties-height
+={properties-height}
 
 # (Number) new lychee.Viewport().height;
 
@@ -157,7 +157,7 @@ viewport.bind('reshape', function() {
 
 
 
-===#methods-destroy
+={methods-destroy}
 
 # (Boolean) lychee.Viewport.prototype.destroy(void);
 
@@ -168,7 +168,7 @@ It will destroy the instance from any interaction bindings.
 
 
 
-===#methods-serialize
+={methods-serialize}
 
 # (Serialization Object) lychee.Viewport.prototype.serialize(void);
 
@@ -178,7 +178,7 @@ This method returns the *Serialization Object* of the instance.
 
 
 
-===#methods-setFullscreen
+={methods-setFullscreen}
 
 # (Boolean) lychee.Viewport.prototype.setFullscreen(fullscreen);
 

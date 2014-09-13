@@ -26,7 +26,7 @@
 			try {
 				callback.call(scope, xhr.responseText || xhr.responseXML);
 			} catch(err) {
-				lychee.Debugger.report(err, lychee.environment, null);
+				lychee.Debugger.report(lychee.environment, err, null);
 			} finally {
 				xhr = null;
 			}
@@ -38,7 +38,7 @@
 			try {
 				callback.call(scope, null);
 			} catch(err) {
-				lychee.Debugger.report(err, lychee.environment, null);
+				lychee.Debugger.report(lychee.environment, err, null);
 			} finally {
 				xhr = null;
 			}

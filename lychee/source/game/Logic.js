@@ -354,10 +354,18 @@ lychee.define('lychee.game.Logic').requires([
 
 		},
 
-		toLayerPosition: function(position) {
+		toScreenPosition: function(position) {
+
+			var x = position.x;
+			var y = position.y;
+
 		},
 
 		toProjectionPosition: function(position) {
+
+			var x = position.x;
+			var y = position.y;
+
 		}
 
 	};

@@ -52,7 +52,7 @@
 			try {
 				callback.call(scope, raw);
 			} catch(err) {
-				lychee.Debugger.report(err, lychee.environment, null);
+				lychee.Debugger.report(lychee.environment, err, null);
 			}
 
 		});

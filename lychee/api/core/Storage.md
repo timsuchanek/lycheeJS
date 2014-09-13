@@ -1,5 +1,5 @@
 
-===#constructor
+={constructor}
 
 # new lychee.Storage(settings);
 

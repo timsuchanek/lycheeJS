@@ -279,7 +279,7 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 						) || null;
 
 					} catch(err) {
-						lychee.Debugger.report(err, this, definition);
+						lychee.Debugger.report(this, err, definition);
 					}
 
 				} else {
@@ -297,7 +297,7 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 						) || null;
 
 					} catch(err) {
-						lychee.Debugger.report(err, this, definition);
+						lychee.Debugger.report(this, err, definition);
 					}
 
 				}
@@ -1087,7 +1087,7 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 								);
 
 							} catch(err) {
-								lychee.Debugger.report(err, this, null);
+								lychee.Debugger.report(this, err, null);
 							}
 
 						} else {

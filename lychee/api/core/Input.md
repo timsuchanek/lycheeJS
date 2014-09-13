@@ -1,5 +1,5 @@
 
-===#constructor
+={constructor}
 
 # new lychee.Input(settings);
 
@@ -26,7 +26,7 @@ var input = new lychee.Input({
 
 
 
-===#events-name
+={events-name}
 
 # new lychee.Input().bind(name, function(delta) {}, scope);
 
@@ -54,7 +54,7 @@ input.bind('ctrl-shift-a', function(delta) {
 
 
 
-===#events-key
+={events-key}
 
 # new lychee.Input().bind('key', function(key, name, delta) {}, scope);
 
@@ -86,7 +86,7 @@ input.bind('key', function(key, name, delta) {
 
 
 
-===#events-touch
+={events-touch}
 
 # new lychee.Input().bind('touch', function(id, position, delta) {}, scope);
 
@@ -111,7 +111,7 @@ input.bind('touch', function(id, position, delta) {
 
 
 
-===#events-swipe
+={events-swipe}
 
 # new lychee.Input().bind('swipe', function(id, state, position, delta, swipe) {}, scope);
 
@@ -157,7 +157,7 @@ input.bind('swipe', function(id, state, position, delta, swipe) {
 
 
 
-===#properties-delay
+={properties-delay}
 
 # (Number) new lychee.Input().delay;
 
@@ -188,7 +188,7 @@ input.bind('touch', function() {
 
 
 
-===#properties-key
+={properties-key}
 
 # (Boolean) new lychee.Input().key;
 
@@ -215,7 +215,7 @@ input.bind('key', function() {
 
 
 
-===#properties-keymodifier
+={properties-keymodifier}
 
 # (Boolean) new lychee.Input().keymodifier;
 
@@ -249,7 +249,7 @@ input.bind('ctrl-s', function() {
 
 
 
-===#properties-touch
+={properties-touch}
 
 # (Boolean) new lychee.Input().touch;
 
@@ -276,7 +276,7 @@ input.bind('touch', function() {
 
 
 
-===#properties-swipe
+={properties-swipe}
 
 # (Boolean) new lychee.Input().swipe;
 
@@ -304,7 +304,7 @@ input.bind('swipe', function() {
 
 
 
-===#methods-serialize
+={methods-serialize}
 
 # (Serialization Object) lychee.Input.prototype.serialize(void);
 
@@ -314,7 +314,7 @@ This method returns the *Serialization Object* of the instance.
 
 
 
-===#methods-setDelay
+={methods-setDelay}
 
 # (Boolean) lychee.Input.prototype.setDelay(delay);
 
@@ -341,7 +341,7 @@ input.bind('key', function(key, name, delta) {
 
 
 
-===#methods-setKey
+={methods-setKey}
 
 # (Boolean) lychee.Input.prototype.setKey(key);
 
@@ -364,7 +364,7 @@ input.bind('key', function() {
 
 
 
-===#methods-setKeyModifier
+={methods-setKeyModifier}
 
 # (Boolean) lychee.Input.prototype.setKeyModifier(keymodifier);
 
@@ -389,7 +389,7 @@ input.bind('ctrl-a', function() {
 
 
 
-===#methods-setTouch
+={methods-setTouch}
 
 # (Boolean) lychee.Input.prototype.setTouch(touch);
 
@@ -412,7 +412,7 @@ input.bind('touch', function() {
 
 
 
-===#methods-setSwipe
+={methods-setSwipe}
 
 # (Boolean) lychee.Input.prototype.setSwipe(swipe);
 
