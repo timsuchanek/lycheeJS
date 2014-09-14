@@ -393,6 +393,7 @@ lychee.define('game.Logic').requires([
 						this.jukebox.play(_sounds.voice_attack);
 
 						this.__actions.push({
+							time:   null,
 							type:   'attack',
 							object: mode.object,
 							target: focus.object
@@ -443,9 +444,14 @@ lychee.define('game.Logic').requires([
 						this.jukebox.play(_sounds.voice_move);
 
 						this.__actions.push({
+							time:   null,
 							type:   'move',
-							entity: mode.entity,
-							target: focus.position
+							object: mode.object,
+							path:   path.buffer,
+							target: {
+								x: focus.position.x,
+								y: focus.position.y
+							}
 						});
 
 						this.trigger('deselect', []);
@@ -522,6 +528,27 @@ lychee.define('game.Logic').requires([
 		 */
 
 		update: function(clock, delta) {
+
+			var actions = this.__actions;
+			for (var a = 0, al = actions.length; a < al; a++) {
+
+				var action = actions[a];
+				if (action.time === null) {
+
+					action.time = clock;
+
+				} else if (clock > action.time) {
+
+					var type = action.type;
+					if (type === 'move') {
+
+console.log(type, action);
+
+					}
+
+				}
+
+			}
 
 		},
 

@@ -280,6 +280,13 @@ lychee.define('game.state.Game').requires([
 
 			this.input.unbind('swipe', _process_swipe, this);
 
+		},
+
+		update: function(clock, delta) {
+
+			this.logic.update(clock, delta);
+			lychee.game.State.prototype.update.call(this, clock, delta);
+
 		}
 
 	};
