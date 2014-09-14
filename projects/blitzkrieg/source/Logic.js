@@ -539,10 +539,42 @@ lychee.define('game.Logic').requires([
 
 				} else if (clock > action.time) {
 
-					var type = action.type;
-					if (type === 'move') {
+					var type   = action.type;
+					var object = action.object;
+					var target = action.target;
 
-console.log(type, action);
+					if (type === 'attack') {
+
+// TODO: Implement attack, needs explosion sprite & ui non-event layer
+
+					} else if (type === 'move') {
+
+						if (object.effects.length === 0) {
+
+							var target = action.path.splice(0, 1)[0] || null;
+							if (target !== null) {
+
+								var pos = this.toScreenPosition(target, 'objects');
+
+								if (typeof object.setTarget === 'function') {
+									object.setTarget(pos);
+								}
+
+								object.addEffect(new lychee.effect.Position({
+									type: lychee.effect.Position.TYPE.linear,
+									delay:    250,
+									duration: 500,
+									position: {
+										x: pos.x,
+										y: pos.y
+									}
+								}));
+
+								action.time = clock + 750;
+
+							}
+
+						}
 
 					}
 

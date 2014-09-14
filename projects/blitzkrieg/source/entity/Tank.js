@@ -7,6 +7,33 @@ lychee.define('game.entity.Tank').includes([
 	var _config  = attachments["json"].buffer;
 
 
+
+	/*
+	 * HELPERS
+	 */
+
+	var _rotate_to_target = function() {
+
+		var target_x = this.target.x;
+		var target_y = this.target.y;
+
+		var rotation = this.__rotation;
+
+
+		var from = rotation.from;
+
+
+		rotation.start    = null;
+		rotation.duration = duration;
+
+	};
+
+
+
+	/*
+	 * IMPLEMENTATION
+	 */
+
 	var Class = function(data) {
 
 		var settings = lychee.extend({}, data);
@@ -18,6 +45,11 @@ lychee.define('game.entity.Tank').includes([
 		this.path   = {
 			current: null,
 			stack:   []
+		};
+
+		this.target = {
+			start: null,
+
 		};
 
 
@@ -81,6 +113,26 @@ lychee.define('game.entity.Tank').includes([
 
 				this.color = color;
 				this.state = color + '-01';
+
+				return true;
+
+			}
+
+
+			return false;
+
+		},
+
+		setTarget: function(target) {
+
+			if (target instanceof Object) {
+
+				this.target.x = typeof target.x === 'number' ? (target.x | 0) : this.target.x;
+				this.target.y = typeof target.y === 'number' ? (target.y | 0) : this.target.y;
+
+
+				_rotate_to_target.call(this);
+
 
 				return true;
 
