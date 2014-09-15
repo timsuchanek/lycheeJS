@@ -26,21 +26,74 @@ lychee.define('sorbet.data.Storage').includes([
 			blob = {};
 		}
 
+		if (blob[this.id] === undefined) {
+			blob[this.id] = [];
+		}
+
 
 		return blob;
 
 	};
 
-	var _sync_storage = function(objects) {
+	var _write_cache = function(path, cache) {
 
-		var path = '/tmp/sorbet.store';
-
-		var cache = _read_cache(path);
-		if (cache instanceof Object) {
-//				cache[this.id] = _serialize.call(this);
+		var result = false;
+		try {
+			result = _fs.writeFileSync(path, JSON.stringify(cache), 'utf8');
+		} catch(e) {
+			result = false;
 		}
 
-console.log('SYNCHRONIZING SORBET STORAGE', Object.keys(cache), this.__objects);
+		return result;
+
+	};
+
+	var _write_storage = function() {
+
+		var path  = '/tmp/sorbet.store';
+		var cache = _read_cache.call(this, path);
+
+		if (cache[this.id] instanceof Array) {
+
+			for (var c = 0, cl = cache[this.id].length; c < cl; c++) {
+
+				var pid      = cache[this.id][c].pid;
+				var pidindex = this.__removals.indexOf(pid);
+				if (pidindex !== -1) {
+
+					this.__removals.splice(pidindex, 1);
+					cache[this.id].splice(c, 1);
+					cl--;
+					c--;
+
+				}
+
+			}
+
+
+			for (var o = 0, ol = this.__objects.length; o < ol; o++) {
+
+				var object = this.__objects[o];
+				var found  = false;
+
+				for (var c = 0, cl = cache[this.id].length; c < cl; c++) {
+
+					if (cache[this.id][c].pid === object.pid) {
+						found = true;
+						break;
+					}
+
+				}
+
+				if (found === false) {
+					cache[this.id].push(JSON.parse(JSON.stringify(object)));
+				}
+
+			}
+
+		}
+
+		_write_cache.call(this, path, cache);
 
 	};
 
@@ -55,7 +108,14 @@ console.log('SYNCHRONIZING SORBET STORAGE', Object.keys(cache), this.__objects);
 		var settings = lychee.extend({}, data);
 
 
+		this.__removals = [];
+
+
 		settings.type = lychee.Storage.TYPE.temporary;
+		settings.model = {
+			pid:  process.pid,
+			port: 8080
+		};
 
 
 		lychee.Storage.call(this, settings);
@@ -68,7 +128,7 @@ console.log('SYNCHRONIZING SORBET STORAGE', Object.keys(cache), this.__objects);
 		 * INITIALIZATION
 		 */
 
-		this.bind('sync', _sync_storage, this);
+		this.bind('sync', _write_storage, this);
 
 	};
 
@@ -77,6 +137,22 @@ console.log('SYNCHRONIZING SORBET STORAGE', Object.keys(cache), this.__objects);
 
 
 	Class.prototype = {
+
+		remove: function(object) {
+
+			var result = lychee.Storage.prototype.remove.call(this, object);
+			if (result === true) {
+
+				this.__removals.push(object.pid);
+
+				return true;
+
+			}
+
+
+			return false;
+
+		}
 
 	};
 
