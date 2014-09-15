@@ -14,17 +14,34 @@ lychee.define('game.entity.Tank').includes([
 
 	var _rotate_to_target = function() {
 
-		var target_x = this.target.x;
-		var target_y = this.target.y;
+		var dx = this.target.x - this.position.x;
+		var dy = this.target.y - this.position.y;
 
-		var rotation = this.__rotation;
+		if (dx !== 0 || dy !== 0) {
 
+			var angle = (((Math.atan2(dy, dx) * 180 / Math.PI) + 90 + 360) % 360) / 360;
+			var state = '01';
+			var part  = 0.25 / 4;
 
-		var from = rotation.from;
+			if (angle > part && angle < part * 3) {
+				state = '02';
+			} else if (angle > part *  3 && angle < part *  5) {
+				state = '03';
+			} else if (angle > part *  5 && angle < part *  7) {
+				state = '04';
+			} else if (angle > part *  7 && angle < part *  9) {
+				state = '05';
+			} else if (angle > part *  9 && angle < part * 11) {
+				state = '06';
+			} else if (angle > part * 11 && angle < part * 13) {
+				state = '07';
+			} else if (angle > part * 13 && angle < part * 15) {
+				state = '08';
+			}
 
+			this.state = this.color + '-' + state;
 
-		rotation.start    = null;
-		rotation.duration = duration;
+		}
 
 	};
 

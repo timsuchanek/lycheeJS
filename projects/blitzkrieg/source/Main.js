@@ -12,7 +12,7 @@ lychee.define('game.Main').requires([
 
 		var settings = lychee.extend({
 
-			title: 'Game Boilerplate',
+			title: 'Blitzkrieg',
 
 			// Is configured by Sorbet API
 			client: '/api/Server?identifier=blitzkrieg',
@@ -31,7 +31,7 @@ lychee.define('game.Main').requires([
 			},
 
 			renderer: {
-				id:     'boilerplate',
+				id:     'blitzkrieg',
 				width:  null,
 				height: null
 			},

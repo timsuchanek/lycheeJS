@@ -554,23 +554,35 @@ lychee.define('game.Logic').requires([
 							var target = action.path.splice(0, 1)[0] || null;
 							if (target !== null) {
 
-								var pos = this.toScreenPosition(target, 'objects');
+								var other = this.get(target, 'objects');
+								if (other === null) {
 
-								if (typeof object.setTarget === 'function') {
-									object.setTarget(pos);
+									var tileposition = this.toTilePosition(object.position, 'objects');
+									var screentarget = this.toScreenPosition(target,        'objects');
+
+									this.set(tileposition, null,   'objects');
+									this.set(target,       object, 'objects');
+
+									object.setTarget(screentarget);
+									object.addEffect(new lychee.effect.Position({
+										type: lychee.effect.Position.TYPE.linear,
+										delay:    250,
+										duration: 500,
+										position: {
+											x: screentarget.x,
+											y: screentarget.y
+										}
+									}));
+
+									action.time = clock + 750;
+
+								} else if (other !== object) {
+
+									actions.splice(a, 1);
+									al--;
+									a--;
+
 								}
-
-								object.addEffect(new lychee.effect.Position({
-									type: lychee.effect.Position.TYPE.linear,
-									delay:    250,
-									duration: 500,
-									position: {
-										x: pos.x,
-										y: pos.y
-									}
-								}));
-
-								action.time = clock + 750;
 
 							}
 
