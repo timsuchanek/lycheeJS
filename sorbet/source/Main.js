@@ -15,6 +15,7 @@ lychee.define('sorbet.Main').requires([
 	'sorbet.module.Server',
 	'sorbet.data.Filesystem',
 	'sorbet.data.Map',
+	'sorbet.data.Storage',
 	'sorbet.data.VHost'
 ]).exports(function(lychee, sorbet, global, attachments) {
 
@@ -194,7 +195,11 @@ lychee.define('sorbet.Main').requires([
 	 * IMPLEMENTATION
 	 */
 
-	var _root = require('path').resolve(__dirname, '../../');
+	var _root          = require('path').resolve(__dirname, '../../');
+	var _storage_model = {
+		pid:  process.pid,
+		port: 8080
+	};
 
 
 	var Class = function(profile) {
@@ -210,6 +215,20 @@ lychee.define('sorbet.Main').requires([
 		this.vhosts  = new _map();
 		this.apis    = new _map();
 		this.modules = new _map();
+
+
+
+		/*
+		 * PID STORAGE
+		 */
+
+		this.storage = new sorbet.data.Storage({
+			id:    'sorbet',
+			model: _storage_model
+		});
+
+		this.status = this.storage.create();
+		this.storage.insert(this.status);
 
 
 
@@ -365,6 +384,10 @@ lychee.define('sorbet.Main').requires([
 
 			this.port = port;
 			this.servers.set(null, server);
+
+			this.status.pid  = process.pid;
+			this.status.port = this.port;
+			this.storage.update(this.status);
 
 		},
 
@@ -699,6 +722,8 @@ lychee.define('sorbet.Main').requires([
 
 			}
 
+
+			this.storage.remove(this.status);
 
 		}
 

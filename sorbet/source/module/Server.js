@@ -56,9 +56,13 @@ lychee.define('sorbet.module.Server').requires([
 					cwd: root
 				});
 
-				server.id   = project.id;
-				server.host = host;
-				server.port = port;
+				server.id          = project.id;
+				server.host        = host;
+				server.port        = port;
+
+				server.status      = this.main.storage.create();
+				server.status.pid  = server.pid;
+				server.status.port = server.port;
 
 				server.destroy = function() {
 					this.kill('SIGTERM');
@@ -73,6 +77,7 @@ lychee.define('sorbet.module.Server').requires([
 						console.log('sorbet.module.Server: Killed Server "' + this.id + '"');
 					}
 
+					that.main.storage.remove(this.status);
 					that.main.servers.remove(this.id, null);
 
 				});
@@ -82,9 +87,11 @@ lychee.define('sorbet.module.Server').requires([
 				});
 
 
+				this.main.storage.insert(server.status);
 				this.main.servers.set(server.id, server);
 				this.main.refresh();
 				this.queue.flush();
+
 
 				return true;
 
