@@ -719,13 +719,7 @@ lychee.define('sorbet.Main').requires([
 
 
 			this.storage.remove(this.status);
-
-
-// TODO: Solve this problem
-			var that = this;
-			setTimeout(function() {
-				that.storage.trigger('sync', []);
-			}, 500);
+			this.storage.trigger('sync', []);
 
 		}
 

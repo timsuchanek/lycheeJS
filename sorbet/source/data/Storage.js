@@ -93,6 +93,7 @@ lychee.define('sorbet.data.Storage').includes([
 
 		}
 
+
 		_write_cache.call(this, path, cache);
 
 	};
@@ -140,7 +141,7 @@ lychee.define('sorbet.data.Storage').includes([
 
 		remove: function(object) {
 
-			var result = lychee.Storage.prototype.remove.call(this, object);
+			var result = lychee.Storage.prototype.remove.call(this, null, object);
 			if (result === true) {
 
 				this.__removals.push(object.pid);

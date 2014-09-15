@@ -64,12 +64,13 @@ lychee.define('sorbet.module.Server').requires([
 				server.status.pid  = server.pid;
 				server.status.port = server.port;
 
-				server.destroy = function() {
-					this.kill('SIGTERM');
-				};
-
 
 				var that = this;
+
+				server.destroy = function() {
+					that.main.storage.remove(this.status);
+					this.kill('SIGTERM');
+				};
 
 				server.on('exit', function() {
 
