@@ -462,26 +462,22 @@ lychee.define('Storage').tags({
 
 		},
 
-		remove: function(index) {
+		remove: function(index, object) {
 
-			index  = typeof index === 'number' ? (index | 0) : null;
-
-
-			if (index !== null) {
-
-				if (index >= 0 && index < this.__objects.length) {
-
-					this.__operations.push({
-						type: 'remove',
-						index: index
-					});
+			index = typeof index === 'number' ? (index | 0) : this.__objects.indexOf(object);
 
 
-					_write_storage.call(this);
+			if (index >= 0 && index < this.__objects.length) {
 
-					return true;
+				this.__operations.push({
+					type: 'remove',
+					index: index
+				});
 
-				}
+
+				_write_storage.call(this);
+
+				return true;
 
 			}
 
