@@ -114,8 +114,9 @@ lychee.define('sorbet.data.Storage').includes([
 		settings.model = {
 			id:   'unknown',
 			type: 'unknown',
+			port: 1337,
 			pid:  1,
-			port: 1337
+			cmd:  ''
 		};
 
 

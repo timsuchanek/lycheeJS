@@ -58,6 +58,7 @@ lychee.define('sorbet.module.Server').requires([
 			var host = null;
 			var port = _get_port.call(this);
 			var info = '(' + JSON.stringify({ host: host, port: port }) + ')';
+			var args = [ this.main.root, port, host ];
 
 
 			if (lychee.debug === true) {
@@ -65,11 +66,7 @@ lychee.define('sorbet.module.Server').requires([
 			}
 
 
-			var server = _child_process.fork(root + '/sorbet.js', [
-				this.main.root,
-				port,
-				host
-			], {
+			var server = _child_process.fork(root + '/sorbet.js', args, {
 				cwd: root
 			});
 
@@ -77,8 +74,9 @@ lychee.define('sorbet.module.Server').requires([
 			server.status      = this.main.storage.create();
 			server.status.id   = project.id;
 			server.status.type = 'websocket';
-			server.status.pid  = server.pid;
 			server.status.port = port;
+			server.status.pid  = server.pid;
+			server.status.cmd  = root + '/sorbet.js ' + args.join(' ');
 
 
 			var that = this;

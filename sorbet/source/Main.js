@@ -195,7 +195,9 @@ lychee.define('sorbet.Main').requires([
 	 * IMPLEMENTATION
 	 */
 
+	var _cmd  = 'sorbet ' + [].slice.call(process.argv, 2).join(' ');
 	var _root = require('path').resolve(__dirname, '../../');
+
 
 	var Class = function(profile) {
 
@@ -223,9 +225,11 @@ lychee.define('sorbet.Main').requires([
 
 
 		this.status      = this.storage.create();
-		this.status.pid  = process.pid;
 		this.status.id   = 'sorbet';
 		this.status.type = 'web';
+		this.status.pid  = process.pid;
+		this.status.cmd  = _cmd;
+
 
 		this.storage.insert(this.status);
 
