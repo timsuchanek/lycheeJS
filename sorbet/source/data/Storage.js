@@ -48,47 +48,45 @@ lychee.define('sorbet.data.Storage').includes([
 
 	};
 
-	var _write_storage = function() {
+	var _on_sync = function() {
 
 		var path  = '/tmp/sorbet.store';
 		var cache = _read_cache.call(this, path);
+		var store = cache[this.id];
 
-		if (cache[this.id] instanceof Array) {
+		for (var s = 0, sl = store.length; s < sl; s++) {
 
-			for (var c = 0, cl = cache[this.id].length; c < cl; c++) {
+			var pid   = store[s].pid;
+			var index = this.__removals.indexOf(pid);
+			if (index !== -1) {
+				this.__removals.splice(index, 1);
+				store.splice(s, 1);
+				sl--;
+				s--;
+			}
 
-				var pid      = cache[this.id][c].pid;
-				var pidindex = this.__removals.indexOf(pid);
-				if (pidindex !== -1) {
+		}
 
-					this.__removals.splice(pidindex, 1);
-					cache[this.id].splice(c, 1);
-					cl--;
-					c--;
 
+		for (var o = 0, ol = this.__objects.length; o < ol; o++) {
+
+			var object = this.__objects[o];
+			var found  = false;
+
+			for (var s = 0, sl = store.length; s < sl; s++) {
+
+				if (store[s].pid === object.pid) {
+					store[s].id   = object.id;
+					store[s].type = object.type;
+					store[s].port = object.port;
+					found = true;
+					break;
 				}
 
 			}
 
-
-			for (var o = 0, ol = this.__objects.length; o < ol; o++) {
-
-				var object = this.__objects[o];
-				var found  = false;
-
-				for (var c = 0, cl = cache[this.id].length; c < cl; c++) {
-
-					if (cache[this.id][c].pid === object.pid) {
-						found = true;
-						break;
-					}
-
-				}
-
-				if (found === false) {
-					cache[this.id].push(JSON.parse(JSON.stringify(object)));
-				}
-
+			if (found === false) {
+				store.push(JSON.parse(JSON.stringify(object)));
 			}
 
 		}
@@ -112,10 +110,12 @@ lychee.define('sorbet.data.Storage').includes([
 		this.__removals = [];
 
 
-		settings.type = lychee.Storage.TYPE.temporary;
+		settings.type  = lychee.Storage.TYPE.temporary;
 		settings.model = {
-			pid:  process.pid,
-			port: 8080
+			id:   'unknown',
+			type: 'unknown',
+			pid:  1,
+			port: 1337
 		};
 
 
@@ -129,7 +129,11 @@ lychee.define('sorbet.data.Storage').includes([
 		 * INITIALIZATION
 		 */
 
-		this.bind('sync', _write_storage, this);
+		this.bind('sync', _on_sync, this);
+
+		this.bind('remove', function(index, object) {
+			this.__removals.push(object.pid);
+		}, this);
 
 	};
 
@@ -138,22 +142,6 @@ lychee.define('sorbet.data.Storage').includes([
 
 
 	Class.prototype = {
-
-		remove: function(object) {
-
-			var result = lychee.Storage.prototype.remove.call(this, null, object);
-			if (result === true) {
-
-				this.__removals.push(object.pid);
-
-				return true;
-
-			}
-
-
-			return false;
-
-		}
 
 	};
 

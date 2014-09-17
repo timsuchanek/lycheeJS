@@ -455,8 +455,8 @@ lychee.define('Storage').tags({
 
 					this.__operations.push({
 						type:   'insert',
-						object: object,
-						index:  this.__objects.length
+						index:  this.__objects.length,
+						object: object
 					});
 
 
@@ -486,8 +486,8 @@ lychee.define('Storage').tags({
 
 					this.__operations.push({
 						type:   'update',
-						object: object,
-						index:  index
+						index:  index,
+						object: object
 					});
 
 
@@ -531,8 +531,9 @@ lychee.define('Storage').tags({
 			if (index >= 0 && index < this.__objects.length) {
 
 				this.__operations.push({
-					type: 'remove',
-					index: index
+					type:   'remove',
+					index:  index,
+					object: this.__objects[index]
 				});
 
 

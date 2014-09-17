@@ -8,7 +8,6 @@ back into master, tagged and published.
 
 ### v0.8.3
 
-- sorbet service compliance (start/stop/restart with PID cache)
 - lychee.game.Physic
 - lychee.game.Logic projections (isometry and hexagon)
 - lychee.game.Logic toScreenPosition() and toProjectionPosition()

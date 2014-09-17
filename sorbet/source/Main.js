@@ -218,10 +218,15 @@ lychee.define('sorbet.Main').requires([
 		 */
 
 		this.storage = new sorbet.data.Storage({
-			id: 'sorbet'
+			id: 'servers'
 		});
 
-		this.status = this.storage.create();
+
+		this.status      = this.storage.create();
+		this.status.pid  = process.pid;
+		this.status.id   = 'sorbet';
+		this.status.type = 'web';
+
 		this.storage.insert(this.status);
 
 
@@ -377,10 +382,10 @@ lychee.define('sorbet.Main').requires([
 
 			server.listen(port);
 
+
 			this.port = port;
 			this.servers.set(null, server);
 
-			this.status.pid  = process.pid;
 			this.status.port = this.port;
 			this.storage.update(this.status);
 
@@ -718,7 +723,7 @@ lychee.define('sorbet.Main').requires([
 			}
 
 
-			this.storage.remove(this.status);
+			this.storage.remove(null, this.status);
 			this.storage.trigger('sync', []);
 
 		}

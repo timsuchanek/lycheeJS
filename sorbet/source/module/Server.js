@@ -5,14 +5,32 @@ lychee.define('sorbet.module.Server').requires([
 
 	var _child_process = require('child_process');
 
-	var _PORT = { min: 49152, max: 65535 };
-	var _port = _PORT.min;
+	var _MIN_PORT = 49152;
+	var _MAX_PORT = 65534;
 
 
 
 	/*
 	 * HELPERS
 	 */
+
+	var _get_port = function() {
+
+		var port  = _MIN_PORT;
+		var ports = [];
+
+		this.main.storage.filter(function(index, object) {
+			ports.push(object.port);
+		}, this);
+
+		while (ports.indexOf(port) !== -1) {
+			port++;
+		}
+
+
+		return port;
+
+	};
 
 	var _refresh = function(vhost) {
 
@@ -38,71 +56,67 @@ lychee.define('sorbet.module.Server').requires([
 
 			var root = project.root[0];
 			var host = null;
-			var port = ++_port;
+			var port = _get_port.call(this);
 			var info = '(' + JSON.stringify({ host: host, port: port }) + ')';
 
-			if (port > _PORT.min && port < _PORT.max) {
 
-				if (lychee.debug === true) {
-					console.log('sorbet.module.Server: Building Server "' + root + '" ' + info);
-				}
-
-
-				var server = _child_process.fork(root + '/sorbet.js', [
-					this.main.root,
-					port,
-					host
-				], {
-					cwd: root
-				});
-
-				server.id          = project.id;
-				server.host        = host;
-				server.port        = port;
-
-				server.status      = this.main.storage.create();
-				server.status.pid  = server.pid;
-				server.status.port = server.port;
-
-
-				var that = this;
-
-				server.destroy = function() {
-					that.main.storage.remove(this.status);
-					this.kill('SIGTERM');
-				};
-
-				server.on('exit', function() {
-
-					if (lychee.debug === true) {
-						console.log('sorbet.module.Server: Killed Server "' + this.id + '"');
-					}
-
-					that.main.storage.remove(this.status);
-					that.main.servers.remove(this.id, null);
-
-				});
-
-				server.on('error', function() {
-					this.exit(0);
-				});
-
-
-				this.main.storage.insert(server.status);
-				this.main.servers.set(server.id, server);
-				this.main.refresh();
-				this.queue.flush();
-
-
-				return true;
-
-			} else {
-
-				if (lychee.debug === true) {
-					console.error('sorbet.module.Server: Invalid Server "' + root + '" ' + info);
-				}
-
+			if (lychee.debug === true) {
+				console.log('sorbet.module.Server: Building Server "' + root + '" ' + info);
 			}
+
+
+			var server = _child_process.fork(root + '/sorbet.js', [
+				this.main.root,
+				port,
+				host
+			], {
+				cwd: root
+			});
+
+
+			server.status      = this.main.storage.create();
+			server.status.id   = project.id;
+			server.status.type = 'websocket';
+			server.status.pid  = server.pid;
+			server.status.port = port;
+
+
+			var that = this;
+
+			server.destroy = function() {
+
+				that.main.storage.remove(null, this.status);
+
+				this.kill('SIGTERM');
+
+			};
+
+			server.on('exit', function() {
+
+				var id = this.status.id;
+
+				if (lychee.debug === true) {
+					console.log('sorbet.module.Server: Killed Server "' + id + '"');
+				}
+
+				that.main.storage.remove(null, this.status);
+				that.main.servers.remove(id, null);
+
+			});
+
+			server.on('error', function(err) {
+				this.exit(0);
+			});
+
+
+			this.main.storage.insert(server.status);
+			this.main.servers.set(project.id, server);
+
+			this.main.refresh();
+			this.queue.flush();
+
+
+			return true;
 
 		}
 
