@@ -428,6 +428,52 @@ var _root = require('path').resolve(__dirname, '../');
 
 		},
 
+		write: function(path, data, encoding) {
+
+			path     =  typeof path === 'string'                            ? path   : null;
+			data     = (typeof data === 'string' || data instanceof Buffer) ? data   : null;
+			encoding =  typeof data === 'string'                            ? 'utf8' : (encoding || 'binary');
+
+
+			if (path !== null && data !== null) {
+
+				if (path.charAt(0) === '.') {
+					return false;
+				}
+
+
+				var result = false;
+
+				if (encoding === 'utf8') {
+
+					try {
+						_fs.writeFileSync(path, data, 'utf8');
+						result = true;
+					} catch(e) {
+
+					}
+
+				} else if (encoding === 'binary') {
+
+					try {
+						_fs.writeFileSync(path, data.toString('binary'), 'binary');
+						result = true;
+					} catch(e) {
+
+					}
+
+				}
+
+
+				return result;
+
+			}
+
+
+			return false;
+
+		},
+
 		isDirectory: function(path) {
 
 			var result = false;
@@ -469,6 +515,62 @@ var _root = require('path').resolve(__dirname, '../');
 			}
 
 			return result;
+
+		},
+
+		table: function(array) {
+
+			if (array.length === 0) {
+				return false;
+			}
+
+
+			var keys = Object.keys(array[0]);
+			if (keys.length > 0) {
+
+				var table  = [];
+				var map    = [];
+
+
+				var header = [];
+				for (var k = 0, kl = keys.length; k < kl; k++) {
+					header.push(keys[k]);
+					map[k] = keys[k].length;
+				}
+
+
+				table.push(header);
+
+
+				for (var a = 0, al = array.length; a < al; a++) {
+
+					var row = [];
+
+					for (var k = 0, kl = keys.length; k < kl; k++) {
+						var val = '' + array[a][keys[k]];
+						row.push(val);
+						map[k] = Math.max(map[k], val.length);
+					}
+
+					table.push(row);
+
+				}
+
+
+				for (var t = 0, tl = table.length; t < tl; t++) {
+
+					for (var k = 0, kl = keys.length; k < kl; k++) {
+						var space   = '                        '.substr(0, map[k] - table[t][k].length);
+						table[t][k] = table[t][k] + space;
+					}
+
+					table[t] = ' ' + table[t].join(' | ');
+
+				}
+
+				console.log('\n' + table.join('\n') + '\n');
+
+			}
 
 		}
 

@@ -76,7 +76,7 @@ lychee.define('sorbet.module.Server').requires([
 			server.status.type = 'websocket';
 			server.status.port = port;
 			server.status.pid  = server.pid;
-			server.status.cmd  = root + '/sorbet.js ' + args.join(' ');
+			server.status.cmd  = 'node ' + root + '/sorbet.js ' + args.join(' ');
 
 
 			var that = this;
@@ -84,6 +84,7 @@ lychee.define('sorbet.module.Server').requires([
 			server.destroy = function() {
 
 				that.main.storage.remove(null, this.status);
+				that.main.servers.remove(this.status.id, null);
 
 				this.kill('SIGTERM');
 

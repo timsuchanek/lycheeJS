@@ -28,12 +28,11 @@ var _print_help = function() {
 	console.log('                                                                                            ');
 	console.log('   start                                      Starts a sorbet server                        ');
 	console.log('   stop                                       Stops a sorbet server                         ');
-	console.log('   restart                                    Stops and starts a sorbet server              ');
+	console.log('   status                                     Shows an overview of running instances        ');
 	console.log('                                                                                            ');
 	console.log('Parameters:                                                                                 ');
 	console.log('                                                                                            ');
-	console.log('   --identifier="mycoolserver"                The identifier of the server.                 ');
-	console.log('                                                                                            ');
+	console.log('   --pid="1337"                               The process identifier of the server.         ');
 	console.log('   --profile="./path/to/profile.json"         The static configuration file.                ');
 	console.log('                                                                                            ');
 	console.log('   --port="8080"                              The dynamic configuration port number.        ');
@@ -44,7 +43,6 @@ var _print_help = function() {
 	console.log('                                                                                            ');
 	console.log('- Profiles are static configuration. They setup ports, root folders and virtualhosts.       ');
 	console.log('- If no Profile is set, it will default to using the dynamic configuration settings.        ');
-	console.log('- If no Identifier is set, it will default to the process id (PID).                         ');
 	console.log('- If no Sandbox Directory is set, it will default to the current working directory.         ');
 	console.log('- If no VirtualHost is set, it will default to "localhost".                                 ');
 	console.log('                                                                                            ');
@@ -52,26 +50,28 @@ var _print_help = function() {
 	console.log('                                                                                            ');
 	console.log('cd ~/lycheeJS; sorbet start --profile="./sorbet/profile/localhost.json"                     ');
 	console.log('                                                                                            ');
+	console.log('                                                                                            ');
 	console.log('cd ~/myproject; sorbet start --port="8081"                                                  ');
 	console.log('cd ~; sorbet start --port="8082" --sandbox="./myproject" --virtualhost="foo.lycheejs.org"   ');
 	console.log('                                                                                            ');
-	console.log('cd ~; sorbet start --identifier="betastuff" --port="8083" --sandbox="./myproject"           ');
-	console.log('cd ~; sorbet restart --identifier="betastuff"                                               ');
+	console.log('                                                                                            ');
+	console.log('cd ~; sorbet start --port="8083" --sandbox="./myproject"                                    ');
+	console.log('cd ~; sorbet status; # lists previously started server with PID 1337                        ');
+	console.log('cd ~; sorbet stop --pid="1337"                                                              ');
 	console.log('                                                                                            ');
 
 };
 
 
-
 var _command    = null;
-var _identifier = null;
+var _pid        = null;
 var _profile    = null;
 
 (function() {
 
 	var settings = {
 		command:     null,
-		identifier:  null,
+		pid:         null,
 		profile:     null,
 		port:        null,
 		sandbox:     process.cwd(),
@@ -96,7 +96,7 @@ var _profile    = null;
 				settings[key] = val;
 			}
 
-		} else if (arg.match(/start|stop|restart/)) {
+		} else if (arg.match(/start|stop|status/)) {
 
 			settings['command'] = arg;
 
@@ -123,8 +123,11 @@ var _profile    = null;
 	}
 
 
+	var pid  = typeof settings.pid === 'number'        ? settings.pid        : null;
+	if (pid === null && settings.pid === '*') {
+		pid = '*';
+	}
 
-	var id   = typeof settings.identifier === 'string' ? settings.identifier : null;
 	var cmd  = typeof settings.command === 'string'    ? settings.command    : null;
 	var port = typeof settings.port === 'number'       ? settings.port       : 8080;
 	var host = typeof settings.host === 'string'       ? settings.host       : 'localhost';
@@ -135,7 +138,7 @@ var _profile    = null;
 		console.warn('No Profile set, using dynamic configuration settings.');
 
 		_command    = cmd;
-		_identifier = id;
+		_pid        = pid;
 		_profile    = {
 			port:   port,
 			vhosts: [{
@@ -149,7 +152,7 @@ var _profile    = null;
 		console.warn('Profile set, using static configuration settings.');
 
 		_command    = cmd;
-		_identifier = id;
+		_pid        = pid;
 		_profile    = settings.profile;
 
 	}
@@ -165,7 +168,7 @@ var _profile    = null;
  * IMPLEMENTATION
  */
 
-(function(cli, command, identifier, profile) {
+(function(cli, command, pid, profile) {
 
 	var lychee = cli.lychee;
 	var global = cli.global;
@@ -176,9 +179,21 @@ var _profile    = null;
 	 * HELPERS
 	 */
 
-	var _start_server = function(identifier, profile) {
+	var _print_status = function() {
 
-// TODO: Use process.spawn() and try to set this to a different folder
+		var storage = _cli.read('/tmp/sorbet.store');
+		if (storage instanceof Object) {
+
+			var servers = storage['servers'] || null;
+			if (servers !== null) {
+				cli.table(servers);
+			}
+
+		}
+
+	};
+
+	var _start_server = function(profile) {
 
 		lychee.setEnvironment(new lychee.Environment({
 			id:      'sorbet',
@@ -205,16 +220,90 @@ var _profile    = null;
 			main.listen(profile.port);
 
 			process.on('exit', function() {
+
+				if (lychee.debug === true) {
+					console.log('sorbet.Main: Killed Server');
+				}
+
 				main.destroy();
+
+			});
+
+			process.on('SIGHUP',  function() { this.exit(0); });
+			process.on('SIGINT',  function() { this.exit(0); });
+			process.on('SIGQUIT', function() { this.exit(0); });
+			process.on('SIGABRT', function() { this.exit(0); });
+			process.on('SIGTERM', function() { this.exit(0); });
+
+			process.on('error', function() {
+
+				main.destroy();
+				this.exit(0);
+
 			});
 
 		});
+
+
+		return true;
 
 	};
 
 	var _stop_server = function(identifier) {
 
-// TODO: stop server via identifier
+		identifier = typeof identifier === 'number' ? identifier : null;
+
+
+		var storage = cli.read('/tmp/sorbet.store');
+		if (storage instanceof Object) {
+
+			var servers = storage['servers'] || null;
+			if (servers !== null) {
+
+				var found = [];
+
+				for (var s = 0, sl = servers.length; s < sl; s++) {
+
+					if (servers[s].pid === identifier || identifier === null) {
+						found.push(servers[s]);
+						break;
+					}
+
+				}
+
+
+				if (found.length > 0) {
+
+					for (var f = 0, fl = found.length; f < fl; f++) {
+
+						var pid = found[f].pid;
+						if (pid > 0) {
+
+							try {
+								process.kill(pid, 'SIGINT');
+							} catch(e) {
+							}
+
+						}
+
+					}
+
+
+					if (identifier === null) {
+						cli.write('/tmp/sorbet.store', '{}');
+					}
+
+
+					return true;
+
+				}
+
+			}
+
+		}
+
+
+		return false;
 
 	};
 
@@ -224,34 +313,71 @@ var _profile    = null;
 	 * INITIALIZATION
 	 */
 
-	if (command === 'start' && profile !== null) {
+	switch(command) {
 
-		_start_server(identifier, profile);
+		case 'start':
 
-	} else if (command === 'stop' && identifier !== null) {
+			if (profile !== null) {
 
-		_stop_server(identifier);
+				console.log('Starting Instance ... ');
 
-	} else if (command === 'restart' && identifier !== null && profile !== null) {
+				var result = _start_server(profile);
+				if (result === true) {
+					console.info('SUCCESS');
+				} else {
+					console.error('FAILURE');
+				}
 
-		_stop_server(identifier);
-		_start_server(identifier, profile);
+			} else {
+				console.error('Invalid Profile');
+				process.exit(1);
+			}
 
-	} else {
+		break;
 
-		if (command === null) {
-			console.error('sorbet: Invalid Command');
-		}
+		case 'stop':
 
-		if (profile === null) {
-			console.error('sorbet: Invalid Profile');
-		}
+			if (pid !== null && (typeof pid === 'number' || pid === '*')) {
 
 
-		_print_help();
-		process.exit(1);
+				console.log('Stopping Instances ... ');
 
-	}
+				var result = false;
 
-})(_cli, _command, _identifier, _profile);
+				if (pid === '*') {
+					result = _stop_server(null);
+				} else {
+					result = _stop_server(pid);
+				}
+
+				if (result === true) {
+					console.info('SUCCESS');
+				} else {
+					console.error('FAILURE');
+				}
+
+			} else {
+
+				console.error('Invalid Identifier');
+				process.exit(1);
+
+			}
+
+		break;
+
+		case 'status':
+
+			_print_status();
+
+		break;
+
+		default:
+		case 'help':
+			_print_help();
+			process.exit(1);
+		break;
+
+	};
+
+})(_cli, _command, _pid, _profile);
 

@@ -25,8 +25,7 @@
 	"scripts": {
 		"postinstall": "node ./tool/configure.js",
 		"start":       "node ./tool/Sorbet.js start --profile=\"./sorbet/profile/localhost.json\"",
-		"stop":        "node ./tool/Sorbet.js stop",
-		"restart":     "node ./tool/Sorbet.js restart --profile=\"./sorbet/profile/localhost.json\""
+		"stop":        "node ./tool/Sorbet.js stop --pid=\"*\""
 	},
 
 	"bin": {
