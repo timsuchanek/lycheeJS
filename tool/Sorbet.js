@@ -26,12 +26,14 @@ var _print_help = function() {
 	console.log('                                                                                            ');
 	console.log('Commands:                                                                                   ');
 	console.log('                                                                                            ');
+	console.log('   init                                       Creates a profile for modification.           ');
 	console.log('   start                                      Starts a sorbet server                        ');
 	console.log('   stop                                       Stops a sorbet server                         ');
 	console.log('   status                                     Shows an overview of running instances        ');
 	console.log('                                                                                            ');
 	console.log('Parameters:                                                                                 ');
 	console.log('                                                                                            ');
+	console.log('   --id="boilerplate"                         The project identifier of the server.         ');
 	console.log('   --pid="1337"                               The process identifier of the server.         ');
 	console.log('   --profile="./path/to/profile.json"         The static configuration file.                ');
 	console.log('                                                                                            ');
@@ -63,9 +65,9 @@ var _print_help = function() {
 };
 
 
-var _command    = null;
-var _pid        = null;
-var _profile    = null;
+var _command  = null;
+var _settings = {};
+var _profile  = null;
 
 (function() {
 
@@ -123,11 +125,8 @@ var _profile    = null;
 	}
 
 
-	var pid  = typeof settings.pid === 'number'        ? settings.pid        : null;
-	if (pid === null && settings.pid === '*') {
-		pid = '*';
-	}
-
+	var id   = typeof settings.id === 'string'         ? settings.id         : null;
+	var pid  = typeof settings.pid === 'number'        ? settings.pid        : (settings.pid === '*' ? '*' : null);
 	var cmd  = typeof settings.command === 'string'    ? settings.command    : null;
 	var port = typeof settings.port === 'number'       ? settings.port       : 8080;
 	var host = typeof settings.host === 'string'       ? settings.host       : 'localhost';
@@ -137,9 +136,10 @@ var _profile    = null;
 
 		console.warn('No Profile set, using dynamic configuration settings.');
 
-		_command    = cmd;
-		_pid        = pid;
-		_profile    = {
+		_command          = cmd;
+		_settings.pid     = pid;
+		_settings.id      = id;
+		_settings.profile = {
 			port:   port,
 			vhosts: [{
 				hosts:  [ host ],
@@ -151,9 +151,8 @@ var _profile    = null;
 
 		console.warn('Profile set, using static configuration settings.');
 
-		_command    = cmd;
-		_pid        = pid;
-		_profile    = settings.profile;
+		_command          = cmd;
+		_settings.profile = settings.profile;
 
 	}
 
@@ -168,7 +167,7 @@ var _profile    = null;
  * IMPLEMENTATION
  */
 
-(function(cli, command, pid, profile) {
+(function(cli, command, settings) {
 
 	var lychee = cli.lychee;
 	var global = cli.global;
@@ -249,9 +248,12 @@ var _profile    = null;
 
 	};
 
-	var _stop_server = function(identifier) {
+	var _stop_server = function(filters) {
 
-		identifier = typeof identifier === 'number' ? identifier : null;
+		filters = filters instanceof Object ? filters : {};
+
+		var id  = filters.id  || null;
+		var pid = filters.pid || null;
 
 
 		var storage = cli.read('/tmp/sorbet.store');
@@ -264,9 +266,14 @@ var _profile    = null;
 
 				for (var s = 0, sl = servers.length; s < sl; s++) {
 
-					if (servers[s].pid === identifier || identifier === null) {
+					if (
+						   (servers[s].id === id   || id === null)
+						&& (servers[s].pid === pid || pid === null)
+					) {
+
 						found.push(servers[s]);
 						break;
+
 					}
 
 				}
@@ -289,7 +296,7 @@ var _profile    = null;
 					}
 
 
-					if (identifier === null) {
+					if (id === null && pid === null) {
 						cli.write('/tmp/sorbet.store', '{}');
 					}
 
@@ -317,6 +324,8 @@ var _profile    = null;
 
 		case 'start':
 
+			var profile = settings.profile;
+
 			if (profile !== null) {
 
 				console.log('Starting Instance ... ');
@@ -329,15 +338,20 @@ var _profile    = null;
 				}
 
 			} else {
+
 				console.error('Invalid Profile');
 				process.exit(1);
+
 			}
 
 		break;
 
 		case 'stop':
 
-			if (pid !== null && (typeof pid === 'number' || pid === '*')) {
+			var id  = settings.id;
+			var pid = settings.pid;
+
+			if (id !== null || pid !== null) {
 
 
 				console.log('Stopping Instances ... ');
@@ -345,9 +359,19 @@ var _profile    = null;
 				var result = false;
 
 				if (pid === '*') {
-					result = _stop_server(null);
+
+					result = _stop_server({
+						id:  null,
+						pid: null
+					});
+
 				} else {
-					result = _stop_server(pid);
+
+					result = _stop_server({
+						id:  id,
+						pid: pid
+					});
+
 				}
 
 				if (result === true) {
@@ -373,11 +397,14 @@ var _profile    = null;
 
 		default:
 		case 'help':
+
 			_print_help();
+
 			process.exit(1);
+
 		break;
 
 	};
 
-})(_cli, _command, _pid, _profile);
+})(_cli, _command, _settings);
 
