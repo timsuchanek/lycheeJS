@@ -96,7 +96,8 @@ lychee.define('game.entity.Circle').requires([
 		serialize: function() {
 
 			var data = lychee.ui.Entity.prototype.serialize.call(this);
-			data['constructor'] = 'game.entity.Circle';
+			data['constructor']  = 'game.entity.Circle';
+			data['arguments'][1] = '#MAIN';
 
 
 			return data;

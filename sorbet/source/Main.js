@@ -692,7 +692,7 @@ lychee.define('sorbet.Main').requires([
 				if (server !== null) {
 
 					if (lychee.debug === true) {
-						console.warn('sorbet.Main: Terminating Server "' + server.id + '" (' + server.pid + ')');
+						console.warn('sorbet.Main: Terminating Server "' + server.status.id + '" (' + server.status.pid + ')');
 					}
 
 
