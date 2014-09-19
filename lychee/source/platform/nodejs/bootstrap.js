@@ -1384,24 +1384,29 @@
 		var is_emitting = stream._emitsKeypress === true;
 		if (is_emitting === false) {
 
-			stream._emitsKeypress = true;
+			// Note: This fixes issues with running nodejs with nohup
+			if (stream.isTTY === true) {
 
-			stream.setEncoding('utf8');
-			stream.setRawMode(true);
-			stream.resume();
+				stream._emitsKeypress = true;
 
-			stream.on('data', function(data) {
+				stream.setEncoding('utf8');
+				stream.setRawMode(true);
+				stream.resume();
 
-				if (this.listeners('keypress').length > 0) {
+				stream.on('data', function(data) {
 
-					var key = _parse_keypress(data);
-					if (key !== null) {
-						this.emit('keypress', key);
+					if (this.listeners('keypress').length > 0) {
+
+						var key = _parse_keypress(data);
+						if (key !== null) {
+							this.emit('keypress', key);
+						}
+
 					}
 
-				}
+				});
 
-			});
+			}
 
 		}
 
