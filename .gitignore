@@ -12,8 +12,7 @@
 /lychee/build/*
 /lychee.store
 
-/sorbet/log
-/sorbet/pid
+/sorbet.log
 /sorbet/lychee.store
 /sorbet/build/*
 

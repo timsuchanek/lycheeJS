@@ -8,16 +8,16 @@ back into master, tagged and published.
 
 ### v0.8.3
 
-- lychee.game.Physic
 - lychee.game.Logic projections (isometry and hexagon)
 - lychee.game.Logic toScreenPosition() and toProjectionPosition()
-- Blitzkrieg Game with basic tanks interaction
 
 ### v0.8.4
 
+- lychee.game.Physic
 - lychee.verlet Stack serialization and finalization
 - html-webgl platform finalization (webgl2d refactor)
 - html-cordova platform finalization
+- Blitzkrieg Game with basic tanks interaction
 
 ## v0.8.5
 

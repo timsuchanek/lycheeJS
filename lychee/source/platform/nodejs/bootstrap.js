@@ -187,21 +187,27 @@
 		if (found === false) {
 
 			stream.listeners('data').forEach(function(listener) {
+
 				if (listener.name === 'onData' && /emitKey/.test(listener.toString())) {
 					found = true;
 					stream._emitKeypress = true;
 				}
+
 			});
 
 		}
 
 		if (found === false) {
+
 			stream.listeners('newListener').forEach(function(listener) {
+
 				if (listener.name === 'onNewListener' && /keypress/.test(listener.toString())) {
 					found = true;
 					stream._emitKeypress = true;
 				}
+
 			});
+
 		}
 
 
