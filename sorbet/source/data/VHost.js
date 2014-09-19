@@ -145,7 +145,13 @@ lychee.define('sorbet.data.VHost').requires([
 
 
 		if (trigger === true) {
-			this.trigger('refresh', []);
+
+			var that = this;
+
+			setTimeout(function() {
+				that.trigger('refresh', []);
+			}, 1000);
+
 		}
 
 	};

@@ -92,7 +92,6 @@ var _sandbox     = null;
 	}
 
 
-
 	if (settings.environment !== null) {
 
 		if (_cli.isFile(settings.environment)) {
@@ -105,7 +104,6 @@ var _sandbox     = null;
 
 	}
 
-
 	if (settings.fertilizer !== null) {
 
 		if (_cli.isDirectory(settings.fertilizer) === false) {
@@ -116,7 +114,6 @@ var _sandbox     = null;
 
 	}
 
-
 	if (settings.sandbox !== null) {
 
 		if (_cli.isDirectory(settings.sandbox) === false) {
@@ -126,7 +123,6 @@ var _sandbox     = null;
 		_sandbox = settings.sandbox;
 
 	}
-
 
 	if (settings.mode !== null) {
 		_mode = settings.mode;

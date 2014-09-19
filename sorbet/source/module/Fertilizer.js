@@ -98,7 +98,7 @@ lychee.define('sorbet.module.Fertilizer').requires([
 		if (_fs.existsSync(fertilizerpath) === true) {
 
 			if (lychee.debug === true) {
-				console.log('sorbet.module.Fertilizer: Building Environment "' + project.id + '"');
+				console.log('sorbet.module.Fertilizer: Building Environment "' + project.id + '" as "' + mode + '"');
 			}
 
 
