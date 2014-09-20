@@ -109,8 +109,8 @@ lychee.define('sorbet.data.VHost').requires([
 			if (server_process !== null) {
 
 				server = {
-					host: server_process.host,
-					port: server_process.port
+					host: server_process.status.host || null,
+					port: server_process.status.port || null
 				};
 
 			}

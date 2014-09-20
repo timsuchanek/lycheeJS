@@ -1,5 +1,6 @@
 
 lychee.define('sorbet.Main').requires([
+	'lychee.Input',
 	'sorbet.api.remote.Debugger',
 	'sorbet.api.remote.Log',
 	'sorbet.api.remote.Project',
