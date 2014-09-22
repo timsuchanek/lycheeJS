@@ -10,7 +10,21 @@ The development process is optimized for Google Chrome
 and its developer tools.
 
 
-# Installation
+## Installation
+
+### 0. Requirements
+
+Currently, the *client-side* lycheeJS Engine Stack is
+supporting all Operating Systems.
+
+The *server-side* CDN, CI-, Web-, and Websocket Stack though
+is only supporting Linux and Mac OSX due to sandboxing and
+cross-compilation reasons. Windows also can't support SPDY
+and WebSocket extensions without routing issues.
+
+Always remember, there's no client-side and server-side
+whatsoever, because all the network components can be used
+on either side and peer-to-peer.
 
 ### 1. Download
 
@@ -23,14 +37,13 @@ Make sure the lycheeJS-master folder contained in the
 zip-file is renamed to lycheeJS to follow up with the
 tutorials.
 
-### 2a. On Linux or Mac OSX
+### 2. Configuration
 
-The port range 0-1024 is reserved for root user. It is
+- The port range 0-1024 is reserved for root user. It is
 recommended to not run nodejs as root user in order to
-prevent exploits or remote shell processes. You need
-to allow nodejs to bind those ports in production to
-serve port 80 successfully without getting an
-**EACCESS** error.
+prevent exploits or remote shell processes. You need to
+allow nodejs to bind those ports in production to serve
+port 80 successfully without getting an **EACCESS** error.
 
 ```bash
 user@box:~$ which node;
@@ -40,24 +53,15 @@ user@box:~$ sudo getcap /usr/bin/node;
 /usr/bin/node = cap_net_bind_service+ep
 ```
 
-### 2b. On Windows
-
-The port range for WebSockets are so-called Ephermal Ports,
-which are deactivated on Windows by default for user processes.
-
-You need to install the Registry Key located at **~/lycheeJS/tool/windows/ActivateEphermalPorts.reg**.
-It will allow using the port range 49152-65535, which is the
-recommended RFC specification.
-
-### 3. Start Sorbet
-
-- Navigate to the **~/lycheeJS** folder in Bash (or PowerShell)
-and execute the configure script to build the lycheeJS core.
+- Navigate to the **~/lycheeJS** folder in Bash and execute
+the configure script to build the lycheeJS core.
 
 ```bash
 cd ~/lycheeJS;
 nodejs ./tool/configure.js; # Important: current working directory is lycheeJS root folder
 ```
+
+### 3. Start Sorbet
 
 - After building the core, you are ready to go. Start Sorbet.
 
@@ -69,17 +73,15 @@ npm start;
 # nodejs ./tool/Sorbet.js start --profile="./sorbet/profile/localhost.json";
 ```
 
-- Open your Web Browserand navigate to **http://localhost:8080**
-to open the lycheeJS Dashboard.
+- Open your Web Browser and navigate to **http://localhost:8080**
+to open the lycheeJS Dashboard. Those games show you how
+to develop real cross-platform games and the best practices
+in JavaScript code. [Link to projects folder](./projects)
 
-Those games show you how to develop real cross-platform games and the best practices
-in high-performant JavaScript code. [Link to projects folder](./projects)
 
+## Getting Started
 
-# Getting Started
-
-**Note**: A project's server is a websocket server, no webserver.
-
+First of all, a project's server is a WebSocket server, not a webserver.
 The best way to get started is to clone the Boilerplate.
 
 ```bash
@@ -109,24 +111,24 @@ A project's folder name is equivalent to its unique identifier.
 ```
 
 
-# Documentation
+## Documentation
 
 The documentation is available online at [http://lycheejs.org/docs](http://lycheejs.org/docs).
 
 
-# Roadmap
+## Roadmap
 
 You want to see what kind of fancy features will arrive next?
 Please take a look at the [ROADMAP.md](ROADMAP.md) file.
 
 
-# Contribution
+## Contribution
 
 You want to contribute to the project?
 Please take a look at the [CONTRIBUTING.md](CONTRIBUTING.md) file.
 
 
-# Other (unsupported) JavaScript Runtimes
+## Other (unsupported) JavaScript Runtimes
 
 The lycheeJS architecture is independent of the environment which
 means it will run on any theoretical JavaScript environment.
@@ -144,18 +146,19 @@ These implementations are fully optional and only necessary if you are using
 them inside your Game or App.
 
 
-# Other (non-Sorbet) Web Server Environments
+## Other (non-Sorbet) Web Server Environments
 
 The lycheeJS architecture depends on different file types served as **application/json**.
 These file types are:
 
-- **Attachment.fnt**: Font Serialization Objects
+- **Font.fnt**: Font Serialization Objects
 - **lychee.env**: A Serialization Object used for [lychee.Enviroment](http://lycheejs.org/docs/api-lychee-Environment.html)
 - **lychee.pkg**: A Serialization Object used for [lychee.Package](http://lycheejs.org/docs/api-lychee-Package.html)
 - **lychee.store**: A Serialization Object used for [lychee.Storage](http://lycheejs.org/docs/api-lychee-Storage.html)
 
 
-# License
+## License
 
-The lycheeJS framework is licensed under MIT License.
+The lycheeJS framework is licensed under the MIT License.
+The projects and demos are licensed under the CC0 (public domain) License.
 
