@@ -12,8 +12,6 @@ lychee.define('game.Main').requires([
 
 		var settings = lychee.extend({
 
-			title: 'Game Boilerplate',
-
 			// Is configured by Sorbet API
 			client: '/api/Server?identifier=boilerplate',
 
