@@ -69,7 +69,7 @@ nodejs ./tool/configure.js; # Important: current working directory is lycheeJS r
 cd ~/lycheeJS;
 npm start;
 
-# Alternative to npm start:
+# Using sorbet itself (identical to npm start):
 # nodejs ./tool/Sorbet.js start --profile="./sorbet/profile/localhost.json";
 ```
 
@@ -77,6 +77,14 @@ npm start;
 to open the lycheeJS Dashboard. Those games show you how
 to develop real cross-platform games and the best practices
 in JavaScript code. [Link to projects folder](./projects)
+
+- If you want to add a script to run the webserver forever,
+take a look at the *package.json / scripts* section.
+
+```bash
+# Don't execute this. It's identical with npm start, but will run forever
+# npm run-script localhost
+```
 
 
 ## Getting Started
