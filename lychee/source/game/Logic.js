@@ -9,62 +9,13 @@ lychee.define('lychee.game.Logic').requires([
 	 * HELPERS
 	 */
 
-	var _sphere = lychee.game.Entity.SHAPE.sphere;
-	var _cuboid = lychee.game.Entity.SHAPE.cuboid;
-
 	var _project_layer = function(layer) {
 
 		var projection = this.projection;
 		var entities   = layer.entities;
 
 		for (var e = 0, el = entities.length; e < el; e++) {
-
-			var entity = entities[e];
-			var shape  = entity.shape;
-			var is3d   = shape === _sphere || shape === _cuboid;
-
-			var x      = entity.position.x;
-			var y      = entity.position.y;
-			var z      = entity.position.z;
-
-			var width  = entity.width  || (entity.radius * 2);
-			var height = entity.height || (entity.radius * 2);
-			var depth  = entity.depth  || (entity.radius * 2);
-
-			if (projection === Class.PROJECTION.tile) {
-
-				x *= width;
-				y *= height;
-				z *= depth;
-
-			} else if (projection === Class.PROJECTION.isometry) {
-
-// TODO: isometric projection
-
-			} else if (projection === Class.PROJECTION.hexagon) {
-
-// TODO: hexagon projection
-
-			}
-
-
-			if (is3d === true) {
-
-				entity.setPosition({
-					x: x,
-					y: y,
-					z: z
-				});
-
-			} else {
-
-				entity.setPosition({
-					x: x,
-					y: y
-				});
-
-			}
-
+			this.projectPosition(entities[e].position, true);
 		}
 
 	};
@@ -75,53 +26,7 @@ lychee.define('lychee.game.Logic').requires([
 		var entities   = layer.entities;
 
 		for (var e = 0, el = entities.length; e < el; e++) {
-
-			var entity = entities[e];
-			var shape  = entity.shape;
-			var is3d   = shape === _sphere || shape === _cuboid;
-
-			var x      = entity.position.x;
-			var y      = entity.position.y;
-			var z      = entity.position.z;
-
-			var width  = entity.width  || (entity.radius * 2);
-			var height = entity.height || (entity.radius * 2);
-			var depth  = entity.depth  || (entity.radius * 2);
-
-			if (projection === Class.PROJECTION.tile) {
-
-				x /= width;
-				y /= height;
-				z /= depth;
-
-			} else if (projection === Class.PROJECTION.isometry) {
-
-// TODO: isometric projection
-
-			} else if (projection === Class.PROJECTION.hexagon) {
-
-// TODO: hexagon projection
-
-			}
-
-
-			if (is3d === true) {
-
-				entity.setPosition({
-					x: x,
-					y: y,
-					z: z
-				});
-
-			} else {
-
-				entity.setPosition({
-					x: x,
-					y: y
-				});
-
-			}
-
+			this.unprojectPosition(entities[e].position, true);
 		}
 
 	};
@@ -139,12 +44,18 @@ lychee.define('lychee.game.Logic').requires([
 
 		this.physic     = null;
 		this.projection = Class.PROJECTION.pixel;
+		this.tile       = {
+			width:  1,
+			height: 1,
+			depth:  1
+		};
 
 		this.__layers   = [];
 
 
 		this.setPhysic(settings.physic);
 		this.setProjection(settings.projection);
+		this.setTile(settings.tile);
 
 
 		settings = null;
@@ -155,8 +66,7 @@ lychee.define('lychee.game.Logic').requires([
 	Class.PROJECTION = {
 		pixel:    0,
 		tile:     1,
-		isometry: 2,
-		hexagon:  3
+		isometry: 2
 	};
 
 
@@ -180,6 +90,17 @@ lychee.define('lychee.game.Logic').requires([
 
 			if (this.physic !== null)                       settings.physic     = this.physic;
 			if (this.projection !== Class.PROJECTION.pixel) settings.projection = this.projection;
+
+			if (this.tile.width !== 1 || this.tile.height !== 1 || this.tile.depth !== 1) {
+
+				settings.tile = {};
+
+				if (this.tile.width !== 1)  settings.tile.width  = this.tile.width;
+				if (this.tile.height !== 1) settings.tile.height = this.tile.height;
+				if (this.tile.depth !== 1)  settings.tile.depth  = this.tile.depth;
+
+			}
+
 
 			if (this.__layers.length > 0) {
 				// TODO: Serialize layers and their query paths
@@ -354,17 +275,128 @@ lychee.define('lychee.game.Logic').requires([
 
 		},
 
-		toScreenPosition: function(position) {
+		setTile: function(tile) {
 
-			var x = position.x;
-			var y = position.y;
+			if (tile instanceof Object) {
+
+				this.tile.width  = typeof tile.width === 'number'  ? (tile.width  | 0) : this.tile.width;
+				this.tile.height = typeof tile.height === 'number' ? (tile.height | 0) : this.tile.height;
+				this.tile.depth  = typeof tile.depth === 'number'  ? (tile.depth  | 0) : this.tile.depth;
+
+				return true;
+
+			}
+
+
+			return false;
 
 		},
 
-		toProjectionPosition: function(position) {
+		projectPosition: function(position, bound) {
 
-			var x = position.x;
-			var y = position.y;
+			position = position instanceof Object ? position : null;
+			bound    = bound === true;
+
+
+			if (position !== null) {
+
+				var projection = this.projection;
+				var tile       = this.tile;
+
+				var x = position.x;
+				var y = position.y;
+				var z = position.z;
+
+
+				if (bound === true) {
+
+					x |= 0;
+					y |= 0;
+					z |= 0;
+
+				}
+
+
+				if (projection === Class.PROJECTION.tile) {
+
+					x = x * tile.width;
+					y = y * tile.height;
+					z = z * tile.depth;
+
+				} else if (projection === Class.PROJECTION.isometry) {
+
+					x = (x - y) * tile.width;
+					y = (x + y) * (tile.height / 2);
+					z = 0;
+
+				}
+
+
+				position.x = x;
+				position.y = y;
+				position.z = z;
+
+
+				return false;
+
+			}
+
+
+			return true;
+
+		},
+
+		unprojectPosition: function(position, bound) {
+
+			position = position instanceof Object ? position : null;
+			bound    = bound === true;
+
+
+			if (position !== null) {
+
+				var projection = this.projection;
+				var tile       = this.tile;
+
+				var x = position.x;
+				var y = position.y;
+				var z = position.z;
+
+
+				if (projection === Class.PROJECTION.tile) {
+
+					x = x / tile.width;
+					y = y / tile.height;
+					z = z / tile.depth;
+
+				} else if (projection === Class.PROJECTION.isometry) {
+
+					x = (y / tile.height) + (x / (2 * tile.width));
+					y = (y / tile.height) - (x / (2 * tile.width));
+					z = 0;
+
+				}
+
+
+				if (bound === true) {
+
+					x |= 0;
+					y |= 0;
+					z |= 0;
+
+				}
+
+
+				position.x = x;
+				position.y = y;
+				position.z = z;
+
+
+				return false;
+
+			}
+
+
+			return true;
 
 		}
 
