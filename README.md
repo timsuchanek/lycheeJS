@@ -1,5 +1,5 @@
 
-# lycheeJS (v0.8.2)
+# lycheeJS (v0.8.3)
 
 lycheeJS is a JavaScript Game library that offers a
 complete solution for prototyping and deployment

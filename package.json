@@ -2,7 +2,7 @@
 	"name":        "lycheejs",
 	"homepage":    "http://lycheejs.org",
 	"license":     "MIT",
-	"version":     "0.8.2",
+	"version":     "0.8.3",
 	"description": "Environment-Independent Cross-Platform JavaScript engine (NodeJS, NodeJS SDL2, HTML5, Apache Cordova, WebGL, native OpenGL)",
 
 	"keywords": [

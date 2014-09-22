@@ -54,15 +54,6 @@
 			"root": "%root%"
 		}
 
-	}, {
-
-		"hosts": [
-			"mode7.lycheejs.org"
-		],
-		"config": {
-			"root": "%root%/projects/mode7/source"
-		}
-
 	}]
 
 }

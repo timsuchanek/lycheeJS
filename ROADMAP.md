@@ -6,13 +6,10 @@ This document shows the planned features for upcoming lycheeJS releases.
 Only if all features are completed, the lycheeJS release is merged
 back into master, tagged and published.
 
-### v0.8.3
-
-- lychee.game.Logic projections (isometry and hexagon)
-- lychee.game.Logic toScreenPosition() and toProjectionPosition()
 
 ### v0.8.4
 
+- lychee.game.Logic
 - lychee.game.Physic
 - lychee.verlet Stack serialization and finalization
 - html-webgl platform finalization (webgl2d refactor)
