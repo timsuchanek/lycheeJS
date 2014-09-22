@@ -7,7 +7,7 @@ Only if all features are completed, the lycheeJS release is merged
 back into master, tagged and published.
 
 
-### v0.8.4
+## v0.8.4
 
 - lychee.game.Logic
 - lychee.game.Physic
