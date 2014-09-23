@@ -13,25 +13,26 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 
 	var _export_loop = function(cache) {
 
-		var loading   = cache.build['load'];
-		var exporting = cache.build['export'];
-
+		var that  = this;
+		var load  = cache.load;
+		var ready = cache.ready;
 
 		var identifier, definition;
 
-		for (var l = 0, ll = loading.length; l < ll; l++) {
 
-			identifier = loading[l];
+		for (var l = 0, ll = load.length; l < ll; l++) {
+
+			identifier = load[l];
 			definition = this.definitions[identifier] || null;
+
 
 			if (definition !== null) {
 
-				if (exporting.indexOf(identifier) === -1 && _get_class.call(this.global, identifier) === null) {
-					exporting.push(identifier);
+				if (ready.indexOf(identifier) === -1) {
+					ready.push(identifier);
 				}
 
-
-				loading.splice(l, 1);
+				load.splice(l, 1);
 				ll--;
 				l--;
 
@@ -40,42 +41,34 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 		}
 
 
-		for (var e = 0, el = exporting.length; e < el; e++) {
+		for (var r = 0, rl = ready.length; r < rl; r++) {
 
-			identifier = exporting[e];
+			identifier = ready[r];
 			definition = this.definitions[identifier] || null;
 
-			if (definition !== null && _get_class.call(this.global, identifier) === null) {
+			if (definition !== null) {
 
 				var dependencies = _resolve_definition.call(this, definition);
-				if (dependencies.length === 0) {
+				if (dependencies.length > 0) {
 
-					var success = _export_definition.call(this, definition);
-					if (success === true) {
+					dependencies.forEach(function(dependency) {
 
-						exporting.splice(e, 1);
-						el--;
-						e--;
+						if (load.indexOf(dependency) === -1 && ready.indexOf(dependency) === -1) {
 
-					}
+							that.load(dependency);
+							load.push(dependency);
+
+						}
+
+					});
 
 				} else {
 
-					var found = 0;
+					_export_definition.call(this, definition);
 
-					for (var d = 0, dl = dependencies.length; d < dl; d++) {
-
-						var dependency = dependencies[d];
-						if (loading.indexOf(dependency) === -1) {
-							loading.push(dependency);
-							found++;
-						}
-
-					}
-
-					if (found > 0) {
-						cache.timeout = Date.now() + this.timeout;
-					}
+					ready.splice(r, 1);
+					rl--;
+					r--;
 
 				}
 
@@ -84,7 +77,7 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 		}
 
 
-		if (loading.length === 0 && exporting.length === 0) {
+		if (load.length === 0 && ready.length === 0) {
 
 			cache.active = false;
 
@@ -243,6 +236,11 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 	};
 
 	var _export_definition = function(definition) {
+
+		if (_get_class.call(this.global, definition.id) !== null) {
+			return false;
+		}
+
 
 		var namespace  = _get_namespace.call(this.global, definition.id);
 		var packageId  = definition.packageId;
@@ -675,9 +673,8 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 			end:      0,
 			timeout:  0,
 			build:    {
-				'load':   [],
-				'export': [],
-				'ready':  []
+				'load':  [],
+				'ready': []
 			}
 		};
 
@@ -1059,11 +1056,11 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 
 
 
-					cache.start           = Date.now();
-					cache.timeout         = Date.now() + this.timeout;
-					cache.build['load']   = [ build ];
-					cache.build['export'] = [];
-					cache.active          = true;
+					cache.start   = Date.now();
+					cache.timeout = Date.now() + this.timeout;
+					cache.load    = [ build ];
+					cache.ready   = [];
+					cache.active  = true;
 
 
 
