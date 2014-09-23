@@ -1862,6 +1862,9 @@
 						that.onload = null;
 					}
 
+					// Don't move this, it's causing serious bugs in Blink
+					document.body.removeChild(this);
+
 				};
 				this.buffer.onerror = function() {
 
@@ -1870,11 +1873,13 @@
 						that.onload = null;
 					}
 
+					// Don't move this, it's causing serious bugs in Blink
+					document.body.removeChild(this);
+
 				};
 				this.buffer.src = this.url;
 
 				document.body.appendChild(this.buffer);
-				document.body.removeChild(this.buffer);
 
 			} else if (type === 'css') {
 
