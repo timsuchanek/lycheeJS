@@ -11,7 +11,7 @@ lychee.define('game.net.client.Ping').includes([
 
 		data.pongstop = Date.now();
 
-		var delta = ((data.pongstop - data.pingstart) / 1000).toFixed(2);
+		var delta = (data.pongstop - data.pingstart).toFixed(2);
 
 		this.trigger('statistics', [ delta ]);
 
