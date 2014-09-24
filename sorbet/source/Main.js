@@ -85,9 +85,9 @@ lychee.define('sorbet.Main').requires([
 
 	};
 
-	var _parse_host = function() {
+	var _parse_host = function(str) {
 
-		var tmp = (this + '').split(':');
+		var tmp = (str + '').split(':');
 		if (tmp[0] === 'http' || tmp[0] === 'https') {
 			return tmp[1].substr(2);
 		} else {
@@ -96,9 +96,9 @@ lychee.define('sorbet.Main').requires([
 
 	};
 
-	var _parse_port = function() {
+	var _parse_port = function(str) {
 
-		var tmp = (this + '').split(':');
+		var tmp = (str + '').split(':');
 		if (tmp[0] === 'http' || tmp[0] === 'https') {
 			return parseInt(tmp[2] || '80', 10);
 		} else {
@@ -406,11 +406,11 @@ lychee.define('sorbet.Main').requires([
 			var _redirect  = this.modules.get('Redirect');
 
 
-			var rawhost    = _parse_host.call(request.headers.host || '');
-			var rawport    = _parse_port.call(request.headers.host || '');
+			var rawhost    = _parse_host(request.headers.host || '');
+			var rawport    = _parse_port(request.headers.host || '');
 			var rawreferer = request.headers.referer || null;
 			var rawremote  = request.connection.remoteAddress || null;
-			var raworigin  = _parse_host.call(request.headers.origin || '');
+			var raworigin  = _parse_host(request.headers.origin || '');
 
 			var vhost      = this.vhosts.get(rawhost);
 			var url        = request.url.split('?')[0];
