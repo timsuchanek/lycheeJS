@@ -30,11 +30,11 @@ lychee.define('game.state.Game').requires([
 		if (entity !== null && service !== null) {
 
 			service.bind('unplug', function() {
-				this.setLabel('Ping: --- ms / --- ms');
+				this.setLabel('Roundtrip: --- ms');
 			}, entity);
 
 			service.bind('statistics', function(ping, pong) {
-				this.setLabel('Ping: ' + ping + ' ms / ' + pong + ' ms');
+				this.setLabel('Roundtrip: ' + ping + ' ms');
 			}, entity);
 
 
