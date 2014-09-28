@@ -148,7 +148,10 @@ lychee.define('sorbet.module.File').exports(function(lychee, sorbet, global, att
 
 					} else {
 
+						range[0] = Math.min(0,        range[0]);
 						range[1] = Math.min(range[1], info.length);
+						range[1] = range[1] !== 0 ? range[1] : info.length;
+
 
 						vhost.fs.readchunk(resolved, range[0], range[1], function(chunk) {
 

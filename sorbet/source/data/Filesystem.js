@@ -280,12 +280,13 @@ lychee.define('sorbet.data.Filesystem').includes([
 			scope    = scope !== undefined          ? scope      : this;
 
 
+			var info     = this.resolve(path);
 			var resolved = this.resolve(path);
-			if (resolved !== null) {
+			var size     = to - from;
 
-				var size   = to - from;
+			if (resolved !== null && size > 0 && from + size <= info.length) {
+
 				var buffer = new Buffer(size);
-
 
 				if (callback !== null) {
 
