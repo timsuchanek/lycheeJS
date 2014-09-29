@@ -528,45 +528,42 @@ var _root = require('path').resolve(__dirname, '../');
 			var keys = Object.keys(array[0]);
 			if (keys.length > 0) {
 
-				var table  = [];
-				var map    = [];
+				var k, kl;
+				var table   = [ [] ];
+				var lengths = [];
 
 
-				var header = [];
-				for (var k = 0, kl = keys.length; k < kl; k++) {
-					header.push(keys[k]);
-					map[k] = keys[k].length;
-				}
+				keys.forEach(function(value, v) {
+					table[0].push(value);
+					lengths[v] = value.length;
+				});
 
 
-				table.push(header);
-
-
-				for (var a = 0, al = array.length; a < al; a++) {
+				array.forEach(function(values) {
 
 					var row = [];
 
-					for (var k = 0, kl = keys.length; k < kl; k++) {
-						var val = '' + array[a][keys[k]];
-						row.push(val);
-						map[k] = Math.max(map[k], val.length);
-					}
+					keys.forEach(function(key, k) {
+						var value  = '' + values[key];
+						lengths[k] = Math.max(lengths[k], value.length);
+						row.push(value);
+					});
 
 					table.push(row);
 
-				}
+				});
 
 
-				for (var t = 0, tl = table.length; t < tl; t++) {
+				table.forEach(function(row, r, self) {
 
-					for (var k = 0, kl = keys.length; k < kl; k++) {
-						var space   = '                        '.substr(0, map[k] - table[t][k].length);
-						table[t][k] = table[t][k] + space;
-					}
+					keys.forEach(function(key, k) {
+						var space = '                        '.substr(0, lengths[k] - row[k].length);
+						row[k]    = row[k] + space;
+					});
 
-					table[t] = ' ' + table[t].join(' | ');
+					self[r] = ' ' + row.join(' | ');
 
-				}
+				});
 
 				console.log('\n' + table.join('\n') + '\n');
 

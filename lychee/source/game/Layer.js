@@ -35,8 +35,10 @@ lychee.define('lychee.game.Layer').requires([
 		var settings = lychee.extend({}, data);
 
 
-		this.width  = 0;
-		this.height = 0;
+		this.width  = typeof settings.width  === 'number' ? settings.width  : 0;
+		this.height = typeof settings.height === 'number' ? settings.height : 0;
+		this.depth  = 0;
+
 
 		this.effects  = [];
 		this.entities = [];
