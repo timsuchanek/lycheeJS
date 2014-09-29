@@ -11,6 +11,7 @@ back into master, tagged and published.
 
 - lychee.game.Logic
 - lychee.game.Physic
+- lychee.net.remote.Controller and lychee.net.client.Controller
 - lychee.verlet Stack serialization and finalization
 - html-webgl platform finalization (webgl2d refactor)
 - html-cordova platform finalization
