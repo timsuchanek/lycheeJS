@@ -71,7 +71,7 @@ lychee.define('lychee.net.Client').tags({
 			that.__isRunning = false;
 			_cleanup_services.call(that);
 
-			that.trigger('disconnect', [ event.code, event.reason ]);
+			that.trigger('disconnect', [ event.code, Class.STATUS[event.code] || null ]);
 
 
 			if (that.reconnect > 0) {
@@ -253,15 +253,17 @@ lychee.define('lychee.net.Client').tags({
 
 	var _cleanup_services = function() {
 
-		var services = this.__services.active;
+		for (var a = 0, al = this.__services.active.length; a < al; a++) {
+			this.__services.active[a].trigger('unplug', []);
+		}
 
-		for (var s = 0; s < services.length; s++) {
-			services[s].trigger('unplug', []);
+		if (lychee.debug === true) {
+			console.log('lychee.net.Client: Remote disconnected');
 		}
 
 
-		this.__services.active  = [];
 		this.__services.waiting = [];
+		this.__services.active  = [];
 
 	};
 
@@ -297,6 +299,21 @@ lychee.define('lychee.net.Client').tags({
 
 		settings = null;
 
+	};
+
+
+	Class.STATUS = {
+		1000: 'Normal Closure',
+		1001: 'Going Away',
+		1002: 'Protocol Error',
+		1003: 'Unsupported Data',
+		1005: 'No Status Received',
+		1006: 'Abnormal Closure',
+		1008: 'Policy Violation',
+		1009: 'Message Too Big',
+		1011: 'Internal Error',
+		1012: 'Service Restart',
+		1013: 'Try Again Later'
 	};
 
 

@@ -390,15 +390,14 @@ lychee.define('lychee.net.Protocol').supports(function(lychee, global) {
 
 		},
 
-		close: function(closedByRemote, reason) {
+		close: function(closedByRemote) {
 
 			if (this.__isClosed === false) {
 
-				this.__isClosed = true;
-
-				this.write(reason || 'Disconnect', false, true);
-
+				this.__isClosed  = true;
 				this.__closeCode = Class.STATUS.normal_closure;
+				this.write('', false, true);
+
 				this.__closeCallback(closedByRemote);
 
 				return true;
