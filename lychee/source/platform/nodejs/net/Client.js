@@ -3,6 +3,8 @@ lychee.define('lychee.net.Client').tags({
 	platform: 'nodejs'
 }).includes([
 	'lychee.event.Emitter'
+]).requires([
+	'lychee.net.Service'
 ]).supports(function(lychee, global) {
 
 	if (typeof process !== 'undefined') {
@@ -18,6 +20,9 @@ lychee.define('lychee.net.Client').tags({
 	 * HELPERS
 	 */
 
+	var _socket_handler = function(url) {
+	};
+
 	var _receive_handler = function(blob, isBinary) {
 
 		var data = null;
@@ -31,7 +36,7 @@ lychee.define('lychee.net.Client').tags({
 
 		if (data instanceof Object && typeof data._serviceId === 'string') {
 
-			var service = _get_service_by_id.call(this, data._serviceId);
+			var service = this.getService(data._serviceId);
 			var event   = data._serviceEvent  || null;
 			var method  = data._serviceMethod || null;
 
@@ -78,33 +83,6 @@ lychee.define('lychee.net.Client').tags({
 
 
 		return true;
-
-	};
-
-	var _get_service_by_id = function(id) {
-
-		var service;
-
-		for (var w = 0, wl = this.__services.waiting.length; w < wl; w++) {
-
-			service = this.__services.waiting[w];
-			if (service.id === id) {
-				return service;
-			}
-
-		}
-
-		for (var a = 0, al = this.__services.active.length; a < al; a++) {
-
-			service = this.__services.active[a];
-			if (service.id === id) {
-				return service;
-			}
-
-		}
-
-
-		return null;
 
 	};
 
@@ -212,15 +190,17 @@ lychee.define('lychee.net.Client').tags({
 
 	var _cleanup_services = function() {
 
-		var services = this.__services.active;
+		for (var a = 0, al = this.__services.active.length; a < al; a++) {
+			this.__services.active[a].trigger('unplug', []);
+		}
 
-		for (var s = 0; s < services.length; s++) {
-			services[s].trigger('unplug', []);
+		if (lychee.debug === true) {
+			console.log('lychee.net.Client: Remote disconnected');
 		}
 
 
-		this.__services.active  = [];
 		this.__services.waiting = [];
+		this.__services.active  = [];
 
 	};
 
@@ -230,7 +210,7 @@ lychee.define('lychee.net.Client').tags({
 	 * IMPLEMENTATION
 	 */
 
-	var Class = function() {
+	var Class = function(data) {
 
 		var settings = lychee.extend({}, data);
 
@@ -259,6 +239,21 @@ lychee.define('lychee.net.Client').tags({
 	};
 
 
+	Class.STATUS = {
+		1000: 'Normal Closure',
+		1001: 'Going Away',
+		1002: 'Protocol Error',
+		1003: 'Unsupported Data',
+		1005: 'No Status Received',
+		1006: 'Abnormal Closure',
+		1008: 'Policy Violation',
+		1009: 'Message Too Big',
+		1011: 'Internal Error',
+		1012: 'Service Restart',
+		1013: 'Try Again Later'
+	};
+
+
 	Class.prototype = {
 
 		listen: function(port, host) {
@@ -282,6 +277,7 @@ lychee.define('lychee.net.Client').tags({
 
 			var url = 'ws://' + this.host + ':' + this.port;
 
+			_socket_handler.call(this, url);
 			// TODO: Create this.__socket instance and bind close and message events
 
 		},
