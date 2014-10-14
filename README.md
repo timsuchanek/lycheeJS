@@ -1,6 +1,20 @@
 
 # lycheeJS (v0.8.3)
 
+[![NPM Version][npm-image]][npm-url]
+[![NPM Downloads][downloads-image]][downloads-url]
+[![Gratipay][gratipay-image]][gratipay-url]
+
+[npm-image]: https://img.shields.io/npm/v/lycheejs.svg?style=flat
+[npm-url]: https://npmjs.org/package/lycheejs
+
+[downloads-image]: https://img.shields.io/npm/dm/lycheejs.svg?style=flat
+[downloads-url]: https://npmjs.org/package/lycheejs
+
+[gratipay-image]: https://img.shields.io/gratipay/martensms.svg?style=flat
+[gratipay-url]: https://gratipay.com/martensms/
+
+
 lycheeJS is a JavaScript Game library that offers a
 complete solution for prototyping and deployment
 of HTML5 Canvas, WebGL or native OpenGL(ES) or libSDL2
