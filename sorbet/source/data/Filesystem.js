@@ -275,12 +275,12 @@ lychee.define('sorbet.data.Filesystem').includes([
 		readchunk: function(path, from, to, callback, scope) {
 
 			from     = typeof from === 'number'     ? (from | 0) : 0;
-			to       = typeof to === 'number'       ? (to | 0)   : 0;
+			to       = typeof to === 'number'       ? (to   | 0) : 0;
 			callback = callback instanceof Function ? callback   : null;
 			scope    = scope !== undefined          ? scope      : this;
 
 
-			var info     = this.resolve(path);
+			var info     = this.info(path);
 			var resolved = this.resolve(path);
 			var size     = to - from;
 
