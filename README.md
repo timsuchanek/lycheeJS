@@ -9,13 +9,13 @@
 [climate-image]: https://codeclimate.com/github/LazerUnicorns/lycheeJS/badges/gpa.svg
 [climate-url]: https://codeclimate.com/github/LazerUnicorns/lycheeJS
 
-[npm-image]: https://img.shields.io/npm/v/lycheejs.svg?style=flat
+[npm-image]: https://img.shields.io/npm/v/lycheejs.svg
 [npm-url]: https://npmjs.org/package/lycheejs
 
-[downloads-image]: https://img.shields.io/npm/dm/lycheejs.svg?style=flat
+[downloads-image]: https://img.shields.io/npm/dm/lycheejs.svg
 [downloads-url]: https://npmjs.org/package/lycheejs
 
-[gratipay-image]: https://img.shields.io/gratipay/martensms.svg?style=flat
+[gratipay-image]: https://img.shields.io/gratipay/martensms.svg
 [gratipay-url]: https://gratipay.com/martensms/
 
 
