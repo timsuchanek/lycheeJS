@@ -1,9 +1,13 @@
 
 # lycheeJS (v0.8.3)
 
+[![Code Climate][climate-image]][climate-url]
 [![NPM Version][npm-image]][npm-url]
 [![NPM Downloads][downloads-image]][downloads-url]
 [![Gratipay][gratipay-image]][gratipay-url]
+
+[climate-image]: https://codeclimate.com/github/LazerUnicorns/lycheeJS/badges/gpa.svg
+[climate-url]: https://codeclimate.com/github/LazerUnicorns/lycheeJS
 
 [npm-image]: https://img.shields.io/npm/v/lycheejs.svg?style=flat
 [npm-url]: https://npmjs.org/package/lycheejs

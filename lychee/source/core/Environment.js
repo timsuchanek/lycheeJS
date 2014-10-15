@@ -874,7 +874,7 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 				this.global = new _sandbox(blob.global.arguments[0]);
 
 				if (blob.global.blob !== null) {
-					this.global.deserialize(blob.global.blob)
+					this.global.deserialize(blob.global.blob);
 				}
 
 			}
