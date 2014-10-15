@@ -1,10 +1,12 @@
 
 lychee.define('lychee.net.Client').tags({
 	platform: 'html'
-}).includes([
-	'lychee.event.Emitter'
-]).requires([
+}).requires([
+	'lychee.data.BitON',
+	'lychee.data.JSON',
 	'lychee.net.Service'
+]).includes([
+	'lychee.event.Emitter'
 ]).supports(function(lychee, global) {
 
 	if (typeof WebSocket !== 'undefined') {
@@ -16,11 +18,14 @@ lychee.define('lychee.net.Client').tags({
 
 }).exports(function(lychee, global) {
 
+	var _JSON = lychee.data.JSON;
+
+
 	/*
-	 * HELPERS
+	 * PLATFORM-SPECIFIC
 	 */
 
-	var _socket_handler = function(url) {
+	var _listen_handler = function(url) {
 
 		var that = this;
 
@@ -49,14 +54,16 @@ lychee.define('lychee.net.Client').tags({
 				var bytes = new Uint8Array(event.data);
 				blob = String.fromCharCode.apply(null, bytes);
 
-				_receive_handler.call(that, blob, true);
-
 			} else {
 
 				blob = event.data;
 
-				_receive_handler.call(that, blob, false);
+			}
 
+
+			var data = that.__decoder(blob);
+			if (data !== null) {
+				_receive.call(that, data);
 			}
 
 		};
@@ -86,16 +93,25 @@ lychee.define('lychee.net.Client').tags({
 
 	};
 
-	var _receive_handler = function(blob, isBinary) {
+	var _send_handler = function(blob) {
 
-		var data = null;
-		try {
-			data = this.__decoder(blob);
-		} catch(e) {
-			// Unsupported data encoding
-			return false;
-		}
+		this.__socket.send(blob);
 
+	};
+
+	var _disconnect_handler = function() {
+
+		this.__socket.close();
+
+	};
+
+
+
+	/*
+	 * HELPERS
+	 */
+
+	var _receive = function(data) {
 
 		if (data instanceof Object && typeof data._serviceId === 'string') {
 
@@ -143,9 +159,6 @@ lychee.define('lychee.net.Client').tags({
 			this.trigger('receive', [ data ]);
 
 		}
-
-
-		return true;
 
 	};
 
@@ -283,8 +296,8 @@ lychee.define('lychee.net.Client').tags({
 		this.reconnect = 0;
 
 
-		this.__encoder = settings.encoder instanceof Function ? settings.encoder : JSON.stringify;
-		this.__decoder = settings.decoder instanceof Function ? settings.decoder : JSON.parse;
+		this.__encoder = settings.encoder instanceof Function ? settings.encoder : _JSON.encode;
+		this.__decoder = settings.decoder instanceof Function ? settings.decoder : _JSON.decode;
 		this.__socket  = null;
 		this.__services  = {
 			waiting: [], // Waiting Services need to be verified from Remote
@@ -340,7 +353,7 @@ lychee.define('lychee.net.Client').tags({
 
 			var url = 'ws://' + this.host + ':' + this.port;
 
-			_socket_handler.call(this, url);
+			_listen_handler.call(this, url);
 
 		},
 
@@ -365,24 +378,30 @@ lychee.define('lychee.net.Client').tags({
 
 
 			var blob = this.__encoder(data);
-			if (this.__isBinary === true) {
+			if (blob !== null) {
 
-				var bl    = blob.length;
-				var bytes = new Uint8Array(bl);
+				if (this.__isBinary === true) {
 
-				for (var b = 0; b < bl; b++) {
-					bytes[b] = blob.charCodeAt(b);
+					var bl    = blob.length;
+					var bytes = new Uint8Array(bl);
+
+					for (var b = 0; b < bl; b++) {
+						bytes[b] = blob.charCodeAt(b);
+					}
+
+					blob = bytes.buffer;
+
 				}
 
-				blob = bytes.buffer;
+
+				_send_handler.call(this, blob);
+
+				return true;
 
 			}
 
 
-			this.__socket.send(blob);
-
-
-			return true;
+			return false;
 
 		},
 
@@ -401,7 +420,7 @@ lychee.define('lychee.net.Client').tags({
 
 			if (this.__isRunning === true) {
 
-				this.__socket.close();
+				_disconnect_handler.call(this);
 
 				return true;
 

@@ -2,6 +2,8 @@
 lychee.define('lychee.net.Server').tags({
 	platform: 'nodejs'
 }).requires([
+	'lychee.data.BitON',
+	'lychee.data.JSON',
 	'lychee.net.Remote'
 ]).includes([
 	'lychee.event.Emitter'
@@ -19,7 +21,8 @@ lychee.define('lychee.net.Server').tags({
 	var http    = require('http');
 	var crypto  = require('crypto');
 
-	var _remote = lychee.net.Remote;
+	var _JSON   = lychee.data.JSON;
+	var _Remote = lychee.net.Remote;
 
 
 
@@ -104,7 +107,7 @@ lychee.define('lychee.net.Server').tags({
 					socket.removeAllListeners('timeout');
 
 
-					var remote = new _remote(
+					var remote = new _Remote(
 						socket,
 						this.__encoder,
 						this.__decoder
@@ -139,8 +142,8 @@ lychee.define('lychee.net.Server').tags({
 
 		this.remotes = [];
 
-		this.__encoder = settings.encoder instanceof Function ? settings.encoder : JSON.stringify;
-		this.__decoder = settings.decoder instanceof Function ? settings.decoder : JSON.parse;
+		this.__encoder = settings.encoder instanceof Function ? settings.encoder : _JSON.encode;
+		this.__decoder = settings.decoder instanceof Function ? settings.decoder : _JSON.decode;
 		this.__socket  = null;
 
 

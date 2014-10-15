@@ -2,12 +2,15 @@
 lychee.define('lychee.net.Server').tags({
 	platform: 'html'
 }).requires([
+	'lychee.data.BitON',
+	'lychee.data.JSON',
 	'lychee.net.Remote'
 ]).includes([
 	'lychee.event.Emitter'
 ]).exports(function(lychee, global) {
 
-	var _remote = lychee.net.Remote;
+	var _JSON   = lychee.data.JSON;
+	var _Remote = lychee.net.Remote;
 
 
 
@@ -31,8 +34,8 @@ lychee.define('lychee.net.Server').tags({
 
 		this.remotes = [];
 
-		this.__encoder = settings.encoder instanceof Function ? settings.encoder : JSON.stringify;
-		this.__decoder = settings.decoder instanceof Function ? settings.decoder : JSON.parse;
+		this.__encoder = settings.encoder instanceof Function ? settings.encoder : _JSON.encode;
+		this.__decoder = settings.decoder instanceof Function ? settings.decoder : _JSON.decode;
 		this.__socket  = null;
 
 

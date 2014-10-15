@@ -106,7 +106,8 @@
 			},
 
 			"data": {
-				"BitON": [ "js" ]
+				"BitON": [ "js" ],
+				"JSON":  [ "js" ]
 			},
 
 			"effect": {
