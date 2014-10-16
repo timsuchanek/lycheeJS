@@ -845,11 +845,28 @@
 
 	Config.prototype = {
 
+		deserialize: function(blob) {
+
+			if (typeof blob.buffer === 'string') {
+				this.buffer = JSON.parse(new Buffer(blob.buffer.substr(29), 'base64').toString('utf8'));
+			}
+
+		},
+
 		serialize: function() {
+
+			var blob = {};
+
+
+			if (this.buffer !== null) {
+				blob.buffer = 'data:application/json;base64,' + new Buffer(JSON.stringify(this.buffer), 'utf8').toString('base64');
+			}
+
 
 			return {
 				'constructor': 'Config',
-				'arguments':   [ this.url ]
+				'arguments':   [ this.url ],
+				'blob':        Object.keys(blob).length > 0 ? blob : null
 			};
 
 		},

@@ -144,7 +144,7 @@
 
 	})([
 		'html',
-		'html-cordova',
+		'html-nw',
 		'html-webgl',
 		'nodejs',
 		'nodejs-sdl',

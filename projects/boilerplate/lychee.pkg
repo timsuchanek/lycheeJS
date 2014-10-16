@@ -4,6 +4,19 @@
 
 		"environments": {
 
+			"html-nw/main": {
+				"build":    "game.Main",
+				"debug":    false,
+				"sandbox":  false,
+				"type":     "file",
+				"packages": [
+					[ "game", "./lychee.pkg" ]
+				],
+				"tags": {
+					"platform": [ "html-nw", "html" ]
+				}
+			}
+
 		},
 
 		"files": {

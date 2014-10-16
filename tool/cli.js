@@ -42,6 +42,44 @@ var _root = require('path').resolve(__dirname, '../');
 
 
 	/*
+	 * HELPERS
+	 */
+
+	var _mkdir_p = function(path, mode) {
+
+		path = _path.resolve(path);
+
+		if (mode === undefined) {
+			mode = 0777 & (~process.umask());
+		}
+
+
+		try {
+
+			if (_fs.statSync(path).isDirectory()) {
+				return true;
+			} else {
+				return false;
+			}
+
+		} catch(err) {
+
+			if (err.code === 'ENOENT') {
+
+				_mkdir_p(_path.dirname(path), mode);
+				_fs.mkdirSync(path, mode);
+
+				return true;
+
+			}
+
+		}
+
+	};
+
+
+
+	/*
 	 * IMPLEMENTATION
 	 */
 
@@ -132,6 +170,55 @@ var _root = require('path').resolve(__dirname, '../');
 
 		},
 
+		copylychee: function(path1, path2) {
+
+			path1 = typeof path1 === 'string' ? path1 : null;
+			path2 = typeof path2 === 'string' ? path2 : null;
+
+
+			if (path1 !== null && path2 !== null) {
+
+				var result = false;
+				try {
+
+					if (_fs.existsSync(_root + '/lychee/build/' + path1)) {
+
+						var tmp2    = path2.split('/'); tmp2.pop();
+						var folder2 = tmp2.join('/');
+						if (folder2 !== '') {
+							_mkdir_p(this.__sandbox + '/' + folder2);
+						}
+
+						var buffer = _fs.readFileSync(_root + '/lychee/build/' + path1);
+						_fs.writeFileSync(this.__sandbox + '/' + path2, buffer);
+
+						result = true;
+
+					}
+
+				} catch(e) {
+
+				}
+
+
+				if (result === true) {
+
+					var index = this.__cache.indexOf(path2);
+					if (index === -1) {
+						this.__cache.push(path2);
+					}
+
+					return true;
+
+				}
+
+			}
+
+
+			return false;
+
+		},
+
 		copytemplate: function(path1, path2) {
 
 			path1 = typeof path1 === 'string' ? path1 : null;
@@ -144,6 +231,12 @@ var _root = require('path').resolve(__dirname, '../');
 				try {
 
 					if (_fs.existsSync(this.__fertilizer + '/' + path1)) {
+
+						var tmp2    = path2.split('/'); tmp2.pop();
+						var folder2 = tmp2.join('/');
+						if (folder2 !== '') {
+							_mkdir_p(this.__sandbox + '/' + folder2);
+						}
 
 						var buffer = _fs.readFileSync(this.__fertilizer + '/' + path1);
 						_fs.writeFileSync(this.__sandbox + '/' + path2, buffer);

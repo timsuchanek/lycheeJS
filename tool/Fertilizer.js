@@ -205,6 +205,7 @@ var _sandbox     = null;
 
 
 		this.environment   = environment;
+		this.platform      = fertilizerpath.split('/').pop();
 		this.filesystem    = new cli.Filesystem(fertilizerpath, sandboxpath);
 		this.mode          = mode;
 

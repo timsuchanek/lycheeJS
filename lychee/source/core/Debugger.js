@@ -82,7 +82,7 @@ lychee.Debugger = typeof lychee.Debugger !== 'undefined' ? lychee.Debugger : (fu
 		}
 
 
-		console.error('lychee.Debugger: Report', data);
+		console.error('lychee.Debugger: Report from ' + data.file + '#L' + data.line + ' in ' + data.method + ': "' + data.message + '"');
 
 	};
 
