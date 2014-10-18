@@ -14,7 +14,6 @@ back into master, tagged and published.
 - lychee.net.remote.Controller and lychee.net.client.Controller
 - lychee.verlet Stack serialization and finalization
 - html-webgl platform finalization (webgl2d refactor)
-- html-cordova platform finalization
 - Blitzkrieg Game with basic tanks interaction
 
 ## v0.8.5

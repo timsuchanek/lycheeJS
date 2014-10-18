@@ -104,14 +104,15 @@
 				var game  = this.filesystem.read('game.js');
 				var init  = this.filesystem.read('init.js');
 
-				game  = game.replacetemplate('{{blob}}',   data.blob);
-				game  = game.replacetemplate('{{info}}',   data.info);
-				init  = init.replacetemplate('{{build}}',  data.build);
+				game  = game.replacetemplate('{{blob}}',  data.blob);
+				game  = game.replacetemplate('{{info}}',  data.info);
+				init  = init.replacetemplate('{{build}}', data.build);
 
-				index = index.replacetemplate('{{name}}',  data.name);
-				index = index.replacetemplate('{{core}}',  core);
-				index = index.replacetemplate('{{game}}',  game);
-				index = index.replacetemplate('{{init}}',  init);
+				index = index.replacetemplate('{{name}}', data.name);
+				index = index.replacetemplate('{{name}}', data.name);
+				index = index.replacetemplate('{{core}}', core);
+				index = index.replacetemplate('{{game}}', game);
+				index = index.replacetemplate('{{init}}', init);
 
 				this.filesystem.write('index.html', index);
 
@@ -156,6 +157,7 @@
 				};
 
 
+				var index = this.filesystem.read('index.html');
 				var game  = this.filesystem.read('game.js');
 				var init  = this.filesystem.read('init.js');
 
@@ -164,9 +166,11 @@
 				init  = init.replacetemplate('{{build}}', data.build);
 
 				index = index.replacetemplate('{{name}}', data.name);
+				index = index.replacetemplate('{{name}}', data.name);
 
-				this.filesystem.write('game.js', game);
-				this.filesystem.write('init.js', init);
+				this.filesystem.write('index.html', index);
+				this.filesystem.write('game.js',    game);
+				this.filesystem.write('init.js',    init);
 
 
 				done();

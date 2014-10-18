@@ -113,6 +113,7 @@
 				var baseplatform = platform.split('-')[0];
 				for (var basefile in _bootstrap[baseplatform]) {
 					_bootstrap[platform][basefile] = _bootstrap[baseplatform][basefile];
+					_validated[platform] = true;
 				}
 
 			}
@@ -124,7 +125,6 @@
 				var path = _path.resolve(_root, './lychee/source/platform/' + platform + '/' + file);
 				if (_fs.existsSync(path) === true) {
 					_bootstrap[platform][file] = _fs.readFileSync(path, 'utf8');
-					_validated[platform]       = true;
 				}
 
 			}

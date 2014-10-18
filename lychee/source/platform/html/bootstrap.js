@@ -931,7 +931,9 @@
 	 * FONT IMPLEMENTATION
 	 */
 
-	var _parse_font = function(data) {
+	var _parse_font = function() {
+
+		var data = this.__buffer;
 
 		if (typeof data.kerning === 'number' && typeof data.spacing === 'number') {
 
@@ -957,24 +959,11 @@
 
 		if (data.map instanceof Array) {
 
-			this.__buffer     = {};
-			this.__buffer[''] = {
-				width:      0,
-				height:     this.lineheight,
-				realwidth:  0,
-				realheight: this.lineheight,
-				x:          0,
-				y:          0
-			};
-
-
-
 			var offset = this.spacing;
 
 			for (var c = 0, cl = this.charset.length; c < cl; c++) {
 
-				var id = this.charset[c];
-
+				var id  = this.charset[c];
 				var chr = {
 					width:      data.map[c] + this.spacing * 2,
 					height:     this.lineheight,
@@ -987,14 +976,14 @@
 				offset += chr.width;
 
 
-				this.__buffer[id] = chr;
+				this.__charset[id] = chr;
 
 			}
 
 		}
 
 
-		if (this.texture === null || this.__buffer === null) {
+		if (this.texture === null) {
 
 			if (lychee.debug === true) {
 				console.error('bootstrap.js: Font at "' + this.url + '" is invalid (No FNT file)');
@@ -1010,18 +999,12 @@
 
 	var _clone_font = function(origin, clone) {
 
-		if (origin.__buffer !== null && origin.texture !== null) {
+		if (origin.__buffer !== null) {
 
-			clone.texture    = origin.texture;
+			clone.__buffer = origin.__buffer;
+			clone.__load   = false;
 
-			clone.baseline   = origin.baseline;
-			clone.charset    = origin.charset;
-			clone.spacing    = origin.spacing;
-			clone.kerning    = origin.kerning;
-			clone.lineheight = origin.lineheight;
-
-			clone.__buffer   = origin.__buffer;
-			clone.__load     = false;
+			_parse_font.call(clone);
 
 		}
 
@@ -1046,6 +1029,16 @@
 		this.__buffer   = null;
 		this.__load     = true;
 
+		this.__charset     = {};
+		this.__charset[''] = {
+			width:      0,
+			height:     this.lineheight,
+			realwidth:  0,
+			realheight: this.lineheight,
+			x:          0,
+			y:          0
+		};
+
 
 		if (url !== null) {
 
@@ -1066,10 +1059,7 @@
 
 			if (typeof blob.buffer === 'string') {
 				this.__buffer = JSON.parse(new Buffer(blob.buffer.substr(29), 'base64').toString('utf8'));
-			}
-
-			if (blob.texture instanceof Object) {
-				this.texture = lychee.deserialize(blob.texture);
+				_parse_font.call(this);
 			}
 
 		},
@@ -1081,10 +1071,6 @@
 
 			if (this.__buffer !== null) {
 				blob.buffer = 'data:application/json;base64,' + new Buffer(JSON.stringify(this.__buffer), 'utf8').toString('base64');
-			}
-
-			if (this.texture instanceof Texture) {
-				blob.texture = lychee.serialize(this.texture);
 			}
 
 
@@ -1105,13 +1091,13 @@
 
 				if (text.length === 1) {
 
-					if (this.__buffer[text] !== undefined) {
-						return this.__buffer[text];
+					if (this.__charset[text] !== undefined) {
+						return this.__charset[text];
 					}
 
 				} else if (text.length > 1) {
 
-					var data = this.__buffer[text] || null;
+					var data = this.__charset[text] || null;
 					if (data === null) {
 
 						var width = 0;
@@ -1124,7 +1110,7 @@
 
 						// TODO: Embedded Font ligatures will set x and y values based on settings.map
 
-						data = this.__buffer[text] = {
+						data = this.__charset[text] = {
 							width:      width,
 							height:     this.lineheight,
 							realwidth:  width,
@@ -1143,7 +1129,7 @@
 			}
 
 
-			return this.__buffer[''];
+			return this.__charset[''];
 
 		},
 
@@ -1176,8 +1162,12 @@
 
 
 				if (data !== null) {
-					_parse_font.call(this, data);
-					this.__load = false;
+
+					this.__buffer = data;
+					this.__load   = false;
+
+					_parse_font.call(this);
+
 				}
 
 
@@ -1731,9 +1721,17 @@
 		deserialize: function(blob) {
 
 			if (typeof blob.buffer === 'string') {
-				this.buffer = new Image();
-				this.buffer.src = blob.buffer;
+
+				var that  = this;
+				var image = new Image();
+
+				image.onload = function() {
+					that.buffer = this;
+				};
+
+				image.src   = blob.buffer;
 				this.__load = false;
+
 			}
 
 		},
