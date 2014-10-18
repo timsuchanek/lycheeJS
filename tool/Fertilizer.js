@@ -13,9 +13,9 @@ var _print_help = function() {
 	console.log('                                                                                            ');
 	console.log('============================================================================================');
 	console.log('                   _                                                                        ');
-	console.log('              {+~/`o;==-    ,_(+--,                 lycheeJS v0.8 Fertilizer                ');
+	console.log('              {+~/`o;==-    ,_(+--,                    lycheeJS v0.8 Fertilizer             ');
 	console.log('         .----+-/`-/          (+--; ,--+)_,                                                 ');
-	console.log('          `+-..-| /               | ;--+)     @   (Cross-Compiler and CI-Builder)           ');
+	console.log('          `+-..-| /               | ;--+)     @     (Cross-Compiler and CI-Builder)         ');
 	console.log('               /|/|           .-. |.| .-.    <|>                                            ');
 	console.log('               `--`              ~| |~        |                                             ');
 	console.log('    ^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^     ');

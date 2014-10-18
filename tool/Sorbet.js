@@ -13,9 +13,9 @@ var _print_help = function() {
 	console.log('                                                                                            ');
 	console.log('============================================================================================');
 	console.log('                   _                                                                        ');
-	console.log('              {+~/`o;==-    ,_(+--,                 lycheeJS v0.8 Sorbet                    ');
+	console.log('              {+~/`o;==-    ,_(+--,                     lycheeJS v0.8 Sorbet                ');
 	console.log('         .----+-/`-/          (+--; ,--+)_,                                                 ');
-	console.log('          `+-..-| /               | ;--+)     @   (Web-, WS- & CI-Server, CDN)              ');
+	console.log('          `+-..-| /               | ;--+)     @      (Web-, WS- & CI-Server, CDN)           ');
 	console.log('               /|/|           .-. |.| .-.    <|>                                            ');
 	console.log('               `--`              ~| |~        |                                             ');
 	console.log('    ^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^=^-.-^     ');

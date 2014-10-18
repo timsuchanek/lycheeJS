@@ -105,6 +105,26 @@ take a look at the *package.json / scripts* section.
 ```
 
 
+### 4. Install Fertilizers
+
+By default, lycheeJS ships with the HTML and NodeJS Fertilizers.
+
+Fertilizers are something like cross-compilation build templates.
+Those templates use a serialized lychee.Environment instance and
+cross-compile those to different environments, like Node-WebKit or
+Node-SDL, which each are cross-compiled to other operating systems,
+like Android or Linux.
+
+Long story short: If you want automatically integrated cross-compilation
+builds, you need to run this command to install those from the
+[lycheeJS-fertilizers repository](https://github.com/LazerUnicorns/lycheeJS-fertilizers):
+
+```bash
+# Note that this is optional and not required
+npm run-script install-fertilizers;
+```
+
+
 ## Getting Started
 
 First of all, a project's server is a websocket server, not a webserver.

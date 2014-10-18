@@ -8,12 +8,25 @@
 				"build":    "game.Main",
 				"debug":    false,
 				"sandbox":  false,
-				"type":     "file",
+				"type":     "folder",
 				"packages": [
 					[ "game", "./lychee.pkg" ]
 				],
 				"tags": {
 					"platform": [ "html-nw", "html" ]
+				}
+			},
+
+			"html/main": {
+				"build":    "game.Main",
+				"debug":    false,
+				"sandbox":  false,
+				"type":     "folder",
+				"packages": [
+					[ "game", "./lychee.pkg" ]
+				],
+				"tags": {
+					"platform": [ "html" ]
 				}
 			}
 

@@ -36,7 +36,10 @@ var _root = require('path').resolve(__dirname, '../');
 
 	var _child_process = require('child_process');
 	var _self_process  = process.argv[0] || 'nodejs';
+	var _exec          = require('child_process').exec;
 	var _fs            = require('fs');
+	var _http          = require('http');
+	var _https         = require('https');
 	var _path          = require('path');
 
 
@@ -430,6 +433,144 @@ var _root = require('path').resolve(__dirname, '../');
 	};
 
 
+	var Shell = function(sandbox) {
+
+		this.__sandbox = '/tmp/lycheejs';
+
+
+		if (typeof sandbox === 'string') {
+
+			try {
+
+				var stat = _fs.statSync(sandbox);
+
+				if (stat.isDirectory()) {
+					this.__sandbox = sandbox;
+				}
+
+			} catch(e) {
+			}
+
+		}
+
+	};
+
+
+	Shell.prototype = {
+
+		download: function(url, path, callback, scope) {
+
+			url      = typeof url === 'string'      ? url      : null;
+			path     = typeof path === 'string'     ? path     : null;
+			callback = callback instanceof Function ? callback : null;
+			scope    = scope !== undefined          ? scope    : this;
+
+
+			if (url !== null && path !== null) {
+
+				var file       = _fs.createWriteStream(this.__sandbox + '/' + path);
+				var downloader = _http;
+				if (url.substr(0, 5) === 'https') {
+					downloader = _https;
+				}
+
+
+				downloader.get(url, function(response) {
+
+					response.pipe(file);
+
+					file.on('finish', function() {
+
+						file.close(function() {
+
+							if (callback !== null) {
+								callback.call(scope, true);
+							}
+
+						});
+
+					});
+
+				}).on('error', function() {
+
+					if (callback !== null) {
+						callback.call(scope, false);
+					}
+
+				});
+
+
+				return true;
+
+			}
+
+
+			return false;
+
+		},
+
+		move: function(path, callback, scope) {
+
+			path     = typeof path === 'string'     ? path     : null;
+			callback = callback instanceof Function ? callback : null;
+			scope    = scope !== undefined          ? scope    : this;
+
+
+			_exec('cd ' + this.__sandbox + ' && mv ' + this.__sandbox + '/' + path + ' ' + this.__sandbox + '/', function(err, stdout, stderr) {
+
+				if (callback !== null) {
+
+					if (err) {
+						callback.call(scope, false);
+					} else {
+						callback.call(scope, true);
+					}
+
+				}
+
+			});
+
+
+			return true;
+
+		},
+
+		unzip: function(path, callback, scope) {
+
+			path     = typeof path === 'string'     ? path     : null;
+			callback = callback instanceof Function ? callback : null;
+			scope    = scope !== undefined          ? scope    : this;
+
+
+			if (_fs.existsSync(this.__sandbox + '/' + path)) {
+
+				_exec('cd ' + this.__sandbox + ' && unzip ' + path, function(err, stdout, stderr) {
+
+					if (callback !== null) {
+
+						if (err) {
+							callback.call(scope, false);
+						} else {
+							callback.call(scope, true);
+						}
+
+					}
+
+				});
+
+
+				return true;
+
+			}
+
+
+			return false;
+
+		}
+
+	};
+
+
 
 	/*
 	 * EXPORTS
@@ -441,6 +582,7 @@ var _root = require('path').resolve(__dirname, '../');
 		global:  global,
 
 		Filesystem: Filesystem,
+		Shell:      Shell,
 
 		include: function(path, identifier) {
 
