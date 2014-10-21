@@ -94,7 +94,7 @@
 				var data = {
 					id:    environment.arguments[0].id    || '',
 					build: environment.arguments[0].build || 'game.Main',
-					name:  data.id.split('/')[0],
+					name:  (environment.arguments[0].id   || '').split('/')[0],
 					blob:  JSON.stringify(environment),
 					info:  _generate_info(environment)
 				};
@@ -153,7 +153,7 @@
 				var data = {
 					id:    environment.arguments[0].id    || '',
 					build: environment.arguments[0].build || 'game.Main',
-					name:  data.id.split('/')[0],
+					name:  (environment.arguments[0].id   || '').split('/')[0],
 					blob:  JSON.stringify(environment),
 					info:  _generate_info(environment)
 				};
