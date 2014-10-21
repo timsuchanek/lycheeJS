@@ -52,9 +52,9 @@
 
 
 				var data = {
+					id:    environment.arguments[0].id || '',
 					blob:  JSON.stringify(environment, null, '\t'),
 					info:  _generate_info(environment),
-					id:    environment.arguments[0].id || ''
 				};
 
 
@@ -92,8 +92,9 @@
 
 
 				var data = {
+					id:    environment.arguments[0].id    || '',
 					build: environment.arguments[0].build || 'game.Main',
-					name:  environment.arguments[0].id    || 'boilerplate',
+					name:  data.id.split('/')[0],
 					blob:  JSON.stringify(environment),
 					info:  _generate_info(environment)
 				};
@@ -108,7 +109,7 @@
 				game  = game.replacetemplate('{{info}}',  data.info);
 				init  = init.replacetemplate('{{build}}', data.build);
 
-				index = index.replacetemplate('{{name}}', data.name);
+				index = index.replacetemplate('{{id}}',   data.id);
 				index = index.replacetemplate('{{name}}', data.name);
 				index = index.replacetemplate('{{core}}', core);
 				index = index.replacetemplate('{{game}}', game);
@@ -150,8 +151,9 @@
 
 
 				var data = {
+					id:    environment.arguments[0].id    || '',
 					build: environment.arguments[0].build || 'game.Main',
-					name:  environment.arguments[0].id    || 'boilerplate',
+					name:  data.id.split('/')[0],
 					blob:  JSON.stringify(environment),
 					info:  _generate_info(environment)
 				};
@@ -165,7 +167,7 @@
 				game  = game.replacetemplate('{{info}}',  data.info);
 				init  = init.replacetemplate('{{build}}', data.build);
 
-				index = index.replacetemplate('{{name}}', data.name);
+				index = index.replacetemplate('{{id}}',   data.id);
 				index = index.replacetemplate('{{name}}', data.name);
 
 				this.filesystem.write('index.html', index);
