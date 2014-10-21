@@ -127,28 +127,10 @@
 	 * FEATURE DETECTION
 	 */
 
-	var _codecs = {};
+	var _audio_supports_ogg = false;
+	var _audio_supports_mp3 = false;
 
 	(function() {
-
-		var mime = {
-			'ogg':  [ 'application/ogg', 'audio/ogg', 'audio/ogg; codecs=theora, vorbis' ],
-			'mp3':  [ 'audio/mpeg' ]
-
-// TODO: Evaluate if other formats are necessary
-/*
-			'aac':  [ 'audio/aac', 'audio/aacp' ],
-			'caf':  [ 'audio/x-caf', 'audio/x-aiff; codecs="IMA-ADPCM, ADPCM"' ],
-
-			'webm': [ 'audio/webm', 'audio/webm; codecs=vorbis' ]
-			'3gp':  [ 'audio/3gpp', 'audio/3gpp2'],
-			'amr':  [ 'audio/amr' ],
-			'm4a':  [ 'audio/mp4; codecs=mp4a' ],
-			'mp4':  [ 'audio/mp4' ],
-			'wav':  [ 'audio/wave', 'audio/wav', 'audio/wav; codecs="1"', 'audio/x-wav', 'audio/x-pn-wav' ],
-*/
-		};
-
 
 		var _buffer_cache = {};
 		var _load_buffer  = function(url) {
@@ -200,19 +182,21 @@
 
 			var audiotest = new Audio();
 
-			for (var ext in mime) {
+			[ 'application/ogg', 'audio/ogg', 'audio/ogg; codecs=theora, vorbis' ].forEach(function(variant) {
 
-				var variants = mime[ext];
-				for (var v = 0, vl = variants.length; v < vl; v++) {
-
-					if (audiotest.canPlayType(variants[v])) {
-						_codecs[ext] = ext;
-						break;
-					}
-
+				if (audiotest.canPlayType(variant)) {
+					_audio_supports_ogg = true;
 				}
 
-			}
+			});
+
+			[ 'audio/mpeg' ].forEach(function(variant) {
+
+				if (audiotest.canPlayType(variant)) {
+					_audio_supports_mp3 = true;
+				}
+
+			});
 
 		} else {
 
@@ -241,12 +225,15 @@
 				},
 
 				play: function() {
+
 				},
 
 				pause: function() {
+
 				},
 
 				addEventListener: function() {
+
 				}
 
 			};
@@ -1195,16 +1182,19 @@
 
 		if (origin.buffer !== null) {
 
-			clone.buffer = new Audio(origin.buffer.src);
+			clone.buffer            = new Audio();
 			clone.buffer.autobuffer = true;
 			clone.buffer.preload    = true;
+			clone.buffer.src        = origin.buffer.src;
 			clone.buffer.load();
 
 			clone.buffer.addEventListener('ended', function() {
 				clone.play();
 			}, true);
 
-			clone.__load = false;
+			clone.__buffer.ogg = origin.__buffer.ogg;
+			clone.__buffer.mp3 = origin.__buffer.mp3;
+			clone.__load       = false;
 
 		}
 
@@ -1216,14 +1206,14 @@
 		url = typeof url === 'string' ? url : null;
 
 
-		this.url       = url;
-		this.onload    = null;
-		this.buffer    = null;
-		this.volume    = 1.0;
-		this.isIdle    = true;
-		this.isLooping = false;
+		this.url      = url;
+		this.onload   = null;
+		this.buffer   = null;
+		this.volume   = 1.0;
+		this.isIdle   = true;
 
-		this.__load    = true;
+		this.__buffer = { ogg: null, mp3: null };
+		this.__load   = true;
 
 
 		if (url !== null) {
@@ -1243,21 +1233,47 @@
 
 		deserialize: function(blob) {
 
-			if (typeof blob.buffer === 'string') {
+			if (blob.buffer instanceof Object) {
 
-				this.buffer = new Audio();
-				this.buffer.src = blob.buffer;
-				this.__load = false;
+				var url  = null;
+				var type = null;
 
-				var that = this;
+				if (_audio_supports_ogg === true) {
 
-				this.buffer.addEventListener('ended', function() {
-					that.isIdle = true;
-					that.play();
-				}, true);
-				this.buffer.autobuffer = true;
-				this.buffer.preload    = true;
-				this.buffer.load();
+					if (typeof blob.buffer.ogg === 'string') {
+						url  = url  || blob.buffer.ogg;
+						type = type || 'ogg';
+					}
+
+				} else if (_audio_supports_mp3 === true) {
+
+					if (typeof blob.buffer.mp3 === 'string') {
+						url  = url  || blob.buffer.mp3;
+						type = type || 'mp3';
+					}
+
+				}
+
+
+				if (url !== null && type !== null) {
+
+					var that   = this;
+					var buffer = new Audio();
+
+					buffer.addEventListener('ended', function() {
+						that.play();
+					}, true);
+
+					buffer.autobuffer = true;
+					buffer.preload    = true;
+					buffer.src        = url;
+					buffer.load();
+
+					this.buffer         = buffer;
+					this.__buffer[type] = buffer;
+					this.__load         = false;
+
+				}
 
 			}
 
@@ -1268,12 +1284,16 @@
 			var blob = {};
 
 
-			if (this.buffer !== null) {
+			if (this.__buffer.ogg !== null || this.__buffer.mp3 !== null) {
 
-				if (_codecs.ogg) {
-					blob.buffer = 'data:application/ogg;base64,' + this.buffer.toString('base64');
-				} else if (_codecs.mp3) {
-					blob.buffer = 'data:audio/mp3;base64,' + this.buffer.toString('base64');
+				blob.buffer = {};
+
+				if (this.__buffer.ogg !== null) {
+					blob.buffer.ogg = 'data:application/ogg;base64,' + this.__buffer.ogg.toString('base64');
+				}
+
+				if (this.__buffer.mp3 !== null) {
+					blob.buffer.mp3 = 'data:audio/mp3;base64,' + this.__buffer.mp3.toString('base64');
 				}
 
 			}
@@ -1301,46 +1321,66 @@
 			}
 
 
-			var that  = this;
-			var url   = this.url + '.' + (_codecs.ogg || _codecs.mp3);
-			var audio = new Audio();
+			var url  = this.url;
+			var type = null;
 
-			audio.onload = function() {
+			if (_audio_supports_ogg === true) {
+				type = type || 'ogg';
+			} else if (_audio_supports_mp3 === true) {
+				type = type || 'mp3';
+			}
 
-				that.buffer = this;
 
-				that.__load = false;
-				that.buffer.toString('base64');
+			if (url !== null && type !== null) {
 
-				if (that.onload instanceof Function) {
-					that.onload(true);
-					that.onload = null;
+				var that   = this;
+				var buffer = new Audio();
+
+				buffer.onload = function() {
+
+					that.buffer         = this;
+					that.__buffer[type] = this;
+
+					this.toString('base64');
+					this.__load = false;
+
+					if (that.onload instanceof Function) {
+						that.onload(true);
+						that.onload = null;
+					}
+
+				};
+
+				buffer.onerror = function() {
+
+					if (that.onload instanceof Function) {
+						that.onload(false);
+						that.onload = null;
+					}
+
+				};
+
+				buffer.addEventListener('ended', function() {
+					that.play();
+				}, true);
+
+				buffer.autobuffer = true;
+				buffer.preload    = true;
+				buffer.src        = url + '.' + type;
+				buffer.load();
+
+
+				// TODO: Evaluate if buffer.onload() is necessary
+				buffer.onload();
+
+			} else {
+
+				if (this.onload instanceof Function) {
+					this.onload(false);
+					this.onload = null;
 				}
 
-			};
-
-			audio.onerror = function() {
-
-				if (that.onload instanceof Function) {
-					that.onload(false);
-					that.onload = null;
-				}
-
-			};
-
-			audio.addEventListener('ended', function() {
-				that.isIdle = true;
-				that.play();
-			}, true);
-
-			audio.autobuffer = true;
-			audio.preload    = true;
-			audio.load();
-
-			audio.src = url;
-
-
-			audio.onload();
+			}
 
 		},
 
@@ -1436,16 +1476,20 @@
 
 		if (origin.buffer !== null) {
 
-			clone.buffer = new Audio(origin.buffer.src);
+			clone.buffer            = new Audio();
 			clone.buffer.autobuffer = true;
 			clone.buffer.preload    = true;
+			clone.buffer.src        = origin.buffer.src;
 			clone.buffer.load();
 
 			clone.buffer.addEventListener('ended', function() {
+				clone.isIdle = true;
 				clone.stop();
 			}, true);
 
-			clone.__load = false;
+			clone.__buffer.ogg = origin.__buffer.ogg;
+			clone.__buffer.mp3 = origin.__buffer.mp3;
+			clone.__load       = false;
 
 		}
 
@@ -1457,13 +1501,14 @@
 		url = typeof url === 'string' ? url : null;
 
 
-		this.url    = url;
-		this.onload = null;
-		this.buffer = null;
-		this.volume = 1.0;
-		this.isIdle = true;
+		this.url      = url;
+		this.onload   = null;
+		this.buffer   = null;
+		this.volume   = 1.0;
+		this.isIdle   = true;
 
-		this.__load = true;
+		this.__buffer = { ogg: null, mp3: null };
+		this.__load   = true;
 
 
 		if (url !== null) {
@@ -1483,20 +1528,47 @@
 
 		deserialize: function(blob) {
 
-			if (typeof blob.buffer === 'string') {
+			if (blob.buffer instanceof Object) {
 
-				this.buffer = new Audio();
-				this.buffer.src = blob.buffer;
-				this.__load = false;
+				var url  = null;
+				var type = null;
 
-				var that = this;
+				if (_audio_supports_ogg === true) {
 
-				this.buffer.addEventListener('ended', function() {
-					that.stop();
-				}, true);
-				this.buffer.autobuffer = true;
-				this.buffer.preload    = true;
-				this.buffer.load();
+					if (typeof blob.buffer.ogg === 'string') {
+						url  = url  || blob.buffer.ogg;
+						type = type || 'ogg';
+					}
+
+				} else if (_audio_supports_mp3 === true) {
+
+					if (typeof blob.buffer.mp3 === 'string') {
+						url  = url  || blob.buffer.mp3;
+						type = type || 'mp3';
+					}
+
+				}
+
+
+				if (url !== null && type !== null) {
+
+					var that   = this;
+					var buffer = new Audio();
+
+					buffer.addEventListener('ended', function() {
+						that.stop();
+					}, true);
+
+					buffer.autobuffer = true;
+					buffer.preload    = true;
+					buffer.src        = url;
+					buffer.load();
+
+					this.buffer         = buffer;
+					this.__buffer[type] = buffer;
+					this.__load         = false;
+
+				}
 
 			}
 
@@ -1507,12 +1579,16 @@
 			var blob = {};
 
 
-			if (this.buffer !== null) {
+			if (this.__buffer.ogg !== null || this.__buffer.mp3 !== null) {
 
-				if (_codecs.ogg) {
-					blob.buffer = 'data:application/ogg;base64,' + this.buffer.toString('base64');
-				} else if (_codecs.mp3) {
-					blob.buffer = 'data:audio/mp3;base64,' + this.buffer.toString('base64');
+				blob.buffer = {};
+
+				if (this.__buffer.ogg !== null) {
+					blob.buffer.ogg = 'data:application/ogg;base64,' + this.__buffer.ogg.toString('base64');
+				}
+
+				if (this.__buffer.mp3 !== null) {
+					blob.buffer.mp3 = 'data:audio/mp3;base64,' + this.__buffer.mp3.toString('base64');
 				}
 
 			}
@@ -1540,45 +1616,67 @@
 			}
 
 
-			var that  = this;
-			var url   = this.url + '.' + (_codecs.ogg || _codecs.mp3);
-			var audio = new Audio();
+			var url  = this.url;
+			var type = null;
 
-			audio.onload = function() {
+			if (_audio_supports_ogg === true) {
+				type = type || 'ogg';
+			} else if (_audio_supports_mp3 === true) {
+				type = type || 'mp3';
+			}
 
-				that.buffer = this;
 
-				that.__load = false;
-				that.buffer.toString('base64');
+			if (url !== null && type !== null) {
 
-				if (that.onload instanceof Function) {
-					that.onload(true);
-					that.onload = null;
+				var that   = this;
+				var buffer = new Audio();
+
+				buffer.onload = function() {
+
+					that.buffer         = this;
+					that.__buffer[type] = this;
+
+					this.toString('base64');
+					this.__load = false;
+
+					if (that.onload instanceof Function) {
+						that.onload(true);
+						that.onload = null;
+					}
+
+				};
+
+				buffer.onerror = function() {
+
+					if (that.onload instanceof Function) {
+						that.onload(false);
+						that.onload = null;
+					}
+
+				};
+
+				buffer.addEventListener('ended', function() {
+					that.isIdle = true;
+					that.stop();
+				}, true);
+
+				buffer.autobuffer = true;
+				buffer.preload    = true;
+				buffer.src        = url + '.' + type;
+				buffer.load();
+
+
+				// TODO: Evaluate if buffer.onload() is necessary
+				buffer.onload();
+
+			} else {
+
+				if (this.onload instanceof Function) {
+					this.onload(false);
+					this.onload = null;
 				}
 
-			};
-
-			audio.onerror = function() {
-
-				if (that.onload instanceof Function) {
-					that.onload(false);
-					that.onload = null;
-				}
-
-			};
-
-			audio.addEventListener('ended', function() {
-				that.stop();
-			}, true);
-
-			audio.autobuffer = true;
-			audio.preload    = true;
-			audio.load();
-
-			audio.src = url;
-
-
-			audio.onload();
+			}
 
 		},
 
@@ -1595,8 +1693,10 @@
 				} catch(e) {
 				}
 
-				this.buffer.play();
-				this.isIdle = false;
+				if (this.buffer.currentTime === 0) {
+					this.buffer.play();
+					this.isIdle = false;
+				}
 
 			}
 
@@ -1768,63 +1868,118 @@
 			}
 
 
-			var that  = this;
-			var url   = this.url;
-			var image = new Image();
+			var url = this.url;
+			if (url.substr(0, 5) === 'data:') {
 
-			image.onload = function() {
+				if (url.substr(0, 15) === 'data:image/png;') {
 
-				that.buffer = this;
-				that.width  = this.width;
-				that.height = this.height;
+					var that   = this;
+					var buffer = new Image();
 
-				that.__load = false;
-				that.buffer.toString('base64');
+					buffer.onload = function() {
+
+						that.buffer = this;
+						that.width  = this.width;
+						that.height = this.height;
+
+						that.__load = false;
+						that.buffer.toString('base64');
 
 
-				var url = that.url;
-				var is_embedded = url.substr(0, 10) === 'data:image';
-				if (is_embedded === false) {
-
-					var ext = url.split('.').pop();
-					if (ext !== 'png') {
-
-						if (lychee.debug === true) {
-							console.error('bootstrap.js: Texture at "' + that.url + '" is invalid (No PNG file)');
+						var is_power_of_two = (this.width & (this.width - 1)) === 0 && (this.height & (this.height - 1)) === 0;
+						if (lychee.debug === true && is_power_of_two === false) {
+							console.warn('bootstrap.js: Texture at data:image/png; is NOT power-of-two');
 						}
 
-					}
 
-				}
+						if (that.onload instanceof Function) {
+							that.onload(true);
+							that.onload = null;
+						}
 
+					};
 
-				var is_power_of_two = (this.width & (this.width - 1)) === 0 && (this.height & (this.height - 1)) === 0;
-				if (is_power_of_two === false && is_embedded === false) {
+					buffer.onerror = function() {
+
+						if (that.onload instanceof Function) {
+							that.onload(false);
+							that.onload = null;
+						}
+
+					};
+
+					buffer.src = url;
+
+				} else {
 
 					if (lychee.debug === true) {
-						console.warn('bootstrap.js: Texture at "' + that.url + '" is NOT power-of-two');
+						console.error('bootstrap.js: Texture at "' + url.substr(0, 15) + '" is invalid (no PNG file)');
+					}
+
+
+					if (this.onload instanceof Function) {
+						this.onload(false);
+						this.onload = null;
 					}
 
 				}
 
+			} else {
 
-				if (that.onload instanceof Function) {
-					that.onload(true);
-					that.onload = null;
+				if (url.split('.').pop() === 'png') {
+
+					var that   = this;
+					var buffer = new Image();
+
+					buffer.onload = function() {
+
+						that.buffer = this;
+						that.width  = this.width;
+						that.height = this.height;
+
+						that.__load = false;
+						that.buffer.toString('base64');
+
+
+						var is_power_of_two = (this.width & (this.width - 1)) === 0 && (this.height & (this.height - 1)) === 0;
+						if (lychee.debug === true && is_power_of_two === false) {
+							console.warn('bootstrap.js: Texture at ' + this.url + ' is NOT power-of-two');
+						}
+
+
+						if (that.onload instanceof Function) {
+							that.onload(true);
+							that.onload = null;
+						}
+
+					};
+
+					buffer.onerror = function() {
+
+						if (that.onload instanceof Function) {
+							that.onload(false);
+							that.onload = null;
+						}
+
+					};
+
+					buffer.src = url;
+
+				} else {
+
+					if (lychee.debug === true) {
+						console.error('bootstrap.js: Texture at "' + this.url + '" is invalid (no PNG file)');
+					}
+
+
+					if (this.onload instanceof Function) {
+						this.onload(false);
+						this.onload = null;
+					}
+
 				}
 
-			};
-
-			image.onerror = function() {
-
-				if (that.onload instanceof Function) {
-					that.onload(false);
-					that.onload = null;
-				}
-
-			};
-
-			image.src = url;
+			}
 
 		}
 

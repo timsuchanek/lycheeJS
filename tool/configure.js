@@ -8,7 +8,6 @@
 	var _root      = _path.resolve(process.cwd(), '.');
 	var _core      = '';
 	var _bootstrap = {};
-	var _validated = {};
 
 
 
@@ -105,7 +104,6 @@
 			platform = platforms[p];
 
 			_bootstrap[platform] = {};
-			_validated[platform] = false;
 
 
 			if (platform.indexOf('-') !== -1) {
@@ -113,7 +111,6 @@
 				var baseplatform = platform.split('-')[0];
 				for (var basefile in _bootstrap[baseplatform]) {
 					_bootstrap[platform][basefile] = _bootstrap[baseplatform][basefile];
-					_validated[platform] = true;
 				}
 
 			}
@@ -163,12 +160,9 @@
 	 * GENERATE CODE (CORE + BOOTSTRAP)
 	 */
 
-	(function(core, bootstrap, validated) {
+	(function(core, bootstrap) {
 
 		for (var platform in bootstrap) {
-
-			if (validated[platform] === false) continue;
-
 
 			var code = '' + core;
 
@@ -213,7 +207,7 @@
 
 		}
 
-	})(_core, _bootstrap, _validated);
+	})(_core, _bootstrap);
 
 })();
 
