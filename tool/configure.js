@@ -2,6 +2,19 @@
 
 (function() {
 
+	(function() {
+
+		if (typeof String.prototype.trim !== 'function') {
+
+			String.prototype.trim = function() {
+				return this.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, "");
+			};
+
+		}
+
+	})();
+
+
 	var _fs   = require('fs');
 	var _path = require('path');
 
@@ -208,6 +221,219 @@
 		}
 
 	})(_core, _bootstrap);
+
+
+
+	/*
+	 * GENERATE API DOCUMENTATION
+	 */
+
+	var _format_markdown = function(text) {
+
+		var index = text.indexOf('*');
+		var open  = false;
+
+		while (index !== -1) {
+
+			text = text.substr(0, index) + (open === false ? '<em>' : '</em>') + text.substr(index + 1);
+			open = !open;
+
+			index = text.indexOf('*');
+
+		}
+
+
+		text = text.replace(/\[([^\]]+)\]\(([^)"]+)(?: \"([^\"]+)\")?\)/, '<a href="$2">$1</a>');
+
+
+		return text;
+
+	};
+
+	var _parse_documentation = function(content) {
+
+		var source = content.toString().split('\n');
+		var target = [];
+
+		var open = {
+			article: false,
+			ul:      false,
+			li:      false,
+			pre:     false,
+			p:       false
+		};
+
+
+		for (var s = 0, sl = source.length; s < sl; s++) {
+
+			var line = source[s];
+
+			if (line.charAt(0) === '=') {
+
+				line = '<article id="' + line.substr(2, line.length - 3).trim() + '">';
+
+				if (open.article === true) {
+					line = '</article>\n\n' + line;
+					open.article = false;
+				}
+
+				open.article = true;
+
+			} else if (line.substr(0, 3) === '###') {
+
+				line = '\t<h3>' + line.substr(4) + '</h3>';
+
+			} else if (line.substr(0, 2) === '##') {
+
+				line = '\t<h2>' + line.substr(3) + '</h2>';
+
+			} else if (line.substr(0, 1) === '#') {
+
+				line = '\t<h1>' + line.substr(2) + '</h1>';
+
+			} else if (line.substr(0, 3) === '```') {
+
+				if (open.pre === false) {
+					line = '\t<pre class="' + _format_markdown(line.substr(3)) + '">';
+					open.pre = true;
+				} else {
+					line = '\t</pre>';
+					open.pre = false;
+				}
+
+			} else if (line.charAt(0) === '-') {
+
+				if (open.ul === false) {
+					line = '\t<ul>\n\t\t<li>\n\t\t\t' + _format_markdown(line.substr(2));
+					// + '</li>';
+					open.ul = true;
+					open.li = true;
+				} else {
+					line = '\t\t<li>\n\t\t\t' + _format_markdown(line.substr(2));
+					// + '</li>';
+					open.li = true;
+				}
+
+			} else if (line !== '' && open.li === true) {
+
+				line = '\t\t\t' + line;
+
+			} else if (line !== '' && open.pre === true) {
+
+				line = line.replace(/\t/g, '  ');
+
+			} else if (line !== '' && open.pre === false && open.ul === false) {
+
+				if (open.p === false) {
+					line = '\t<p>\n\t\t' + _format_markdown(line);
+					open.p = true;
+				} else {
+					// Do nothing
+					line = '\t\t' + _format_markdown(line);
+				}
+
+			} else if (line === '') {
+
+				if (open.li === true) {
+					line += '\t\t</li>\n';
+					open.li = false;
+				}
+
+				if (open.ul === true) {
+					line += '\t</ul>\n';
+					open.ul = false;
+				}
+
+				if (open.p === true) {
+					line += '\t</p>\n';
+					open.p = false;
+				}
+
+
+				if (s === sl - 1) {
+
+					if (open.article === true) {
+						line += '</article>';
+					}
+
+				}
+
+			}
+
+
+			target.push(line);
+
+		}
+
+
+		return target.join('\n');
+
+	};
+
+	(function(folders) {
+
+		for (var fo = 0, fol = folders.length; fo < fol; fo++) {
+
+			var folder  = folders[fo];
+			var path    = _path.resolve(_root, './lychee/' + folder);
+			var message = 'Documenting "' + path + '"';
+			var result  = true;
+
+			if (_fs.existsSync(path) === true) {
+
+				var files = _fs.readdirSync(path);
+				for (var f = 0, fl = files.length; f < fl; f++) {
+
+					var apipath = path + '/' + files[f];
+					var docpath = _path.resolve(_root, './docs/' + folder.split('/').join('-') + '-' + files[f].split('.')[0] + '.html');
+
+					var file = files[f];
+					if (_fs.existsSync(apipath) === true) {
+
+						var apicontent = _fs.readFileSync(apipath);
+						var doccontent = _parse_documentation(apicontent);
+						if (doccontent !== null) {
+
+							if (_fs.existsSync(_path.dirname(docpath)) === false) {
+								_mkdir_p(_path.dirname(docpath));
+							}
+
+							if (_fs.existsSync(_path.dirname(docpath)) === true) {
+
+								try {
+									_fs.writeFileSync(docpath, doccontent, 'utf8');
+								} catch(e) {
+									result = false;
+								}
+
+							}
+
+						}
+
+					}
+
+				}
+
+			}
+
+
+			_log(message, result);
+
+		}
+
+	})([
+		'api/core',
+		'api/data',
+		'api/effect',
+		'api/event',
+		'api/game',
+		'api/math',
+		'api/net',
+		'api/net/client',
+		'api/net/remote',
+		'api/ui',
+		'api/verlet'
+	]);
 
 })();
 
