@@ -1,7 +1,7 @@
 
 ={constructor}
 
-# new lychee.Storage(identifier);
+# new lychee.Definition(identifier);
 
 - *identifier* is unique *String*.
 
@@ -35,9 +35,20 @@ The unique identifier is used for determination of all dependencies
 in the current [lychee.environment](lychee.html#properties-environment).
 
 
+
+={methods-serialize}
+
+### (Serialization Object) lychee.Definition.prototype.serialize(void);
+
+- This method has no arguments.
+
+This method returns the *Serialization Object* of the instance.
+
+
+
 ={methods-attaches}
 
-# (Boolean) lychee.Definition.prototype.attaches(map);
+### (Boolean) lychee.Definition.prototype.attaches(map);
 
 - *(Object) map* is an Object consisting of a *(String) key* and a *(Asset) value*.
 
@@ -54,9 +65,10 @@ Foo.attaches({
 ```
 
 
+
 ={methods-exports}
 
-# (Boolean) lychee.Definition.prototype.exports(callback);
+### (Boolean) lychee.Definition.prototype.exports(callback);
 
 - *(Function) callback* is a Function that returns the Definition.
 Allowed return types are Callback, Class and Module
@@ -89,7 +101,7 @@ Qux.exports(function(lychee, foo) {
 
 ={methods-includes}
 
-# (Boolean) lychee.Definition.prototype.includes(definitions);
+### (Boolean) lychee.Definition.prototype.includes(definitions);
 
 - *(Array) definitions* is an Array consisting of *(String) values*.
 
@@ -108,7 +120,7 @@ Foo.includes([
 
 ={methods-requires}
 
-# (Boolean) lychee.Definition.prototype.requires(definitions);
+### (Boolean) lychee.Definition.prototype.requires(definitions);
 
 - *(Array) definitions* is an Array consisting of *(String) values*.
 
@@ -127,7 +139,7 @@ Foo.requires([
 
 ={methods-supports}
 
-# (Boolean) lychee.Definition.prototype.supports(callback);
+### (Boolean) lychee.Definition.prototype.supports(callback);
 
 - *(Function) callback* is a Function that returns either *true* or *false*.
 
@@ -159,12 +171,12 @@ Foo.supports(function(lychee, global) {
 
 });
 ```
- 
+
 
 
 ={methods-tags}
 
-# (Boolean) lychee.Definition.prototype.tags(map);
+### (Boolean) lychee.Definition.prototype.tags(map);
 
 - *(Object) map* is an Object consisting of a *(String) key* and a *(String) value*.
 

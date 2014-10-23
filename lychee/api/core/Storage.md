@@ -14,8 +14,8 @@ The *settings* object consists of the following properties:
 
 ```javascript
 var model = {
-	name:  'Unicorn',
-	squad: 'Lazer',
+	name:  'Rainbow',
+	squad: 'LazerUnicorns',
 	score: 1337
 };
 

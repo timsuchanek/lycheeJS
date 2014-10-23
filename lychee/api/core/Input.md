@@ -28,7 +28,7 @@ var input = new lychee.Input({
 
 ={events-name}
 
-# new lychee.Input().bind(name, function(delta) {}, scope);
+### new lychee.Input().bind(name, function(delta) {}, scope);
 
 The unique *name* event is fired on keyboard interaction.
 
@@ -56,7 +56,7 @@ input.bind('ctrl-shift-a', function(delta) {
 
 ={events-key}
 
-# new lychee.Input().bind('key', function(key, name, delta) {}, scope);
+### new lychee.Input().bind('key', function(key, name, delta) {}, scope);
 
 The *key* event is fired on keyboard interaction.
 It is fired right before the corresponding *name* event is fired.
@@ -88,7 +88,7 @@ input.bind('key', function(key, name, delta) {
 
 ={events-touch}
 
-# new lychee.Input().bind('touch', function(id, position, delta) {}, scope);
+### new lychee.Input().bind('touch', function(id, position, delta) {}, scope);
 
 The *touch* event is fired on mouse or touchscreen interaction.
 
@@ -113,7 +113,7 @@ input.bind('touch', function(id, position, delta) {
 
 ={events-swipe}
 
-# new lychee.Input().bind('swipe', function(id, state, position, delta, swipe) {}, scope);
+### new lychee.Input().bind('swipe', function(id, state, position, delta, swipe) {}, scope);
 
 The *swipe* event is fired on mouse or touchscreen interaction.
 
@@ -159,7 +159,7 @@ input.bind('swipe', function(id, state, position, delta, swipe) {
 
 ={properties-delay}
 
-# (Number) new lychee.Input().delay;
+### (Number) new lychee.Input().delay;
 
 The *(Number) delay* property is the delay in milliseconds after
 which an event is fired.
@@ -190,7 +190,7 @@ input.bind('touch', function() {
 
 ={properties-key}
 
-# (Boolean) new lychee.Input().key;
+### (Boolean) new lychee.Input().key;
 
 The *(Boolean) key* property is the state whether the instance is
 firing the [key event](#events-key).
@@ -217,7 +217,7 @@ input.bind('key', function() {
 
 ={properties-keymodifier}
 
-# (Boolean) new lychee.Input().keymodifier;
+### (Boolean) new lychee.Input().keymodifier;
 
 The *(Boolean) keymodifier* property is the state whether the instance is
 firing the [name event](#events-name).
@@ -251,7 +251,7 @@ input.bind('ctrl-s', function() {
 
 ={properties-touch}
 
-# (Boolean) new lychee.Input().touch;
+### (Boolean) new lychee.Input().touch;
 
 The *(Boolean) touch* property is the state whether the instance is
 firing the [touch event](#events-touch).
@@ -278,7 +278,7 @@ input.bind('touch', function() {
 
 ={properties-swipe}
 
-# (Boolean) new lychee.Input().swipe;
+### (Boolean) new lychee.Input().swipe;
 
 The *(Boolean) swipe* property is the state whether the instance is
 firing the [swipe event](#events-swipe).
@@ -304,9 +304,20 @@ input.bind('swipe', function() {
 
 
 
+={methods-destroy}
+
+### (Boolean) lychee.Viewport.prototype.destroy(void);
+
+- This method has no arguments.
+
+This method returns *true* on success and *false* on failure.
+It will destroy the instance from any interaction bindings.
+
+
+
 ={methods-serialize}
 
-# (Serialization Object) lychee.Input.prototype.serialize(void);
+### (Serialization Object) lychee.Input.prototype.serialize(void);
 
 - This method has no arguments.
 
@@ -316,7 +327,7 @@ This method returns the *Serialization Object* of the instance.
 
 ={methods-setDelay}
 
-# (Boolean) lychee.Input.prototype.setDelay(delay);
+### (Boolean) lychee.Input.prototype.setDelay(delay);
 
 - *(Number) delay* is the delay in milliseconds.
   If set to a value bigger than *0*, the instance will wait the
@@ -343,7 +354,7 @@ input.bind('key', function(key, name, delta) {
 
 ={methods-setKey}
 
-# (Boolean) lychee.Input.prototype.setKey(key);
+### (Boolean) lychee.Input.prototype.setKey(key);
 
 - *(Boolean) key* is a flag. If set to *true*, the [key event](#events-key) is fired.
 
@@ -366,7 +377,7 @@ input.bind('key', function() {
 
 ={methods-setKeyModifier}
 
-# (Boolean) lychee.Input.prototype.setKeyModifier(keymodifier);
+### (Boolean) lychee.Input.prototype.setKeyModifier(keymodifier);
 
 - *(Boolean) keymodifier* is a flag. If set to *true*, the [name event](#events-name) is fired.
 
@@ -391,7 +402,7 @@ input.bind('ctrl-a', function() {
 
 ={methods-setTouch}
 
-# (Boolean) lychee.Input.prototype.setTouch(touch);
+### (Boolean) lychee.Input.prototype.setTouch(touch);
 
 - *(Boolean) touch* is a flag. If set to *true*, the [touch event](#events-touch) is fired.
 
@@ -414,7 +425,7 @@ input.bind('touch', function() {
 
 ={methods-setSwipe}
 
-# (Boolean) lychee.Input.prototype.setSwipe(swipe);
+### (Boolean) lychee.Input.prototype.setSwipe(swipe);
 
 - *(Boolean) swipe* is a flag. If set to *true*, the [swipe event](#events-swipe) is fired.
 

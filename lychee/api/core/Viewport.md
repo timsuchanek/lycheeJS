@@ -28,7 +28,7 @@ than 1, it is treated as its *orientation* is *portrait*.
 
 ={events-reshape}
 
-# new lychee.Viewport().bind('reshape', function(orientation, rotation) {}, scope);
+### new lychee.Viewport().bind('reshape', function(orientation, rotation) {}, scope);
 
 The *reshape* event is fired on viewport size change or rotation of the device.
 
@@ -59,7 +59,7 @@ viewport.bind('reshape', function(orientation, rotation) {
 
 ={events-show}
 
-# new lychee.Viewport().bind('show', function() {}, scope);
+### new lychee.Viewport().bind('show', function() {}, scope);
 
 The *show* event is fired if the window is made visible and was not visible before.
 
@@ -81,7 +81,7 @@ viewport.bind('hide', function() {
 
 ={events-hide}
 
-# new lychee.Viewport().bind('hide', function() {}, scope);
+### new lychee.Viewport().bind('hide', function() {}, scope);
 
 The *show* event is fired if the window is made not visible and was visible before.
 
@@ -103,7 +103,7 @@ viewport.bind('hide', function() {
 
 ={properties-fullscreen}
 
-# (Boolean) new lychee.Viewport().fullscreen;
+### (Boolean) new lychee.Viewport().fullscreen;
 
 The *(Boolean) fullscreen* property is the state whether the instance is
 in fullscreen mode.
@@ -127,7 +127,7 @@ viewport.bind('reshape', function() {
 
 ={properties-width}
 
-# (Number) new lychee.Viewport().width;
+### (Number) new lychee.Viewport().width;
 
 The *(Number) width* property is the current width of the Viewport.
 
@@ -143,7 +143,7 @@ viewport.bind('reshape', function() {
 
 ={properties-height}
 
-# (Number) new lychee.Viewport().height;
+### (Number) new lychee.Viewport().height;
 
 The *(Number) height* property is the current height of the Viewport.
 
@@ -159,7 +159,7 @@ viewport.bind('reshape', function() {
 
 ={methods-destroy}
 
-# (Boolean) lychee.Viewport.prototype.destroy(void);
+### (Boolean) lychee.Viewport.prototype.destroy(void);
 
 - This method has no arguments.
 
@@ -170,7 +170,7 @@ It will destroy the instance from any interaction bindings.
 
 ={methods-serialize}
 
-# (Serialization Object) lychee.Viewport.prototype.serialize(void);
+### (Serialization Object) lychee.Viewport.prototype.serialize(void);
 
 - This method has no arguments.
 
@@ -180,7 +180,7 @@ This method returns the *Serialization Object* of the instance.
 
 ={methods-setFullscreen}
 
-# (Boolean) lychee.Viewport.prototype.setFullscreen(fullscreen);
+### (Boolean) lychee.Viewport.prototype.setFullscreen(fullscreen);
 
 - *(Boolean) fullscreen* is a flag. If set to *true*, the instance
   will try to go into fullscreen mode.
