@@ -9,6 +9,8 @@ back into master, tagged and published.
 
 ## v0.8.4
 
+- Integration with Services (tool/linux) using systemd and upstart
+- Integration with Services (tool/windows) using regedit
 - Color Game (Timeout and Point Calculation)
 - lychee.net.remote.Controller and lychee.net.client.Controller
 - lychee.game.Logic
