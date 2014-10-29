@@ -209,17 +209,22 @@ console.log('GAME OVER DUDE!');
 
 		this.__index = 0;
 		this.__level = 0;
+		this.__time  = 60000;
 
 
 		this.deserialize(_blob);
 		this.reshape();
 
 
-this.getLayer('ui').bind('touch', function() {
-	console.log('YAY TOUCH!');
+		this.getLayer('ui').bind('touch', function(id, position, delta) {
+
+console.log('YAY TOUCH!', position);
+
+
 	this.__level++;
 	_refresh.call(this);
-}, this);
+
+		}, this);
 
 	};
 

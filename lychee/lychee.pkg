@@ -153,6 +153,7 @@
 
 				"Protocol": [ "js" ],
 				"Service":  [ "js" ],
+				"Tunnel":   [ "js" ],
 
 				"client": {
 					"Chat":        [ "js" ],

@@ -9,18 +9,19 @@ back into master, tagged and published.
 
 ## v0.8.4
 
+- Color Game (Timeout and Point Calculation)
+- lychee.net.remote.Controller and lychee.net.client.Controller
 - lychee.game.Logic
 - lychee.game.Physic
-- lychee.net.remote.Controller and lychee.net.client.Controller
 - lychee.verlet Stack serialization and finalization
-- html-webgl platform finalization (webgl2d refactor)
-- Blitzkrieg Game with basic tanks interaction
 
 ## v0.8.5
 
-- lychee.data.Markdown encoder/decoder
-- Automatized API doc generation
+- lychee.net.Tunnel integration (event-based abstraction for Client and Remote)
+- lychee.net.Protocol refactor for sending AND receiving
+- html-webgl platform finalization (webgl2d refactor)
 - Automatized Fuzztest suite (based on API docs)
+- Blitzkrieg Game with basic tanks interaction
 
 ## v0.8.6
 

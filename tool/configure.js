@@ -459,8 +459,8 @@
 			if (classid === 'lychee.lychee') classid = 'lychee';
 
 			var pathid  = file.substr(0, file.length - 3).split('/').join('.');
-			var apipath = _path.resolve(_root, './lychee/api/'      + pathid.split('.').join('/') + '.md');
-			var docpath = _path.resolve(_root, './lychee/docs/api-' + pathid.split('.').join('-') + '.html');
+			var apipath = _path.resolve(_root, './lychee/api/'  + pathid.split('.').join('/')  + '.md');
+			var docpath = _path.resolve(_root, './lychee/docs/' + classid.split('.').join('-') + '.html');
 
 
 			var result = false;
@@ -515,8 +515,8 @@
 			var classid = 'lychee.' + file.substr(0, file.length - 3).split('/').join('.');
 			var pathid  = ((file.indexOf('/') !== -1 ? '' : 'core/') + file.substr(0, file.length - 3)).split('/').join('.');
 
-			var apipath = _path.resolve(_root, './lychee/api/'      + pathid.split('.').join('/') + '.md');
-			var docpath = _path.resolve(_root, './lychee/docs/api-' + pathid.split('.').join('-') + '.html');
+			var apipath = _path.resolve(_root, './lychee/api/'  + pathid.split('.').join('/')  + '.md');
+			var docpath = _path.resolve(_root, './lychee/docs/' + classid.split('.').join('-') + '.html');
 
 
 			var result = false;
