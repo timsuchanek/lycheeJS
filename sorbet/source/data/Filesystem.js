@@ -272,19 +272,17 @@ lychee.define('sorbet.data.Filesystem').includes([
 
 		},
 
-		readchunk: function(path, from, to, callback, scope) {
+		readrange: function(path, range, callback, scope) {
 
-			from     = typeof from === 'number'     ? (from | 0) : 0;
-			to       = typeof to === 'number'       ? (to   | 0) : 0;
+			range    = range instanceof Object      ? range      : null;
 			callback = callback instanceof Function ? callback   : null;
 			scope    = scope !== undefined          ? scope      : this;
 
 
-			var info     = this.info(path);
 			var resolved = this.resolve(path);
-			var size     = to - from;
+			var size     = range.to - range.from + 1;
 
-			if (resolved !== null && size > 0 && from + size <= info.length) {
+			if (resolved !== null && range !== null) {
 
 				var buffer = new Buffer(size);
 
@@ -297,7 +295,7 @@ lychee.define('sorbet.data.Filesystem').includes([
 							return;
 						}
 
-						_fs.read(fd, buffer, 0, size, from, function(err) {
+						_fs.read(fd, buffer, 0, size, range.from, function(err) {
 
 							if (err) {
 								callback.call(scope, null);
@@ -315,7 +313,7 @@ lychee.define('sorbet.data.Filesystem').includes([
 
 					var fd = _fs.openSync(resolved, 'r');
 
-					_fs.readSync(fd, buffer, 0, size, from);
+					_fs.readSync(fd, buffer, 0, size, range.from);
 					_fs.close(fd);
 
 					return buffer;

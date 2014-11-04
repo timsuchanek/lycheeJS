@@ -8,27 +8,44 @@ lychee.define('sorbet.module.File').exports(function(lychee, sorbet, global, att
 	 * HELPERS
 	 */
 
-	var _parse_range = function(range) {
+	var _parse_range = function(str, size) {
 
-		if (typeof range !== 'string') return null;
+		if (typeof str === 'string') {
 
+			if (str.substr(0, 6) === 'bytes=') {
 
-		var tmp = range.split('=');
-		if (tmp[0] === 'bytes') {
+				var tmp  = str.substr(6).split('-');
+				var from = parseInt(tmp[0], 10);
+				var to   = parseInt(tmp[1], 10);
 
-			var tmp1 = tmp[1].split('-');
-			var min  = parseInt(tmp1[0], 10);
-			var max  = parseInt(tmp1[1], 10);
-
-			if (!isNaN(min)) {
-
-				if (isNaN(max)) {
-					max = Infinity;
+				if (isNaN(to) || to === '') {
+					to = size - 1;
 				}
 
-				return [ min, max ];
+
+				from = from >= 0 ? from : 0;
+				to   = to > size ? size : to;
+
+
+// TODO: Figure this shit out
+
+				if (to < from) {
+					to = from;
+				}
+
+
+				if (!isNaN(from) && !isNaN(to)) {
+
+					return {
+						from:   from,
+						to:     to,
+						length: size
+					};
+
+				}
 
 			}
+
 
 		}
 
@@ -61,9 +78,10 @@ lychee.define('sorbet.module.File').exports(function(lychee, sorbet, global, att
 		process: function(vhost, response, data) {
 
 			var expires  = Date.now() + 1000 * 60 * 60 * 24 * 7; // 7 days
-			var range    = _parse_range(data.range);
 			var resolved = data.resolved;
 			var info     = vhost.fs.info(resolved);
+
+			var range    = _parse_range(data.range, info.length);
 			var tmp1     = resolved.split('/');
 			var tmp2     = tmp1[tmp1.length - 1].split('.');
 			var ext      = tmp2[tmp2.length - 1];
@@ -148,23 +166,28 @@ lychee.define('sorbet.module.File').exports(function(lychee, sorbet, global, att
 
 					} else {
 
-						range[0] = Math.min(0,        range[0]);
-						range[1] = Math.min(range[1], info.length);
-						range[1] = range[1] !== 0 ? range[1] : info.length;
-
-
-						vhost.fs.readchunk(resolved, range[0], range[1], function(chunk) {
+						vhost.fs.readrange(resolved, range, function(chunk) {
 
 							if (chunk !== null) {
 
 								response.status                  = 206;
-								response.header['Content-Range'] = 'bytes ' + range[0] + '-' + (range[1] - 1) + '/' + chunk.length;
+								response.header['Content-Range'] = 'bytes ' + range.from + '-' + range.to + '/' + range.length;
 								response.content                 = chunk;
 
 							} else {
 
-								response.status  = 500;
-								response.content = '';
+								if (range.to - range.from === 0) {
+
+									response.status                  = 206;
+									response.header['Content-Range'] = 'bytes ' + range.from + '-' + range.to + '/' + range.length;
+									response.content = '';
+
+								} else {
+
+									response.status  = 500;
+									response.content = '';
+
+								}
 
 							}
 
