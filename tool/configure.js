@@ -15,6 +15,7 @@
 	})();
 
 
+
 	var _fs      = require('fs');
 	var _package = null;
 	var _path    = require('path');
@@ -218,7 +219,7 @@
 		if (_fs.existsSync(_path.resolve(_root, './lychee/build')) === true) {
 			console.log('\tprocess cwd: OKAY');
 		} else {
-			console.log('\tprocess cwd: FAIL (' + _root + ')');
+			console.log('\tprocess cwd: FAIL (' + _root + ' is not the lycheeJS directory)');
 			errors++;
 		}
 

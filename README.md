@@ -64,19 +64,19 @@ allow nodejs to bind those ports in production to serve
 port 80 successfully without getting the **EACCESS** error.
 
 ```bash
-user@box:~$ which node;
-/usr/bin/node
-user@box:~$ sudo setcap cap_net_bind_service=+ep /usr/bin/node;
-user@box:~$ sudo getcap /usr/bin/node;
-/usr/bin/node = cap_net_bind_service+ep
+user@box:~$ which nodejs;
+/usr/bin/nodejs
+user@box:~$ sudo setcap cap_net_bind_service=+ep /usr/bin/nodejs;
+user@box:~$ sudo getcap /usr/bin/nodejs;
+/usr/bin/nodejs = cap_net_bind_service+ep
 ```
 
 - Navigate to the **~/lycheeJS** folder in Bash and execute
 the configure script to build the lycheeJS core.
 
 ```bash
-cd ~/lycheeJS;
-nodejs ./tool/configure.js; # Important: current working directory is lycheeJS root folder
+user@box:~$          cd ~/lycheeJS;
+user@box:~/lycheeJS$ nodejs ./tool/configure.js; # Important: current working directory is lycheeJS root folder
 ```
 
 ### 3. Start Sorbet
@@ -84,11 +84,8 @@ nodejs ./tool/configure.js; # Important: current working directory is lycheeJS r
 - After building the core, you are ready to go. Start Sorbet.
 
 ```bash
-cd ~/lycheeJS;
-npm start;
-
-# Using sorbet itself (identical to npm start):
-# nodejs ./tool/Sorbet.js start --profile="./sorbet/profile/localhost.json";
+user@box:~$          cd ~/lycheeJS;
+user@box:~/lycheeJS$ npm start;
 ```
 
 - Open your Web Browser and navigate to **http://localhost:8080**
@@ -96,16 +93,8 @@ to open the lycheeJS Dashboard. Those games show you how
 to develop real cross-platform games and the best practices
 in JavaScript code. [Link to projects folder](./projects)
 
-- If you want to add a script to run the webserver forever,
-take a look at the *package.json / scripts* section.
 
-```bash
-# Don't execute this. It's identical with npm start, but will run forever
-# npm run-script localhost
-```
-
-
-### 4. Install Fertilizers
+### 4. Install Fertilizers (optional)
 
 By default, lycheeJS ships with the HTML and NodeJS Fertilizers.
 
@@ -120,8 +109,32 @@ builds, you need to run this command to install those from the
 [lycheeJS-fertilizers repository](https://github.com/LazerUnicorns/lycheeJS-fertilizers):
 
 ```bash
-# Note that this is optional and not required
-npm run-script install-fertilizers;
+# Note that this is optional
+nodejs ./tool/ubuntu/install-fertilizers.js
+```
+
+
+### 5. Deploy on a Server (optional)
+
+lycheeJS and Sorbet can also be integrated with your root server.
+
+- If you want to have LSB init integration, you can do so by
+running the install.js script.
+
+```bash
+# Note that this is optional
+user@box:~$          cd ~/lycheeJS;
+user@box:~/lycheeJS$ sudo ./tool/ubuntu/install.js;
+```
+
+- If you want **no** LSB init integration, you can alternatively add
+an own script to the *package.json/scripts* section. Take a look
+at the **localhost** or **lycheejs.org** example.
+
+```bash
+# This is identical to npm start, but will run forever
+user@box:~$          cd ~/lycheeJS;
+user@box:~/lycheeJS$ npm run-script localhost
 ```
 
 

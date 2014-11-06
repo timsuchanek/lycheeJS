@@ -72,6 +72,12 @@
 		"stream":   true
 	},
 
+	"mp4": {
+		"encoding": "binary",
+		"type":     "video/mp4",
+		"stream":   true
+	},
+
 	"ogg": {
 		"encoding": "binary",
 		"type":     "application/ogg",
