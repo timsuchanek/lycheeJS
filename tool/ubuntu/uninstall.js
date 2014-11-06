@@ -14,18 +14,27 @@
 
 	var _execSync = require('child_process').execSync || function(command) {
 
-		require('child_process').exec(command + ' 2>&1 1>.exec-stdout && echo "ready" > .exec-wait');
+		require('child_process').exec(command + ' 2>&1 1>/tmp/.exec-stdout 2>/tmp/.exec-stderr; echo "$?" > /tmp/.exec-exitcode');
 
-		while (!_fs.existsSync('.exec-wait')) {
+		while (!_fs.existsSync('/tmp/.exec-exitcode')) {
 			// Do Nothing
 		}
 
-		var stdout = _fs.readFileSync('.exec-stdout');
+		var stdout   = _fs.readFileSync('/tmp/.exec-stdout').toString().trim();
+		var stderr   = _fs.readFileSync('/tmp/.exec-stderr').toString().trim();
+		var exitcode = _fs.readFileSync('/tmp/.exec-exitcode').toString().trim();
 
-		_fs.unlinkSync('.exec-stdout');
-		_fs.unlinkSync('.exec-wait');
 
-		return stdout;
+		_fs.unlinkSync('/tmp/.exec-stdout');
+		_fs.unlinkSync('/tmp/.exec-stderr');
+		_fs.unlinkSync('/tmp/.exec-exitcode');
+
+
+		if (exitcode !== '0') {
+			throw new Error('Command failed: ' + command + (stderr !== '' ? '\n' + stderr : ''));
+		} else {
+			return stdout;
+		}
 
 	};
 
