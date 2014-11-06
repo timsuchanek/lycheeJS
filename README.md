@@ -76,8 +76,8 @@ user@box:~/lycheeJS$ npm start;
 - Open your Web Browser and navigate to **http://localhost:8080**
 to open the lycheeJS Dashboard. You are now ready to go.
 
-The shipped example projects show you best practices on how
-to develop cross-platform games. [Link to projects folder](./projects)
+The shipped [example projects](./projects) show you best practices on how
+to develop cross-platform games.
 
 
 ### 3. Install Fertilizers (optional)
@@ -89,7 +89,6 @@ this command to install those from the
 [lycheeJS-fertilizers repository](https://github.com/LazerUnicorns/lycheeJS-fertilizers):
 
 ```bash
-# Note that this is optional
 user@box:~$          cd ~/lycheeJS;
 user@box:~/lycheeJS$ nodejs ./tool/ubuntu/install-fertilizers.js
 ```
@@ -103,7 +102,6 @@ lycheeJS and Sorbet can also be integrated with your root server.
 the install.js script.
 
 ```bash
-# Note that this is optional
 user@box:~$          cd ~/lycheeJS;
 user@box:~/lycheeJS$ sudo ./tool/ubuntu/install.js;
 ```
@@ -157,6 +155,11 @@ lycheeJS Dashboard.
 ```
 
 
+## Tutorials
+
+There are plenty of tutorials available at [http://lycheejs.org/tutorials](http://lycheejs.org/tutorials).
+
+
 ## Documentation
 
 The documentation is available online at [http://lycheejs.org/docs](http://lycheejs.org/docs).
@@ -165,13 +168,13 @@ The documentation is available online at [http://lycheejs.org/docs](http://lyche
 ## Roadmap
 
 You want to see what kind of fancy features will arrive next?
-Please take a look at the [ROADMAP.md](ROADMAP.md) file.
+Take a look at the [ROADMAP.md](ROADMAP.md) file.
 
 
 ## Contribution
 
 You want to contribute to the project?
-Please take a look at the [CONTRIBUTING.md](CONTRIBUTING.md) file.
+Take a look at the [CONTRIBUTING.md](CONTRIBUTING.md) file.
 
 
 ## Other (unsupported) JavaScript Runtimes
