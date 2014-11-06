@@ -2,6 +2,20 @@
 
 (function() {
 
+	/*
+	 * START OF CUSTOM SETTINGS
+	 */
+
+	var _sorbet_profile = 'localhost.json';
+	var _sorbet_user    = 'lycheejs';
+	var _sorbet_group   = 'lycheejs';
+
+	/*
+	 * END OF CUSTOM SETTINGS
+	 */
+
+
+
 	(function() {
 
 		if (typeof String.prototype.trim !== 'function') {
@@ -287,7 +301,28 @@
 		console.log('> Integrating Sorbet Service');
 
 
-		var sorbet_profile = 'localhost.json';
+		var nodejs = _exec_sync('which nodejs');
+		if (nodejs !== null) {
+
+			nodejs = nodejs.split('\n')[0];
+
+			var capabilities = _exec_sync('getcap ' + nodejs) || '';
+			if (capabilities.indexOf('cap_net_bind_service+ep') !== -1) {
+				console.log('\t' + nodejs + ': OKAY');
+			} else {
+
+				if (_exec_sync('setcap cap_net_bind_service=+ep ' + nodejs) !== null) {
+					console.log('\t' + nodejs + ': OKAY');
+				} else {
+					console.log('\t' + nodejs + ': FAIL (Could not set capabilities via setcap)');
+					errors++;
+				}
+
+			}
+
+		}
+
+
 		var script_dir     = _path.resolve('/etc/init.d');
 		var script_result  = false;
 
@@ -305,9 +340,9 @@
 			if (buffer !== null) {
 
 				buffer = buffer.replacetemplate('{{lycheejs_root}}',  _root);
-				buffer = buffer.replacetemplate('{{sorbet_user}}',    'lycheejs');
-				buffer = buffer.replacetemplate('{{sorbet_group}}',   'lycheejs');
-				buffer = buffer.replacetemplate('{{sorbet_profile}}', sorbet_profile);
+				buffer = buffer.replacetemplate('{{sorbet_user}}',    _sorbet_user);
+				buffer = buffer.replacetemplate('{{sorbet_group}}',   _sorbet_group);
+				buffer = buffer.replacetemplate('{{sorbet_profile}}', _sorbet_profile);
 
 
 				try {
@@ -336,12 +371,11 @@
 		}
 
 
-
 		var user_result = false;
 
-		if (_exec_sync('getent passwd lycheejs') === null) {
+		if (_exec_sync('getent passwd ' + _sorbet_user) === null) {
 
-			if (_exec_sync('useradd --system lycheejs') !== null) {
+			if (_exec_sync('useradd --system ' + _sorbet_user) !== null) {
 				user_result = true;
 			}
 
@@ -350,9 +384,9 @@
 		}
 
 		if (user_result === true) {
-			console.log('\tlycheejs user: OKAY');
+			console.log('\t' + _sorbet_user + ' user: OKAY');
 		} else {
-			console.log('\tlycheejs user: FAIL');
+			console.log('\t' + _sorbet_user + ' user: FAIL');
 			errors++;
 		}
 

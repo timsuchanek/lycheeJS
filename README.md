@@ -51,75 +51,56 @@ NodeJS from [nodejs.org](http://nodejs.org).
 
 - Install lycheeJS via [zip-file](https://github.com/LazerUnicorns/lycheeJS/archive/master.zip)
 and extract its contents to **~/lycheeJS**.
-Make sure the lycheeJS-master folder contained in the
+
+```bash
+wget https://github.com/LazerUnicorns/lycheeJS/archive/master.zip;
+unzip lycheeJS-master.zip;
+mv lycheeJS-master ~/lycheeJS;
+```
+
+- Make sure the lycheeJS-master folder contained in the
 zip-file is renamed to lycheeJS to follow up with the
 tutorials.
 
-### 2. Configuration
 
-- The port range 0-1024 is reserved for root user by default.
-It is NOT recommended to run nodejs as root user in order to
-prevent exploits or remote shell processes. You need to
-allow nodejs to bind those ports in production to serve
-port 80 successfully without getting the **EACCESS** error.
-
-```bash
-user@box:~$ which nodejs;
-/usr/bin/nodejs
-user@box:~$ sudo setcap cap_net_bind_service=+ep /usr/bin/nodejs;
-user@box:~$ sudo getcap /usr/bin/nodejs;
-/usr/bin/nodejs = cap_net_bind_service+ep
-```
-
-- Navigate to the **~/lycheeJS** folder in Bash and execute
-the configure script to build the lycheeJS core.
-
-```bash
-user@box:~$          cd ~/lycheeJS;
-user@box:~/lycheeJS$ nodejs ./tool/configure.js; # Important: current working directory is lycheeJS root folder
-```
-
-### 3. Start Sorbet
+### 2. Start lycheeJS Webserver (Sorbet)
 
 - After building the core, you are ready to go. Start Sorbet.
 
 ```bash
 user@box:~$          cd ~/lycheeJS;
+user@box:~/lycheeJS$ nodejs ./tool/configure.js;
 user@box:~/lycheeJS$ npm start;
 ```
 
 - Open your Web Browser and navigate to **http://localhost:8080**
-to open the lycheeJS Dashboard. Those games show you how
-to develop real cross-platform games and the best practices
-in JavaScript code. [Link to projects folder](./projects)
+to open the lycheeJS Dashboard. You are now ready to go.
+
+The shipped example projects show you best practices on how
+to develop cross-platform games. [Link to projects folder](./projects)
 
 
-### 4. Install Fertilizers (optional)
+### 3. Install Fertilizers (optional)
 
 By default, lycheeJS ships with the HTML and NodeJS Fertilizers.
 
-Fertilizers are something like cross-compilation build templates.
-Those templates use a serialized lychee.Environment instance and
-cross-compile those to different environments, like Node-WebKit or
-Node-SDL, which each are cross-compiled to other operating systems,
-like Android or Linux.
-
-Long story short: If you want automatically integrated cross-compilation
-builds, you need to run this command to install those from the
+If you want more cross-compilation build targets, you need to run
+this command to install those from the
 [lycheeJS-fertilizers repository](https://github.com/LazerUnicorns/lycheeJS-fertilizers):
 
 ```bash
 # Note that this is optional
-nodejs ./tool/ubuntu/install-fertilizers.js
+user@box:~$          cd ~/lycheeJS;
+user@box:~/lycheeJS$ nodejs ./tool/ubuntu/install-fertilizers.js
 ```
 
 
-### 5. Deploy on a Server (optional)
+### 4. Deployment on a Server (optional)
 
 lycheeJS and Sorbet can also be integrated with your root server.
 
-- If you want to have LSB init integration, you can do so by
-running the install.js script.
+- If you want to have LSB init integration, you can do so by running
+the install.js script.
 
 ```bash
 # Note that this is optional
