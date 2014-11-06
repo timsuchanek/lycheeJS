@@ -12,12 +12,29 @@
 	 * HELPERS
 	 */
 
+	var _execSync = require('child_process').execSync || function(command) {
+
+		require('child_process').exec(command + ' 2>&1 1>.exec-stdout && echo "ready" > .exec-wait');
+
+		while (!_fs.existsSync('.exec-wait')) {
+			// Do Nothing
+		}
+
+		var stdout = _fs.readFileSync('.exec-stdout');
+
+		_fs.unlinkSync('.exec-stdout');
+		_fs.unlinkSync('.exec-wait');
+
+		return stdout;
+
+	};
+
 	var _exec_sync = function(command) {
 
 		var result = null;
 
 		try {
-			result = require('child_process').execSync(command);
+			result = _execSync(command);
 		} catch(e) {
 			result = null;
 		}
