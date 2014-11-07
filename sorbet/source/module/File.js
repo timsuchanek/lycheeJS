@@ -27,8 +27,7 @@ lychee.define('sorbet.module.File').exports(function(lychee, sorbet, global, att
 				to   = to > size ? size : to;
 
 
-// TODO: Figure this shit out
-
+				// TODO: Figure out if this is the correct behaviour, not specified in w3c spec
 				if (to < from) {
 					to = from;
 				}
@@ -80,14 +79,11 @@ lychee.define('sorbet.module.File').exports(function(lychee, sorbet, global, att
 			var expires  = Date.now() + 1000 * 60 * 60 * 24 * 7; // 7 days
 			var resolved = data.resolved;
 			var info     = vhost.fs.info(resolved);
-
-			var range    = _parse_range(data.range, info.length);
 			var tmp1     = resolved.split('/');
 			var tmp2     = tmp1[tmp1.length - 1].split('.');
 			var ext      = tmp2[tmp2.length - 1];
+			var mime     = Class.MIME['default'];
 
-
-			var mime = Class.MIME['default'];
 			if (Class.MIME[ext] !== undefined) {
 
 				mime = Class.MIME[ext];
@@ -112,6 +108,7 @@ lychee.define('sorbet.module.File').exports(function(lychee, sorbet, global, att
 			} else {
 
 				var timestamp = data.timestamp || null;
+
 				if (timestamp !== null) {
 
 					var modified = new Date(timestamp) > new Date(info.time);
@@ -144,6 +141,7 @@ lychee.define('sorbet.module.File').exports(function(lychee, sorbet, global, att
 
 				if (data.version >= 1.1) {
 
+					var range = _parse_range(data.range, info.length);
 					if (range === null) {
 
 						vhost.fs.read(resolved, function(buffer) {
