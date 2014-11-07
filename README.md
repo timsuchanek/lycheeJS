@@ -49,7 +49,7 @@ on either side and peer-to-peer.
 - Download and install the newest stable release of
 NodeJS from [nodejs.org](http://nodejs.org).
 
-- Install lycheeJS via [zip-file](https://github.com/LazerUnicorns/lycheeJS/archive/master.zip)
+- Download lycheeJS via [zip-file](https://github.com/LazerUnicorns/lycheeJS/archive/master.zip)
 and extract its contents to **~/lycheeJS**.
 
 ```bash
