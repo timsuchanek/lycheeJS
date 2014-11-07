@@ -9,9 +9,10 @@ back into master, tagged and published.
 
 ## v0.8.4
 
-- Integration with Services (tool/linux) using systemd and upstart
-- Integration with Services (tool/windows) using regedit
-- Color Game (Timeout and Point Calculation)
+- Game Inspector (that can be loaded via iframe) for Dashboard and website
+- Mode7 Game finalization (lane switch), required assets: racing car, box sprite, explosion sprite
+- Color Game finalization (Timeout and Point Calculation)
+- Blitzkrieg Game finalization (auto-connect 4 players and let them play against each other)
 - lychee.net.remote.Controller and lychee.net.client.Controller
 - lychee.game.Logic
 - lychee.game.Physic
