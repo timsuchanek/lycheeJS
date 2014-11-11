@@ -31,14 +31,16 @@ lychee.define('Input').tags({
 			// This is apparently a hack to have a TTY conform behaviour
 			if (key.ctrl === true && key.name === 'c') {
 
-				process.exit();
+				key.name  = 'escape';
+				key.ctrl  = false;
+				key.alt   = false
+				key.shift = false;
 
-			} else {
+			}
 
-				for (var i = 0, l = _instances.length; i < l; i++) {
-					_process_key.call(_instances[i], key.name, key.ctrl, key.meta, key.shift);
-				}
 
+			for (var i = 0, l = _instances.length; i < l; i++) {
+				_process_key.call(_instances[i], key.name, key.ctrl, key.meta, key.shift);
 			}
 
 		}
