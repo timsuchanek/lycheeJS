@@ -213,14 +213,14 @@
 		console.log('> Integrating Sorbet Profiles');
 
 
-		var dir = _path.resolve('/etc/sorbet/');
+		var folder = _path.resolve('/etc/sorbet/');
 
-		if (_fs.existsSync(dir) === false) {
-			_mkdir_p(dir);
+		if (_fs.existsSync(folder) === false) {
+			_mkdir_p(folder);
 		}
 
 
-		if (_fs.existsSync(dir) === true) {
+		if (_fs.existsSync(folder) === true) {
 
 			Object.keys(profiles).forEach(function(profileid) {
 
@@ -323,10 +323,10 @@
 		}
 
 
-		var script_dir     = _path.resolve('/etc/init.d');
-		var script_result  = false;
+		var script_folder = _path.resolve('/etc/init.d');
+		var script_result = false;
 
-		if (_fs.existsSync(script_dir) === true) {
+		if (_fs.existsSync(script_folder) === true) {
 
 			var buffer = null;
 			try {
@@ -347,9 +347,9 @@
 
 				try {
 
-					_fs.writeFileSync(_path.resolve(script_dir, './sorbet'), buffer, 'utf8');
+					_fs.writeFileSync(_path.resolve(script_folder, './sorbet'), buffer, 'utf8');
 
-					if (_exec_sync('chmod 755 ' + _path.resolve(script_dir, './sorbet')) !== null) {
+					if (_exec_sync('chmod 755 ' + _path.resolve(script_folder, './sorbet')) !== null) {
 						script_result = true;
 					} else {
 						script_result = false;

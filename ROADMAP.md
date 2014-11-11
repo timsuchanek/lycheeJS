@@ -7,34 +7,32 @@ Only if all features are completed, the lycheeJS release is merged
 back into master, tagged and published.
 
 
-## v0.8.4
+## v0.8.5
 
-- Game Inspector (that can be loaded via iframe) for Dashboard and website
+- Port existing tools to standalone tools in /projects/devtools/
+- Debugger Tool (that debugs errors in timelines)
+- Font Tool (generates .fnt files)
+- Sprite Tool (generates sprite entities and png/json files)
+- Inspector Tool (that inspects snapshots of environments)
 - Mode7 Game finalization (lane switch), required assets: racing car, box sprite, explosion sprite
 - Color Game finalization (Timeout and Point Calculation)
+- lychee.Environment needs serializable injection API
+
+## v0.8.6
+
 - Blitzkrieg Game finalization (auto-connect 4 players and let them play against each other)
 - lychee.net.remote.Controller and lychee.net.client.Controller
 - lychee.game.Logic
 - lychee.game.Physic
 - lychee.verlet Stack serialization and finalization
-
-## v0.8.5
-
 - lychee.net.Tunnel integration (event-based abstraction for Client and Remote)
 - lychee.net.Protocol refactor for sending AND receiving
 - html-webgl platform finalization (webgl2d refactor)
 - Automatized Fuzztest suite (based on API docs)
-- Blitzkrieg Game with basic tanks interaction
-
-## v0.8.6
-
-- Simulator for Dashboard
-- Debugger for Dashboard (Remote-Debugging API UI)
-- lychee.Environment needs serializable injection API
-- sorbet.module.Fertilizer needs injection references (and internal cache)
 
 ## v0.8.7
 
+- sorbet.module.Fertilizer needs injection references (and internal cache)
 - Sorbet needs major support for Content-Security-Policy
 - sorbet.module.Blacklist integration with Content-Security-Policy
 

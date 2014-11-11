@@ -1,5 +1,5 @@
 
-# lycheeJS (v0.8.3)
+# lycheeJS (v0.8.4)
 
 [![Code Climate][climate-image]][climate-url]
 [![NPM Version][npm-image]][npm-url]
@@ -90,7 +90,7 @@ this command to install those from the
 
 ```bash
 user@box:~$          cd ~/lycheeJS;
-user@box:~/lycheeJS$ nodejs ./tool/ubuntu/install-fertilizers.js
+user@box:~/lycheeJS$ nodejs ./tool/install-fertilizers.js
 ```
 
 

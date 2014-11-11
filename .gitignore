@@ -10,7 +10,12 @@
 !/projects/pong
 
 /lychee/build/*
+/lychee/docs/*
 /lychee.store
+
+/fertilizers/*
+!/fertilizers/html
+!/fertilizers/nodejs
 
 /sorbet.log
 /sorbet/lychee.store
