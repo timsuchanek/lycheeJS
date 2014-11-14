@@ -1,0 +1,15 @@
+
+section.inspector-State {
+	display: none;
+	position: absolute;
+	top: 64px;
+	right: 0px;
+	bottom: 0px;
+	left: 0px;
+	background: red;
+}
+
+section.inspector-State.active {
+	display: block;
+}
+

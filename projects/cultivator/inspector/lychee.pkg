@@ -1,0 +1,66 @@
+{
+
+	"build": {
+
+		"environments": {
+
+		},
+
+		"files": {
+
+		}
+
+	},
+
+	"source": {
+
+		"environments": {
+
+		},
+
+		"tags": {
+
+			"platform": {
+
+				"html": "platform/html"
+
+			}
+
+		},
+
+		"files": {
+
+			"platform": {
+
+				"html": {
+
+					"ui": {
+						"Menu": [ "js", "css" ],
+						"View": [ "js", "css" ]
+					}
+
+				}
+
+			},
+
+			"state": {
+				"Overview": [ "js" ],
+				"Snapshot": [ "js" ],
+				"Timeline": [ "js" ]
+			},
+
+			"view": {
+				"Definitions": [ "js" ],
+				"Assets":      [ "js" ],
+				"Events":      [ "js" ],
+				"Logs":        [ "js" ]
+			},
+
+			"Main":  [ "js", "css" ],
+			"State": [ "js", "css" ]
+
+		}
+
+	}
+
+}

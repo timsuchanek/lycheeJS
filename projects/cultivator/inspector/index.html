@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+<head>
+	<title>lycheeJS Inspector</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<link rel="stylesheet" href="../lib/layout/index.css">
+	<script src="../lib/layout/index.js"></script>
+
+	<!-- BOOTSTRAP -->
+	<script src="/lychee/build/html/core.js"></script>
+
+</head>
+<body>
+
+	<menu>
+		<li><b onclick="MAIN.changeState('overview')">Overview</b></li>
+		<li><b onclick="MAIN.changeState('snapshot')">Snapshot</b></li>
+		<li><b onclick="MAIN.changeState('timeline')">Timeline</b></li>
+	</menu>
+
+	<main id="inspector-Main">
+
+		<section id="inspector-state-Overview" class="inspector-State active">
+
+			<menu>
+				<li><b onclick="MAIN.state.changeView('files')">Files</b></li>
+			</menu>
+
+			<section id="inspector-view-Files" class="inspector-View">
+				<menu>
+					<li><b onclick="MAIN.state.view.trigger('open')">Open</b></li>
+					<li><b onclick="MAIN.state.view.trigger('save')">Save</b></li>
+				</menu>
+			</section>
+
+		</section>
+
+		<section id="inspector-state-Snapshot" class="inspector-State">
+
+			<menu>
+				<li><b onclick="MAIN.state.changeView('definitions')">Definitions</b></li>
+				<li><b onclick="MAIN.state.changeView('assets')">Assets</b></li>
+			</menu>
+
+			<section id="inspector-view-Definitions" class="inspector-View">
+			</section>
+
+			<section id="inspector-view-Assets" class="inspector-View">
+			</section>
+
+		</section>
+
+		<section id="inspector-state-Timeline" class="inspector-State">
+
+			<menu>
+				<li><b onclick="MAIN.state.changeView('events')">Events</b></li>
+				<li><b onclick="MAIN.state.changeView('logs')">Logs</b></li>
+			</menu>
+
+			<section id="inspector-view-Events" class="inspector-View">
+			</section>
+
+			<section id="inspector-view-Logs" class="inspector-View">
+			</section>
+
+		</section>
+
+	</main>
+
+	<script>
+	(function(lychee, global) {
+	
+		var environment = new lychee.Environment({
+			id:       'inspector',
+			debug:    true,
+			sandbox:  false,
+			build:    'inspector.Main',
+			packages: [
+				new lychee.Package('inspector', './lychee.pkg')
+			],
+			tags:     {
+				platform: [ 'html' ]
+			}
+		});
+
+
+		lychee.setEnvironment(environment);
+
+		lychee.init(function(sandbox) {
+
+			var lychee    = sandbox.lychee;
+			var inspector = sandbox.inspector;
+
+			sandbox.MAIN = new inspector.Main();
+			sandbox.MAIN.init();
+
+		});
+
+	})(lychee, typeof global !== 'undefined' ? global : this);
+	</script>
+
+</body>
+</html>

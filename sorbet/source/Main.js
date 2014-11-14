@@ -549,13 +549,13 @@ lychee.define('sorbet.Main').requires([
 					}
 
 
-				// 1.2b Dashboard Integration and static assets
+				// 1.2b Welcome Page and static assets
 				} else if (vhost.root === this.root) {
 
 					if (url === '/') {
 
 						if (_redirect.process(vhost, response, {
-							url: vhost.root + '/Dashboard/index.html'
+							url: vhost.root + '/projects/cultivator/index.html'
 						})) {
 							return response;
 						}
