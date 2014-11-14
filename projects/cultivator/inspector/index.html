@@ -24,7 +24,7 @@
 
 	<main id="inspector-Main">
 
-		<section id="inspector-state-Overview" class="inspector-State active">
+		<section id="inspector-state-Overview" class="inspector-State">
 
 			<menu>
 				<li><b onclick="MAIN.state.changeView('files')">Files</b></li>
@@ -32,9 +32,10 @@
 
 			<section id="inspector-view-Files" class="inspector-View">
 				<menu>
-					<li><b onclick="MAIN.state.view.trigger('open')">Open</b></li>
-					<li><b onclick="MAIN.state.view.trigger('save')">Save</b></li>
+					<li onclick="MAIN.state.view.trigger('menu', [ 'open' ])">Open</li>
+					<li onclick="MAIN.state.view.trigger('menu', [ 'save' ])">Save</li>
 				</menu>
+				<article></article>
 			</section>
 
 		</section>
@@ -47,9 +48,13 @@
 			</menu>
 
 			<section id="inspector-view-Definitions" class="inspector-View">
+				<menu></menu>
+				<article></article>
 			</section>
 
 			<section id="inspector-view-Assets" class="inspector-View">
+				<menu></menu>
+				<article></article>
 			</section>
 
 		</section>
@@ -62,9 +67,11 @@
 			</menu>
 
 			<section id="inspector-view-Events" class="inspector-View">
+				<!-- TODO -->
 			</section>
 
 			<section id="inspector-view-Logs" class="inspector-View">
+				<!-- TODO -->
 			</section>
 
 		</section>
@@ -88,6 +95,27 @@
 		});
 
 
+		var parameters = {};
+
+		if (document.location.search.indexOf('?') !== -1) {
+
+			var tmp = document.location.search.substr(1).split('&');
+			if (tmp.length > 0) {
+
+				tmp.forEach(function(item) {
+
+					var key = item.split('=')[0];
+					var val = item.split('=')[1];
+
+					parameters[key] = val;
+
+				});
+
+			}
+
+		}
+
+
 		lychee.setEnvironment(environment);
 
 		lychee.init(function(sandbox) {
@@ -95,7 +123,7 @@
 			var lychee    = sandbox.lychee;
 			var inspector = sandbox.inspector;
 
-			sandbox.MAIN = new inspector.Main();
+			sandbox.MAIN = new inspector.Main(parameters);
 			sandbox.MAIN.init();
 
 		});

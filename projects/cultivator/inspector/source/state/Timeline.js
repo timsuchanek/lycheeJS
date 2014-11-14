@@ -3,12 +3,9 @@ lychee.define('inspector.state.Timeline').includes([
 	'inspector.State'
 ]).exports(function(lychee, inspector, global, attachments) {
 
-	var Class = function(data) {
+	var Class = function(main) {
 
-		var settings = lychee.extend({}, data);
-
-
-		inspector.State.call(this, 'Timeline', settings);
+		inspector.State.call(this, 'Timeline', main);
 
 	};
 

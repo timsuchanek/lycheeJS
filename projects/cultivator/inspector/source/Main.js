@@ -7,9 +7,13 @@ lychee.define('inspector.Main').requires([
 	'lychee.game.Main'
 ]).exports(function(lychee, inspector, global, attachments) {
 
-	var Class = function(data) {
+	var Class = function(parameters) {
 
-		var settings = lychee.extend({
+
+		this.environment = null;
+
+
+		lychee.game.Main.call(this, {
 
 			client:   null,
 			server:   null,
@@ -32,10 +36,7 @@ lychee.define('inspector.Main').requires([
 				fullscreen: false
 			}
 
-		}, data);
-
-
-		lychee.game.Main.call(this, settings);
+		});
 
 
 		this.bind('load', function() {
@@ -47,14 +48,41 @@ lychee.define('inspector.Main').requires([
 			this.setState('overview', new inspector.state.Overview(this));
 			this.setState('snapshot', new inspector.state.Snapshot(this));
 			this.setState('timeline', new inspector.state.Timeline(this));
-			this.changeState('overview');
 
 		}, this, true);
+
+
+
+		/*
+		 * INITIALIZATION
+		 */
+
+		var url = parameters.url;
+		if (typeof url === 'string') {
+
+
+			var that        = this;
+			var environment = new Config(url);
+
+			environment.onload = function() {
+				that.setEnvironment(this.buffer);
+			};
+
+			environment.load();
+
+		}
 
 	};
 
 
 	Class.prototype = {
+
+		setEnvironment: function(environment) {
+
+console.log(environment);
+
+		}
+
 	};
 
 

@@ -22,26 +22,11 @@
 
 			"platform": {
 
-				"html": "platform/html"
-
 			}
 
 		},
 
 		"files": {
-
-			"platform": {
-
-				"html": {
-
-					"ui": {
-						"Menu": [ "js", "css" ],
-						"View": [ "js", "css" ]
-					}
-
-				}
-
-			},
 
 			"state": {
 				"Overview": [ "js" ],
@@ -57,7 +42,8 @@
 			},
 
 			"Main":  [ "js", "css" ],
-			"State": [ "js", "css" ]
+			"State": [ "js", "css" ],
+			"View":  [ "js", "css" ]
 
 		}
 

@@ -1,0 +1,67 @@
+
+section.inspector-View {
+	display: none;
+	position: absolute;
+	top: 64px;
+	right: 0px;
+	bottom: 0px;
+	left: 0px;
+}
+
+section.inspector-View.active {
+	display: block;
+}
+
+section.inspector-View > menu {
+	display: block;
+	position: absolute;
+	top: 0px;
+	right: auto;
+	bottom: 0px;
+	left: 0px;
+	width: 128px;
+	margin: 0;
+	padding: 0;
+	background: #333333;
+	border: 2px solid #000000;
+	border-left: 0px solid transparent;
+	overflow: auto;
+}
+
+section.inspector-View > menu li {
+	display: block;
+	height: 48px;
+	line-height: 48px;
+	margin: 8px 0px;
+	padding: 4px 16px;
+	list-style: none;
+	background: #333333;
+	cursor: pointer;
+	-ms-transition: all 200ms ease-out;
+	-moz-transition: all 200ms ease-out;
+	-webkit-transition: all 200ms ease-out;
+	transition: all 200ms ease-out;
+}
+
+section.inspector-View > menu li:hover {
+	background: #666666;
+	text-shadow: 0 0 8px #ffffff, 0 0 16px #ffffff;
+}
+
+section.inspector-View > article {
+	display: block;
+	position: absolute;
+	width: auto;
+	max-width: none;
+	min-width: initial;
+	margin: 0;
+	padding: 0;
+	top: 0px;
+	right: 0px;
+	bottom: 0px;
+	left: 128px;
+	border: 0px solid transparent;
+	border-radius: 0;
+	background: #000000;
+}
+

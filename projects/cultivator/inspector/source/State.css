@@ -1,15 +1,69 @@
 
 section.inspector-State {
-	display: none;
+	display: block;
 	position: absolute;
-	top: 64px;
+	top: 0px;
 	right: 0px;
 	bottom: 0px;
 	left: 0px;
-	background: red;
+	-ms-transform: -ms-translate(100%, 0%);
+	-moz-transform: translate(100%, 0%);
+	-webkit-transform: translate(100%, 0%);
+	transform: translate(100%, 0%);
+	-ms-transition: all 200ms ease-out;
+	-moz-transition: all 200ms ease-out;
+	-webkit-transition: all 200ms ease-out;
+	transition: all 200ms ease-out;
 }
 
 section.inspector-State.active {
+	-ms-transform: -ms-translate(0%, 0%);
+	-moz-transform: translate(0%, 0%);
+	-webkit-transform: translate(0%, 0%);
+	transform: translate(0%, 0%);
+}
+
+.inspector-State > menu {
 	display: block;
+	margin: 0;
+	padding: 0;
+	background: #666;
+}
+
+.inspector-State > menu li {
+	display: inline-block;
+	margin: 4px 8px;
+	padding: 0px 0px;
+	text-align: center;
+	vertical-align: middle;
+	list-style: none;
+}
+
+.inspector-State > menu li b {
+	display: inline-block;
+	margin: 0px 0px;
+	padding: 0px 8px;
+	cursor: pointer;
+	height: 24px;
+	line-height: 24px;
+	color: #ffffff;
+	font-family: 'exobold';
+	text-decoration: none;
+	background: transparent;
+	border: 16px solid transparent;
+	cursor: pointer;
+	-ms-transition: all 200ms ease-out;
+	-moz-transition: all 200ms ease-out;
+	-webkit-transition: all 200ms ease-out;
+	transition: all 200ms ease-out;
+}
+
+.inspector-State > menu li b:hover,
+.inspector-State > menu li b:focus {
+	background: rgba(165, 228, 251, 0.2);
+	border: 16px solid transparent;
+	border-radius: 24px;
+	border-image: url('../../lib/layout/border.png') 16 16 repeat;
+	text-shadow: 0 0 8px #ffffff, 0 0 16px #ffffff;
 }
 
