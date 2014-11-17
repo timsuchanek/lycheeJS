@@ -29,21 +29,14 @@
 		"files": {
 
 			"state": {
-				"Overview": [ "js" ],
-				"Snapshot": [ "js" ],
-				"Timeline": [ "js" ]
-			},
-
-			"view": {
-				"Definitions": [ "js" ],
-				"Assets":      [ "js" ],
-				"Events":      [ "js" ],
-				"Logs":        [ "js" ]
+				"Definition": [ "js" ],
+				"Asset":      [ "js" ],
+				"Event":      [ "js" ],
+				"Log":        [ "js" ]
 			},
 
 			"Main":  [ "js", "css" ],
-			"State": [ "js", "css" ],
-			"View":  [ "js", "css" ]
+			"State": [ "js", "css" ]
 
 		}
 

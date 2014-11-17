@@ -102,15 +102,14 @@ body > menu {
 
 body > menu li {
 	display: inline-block;
-	margin: 4px 8px;
+	margin: 4px 0px;
 	padding: 0px 0px;
 	text-align: center;
 	vertical-align: middle;
 	list-style: none;
 }
 
-body > menu li a,
-body > menu li b {
+body > menu li a {
 	display: inline-block;
 	margin: 0px 0px;
 	padding: 0px 8px;
@@ -120,7 +119,7 @@ body > menu li b {
 	font-family: 'exobold';
 	text-decoration: none;
 	background: transparent;
-	border: 16px solid transparent;
+	border: 13px solid transparent;
 	cursor: pointer;
 	-ms-transition: all 200ms ease-out;
 	-moz-transition: all 200ms ease-out;
@@ -130,14 +129,14 @@ body > menu li b {
 
 body > menu li a:hover,
 body > menu li a:focus,
-body > menu li b:hover,
-body > menu li b:focus {
+body > menu li a.active {
 	background: rgba(165, 228, 251, 0.2);
-	border: 16px solid transparent;
-	border-radius: 24px;
-	border-image: url('./border.png') 16 16 repeat;
+	border-radius: 20px;
+	border-image: url('./border-glass.png') 13 13 repeat;
 	text-shadow: 0 0 8px #ffffff, 0 0 16px #ffffff;
 }
+
+
 
 /*
  * CONTENT
@@ -193,8 +192,9 @@ article a {
 	padding: 2px 4px;
 	color: #8f202f;
 	background: transparent;
-	border: 2px solid #222222;
+	border: 2px solid transparent;
 	text-decoration: none;
+	cursor: pointer;
 }
 
 article a:hover,
@@ -319,9 +319,9 @@ footer {
 	text-align: center;
 	text-decoration: none;
 	background: rgba(165, 228, 251, 0.2);
-	border: 16px solid transparent;
-	border-radius: 24px;
-	border-image: url('./border.png') 16 16 repeat;
+	border: 13px solid transparent;
+	border-radius: 20px;
+	border-image: url('./border-glass.png') 13 13 repeat;
 	cursor: pointer;
 	outline: none;
 	vertical-align: top;
@@ -398,9 +398,9 @@ article a.ui-Button {
 	font-size: 18px;
 	font-weight: bold;
 	background: rgba(165, 228, 251, 0.2);
-	border: 16px solid transparent;
-	border-radius: 24px;
-	border-image: url('./border.png') 16 16 repeat;
+	border: 13px solid transparent;
+	border-radius: 20px;
+	border-image: url('./border-glass.png') 13 13 repeat;
 	-ms-transition: all 200ms ease-out;
 	-moz-transition: all 200ms ease-out;
 	-webkit-transition: all 200ms ease-out;
@@ -473,33 +473,6 @@ input.ui-Slider::slider-thumb {
 	background: rgba(165, 228, 251, 0.5);
 	z-index: 1;
 	appearance: none;
-}
-
-
-
-/*
- * UI DIALOGS
- */
-
-.ui-Dialog {
-	display: block;
-	position: relative;
-	margin: auto auto auto auto;
-	padding: 0px 0px;
-	width: 640px;
-	height: 320px;
-	background: rgba(165, 228, 251, 0.2);
-	border: 16px solid transparent;
-	border-radius: 24px;
-	border-image: url('./border.png') 16 16 repeat;
-}
-
-.ui-Dialog p {
-	font-family: 'exolight';
-}
-
-.ui-Dialog p.center {
-	text-align: center;
 }
 
 

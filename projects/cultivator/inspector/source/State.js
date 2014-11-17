@@ -1,19 +1,30 @@
 
-lychee.define('inspector.State').requires([
-	'inspector.View'
-]).includes([
+lychee.define('inspector.State').includes([
+	'lychee.event.Emitter',
 	'lychee.game.State'
 ]).exports(function(lychee, inspector, global, attachments) {
 
 	var Class = function(id, main) {
 
-		this.view    = null;
-		this.__views = {};
+		this.articles = {};
+		this.menu     = [];
 
-		this.__element = document.querySelector('#inspector-state-' + id);
+		this.__element = null;
+		this.__menu    = null;
+		this.__article = null;
+
+
+		if (typeof id === 'string') {
+
+			this.__element = document.querySelector('#inspector-state-' + id);
+			this.__menu    = document.querySelector('#inspector-state-' + id + ' > menu');
+			this.__article = document.querySelector('#inspector-state-' + id + ' > article');
+
+		}
 
 
 		lychee.game.State.call(this, main);
+		lychee.event.Emitter.call(this);
 
 	};
 
@@ -21,9 +32,6 @@ lychee.define('inspector.State').requires([
 	Class.prototype = {
 
 		enter: function() {
-
-			lychee.game.State.prototype.leave.call(this);
-
 
 			var element = this.__element;
 			if (element !== null) {
@@ -33,9 +41,6 @@ lychee.define('inspector.State').requires([
 		},
 
 		leave: function() {
-
-			lychee.game.State.prototype.leave.call(this);
-
 
 			var element = this.__element;
 			if (element !== null) {
@@ -50,54 +55,17 @@ lychee.define('inspector.State').requires([
 		 * CUSTOM API
 		 */
 
-		setView: function(id, view) {
+		setArticles: function(map) {
 
-			id = typeof id === 'string' ? id : null;
+			map = map instanceof Object ? map : null;
 
 
-			if (lychee.interfaceof(inspector.View, view)) {
+			if (map !== null) {
 
-				if (id !== null) {
-
-					this.__views[id] = view;
-
-					return true;
-
+				for (var id in map) {
+					this.articles[id] = map[id];
 				}
 
-			}
-
-
-			return false;
-
-		},
-
-		getView: function(id) {
-
-			id = typeof id === 'string' ? id : null;
-
-
-			if (id !== null && this.__views[id] !== undefined) {
-				return this.__views[id];
-			}
-
-
-			return null;
-
-		},
-
-		removeView: function(id) {
-
-			id = typeof id === 'string' ? id : null;
-
-
-			if (id !== null && this.__views[id] !== undefined) {
-
-				delete this.__views[id];
-
-				if (this.view === this.__views[id]) {
-					this.changeView(null);
-				}
 
 				return true;
 
@@ -108,38 +76,57 @@ lychee.define('inspector.State').requires([
 
 		},
 
-		changeView: function(id) {
+		setMenu: function(menu, labels) {
 
-			id = typeof id === 'string' ? id : null;
+			menu   = menu instanceof Array   ? menu   : null;
+			labels = labels instanceof Array ? labels : menu;
 
 
-			var oldview = this.view;
-			var newview = this.__views[id] || null;
+			if (menu !== null) {
 
-			if (newview !== null) {
+				var content = '';
 
-				if (oldview !== null) {
-					oldview.leave();
+				menu.forEach(function(item, index) {
+					content += '<li onclick="MAIN.state.view(\'' + item + '\')">' + labels[index] + '</li>';
+				});
+
+
+				var element = this.__menu;
+				if (element !== null) {
+					element.innerHTML = content;
 				}
 
-				if (newview !== null) {
-					newview.enter();
-				}
 
-				this.view = newview;
+				this.menu = menu;
 
-			} else {
 
-				if (oldview !== null) {
-					oldview.leave();
-				}
-
-				this.view = null;
+				return true;
 
 			}
 
 
-			return true;
+			return false;
+
+		},
+
+		view: function(id) {
+
+			id = typeof id === 'string' ? id : null;
+
+
+			if (id !== null) {
+
+				var article = this.articles[id] || null;
+				if (article !== null) {
+
+					var element = this.__article;
+					if (element !== null) {
+						element.innerHTML = article;
+					}
+
+				}
+
+			}
 
 		}
 

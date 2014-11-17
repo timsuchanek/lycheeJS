@@ -17,63 +17,27 @@
 <body>
 
 	<menu>
-		<li><b onclick="MAIN.changeState('overview')">Overview</b></li>
-		<li><b onclick="MAIN.changeState('snapshot')">Snapshot</b></li>
-		<li><b onclick="MAIN.changeState('timeline')">Timeline</b></li>
+		<li><a onclick="MAIN.changeState('asset')">Assets</a></li>
+		<li><a onclick="MAIN.changeState('definition')">Definitions</a></li>
+		<li><a onclick="MAIN.changeState('event')">Events</a></li>
+		<li><a onclick="MAIN.changeState('log')">Logs</a></li>
 	</menu>
 
 	<main id="inspector-Main">
 
-		<section id="inspector-state-Overview" class="inspector-State">
-
-			<menu>
-				<li><b onclick="MAIN.state.changeView('files')">Files</b></li>
-			</menu>
-
-			<section id="inspector-view-Files" class="inspector-View">
-				<menu>
-					<li onclick="MAIN.state.view.trigger('menu', [ 'open' ])">Open</li>
-					<li onclick="MAIN.state.view.trigger('menu', [ 'save' ])">Save</li>
-				</menu>
-				<article></article>
-			</section>
-
+		<section id="inspector-state-Asset" class="inspector-State">
+			<menu></menu>
+			<article></article>
 		</section>
 
-		<section id="inspector-state-Snapshot" class="inspector-State">
-
-			<menu>
-				<li><b onclick="MAIN.state.changeView('definitions')">Definitions</b></li>
-				<li><b onclick="MAIN.state.changeView('assets')">Assets</b></li>
-			</menu>
-
-			<section id="inspector-view-Definitions" class="inspector-View">
-				<menu></menu>
-				<article></article>
-			</section>
-
-			<section id="inspector-view-Assets" class="inspector-View">
-				<menu></menu>
-				<article></article>
-			</section>
-
+		<section id="inspector-state-Definition" class="inspector-State">
+			<menu></menu>
+			<article></article>
 		</section>
 
-		<section id="inspector-state-Timeline" class="inspector-State">
-
-			<menu>
-				<li><b onclick="MAIN.state.changeView('events')">Events</b></li>
-				<li><b onclick="MAIN.state.changeView('logs')">Logs</b></li>
-			</menu>
-
-			<section id="inspector-view-Events" class="inspector-View">
-				<!-- TODO -->
-			</section>
-
-			<section id="inspector-view-Logs" class="inspector-View">
-				<!-- TODO -->
-			</section>
-
+		<section id="inspector-state-Event" class="inspector-State">
+			<menu></menu>
+			<article></article>
 		</section>
 
 	</main>
