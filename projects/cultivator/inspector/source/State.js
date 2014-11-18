@@ -82,25 +82,30 @@ lychee.define('inspector.State').includes([
 			labels = labels instanceof Array ? labels : menu;
 
 
-			if (menu !== null) {
+			var element = this.__menu;
+			if (element !== null) {
 
-				var content = '';
+				if (menu !== null && menu.length > 0) {
 
-				menu.forEach(function(item, index) {
-					content += '<li onclick="MAIN.state.view(\'' + item + '\')">' + labels[index] + '</li>';
-				});
+					var content = '';
+
+					menu.forEach(function(item, index) {
+						content += '<li onclick="MAIN.state.view(\'' + item + '\')">' + labels[index] + '</li>';
+					});
 
 
-				var element = this.__menu;
-				if (element !== null) {
+					element.className = '';
 					element.innerHTML = content;
+					this.menu         = menu;
+
+
+					return true;
+
+				} else {
+
+					element.className = 'hidden';
+
 				}
-
-
-				this.menu = menu;
-
-
-				return true;
 
 			}
 
@@ -114,15 +119,22 @@ lychee.define('inspector.State').includes([
 			id = typeof id === 'string' ? id : null;
 
 
-			if (id !== null) {
+			var element = this.__article;
+			if (element !== null) {
 
-				var article = this.articles[id] || null;
-				if (article !== null) {
+				if (id !== null) {
 
-					var element = this.__article;
-					if (element !== null) {
+					var article = this.articles[id] || null;
+					if (article !== null) {
+						element.className = '';
 						element.innerHTML = article;
+					} else {
+						element.className = 'hidden';
 					}
+
+				} else {
+
+					element.className = 'hidden';
 
 				}
 

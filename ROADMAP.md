@@ -7,13 +7,14 @@ Only if all features are completed, the lycheeJS release is merged
 back into master, tagged and published.
 
 
-## v0.8.5
+## v0.8.4
 
-- Port existing tools to standalone tools in /projects/devtools/
-- Debugger Tool (that debugs errors in timelines)
-- Font Tool (generates .fnt files)
-- Sprite Tool (generates sprite entities and png/json files)
+- Entity Tool (generates Entities and png/json/fnt files)
 - Inspector Tool (that inspects snapshots of environments)
+
+
+## v0.8.5
+- Debugger Tool (that debugs errors in timelines)
 - Mode7 Game finalization (lane switch), required assets: racing car, box sprite, explosion sprite
 - Color Game finalization (Timeout and Point Calculation)
 - lychee.Environment needs serializable injection API

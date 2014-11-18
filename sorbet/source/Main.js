@@ -30,23 +30,6 @@ lychee.define('sorbet.Main').requires([
 
 
 	/*
-	 * OS INTEGRATION
-	 */
-
-	(function(input, proc) {
-
-		input.bind('escape', function() {
-			this.exit(1);
-		}, proc);
-
-	})(new lychee.Input({
-		key:         true,
-		keymodifier: true
-	}), process);
-
-
-
-	/*
 	 * HELPERS
 	 */
 

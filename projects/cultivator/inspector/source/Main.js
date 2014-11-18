@@ -1,5 +1,6 @@
 
 lychee.define('inspector.Main').requires([
+	'inspector.state.Overview',
 	'inspector.state.Asset',
 	'inspector.state.Definition'
 ]).includes([
@@ -145,6 +146,7 @@ lychee.define('inspector.Main').requires([
 
 			this.setState('asset',      new inspector.state.Asset(this));
 			this.setState('definition', new inspector.state.Definition(this));
+			this.setState('overview',   new inspector.state.Overview(this));
 
 
 			var url = parameters.url;
@@ -153,16 +155,24 @@ lychee.define('inspector.Main').requires([
 				var that        = this;
 				var environment = new Config(url);
 
-				environment.onload = function() {
-					that.setEnvironment(this.buffer);
+				environment.onload = function(result) {
+
+					if (result === true) {
+						that.setEnvironment(this.buffer);
+						that.changeState('overview');
+					} else {
+						that.getState('overview').deserialize(null);
+						that.changeState('overview');
+					}
+
 				};
 
 				environment.load();
 
+			} else {
+				this.getState('overview').deserialize(null);
+				this.changeState('overview');
 			}
-
-
-			this.changeState('asset');
 
 		}, this, true);
 

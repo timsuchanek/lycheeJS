@@ -218,28 +218,26 @@ var _profile  = null;
 
 			main.listen(profile.port);
 
-			process.on('exit', function() {
 
-				if (lychee.debug === true) {
-					console.log('sorbet.Main: Killed Server');
-				}
+			process.on('SIGHUP',  function() { main.destroy(); this.exit(0); });
+			process.on('SIGINT',  function() { main.destroy(); this.exit(0); });
+			process.on('SIGQUIT', function() { main.destroy(); this.exit(0); });
+			process.on('SIGABRT', function() { main.destroy(); this.exit(0); });
+			process.on('SIGTERM', function() { main.destroy(); this.exit(0); });
+			process.on('error',   function() { main.destroy(); this.exit(0); });
 
-				main.destroy();
 
-			});
+			new lychee.Input({
+				key:         true,
+				keymodifier: true
+			}).bind('escape', function() {
 
-			process.on('SIGHUP',  function() { this.exit(0); });
-			process.on('SIGINT',  function() { this.exit(0); });
-			process.on('SIGQUIT', function() { this.exit(0); });
-			process.on('SIGABRT', function() { this.exit(0); });
-			process.on('SIGTERM', function() { this.exit(0); });
-
-			process.on('error', function() {
+				console.log('sorbet.Main: [ESC] pressed, exiting Sorbet ...');
 
 				main.destroy();
-				this.exit(0);
+				process.exit(0);
 
-			});
+			}, this);
 
 		});
 

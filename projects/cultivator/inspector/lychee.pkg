@@ -32,7 +32,8 @@
 				"Definition": [ "js" ],
 				"Asset":      [ "js" ],
 				"Event":      [ "js" ],
-				"Log":        [ "js" ]
+				"Log":        [ "js" ],
+				"Overview":   [ "js" ]
 			},
 
 			"Main":  [ "js", "css" ],
