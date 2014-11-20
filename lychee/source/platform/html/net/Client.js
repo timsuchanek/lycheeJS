@@ -66,6 +66,28 @@ lychee.define('lychee.net.Client').tags({
 
 	Class.prototype = {
 
+		/*
+		 * ENTITY API
+		 */
+
+		// deserialize: function(blob) {},
+
+		serialize: function() {
+
+			var data = lychee.net.Tunnel.prototype.serialize.call(this);
+			data['constructor'] = 'lychee.net.Client';
+
+
+			return data;
+
+		},
+
+
+
+		/*
+		 * CUSTOM API
+		 */
+
 		connect: function() {
 
 			if (this.__isConnected === false) {
@@ -85,7 +107,7 @@ lychee.define('lychee.net.Client').tags({
 
 				this.__socket.onclose = function(event) {
 					that.__socket = null;
-					that.trigger('disconnect', [ event.code, Class.STATUS[event.code] || null]);
+					that.trigger('disconnect', [ event.code || null ]);
 				};
 
 

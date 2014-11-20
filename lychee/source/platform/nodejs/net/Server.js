@@ -21,8 +21,8 @@ lychee.define('lychee.net.Server').tags({
 	var http    = require('http');
 	var crypto  = require('crypto');
 
+	var _BitON  = lychee.data.BitON;
 	var _JSON   = lychee.data.JSON;
-	var _Remote = lychee.net.Remote;
 
 
 
@@ -107,13 +107,27 @@ lychee.define('lychee.net.Server').tags({
 					socket.removeAllListeners('timeout');
 
 
-					var remote = new _Remote(
-						socket,
-						this.__encoder,
-						this.__decoder
-					);
+// TODO: This
+//
+// Remotes need to be connected, but NOT via server.connect();
+//
+// Remote.trigger('connect') triggered by remote itself?
+//
+// remote.bind('#connect', function() {
+//  this.__stack.push(remote)
+// }, server);
+//
+// ???
+//
+TODO;
 
-					this.connect(remote);
+
+
+					this.connect(new lychee.net.Remote(socket, {
+						host:  this.host,
+						port:  this.port,
+						codec: this.__codec
+					}));
 
 
 					return true;
@@ -142,9 +156,8 @@ lychee.define('lychee.net.Server').tags({
 
 		this.remotes = [];
 
-		this.__encoder = settings.encoder instanceof Function ? settings.encoder : _JSON.encode;
-		this.__decoder = settings.decoder instanceof Function ? settings.decoder : _JSON.decode;
-		this.__socket  = null;
+		this.__codec  = lychee.interfaceof(settings.codec, _JSON) ? settings.codec : _JSON;
+		this.__socket = null;
 
 
 		lychee.event.Emitter.call(this);
