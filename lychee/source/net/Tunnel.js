@@ -4,9 +4,11 @@ lychee.define('lychee.net.Tunnel').requires([
 	'lychee.data.JSON'
 ]).includes([
 	'lychee.event.Emitter'
-]).exports(function(lychee, global) {
+]).exports(function(lychee, global, attachments) {
 
-	var _JSON = lychee.data.JSON;
+	var _BitON = lychee.data.BitON;
+	var _JSON  = lychee.data.JSON;
+
 
 
 	/*
@@ -107,7 +109,10 @@ lychee.define('lychee.net.Tunnel').requires([
 		var settings = lychee.extend({}, data);
 
 
+		this.port        = 1337;
+		this.host        = 'localhost';
 		this.binary      = false;
+		this.reconnect   = 0;
 
 
 		this.__codec     = lychee.interfaceof(_JSON, settings.codec) ? settings.codec : _JSON;
@@ -117,9 +122,43 @@ lychee.define('lychee.net.Tunnel').requires([
 		};
 
 
+		this.setHost(settings.host);
+		this.setPort(settings.port);
+		this.setBinary(settings.binary);
+		this.setReconnect(settings.reconnect);
+
+
 		lychee.event.Emitter.call(this);
 
 		settings = null;
+
+
+
+		/*
+		 * INITIALIZATION
+		 */
+
+		this.bind('disconnect', function() {
+
+			for (var a = 0, al = this.__services.active.length; a < al; a++) {
+				this.__services.active[a].trigger('unplug', []);
+			}
+
+			this.__services.active  = [];
+			this.__services.waiting = [];
+
+
+			if (this.reconnect > 0) {
+
+				var that = this;
+
+				setTimeout(function() {
+					that.trigger('connect', []);
+				}, this.reconnect);
+
+			}
+
+		}, this);
 
 	};
 
@@ -155,7 +194,8 @@ lychee.define('lychee.net.Tunnel').requires([
 			var settings = {};
 
 
-			if (this.binary !== false) settings.binary = true;
+			if (this.binary !== false) settings.binary    = this.binary;
+			if (this.reconnect !== 0)  settings.reconnect = this.reconnect;
 
 
 			// TODO: Serialize services to data['blob']
@@ -290,6 +330,60 @@ lychee.define('lychee.net.Tunnel').requires([
 			if (binary === true || binary === false) {
 
 				this.binary = binary;
+
+				return true;
+
+			}
+
+
+			return false;
+
+		},
+
+		setHost: function(host) {
+
+			host = typeof host === 'string' ? host : null;
+
+
+			if (host !== null) {
+
+				this.host = host;
+
+				return true;
+
+			}
+
+
+			return false;
+
+		},
+
+		setPort: function(port) {
+
+			port = typeof port === 'number' ? (port | 0) : null;
+
+
+			if (port !== null) {
+
+				this.port = port;
+
+				return true;
+
+			}
+
+
+			return false;
+
+		},
+
+		setReconnect: function(reconnect) {
+
+			reconnect = typeof reconnect === 'number' ? (reconnect | 0) : null;
+
+
+			if (reconnect !== null) {
+
+				this.reconnect = reconnect;
 
 				return true;
 
