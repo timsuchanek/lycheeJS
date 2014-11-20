@@ -207,8 +207,11 @@ lychee.define('lychee.game.Main').requires([
 
 		serialize: function() {
 
+			var data = lychee.event.Emitter.prototype.serialize.call(this);
+			data['constructor'] = 'lychee.game.Main';
+
 			var settings = lychee.extendunlink({}, this.settings);
-			var blob     = {};
+			var blob     = data['blob'] || {};
 
 
 			if (this.input !== null)    blob.input    = lychee.serialize(this.input);
@@ -226,11 +229,11 @@ lychee.define('lychee.game.Main').requires([
 			}
 
 
-			return {
-				'constructor': 'lychee.game.Main',
-				'arguments':   [ settings ],
-				'blob':        Object.keys(blob).length > 0 ? blob : null
-			};
+			data['arguments'][0] = settings;
+			data['blob']         = Object.keys(blob).length > 0 ? blob : null;
+
+
+			return data;
 
 		},
 

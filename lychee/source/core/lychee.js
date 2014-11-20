@@ -304,18 +304,37 @@ lychee = typeof lychee !== 'undefined' ? lychee : (function(global) {
 			definition = definition !== undefined ? definition : null;
 
 
+			var data = null;
+
 			if (definition !== null) {
 
-				if (typeof definition.serialize === 'function') {
-					return definition.serialize();
-				} else {
-					return JSON.parse(JSON.stringify(definition));
+				if (typeof definition === 'object') {
+
+					if (typeof definition.serialize === 'function') {
+
+						data = definition.serialize();
+
+					} else {
+
+						var data = null;
+						try {
+							data = JSON.parse(JSON.stringify(definition));
+						} catch(e) {
+							data = null;
+						}
+
+					}
+
+				} else if (typeof definition === 'function') {
+
+					data = definition.toString();
+
 				}
 
 			}
 
 
-			return null;
+			return data;
 
 		},
 

@@ -309,15 +309,6 @@ lychee.define('Input').tags({
 			handled = this.trigger('key', [ key, name, delta ]) || handled;
 			handled = this.trigger(name,  [ delta ])            || handled;
 
-
-			if (handled === true) {
-
-				if (lychee.debug === true) {
-					this.__history.key.push([ Date.now(), key, name, delta ]);
-				}
-
-			}
-
 		}
 
 
@@ -355,15 +346,6 @@ lychee.define('Input').tags({
 		var handled = false;
 
 		handled = this.trigger('touch', [ id, { x: x, y: y }, delta ]) || handled;
-
-
-		if (handled === true) {
-
-			if (lychee.debug === true) {
-				this.__history.touch.push([ Date.now(), id, { x: x, y: y }, delta ]);
-			}
-
-		}
 
 
 		this.__clock.touch = Date.now();
@@ -441,15 +423,6 @@ lychee.define('Input').tags({
 		}
 
 
-		if (handled === true) {
-
-			if (lychee.debug === true) {
-				this.__history.swipe.push([ Date.now(), id, state, { x: position.x, y: position.y }, delta, { x: swipe.x, y: swipe.y }]);
-			}
-
-		}
-
-
 		this.__clock.swipe = Date.now();
 
 
@@ -478,11 +451,6 @@ lychee.define('Input').tags({
 			key:   Date.now(),
 			touch: Date.now(),
 			swipe: Date.now()
-		};
-		this.__history = {
-			key:   [],
-			touch: [],
-			swipe: []
 		};
 		this.__swipes  = {
 			0: null, 1: null,
@@ -659,8 +627,10 @@ lychee.define('Input').tags({
 
 		serialize: function() {
 
+			var data = lychee.event.Emitter.prototype.serialize.call(this);
+			data['constructor'] = 'lychee.Input';
+
 			var settings = {};
-			var blob     = {};
 
 
 			if (this.delay !== 0)           settings.delay       = this.delay;
@@ -670,48 +640,10 @@ lychee.define('Input').tags({
 			if (this.swipe !== false)       settings.swipe       = this.swipe;
 
 
-			if (this.__history.key.length > 0 || this.__history.touch.length > 0 || this.__history.swipe.length > 0) {
-
-				blob.history = {};
-
-				if (this.__history.key.length > 0) {
-
-					blob.history.key = [];
-
-					for (var k = 0, kl = this.__history.key.length; k < kl; k++) {
-						blob.history.key.push(this.__history.key[k]);
-					}
-
-				}
-
-				if (this.__history.touch.length > 0) {
-
-					blob.history.touch = [];
-
-					for (var t = 0, tl = this.__history.touch.length; t < tl; t++) {
-						blob.history.touch.push(this.__history.touch[t]);
-					}
-
-				}
-
-				if (this.__history.swipe.length > 0) {
-
-					blob.history.swipe = [];
-
-					for (var s = 0, sl = this.__history.swipe.length; s < sl; s++) {
-						blob.history.swipe.push(this.__history.swipe[s]);
-					}
-
-				}
-
-			}
+			data['arguments'][0] = settings;
 
 
-			return {
-				'constructor': 'lychee.Input',
-				'arguments':   [ settings ],
-				'blob':        Object.keys(blob).length > 0 ? blob : null
-			};
+			return data;
 
 		},
 

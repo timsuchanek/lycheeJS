@@ -141,6 +141,39 @@ lychee.define('lychee.net.Tunnel').requires([
 
 	Class.prototype = {
 
+		/*
+		 * ENTITY API
+		 */
+
+		// deserialize: function(blob) {},
+
+		serialize: function() {
+
+			var data = lychee.event.Emitter.prototype.serialize.call(this);
+			data['constructor'] = 'lychee.net.Tunnel';
+
+			var settings = {};
+
+
+			if (this.binary !== false) settings.binary = true;
+
+
+			// TODO: Serialize services to data['blob']
+
+
+			data['arguments'][0] = settings;
+
+
+			return data;
+
+		},
+
+
+
+		/*
+		 * CUSTOM API
+		 */
+
 		send: function(data, service) {
 
 			data    = data instanceof Object    ? data    : null;
