@@ -3,8 +3,7 @@ lychee.define('lychee.net.Client').tags({
 	platform: 'nodejs'
 }).requires([
 	'lychee.data.BitON',
-	'lychee.data.JSON',
-	'lychee.net.Service'
+	'lychee.data.JSON'
 ]).includes([
 	'lychee.net.Tunnel'
 ]).supports(function(lychee, global) {
@@ -90,7 +89,7 @@ lychee.define('lychee.net.Client').tags({
 
 
 				if (lychee.debug === true) {
-					console.log('lychee.net.Client: Listening on ' + this.host + ':' + this.port);
+					console.log('lychee.net.Client: Connected to ' + this.host + ':' + this.port);
 				}
 
 

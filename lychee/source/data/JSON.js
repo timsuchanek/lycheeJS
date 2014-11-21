@@ -267,7 +267,7 @@ lychee.define('lychee.data.JSON').exports(function(lychee, global) {
 
 				while (errors === 0) {
 
-					values.push(_decode(stream));
+					value.push(_decode(stream));
 
 					check = stream.seekRAW(1);
 

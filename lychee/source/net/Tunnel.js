@@ -1,7 +1,8 @@
 
 lychee.define('lychee.net.Tunnel').requires([
 	'lychee.data.BitON',
-	'lychee.data.JSON'
+	'lychee.data.JSON',
+	'lychee.net.Service'
 ]).includes([
 	'lychee.event.Emitter'
 ]).exports(function(lychee, global, attachments) {

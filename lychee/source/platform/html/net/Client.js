@@ -3,8 +3,7 @@ lychee.define('lychee.net.Client').tags({
 	platform: 'html'
 }).requires([
 	'lychee.data.BitON',
-	'lychee.data.JSON',
-	'lychee.net.Service'
+	'lychee.data.JSON'
 ]).includes([
 	'lychee.net.Tunnel'
 ]).supports(function(lychee, global) {
