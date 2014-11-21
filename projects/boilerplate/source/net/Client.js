@@ -7,7 +7,7 @@ lychee.define('game.net.Client').requires([
 	'lychee.net.Client'
 ]).exports(function(lychee, game, global, attachments) {
 
-	var _BitON     = lychee.data.BitON;
+	var _BitON     = lychee.data.JSON;
 	var _highscore = game.net.client.Highscore;
 	var _ping      = game.net.client.Ping;
 
@@ -18,6 +18,10 @@ lychee.define('game.net.Client').requires([
 			codec:     _BitON,
 			reconnect: 10000
 		}, data);
+
+
+settings.host = 'localhost';
+settings.port = 1337;
 
 
 		lychee.net.Client.call(this, settings);

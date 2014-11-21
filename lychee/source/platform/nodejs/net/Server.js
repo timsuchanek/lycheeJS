@@ -16,7 +16,7 @@ lychee.define('lychee.net.Server').tags({
 
 	return false;
 
-}).exports(function(lychee, global) {
+}).exports(function(lychee, global, attachments) {
 
 	var http    = require('http');
 	var crypto  = require('crypto');
@@ -107,29 +107,6 @@ lychee.define('lychee.net.Server').tags({
 					socket.removeAllListeners('timeout');
 
 
-// TODO: This
-//
-// Remotes need to be connected, but NOT via server.connect();
-//
-// Remote.trigger('connect') triggered by remote itself?
-//
-// remote.bind('#connect', function() {
-//  this.__stack.push(remote)
-// }, server);
-//
-// ???
-//
-TODO;
-
-
-
-					this.connect(new lychee.net.Remote(socket, {
-						host:  this.host,
-						port:  this.port,
-						codec: this.__codec
-					}));
-
-
 					return true;
 
 				}
@@ -154,7 +131,9 @@ TODO;
 		var settings = lychee.extend({}, data);
 
 
-		this.remotes = [];
+		this.host = 'localhost';
+		this.port = 1337;
+
 
 		this.__codec  = lychee.interfaceof(settings.codec, _JSON) ? settings.codec : _JSON;
 		this.__socket = null;
@@ -169,82 +148,70 @@ TODO;
 
 	Class.prototype = {
 
-		listen: function(port, host) {
+		connect: function() {
 
-			if (this.__socket !== null) return false;
-
-
-			port = typeof port === 'number' ? port : 1337;
-			host = typeof host === 'string' ? host : null;
-
-
-			if (lychee.debug === true) {
-				console.log('lychee.net.Server: Listening on ' + host + ':' + port);
-			}
-
-
-			var that = this;
-
-
-			this.__socket = new http.Server();
-
-			this.__socket.on('upgrade', function(request, socket, headers) {
-
-				if (_upgrade_to_websocket.call(that, request, socket, headers) === false) {
-					socket.end();
-					socket.destroy();
-				}
-
-			});
-
-			this.__socket.on('error', function(err) {
-
-				console.error('lychee.net.Server: Error "' + err + '" on ' + host + ':' + port);
-
-				try {
-					that.__socket.close();
-				} catch(e) {
-				}
-
-			});
-
-			this.__socket.on('close', function() {
-				that.__socket = null;
-			});
-
-			this.__socket.listen(port, host);
-
-		},
-
-
-
-		/*
-		 * REMOTE INTEGRATION API
-		 */
-
-		connect: function(remote) {
-
-			var found = false;
-			for (var r = 0, rl = this.remotes.length; r < rl; r++) {
-
-				if (this.remotes[r] === remote) {
-					found = true;
-					break;
-				}
-
-			}
-
-
-			if (found === false) {
+			if (this.__socket === null) {
 
 				if (lychee.debug === true) {
-					console.log('lychee.net.Server: Connected lychee.Remote (' + remote.id + ')');
+					console.log('lychee.net.Server: Connected to ' + this.host + ':' + this.port);
 				}
 
-				remote.bind('#destroy', this.disconnect, this);
 
-				this.remotes.push(remote);
-				this.trigger('connect', [ remote ]);
+				var that = this;
+
+
+				this.__socket = new http.Server();
+
+				this.__socket.on('upgrade', function(request, socket, headers) {
+
+					if (_upgrade_to_websocket.call(that, request, socket, headers) === true) {
+
+						var host = socket.remoteAddress || socket.server._connectionKey.split(':')[1];
+						var port = socket.remotePort    || socket.server._connectionKey.split(':')[2];
+
+
+						var remote = new lychee.net.Remote({
+							host:  host,
+							port:  port,
+							codec: that.__codec
+						});
+
+						remote.bind('connect', function() {
+							that.trigger('connect', [ this ]);
+						}, remote);
+
+						remote.bind('disconnect', function() {
+							that.trigger('disconnect', [ this ]);
+						}, remote);
+
+						remote.connect(socket);
+						remote.trigger('connect', []);
+
+					} else {
+
+						socket.end();
+						socket.destroy();
+
+					}
+
+				});
+
+				this.__socket.on('error', function(err) {
+
+					console.error('lychee.net.Server: Error "' + err + '" on ' + that.host + ':' + that.port);
+
+					try {
+						that.__socket.close();
+					} catch(e) {
+					}
+
+				});
+
+				this.__socket.on('close', function() {
+					that.__socket = null;
+				});
+
+				this.__socket.listen(this.port, this.host);
 
 
 				return true;
@@ -256,29 +223,49 @@ TODO;
 
 		},
 
-		disconnect: function(remote) {
+		disconnect: function() {
 
-			var found = false;
-			for (var r = 0, rl = this.remotes.length; r < rl; r++) {
+			if (this.__socket !== null) {
+				this.__socket.close();
+			}
 
-				if (this.remotes[r] === remote) {
-					found = true;
-					this.remotes.splice(r, 1);
-					rl--;
-					r--;
-				}
+
+			return true;
+
+		},
+
+
+
+		/*
+		 * TUNNEL API
+		 */
+
+		setHost: function(host) {
+
+			host = typeof host === 'string' ? host : null;
+
+
+			if (host !== null) {
+
+				this.host = host;
+
+				return true;
 
 			}
 
 
-			if (found === true) {
+			return false;
 
-				if (lychee.debug === true) {
-					console.log('lychee.net.Server: Disconnected lychee.Remote (' + remote.id + ')');
-				}
+		},
 
-				this.trigger('disconnect', [ remote ]);
+		setPort: function(port) {
 
+			port = typeof port === 'number' ? (port | 0) : null;
+
+
+			if (port !== null) {
+
+				this.port = port;
 
 				return true;
 
