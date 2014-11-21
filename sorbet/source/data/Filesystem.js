@@ -311,12 +311,19 @@ lychee.define('sorbet.data.Filesystem').includes([
 
 				} else {
 
-					var fd = _fs.openSync(resolved, 'r');
+					try {
 
-					_fs.readSync(fd, buffer, 0, size, range.from);
-					_fs.close(fd);
+						var fd = _fs.openSync(resolved, 'r');
 
-					return buffer;
+						_fs.readSync(fd, buffer, 0, size, range.from);
+						_fs.close(fd);
+
+						return buffer;
+
+					} catch(e) {
+					}
+
+					return null;
 
 				}
 
