@@ -31,7 +31,9 @@ lychee.define('sorbet.net.Client').requires([
 					var port = this.buffer.port || 8081;
 					var host = this.buffer.host || null;
 
-					that.listen(port, host);
+					that.setHost(host);
+					that.setPort(port);
+					that.connect();
 
 				}
 
@@ -49,13 +51,20 @@ lychee.define('sorbet.net.Client').requires([
 	 * IMPLEMENTATION
 	 */
 
-	var Class = function() {
+	var Class = function(data) {
 
-		lychee.net.Client.call(this, {
-			encoder: _BitON.encode,
-			decoder: _BitON.decode
-		});
+		var settings = lychee.extend({
+			codec: _BitON
+		}, data);
 
+
+		lychee.net.Client.call(this, settings);
+
+
+
+		/*
+		 * INITIALIZATION
+		 */
 
 		this.bind('connect', function() {
 

@@ -12,36 +12,36 @@ lychee.define('sorbet.net.Server').requires([
 	var _session  = sorbet.net.remote.Session;
 
 
-	var Class = function() {
+	var Class = function(data) {
 
-		lychee.net.Server.call(this, {
-			encoder: _BitON.encode,
-			decoder: _BitON.decode
-		});
+		var settings = lychee.extend({
+			codec: _BitON
+		}, data);
 
+
+		lychee.net.Server.call(this, settings);
+
+
+		/*
+		 * INITIALIZATION
+		 */
 
 		this.bind('connect', function(remote) {
 
-			console.log('(Sorbet) sorbet.net.Server: New Remote (' + remote.id + ')');
+			console.log('(Sorbet) sorbet.net.Server: New Remote (' + remote.host + ':' + remote.port + ')');
 
-			remote.register('debugger', _debugger);
-			remote.register('session',  _session);
-			remote.accept();
+			remote.addService(new _debugger(remote));
+			remote.addService(new _session(remote));
 
 		}, this);
+
+
+		this.connect();
 
 	};
 
 
 	Class.prototype = {
-
-		listen: function(port, host) {
-
-			console.log('(Sorbet) sorbet.net.Server: Listening on ' + host + ':' + port);
-
-			lychee.net.Server.prototype.listen.call(this, port, host);
-
-		}
 
 	};
 

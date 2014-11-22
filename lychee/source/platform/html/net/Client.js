@@ -40,6 +40,7 @@ lychee.define('lychee.net.Client').tags({
 		settings = null;
 
 
+
 		/*
 		 * INITIALIZATION
 		 */

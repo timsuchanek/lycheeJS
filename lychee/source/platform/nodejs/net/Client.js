@@ -40,6 +40,7 @@ lychee.define('lychee.net.Client').tags({
 		settings = null;
 
 
+
 		/*
 		 * INITIALIZATION
 		 */
@@ -64,6 +65,28 @@ lychee.define('lychee.net.Client').tags({
 
 
 	Class.prototype = {
+
+		/*
+		 * ENTITY API
+		 */
+
+		// deserialize: function(blob) {},
+
+		serialize: function() {
+
+			var data = lychee.net.Tunnel.prototype.serialize.call(this);
+			data['constructor'] = 'lychee.net.Client';
+
+
+			return data;
+
+		},
+
+
+
+		/*
+		 * CUSTOM API
+		 */
 
 		connect: function() {
 

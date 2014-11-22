@@ -139,6 +139,10 @@ lychee.define('lychee.net.Server').tags({
 		this.__socket = null;
 
 
+		this.setHost(settings.host);
+		this.setPort(settings.port);
+
+
 		lychee.event.Emitter.call(this);
 
 		settings = null;
@@ -147,6 +151,37 @@ lychee.define('lychee.net.Server').tags({
 
 
 	Class.prototype = {
+
+		/*
+		 * ENTITY API
+		 */
+
+		// deserialize: function(blob) {},
+
+		serialize: function() {
+
+			var data = lychee.event.Emitter.prototype.serialize.call(this);
+			data['constructor'] = 'lychee.net.Server';
+
+			var settings = {};
+
+
+			if (this.host !== 'localhost') settings.host = this.host;
+			if (this.port !== 1337)        settings.port = this.port;
+
+
+			data['arguments'][0] = settings;
+
+
+			return data;
+
+		},
+
+
+
+		/*
+		 * CUSTOM API
+		 */
 
 		connect: function() {
 
