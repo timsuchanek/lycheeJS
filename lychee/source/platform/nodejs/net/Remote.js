@@ -56,16 +56,10 @@ lychee.define('lychee.net.Remote').tags({
 
 		this.bind('send', function(blob) {
 
-			if (this.__protocol) {
-				this.__protocol.write(blob);
-			}
-
-			// TODO: NEW API
-/*
 			if (this.__socket !== null) {
 				this.__socket.send(blob);
 			}
-*/
+
 		}, this);
 
 	};
@@ -102,44 +96,9 @@ lychee.define('lychee.net.Remote').tags({
 				var that = this;
 
 
-				this.__protocol = new lychee.net.Protocol(socket, function() {
-					socket.end();
-					socket.destroy();
-					that.trigger('destroy', []);
-				});
-
-
-				socket.on('data', function(data) {
-					that.__protocol.read(data, function(blob) {
-						this.receive(blob)
-					}, that);
-				});
-
-				socket.on('error', function() {
-					that.__protocol.close(true);
-				});
-
-				socket.on('timeout', function() {
-					that.__protocol.close(true);
-				});
-
-				socket.on('end', function() {
-					that.__protocol.close(true);
-				});
-
-				socket.on('close', function() {
-					that.__protocol.close(true);
-				});
-
-// TODO: NEW API
-/*
-
 				this.__socket = new lychee.net.Protocol(socket);
 
 				this.__socket.ondata = function(blob) {
-
-console.log('ONDATA callback', blob);
-
 					that.receive(blob);
 				};
 
@@ -147,7 +106,7 @@ console.log('ONDATA callback', blob);
 					that.__socket = null;
 					that.trigger('disconnect', []);
 				};
-*/
+
 
 				if (lychee.debug === true) {
 					console.log('lychee.net.Remote: Connected to ' + this.host + ':' + this.port);
