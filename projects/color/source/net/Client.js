@@ -39,7 +39,7 @@ lychee.define('game.net.Client').requires([
 		this.bind('disconnect', function(code, reason) {
 
 			if (lychee.debug === true) {
-				console.log('(Color) game.net.Client: Remote disconnected (' + code + ' | ' + reason + ')');
+				console.log('(Color) game.net.Client: Remote disconnected (' + code + ')');
 			}
 
 		}, this);

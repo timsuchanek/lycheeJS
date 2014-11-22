@@ -10,28 +10,37 @@ lychee.define('game.net.Server').requires([
 	var _highscore = game.net.remote.Highscore;
 
 
-	var Class = function() {
+	var Class = function(data) {
 
-		lychee.net.Server.call(this, {
-			encoder: _BitON.encode,
-			decoder: _BitON.decode
-		});
+		var settings = lychee.extend({
+			codec: _BitON
+		}, data);
 
+
+		lychee.net.Server.call(this, settings);
+
+
+
+		/*
+		 * INITIALIZATION
+		 */
 
 		this.bind('connect', function(remote) {
 
-			console.log('(Color) game.net.Server: Remote connected (' + remote.id + ')');
+			console.log('(Color) game.net.Server: Remote connected (' + remote.host + ':' + remote.port + ')');
 
-			remote.register('highscore', _highscore);
-			remote.accept();
+			remote.addService(new _highscore(remote));
 
 		}, this);
 
 		this.bind('disconnect', function(remote) {
 
-			console.log('(Color) game.net.Server: Remote disconnected (' + remote.id + ')');
+			console.log('(Color) game.net.Server: Remote disconnected (' + remote.host + ':' + remote.port + ')');
 
 		}, this);
+
+
+		this.connect();
 
 	};
 

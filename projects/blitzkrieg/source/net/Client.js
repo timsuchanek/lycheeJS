@@ -36,10 +36,10 @@ lychee.define('game.net.Client').requires([
 
 		}, this);
 
-		this.bind('disconnect', function(code, reason) {
+		this.bind('disconnect', function(code) {
 
 			if (lychee.debug === true) {
-				console.log('(Blitzkrieg) game.net.Client: Remote disconnected (' + code + ' | ' + reason + ')');
+				console.log('(Blitzkrieg) game.net.Client: Remote disconnected (' + code + ')');
 			}
 
 		}, this);

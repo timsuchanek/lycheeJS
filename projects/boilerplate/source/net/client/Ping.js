@@ -9,11 +9,13 @@ lychee.define('game.net.client.Ping').includes([
 
 	var _on_pong = function(data) {
 
-		data.pongstop = Date.now();
+		data.pung = Date.now();
 
-		var delta = (data.pongstop - data.pingstart).toFixed(2);
+		var ping = (data.pong - data.ping).toFixed(0);
+		var pong = (data.pung - data.pong).toFixed(0);
 
-		this.trigger('statistics', [ delta ]);
+
+		this.trigger('statistics', [ ping, pong ]);
 
 	};
 
@@ -44,7 +46,7 @@ lychee.define('game.net.client.Ping').includes([
 			if (this.tunnel !== null) {
 
 				this.tunnel.send({
-					pingstart: Date.now()
+					ping: Date.now()
 				}, {
 					id:    this.id,
 					event: 'ping'

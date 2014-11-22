@@ -39,14 +39,18 @@ lychee.define('lychee.net.Protocol').supports(function(lychee, global) {
 			var length = this.__buffer.length;
 			while (length > 0) {
 
-				// Evaluate message frame
+				// Invalid Message Frame
 				var result = _parse_buffer.call(this, length);
-				if (result === false || this.__isClosed === true) {
+				if (result === -1 || this.__isClosed === true) {
 
 					break;
 
-				// Re-Size the buffer on message frame
-				} else if (result === true) {
+				// Header Frames, continue parsing modes
+				} else if (result === 0) {
+
+
+				// Valid Message Frame, resize Buffer afterwards
+				} else if (result === 1) {
 
 					length = this.__buffer.length - this.__offset;
 
@@ -62,6 +66,7 @@ lychee.define('lychee.net.Protocol').supports(function(lychee, global) {
 		}
 
 	};
+
 
 	var _parse_buffer = function(length) {
 
@@ -144,7 +149,7 @@ lychee.define('lychee.net.Protocol').supports(function(lychee, global) {
 			} else {
 
 				// Protocol Error
-				this.__mode = -1;
+				this.__mode      = -1;
 
 			}
 
@@ -223,17 +228,30 @@ lychee.define('lychee.net.Protocol').supports(function(lychee, global) {
 			// Message Frame
 			} else {
 
-				this.ondata(message);
+				this.ondata(message, isBinary);
 
 			}
 
 
-			return true;
+			return 1;
+
+		} else {
+
+			return -1;
 
 		}
 
 
-		return false;
+		if (this.__mode === -1) {
+
+			this.close(Class.STATUS.protocol_error);
+
+			return -1;
+
+		}
+
+
+		return 0;
 
 	};
 
@@ -250,9 +268,9 @@ lychee.define('lychee.net.Protocol').supports(function(lychee, global) {
 		this.onclose = function(err) {};
 
 
-		this.__buffer  = new Buffer(0);
-		this.__offset  = 0;
-		this.__moffset = 0;
+		this.__buffer      = new Buffer(0);
+		this.__offset      = 0;
+		this.__moffset     = 0;
 
 		this.__op          = 0;
 		this.__mode        = 0;
@@ -287,16 +305,10 @@ lychee.define('lychee.net.Protocol').supports(function(lychee, global) {
 	};
 
 
-	Class.VERSION   = 13;
-	Class.FRAMESIZE = 0x800000; // 8MiB
 	// Class.FRAMESIZE = 32768; // 32kB
+	Class.FRAMESIZE = 0x800000; // 8MiB
+	Class.VERSION   = 13;
 
-	/*
-	 * STATUS CODES
-	 *
-	 * Using HYBI headers, adopted from:
-	 * http://www.iana.org/assignments/websocket/websocket.xml
-	 */
 
 	Class.STATUS = {
 
@@ -336,6 +348,7 @@ lychee.define('lychee.net.Protocol').supports(function(lychee, global) {
 			return false;
 
 		},
+
 
 		write: function(data, isBinary) {
 
@@ -434,6 +447,7 @@ lychee.define('lychee.net.Protocol').supports(function(lychee, global) {
 				this.socket.write(buffer);
 				this.socket.end();
 				this.socket.destroy();
+
 
 				this.__isClosed = true;
 				this.onclose(status);

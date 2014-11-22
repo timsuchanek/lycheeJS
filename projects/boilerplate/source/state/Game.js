@@ -23,6 +23,27 @@ lychee.define('game.state.Game').requires([
 	 * HELPERS
 	 */
 
+	var _format_statistics = function(ping, pong) {
+
+		var tmp  = '00000000';
+		var str1 = '' + ping;
+		var str2 = '' + pong;
+
+		var l = Math.max(2, str1.length, str2.length);
+
+		if (str1.length < l) {
+			str1 = tmp.substr(0, l - str1.length) + str1;
+		}
+
+		if (str2.length < l) {
+			str2 = tmp.substr(0, l - str2.length) + str2;
+		}
+
+
+		return str1 + ' / ' + str2;
+
+	};
+
 	var _bind_pingservice = function() {
 
 		var entity  = this.queryLayer('ui', 'help > statistics');
@@ -30,11 +51,11 @@ lychee.define('game.state.Game').requires([
 		if (entity !== null && service !== null) {
 
 			service.bind('unplug', function() {
-				this.setLabel('Roundtrip: --- ms');
+				this.setLabel('Roundtrip: --/-- ms');
 			}, entity);
 
 			service.bind('statistics', function(ping, pong) {
-				this.setLabel('Roundtrip: ' + ping + ' ms');
+				this.setLabel('Roundtrip: ' + _format_statistics(ping, pong) + ' ms');
 			}, entity);
 
 

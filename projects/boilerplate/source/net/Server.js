@@ -7,7 +7,7 @@ lychee.define('game.net.Server').requires([
 	'lychee.net.Server'
 ]).exports(function(lychee, game, global, attachments) {
 
-	var _BitON     = lychee.data.JSON;
+	var _BitON     = lychee.data.BitON;
 	var _highscore = game.net.remote.Highscore;
 	var _ping      = game.net.remote.Ping;
 
