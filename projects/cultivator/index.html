@@ -16,59 +16,141 @@
 	<h1><a href="http://lycheeJS.org">lycheeJS</a></h1>
 
 	<menu>
-		<li><a href="./inspector/index.html">Environment&nbsp;Inspector</a></li>
-		<li><a href="./entity/index.html">Entity&nbsp;Creator</a></li>
+		<li><a href="./wizard/index.html" title="Cultivation Wizard">Wizard</a></li>
+		<li><a href="./inspector/index.html" title="Environment Inspector">Inspector</a></li>
+		<li><a href="./documenter/index.html" title="Cultivation Documenter">Documenter</a></li>
 	</menu>
 
 	<h2>Getting Started</h2>
 
 	<article>
-		<h3>1. Inspect an existing Project</h3>
+		<h3>1. Play with the Nursery Garden</h3>
 		<p>
-			Inspect an existing lycheeJS Project in the Inspector
-			and learn from it.
+			Play around with the existing lycheeJS Projects
+			and learn how they are builtup and integrated
+			with controllers, networking and devices.
 		</p>
 		<ul class="teaser-List">
 			<li>
-				<a href="./inspector/index.html?url=/projects/boilerplate/build/html/main.lychee.env">
+				<a href="../boilerplate/source/index.html">
 					<img src="./welcome/boilerplate.png">
 					<span>Boilerplate</span>
 				</a>
 			</li>
 			<li>
-				<a href="./inspector/index.html?url=/projects/mode7/build/html/main.lychee.env">
+				<a href="../mode7/source/index.html">
 					<img src="./welcome/mode7.png">
 					<span>Mode7</span>
 				</a>
 			</li>
 			<li>
-				<a href="./inspector/index.html?url=/projects/pong/build/html/main.lychee.env">
+				<a href="../pong/source/index.html">
 					<img src="./welcome/pong.png">
-					<span>Pong (Tutorial)</span>
+					<span>Pong (Minigame)</span>
 				</a>
 			</li>
 		</ul>
 	</article>
 
 	<article>
-		<h3>2. Start a new Project</h3>
+		<h3>2. Learn from the Nursery Garden</h3>
+		<p>
+			Inspect the existing lycheeJS Projects and learn how
+			environment snapshots and different environment builts
+			are builtup.
+		</p>
+		<ul class="teaser-List">
+			<li>
+				<a href="./inspector/index.html?url=/projects/boilerplate/build/html/main.lychee.env">
+					<img src="./welcome/boilerplate.png">
+					<span>Boilerplate&nbsp;(HTML)</span>
+				</a>
+			</li>
+			<li>
+				<a href="./inspector/index.html?url=/projects/mode7/build/html/main.lychee.env">
+					<img src="./welcome/mode7.png">
+					<span>Mode7&nbsp;(HTML)</span>
+				</a>
+			</li>
+			<li>
+				<a href="./inspector/index.html?url=/projects/pong/build/html/main.lychee.env">
+					<img src="./welcome/pong.png">
+					<span>Pong&nbsp;(HTML)</span>
+				</a>
+			</li>
+		</ul>
+	</article>
+
+	<article>
+		<h3>3. Plant your own Project</h3>
 		<p>
 			Start a new project from the boilerplate by copying its
 			contents into a new folder.
 		</p>
 		<pre class="bash">
 cd ~/lycheeJS/projects;
-cp -R ./boilerplate ./myproject; # replace myproject with unique identifier
+cp -R ./boilerplate ./myproject; # Replace myproject with unique identifier
+		</pre>
+		<br>
+		<p>
+			Modify the unique identifier of the lychee.Environment in
+			the index.html, so you have sweet remote debugging features.
+		</p>
+		<pre class="javascript">
+var environment = new lychee.Environment({
+	// /projects/myproject/source/index.html#L48
+	id: 'boilerplate', // Replace boilerplate with unique identifier
+});
+		</pre>
+		<br>
+		<p>
+			Modify the lychee.net.Client's settings, so that it can
+			connect to the lychee.net.Server.
+		</p>
+		<p>
+			The API call can be replaced by either a Settings Object
+			(e.g. <em>{ host: 'myproject.lycheejs.org', port: 1337 }</em>) or
+			an API call String (e.g. <em>"/api/Server/?identifier=myproject")</em>.
+		</p>
+		<pre class="javascript">
+var settings = {
+	// /projects/myproject/source/Main.js#L16
+	client: '/api/Server/?identifier=boilerplate', // Replace boilerplate with unique identifier
+};
 		</pre>
 	</article>
 
 	<article>
-		<h3>3. Create Entities and import Assets</h3>
+		<h3>4. Become a Gardening Master</h3>
+		<p>
+			Watch the <a href="http://www.youtube.com/embed/videoseries?list=PLN8QSMXLHp7Q8FcbqSS7MJkqvsE8_CSHw">Playlist on YouTube</a>
+			and learn from the Tutorials.
+		</p>
+		<br>
+		<p class="center">
+			<iframe width="100%" height="480" src="http://www.youtube.com/embed/videoseries?list=PLN8QSMXLHp7Q8FcbqSS7MJkqvsE8_CSHw" frameborder="0" allowfullscreen></iframe>
+		</p>
+	</article>
+
+	<article>
+		<h3>5. Cultivate your Project</h3>
 		<ul class="teaser-List">
 			<li>
-				<a href="./entity/">
+				<a href="./wizard/index.html">
 					<img src="./welcome/entity.png">
-					<span>Entity Creator</span>
+					<span>Wizard</span>
+				</a>
+			</li>
+			<li>
+				<a href="./inspector/index.html">
+					<img src="./welcome/inspector.png">
+					<span>Inspector</span>
+				</a>
+			</li>
+			<li>
+				<a href="./documenter/index.html">
+					<img src="./welcome/documenter.png">
+					<span>Documenter</span>
 				</a>
 			</li>
 		</ul>

@@ -22,7 +22,7 @@ require(_root + '/lychee/build/nodejs/core.js')(_root);
 (function(lychee, global) {
 
 	var environment = new lychee.Environment({
-		debug:    true,
+		debug:    false,
 		sandbox:  false,
 		build:    'game.net.Server',
 		packages: [
