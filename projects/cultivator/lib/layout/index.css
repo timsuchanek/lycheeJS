@@ -1,5 +1,16 @@
 
 @font-face {
+	font-family: 'oswald';
+	src: url('./oswald.eot');
+	src: url('./oswald.eot?#iefix') format('embedded-opentype'),
+		 url('./oswald.woff') format('woff'),
+		 url('./oswald.ttf') format('truetype'),
+		 url('./oswald.svg#army_rustregular') format('svg');
+	font-weight: normal;
+	font-style: normal;
+} 
+
+@font-face {
 	font-family: 'exolight';
 	src: url('./exolight.eot');
 	src: url('./exolight.eot?#iefix') format('embedded-opentype'),
@@ -95,9 +106,13 @@ h3 {
 body > menu {
 	display: block;
 	margin: 0px;
-	padding: 0px;
-	background: #8f202f;
-	text-align: center;
+	padding: 0px 0px 0px 268px;
+	background: 0px 0px url('./menu-background2.png') repeat-x #8f202f;
+	background-color: #8f202f;
+	background-image: url('./menu-logo.png'), url('./menu-background2.png');
+	background-repeat: no-repeat, repeat-x;
+	background-position: 0px 0px, 256px 0px;
+	text-align: left;
 }
 
 body > menu li {
@@ -136,6 +151,77 @@ body > menu li a.active {
 	text-shadow: 0 0 8px #ffffff, 0 0 16px #ffffff;
 }
 
+
+
+body > main > section menu {
+	display: block;
+	position: absolute;
+	top: 0px;
+	right: auto;
+	bottom: 0px;
+	left: 0px;
+	margin: 0px;
+	padding: 0px;
+	width: 256px;
+	background: 0px 0px url(./menu-background.png) repeat-y #708391;
+	overflow-x: hidden;
+	overflow-y: auto;
+	z-index: 2;
+}
+
+body > main > section menu.hidden {
+	display: none;
+}
+
+body > main > section menu li {
+	display: block;
+	line-height: 40px;
+	margin: 0px 0px 0px 28px;
+	padding: 0px 0px 0px 20px;
+	text-align: left;
+	text-decoration: none;
+	font-family: 'oswald';
+	font-weight: bold;
+	font-size: 16px;
+	list-style: none;
+	color: #2b1d1a;
+	background: -194px 0px url(./menu-item.png) no-repeat transparent;
+	cursor: pointer;
+	transition: all 200ms ease-out;
+}
+
+body > main > section menu li:hover,
+body > main > section menu li:focus,
+body > main > section menu li.active {
+	color: #ffffff;
+	background-position: 0px 0px;
+	text-shadow: 0px 0px 10px #ebbf10,
+				 0px 0px 20px #ebbf10,
+				 0px 0px 30px #ebbf10,
+				 0px 0px 40px #ebbf10,
+				 0px 0px 50px #ebbf10,
+				 2px 2px 0px rgba(0,0,0,0.4);
+}
+
+body > main > section menu ~ article {
+	display: block;
+	position: absolute;
+	width: auto;
+	max-width: none;
+	min-width: initial;
+	margin: 0px;
+	padding: 0px 24px 0px 24px;
+	top: 0px;
+	right: 0px;
+	bottom: 0px;
+	left: 256px;
+	border-color: transparent;
+	border-style: solid;
+	border-width: 16px 16px 16px 16px;
+	border-image: url('./article-border.png') 16 16 repeat repeat;
+	overflow-y: scroll;
+	z-index: 1;
+}
 
 
 /*
