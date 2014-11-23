@@ -162,8 +162,12 @@ body > main > section menu {
 	left: 0px;
 	margin: 0px;
 	padding: 0px;
-	width: 256px;
+	width: 245px;
 	background: 0px 0px url(./menu-background.png) repeat-y #708391;
+	border-color: transparent;
+	border-style: solid;
+	border-width: 0px 11px 0px 0px;
+	border-image: url('./menu-border.png') 11 11 repeat repeat;
 	overflow-x: hidden;
 	overflow-y: auto;
 	z-index: 2;
@@ -185,7 +189,7 @@ body > main > section menu li {
 	font-size: 16px;
 	list-style: none;
 	color: #2b1d1a;
-	background: -194px 0px url(./menu-item.png) no-repeat transparent;
+	background: -240px 0px url(./menu-item.png) no-repeat transparent;
 	cursor: pointer;
 	transition: all 200ms ease-out;
 }
