@@ -90,20 +90,15 @@ lychee.define('inspector.State').includes([
 					var content = '';
 
 					menu.forEach(function(item, index) {
-						content += '<li onclick="MAIN.state.view(\'' + item + '\')">' + labels[index] + '</li>';
+						content += '<li data-id="' + item + '" onclick="MAIN.state.view(\'' + item + '\')">' + labels[index] + '</li>';
 					});
 
 
-					element.className = '';
 					element.innerHTML = content;
 					this.menu         = menu;
 
 
 					return true;
-
-				} else {
-
-					element.className = 'hidden';
 
 				}
 
@@ -126,15 +121,29 @@ lychee.define('inspector.State').includes([
 
 					var article = this.articles[id] || null;
 					if (article !== null) {
-						element.className = '';
 						element.innerHTML = article;
-					} else {
-						element.className = 'hidden';
 					}
 
-				} else {
+				}
 
-					element.className = 'hidden';
+			}
+
+
+			var menu = this.__menu;
+			if (menu !== null) {
+
+				var items = [].slice.call(menu.querySelectorAll('li'));
+				if (items.length > 0) {
+
+					items.forEach(function(item) {
+
+						if (item.getAttribute('data-id') === id) {
+							item.className = 'active';
+						} else {
+							item.className = '';
+						}
+
+					});
 
 				}
 
