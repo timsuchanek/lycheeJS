@@ -22,22 +22,18 @@ lychee.define('inspector.state.Overview').includes([
 			identifier = data.settings.id;
 		}
 
-		content += '<h2>Current Environment<br><small>(unique identifier "' + identifier + '")</small></h2>';
-		content += '<h3>Overview</h3>';
 
 		if (data === null) {
 
+			content += '<h2>Corrupt Environment</h2>';
+			content += '<h3>Overview</h3>';
 			content += '<div class="center"><p class="error"><b>Error</b>: The current Environment is corrupt or not available.</p></div>';
-			content += '<h3>How To Use</h3>';
-			content += '<p>Open an Environment by modifying the <em>url</em> parameter. Here are some examples:</p>';
-
-			content += '<ul>';
-			_EXAMPLES.forEach(function(url) {
-				content += '<li><a href="' + url + '">' + url + '</a></li>';
-			});
-			content += '</ul>';
+			content += '<p class="center">Please select an Environment from the Menu.</p>';
 
 		} else {
+
+			content += '<h2>Environment "' + identifier + '"</h2>';
+			content += '<h3>Overview</h3>';
 
 			content += '<table>';
 			content += '<tr><th>Assets</th><td>' + data.assets.length + '</td></tr>';
@@ -107,9 +103,38 @@ lychee.define('inspector.state.Overview').includes([
 
 		deserialize: function(data) {
 
-			this.setMenu(null);
-			this.setArticles({ 'default': _render_article(data) });
-			this.view('default');
+			var articles = {};
+
+			if (data instanceof Object && typeof data.url === 'string') {
+
+				articles[data.url] = _render_article(data);
+
+				this.setMenu(null);
+				this.setArticles(articles);
+				this.view(data.url);
+
+			}
+
+		},
+
+		view: function(url) {
+
+			var active  = document.location.search;
+			var current = '?url=' + url;
+
+			if (active !== current) {
+				document.location.search = current;
+			} else {
+
+				var result = inspector.State.prototype.view.call(this, url);
+				if (result === true) {
+					return true;
+				}
+
+			}
+
+
+			return false;
 
 		}
 

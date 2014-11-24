@@ -9,14 +9,14 @@ back into master, tagged and published.
 
 ## v0.8.4
 
-- Entity Tool (generates Entities and png/json/fnt files)
-- Inspector Tool (that inspects snapshots of environments)
+- Wizard Tool (generates Fonts, Sprites and Entities)
+- Documenter Tool (generates API docs and parses lychee.pkg Packages)
 
 
 ## v0.8.5
-- Debugger Tool (that debugs errors in timelines)
+- Inspector Tool: Timeline State (that shows bind/trigger/unbind calls)
 - Mode7 Game finalization (lane switch), required assets: racing car, box sprite, explosion sprite
-- Color Game finalization (Timeout and Point Calculation)
+- Color Game finalization (UI, Timeout and Point Calculation)
 - lychee.Environment needs serializable injection API
 
 ## v0.8.6

@@ -39,11 +39,23 @@ lychee.define('inspector.Main').requires([
 						var asset = environment.blob.definitions[id].blob.attaches[ext];
 						if (asset instanceof Object) {
 
-							assets.push({
-								type:   asset.constructor,
-								url:    asset.arguments[0],
-								buffer: asset.blob.buffer
-							});
+							if (typeof asset.constructor === 'string') {
+
+								assets.push({
+									type:   asset.constructor,
+									url:    asset.arguments[0],
+									buffer: asset.blob.buffer
+								});
+
+							} else {
+
+								assets.push({
+									type:   'Buffer',
+									url:    asset.url    || null,
+									buffer: asset.buffer || null
+								});
+
+							}
 
 						}
 
@@ -92,6 +104,7 @@ lychee.define('inspector.Main').requires([
 
 
 		return {
+			url:         environment.url,
 			settings:    settings,
 			assets:      assets,
 			definitions: definitions,
@@ -158,6 +171,7 @@ lychee.define('inspector.Main').requires([
 				environment.onload = function(result) {
 
 					if (result === true) {
+						this.buffer.url = url;
 						that.setEnvironment(this.buffer);
 						that.changeState('overview');
 					} else {

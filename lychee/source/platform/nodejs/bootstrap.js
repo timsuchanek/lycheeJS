@@ -1294,9 +1294,18 @@
 
 		serialize: function() {
 
+			// var buffer = null;
+			// if (this.buffer !== null) {
+			//	buffer = lychee.serialize(new Buffer(this.buffer, 'utf8'));
+			// }
+
+
 			return {
-				'url':    this.url,
-				'buffer': this.buffer !== null ? this.buffer.toString() : null
+				'constructor': 'Object',
+				'arguments':   [{
+					'url':    this.url,
+					'buffer': this.buffer
+				}]
 			};
 
 		},
@@ -1362,14 +1371,6 @@
 					}
 
 				});
-
-			} else if (type === 'css') {
-
-				// CSS files can't fail and can't influence the NodeJS application
-				if (this.onload instanceof Function) {
-					this.onload(true);
-					this.onload = null;
-				}
 
 			} else {
 

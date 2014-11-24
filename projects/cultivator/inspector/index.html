@@ -20,23 +20,28 @@
 		<li><a onclick="MAIN.changeState('overview')">Overview</a></li>
 		<li><a onclick="MAIN.changeState('asset')">Assets</a></li>
 		<li><a onclick="MAIN.changeState('definition')">Definitions</a></li>
-		<li><a onclick="MAIN.changeState('event')">Events</a></li>
-		<li><a onclick="MAIN.changeState('log')">Logs</a></li>
 	</menu>
 
 	<main id="inspector-Main">
 
 		<section id="inspector-state-Overview" class="inspector-State">
-			<menu></menu>
+			<menu>
+				<li onclick="MAIN.state.view(this.getAttribute('data-id'));" data-id="/projects/boilerplate/build/html/main.lychee.env">Boilerplate&nbsp;(html/main)</li>
+				<li onclick="MAIN.state.view(this.getAttribute('data-id'));" data-id="/projects/boilerplate/build/html-nw/main.lychee.env">Boilerplate&nbsp;(html-nw/main)</li>
+				<li onclick="MAIN.state.view(this.getAttribute('data-id'));" data-id="/projects/boilerplate/build/nodejs/server.lychee.env">Boilerplate&nbsp;(nodejs/server)</li>
+				<li onclick="MAIN.state.view(this.getAttribute('data-id'));" data-id="/projects/color/build/html/main.lychee.env">Color&nbsp;(html/main)</li>
+				<li onclick="MAIN.state.view(this.getAttribute('data-id'));" data-id="/projects/color/build/html-nw/main.lychee.env">Color&nbsp;(html-nw/main)</li>
+				<li onclick="MAIN.state.view(this.getAttribute('data-id'));" data-id="/projects/color/build/nodejs/server.lychee.env">Color&nbsp;(nodejs/server)</li>
+				<li onclick="MAIN.state.view(this.getAttribute('data-id'));" data-id="/projects/mode7/build/html/main.lychee.env">Mode7&nbsp;(html/main)</li>
+				<li onclick="MAIN.state.view(this.getAttribute('data-id'));" data-id="/projects/mode7/build/html-nw/main.lychee.env">Mode7&nbsp;(html-nw/main)</li>
+				<li onclick="MAIN.state.view(this.getAttribute('data-id'));" data-id="/projects/pong/build/html/main.lychee.env">Pong&nbsp;(html/main)</li>
+				<li onclick="MAIN.state.view(this.getAttribute('data-id'));" data-id="/projects/pong/build/html-nw/main.lychee.env">Pong&nbsp;(html-nw/main)</li>
+			</menu>
 			<article>
-				<h2>Current Environment<br><small>(unique identifier "unknown")</small></h2>
+				<h2>Corrupt Environment</h2>
 				<h3>Overview</h3>
 				<div class="center"><p class="error"><b>Error</b>: The current Environment is corrupt or not available.</p></div>
-				<h3>How To Use</h3>
-				<p>Open an Environment by modifying the <em>url</em> parameter. Here is an example:</p>
-				<ul>
-					<li><a href="index.html?url=/projects/boilerplate/build/html/main.lychee.env">index.html?url=/projects/boilerplate/build/html/main.lychee.env</a></li>
-				</ul>
+				<p class="center">Please select an Environment from the Menu.</p>
 			</article>
 		</section>
 
@@ -48,16 +53,6 @@
 		<section id="inspector-state-Definition" class="inspector-State">
 			<menu></menu>
 			<article></article>
-		</section>
-
-		<section id="inspector-state-Event" class="inspector-State">
-			<menu></menu>
-			<article>This feature is coming soon...</article>
-		</section>
-
-		<section id="inspector-state-Log" class="inspector-State">
-			<menu></menu>
-			<article>This feature is coming soon...</article>
 		</section>
 
 	</main>

@@ -31,8 +31,6 @@
 			"state": {
 				"Definition": [ "js" ],
 				"Asset":      [ "js" ],
-				"Event":      [ "js" ],
-				"Log":        [ "js" ],
 				"Overview":   [ "js" ]
 			},
 

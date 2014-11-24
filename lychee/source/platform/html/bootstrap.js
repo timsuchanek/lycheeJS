@@ -674,6 +674,15 @@
 
 	Buffer.prototype = {
 
+		serialize: function() {
+
+			return {
+				'constructor': 'Buffer',
+				'arguments':   [ this.toString('base64'), 'base64' ]
+			};
+
+		},
+
 		copy: function(target, target_start, start, end) {
 
 			target_start = typeof target_start === 'number' ? (target_start | 0) : 0;
@@ -2003,9 +2012,18 @@
 
 		serialize: function() {
 
+			// var buffer = null;
+			// if (this.buffer !== null) {
+			// 	buffer = lychee.serialize(new Buffer(this.buffer, 'utf8'));
+			// }
+
+
 			return {
-				'url':    this.url,
-				'buffer': this.buffer !== null ? this.buffer.toString() : null
+				'constructor': 'Object',
+				'arguments':   [{
+					'url':    this.url,
+					'buffer': this.buffer
+				}]
 			};
 
 		},
@@ -2027,6 +2045,8 @@
 
 				this.buffer.onload = function() {
 
+					that.buffer = '';
+
 					if (that.onload instanceof Function) {
 						that.onload(true);
 						that.onload = null;
@@ -2037,6 +2057,8 @@
 
 				};
 				this.buffer.onerror = function() {
+
+					that.buffer = '';
 
 					if (that.onload instanceof Function) {
 						that.onload(false);
@@ -2056,6 +2078,22 @@
 				this.buffer = document.createElement('link');
 				this.buffer.rel  = 'stylesheet';
 				this.buffer.href = this.url;
+				this.buffer.onload = function() {
+
+					var rules = [].slice.call(this.sheet.rules);
+					if (rules.length > 0) {
+
+						var buffer = '';
+
+						rules.forEach(function(rule) {
+							buffer += rule.cssText + '\n';
+						});
+
+						that.buffer = buffer;
+
+					}
+
+				};
 
 				document.head.appendChild(this.buffer);
 

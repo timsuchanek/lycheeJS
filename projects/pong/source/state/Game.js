@@ -97,6 +97,16 @@ lychee.define('game.state.Game').requires([
 
 	Class.prototype = {
 
+		serialize: function() {
+
+			var data = lychee.game.State.prototype.serialize.call(this);
+			data['constructor'] = 'game.state.Game';
+
+
+			return data;
+
+		},
+
 		deserialize: function(blob) {
 
 			lychee.game.State.prototype.deserialize.call(this, blob);

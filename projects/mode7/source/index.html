@@ -60,11 +60,9 @@
 		var lychee = sandbox.lychee;
 		var game   = sandbox.game;
 
-		// This allows using #MODE7 in JSON files
-		sandbox.MODE7 = new game.Main({
-			id: 0
-		});
-		sandbox.MODE7.init();
+		// This allows using #MAIN in JSON files
+		sandbox.MAIN = new game.Main({ id: 0 });
+		sandbox.MAIN.init();
 
 	});
 

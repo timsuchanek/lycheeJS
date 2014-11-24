@@ -177,6 +177,20 @@ lychee.define('game.state.Game').requires([
 
 	Class.prototype = {
 
+		/*
+		 * ENTITY API
+		 */
+
+		serialize: function() {
+
+			var data = lychee.game.State.prototype.serialize.call(this);
+			data['constructor'] = 'game.state.Game';
+
+
+			return data;
+
+		},
+
 		deserialize: function(blob) {
 
 			lychee.game.State.prototype.deserialize.call(this, blob);
@@ -251,6 +265,12 @@ lychee.define('game.state.Game').requires([
 			_create_emitter.call(this, x1, y2);
 
 		},
+
+
+
+		/*
+		 * CUSTOM API
+		 */
 
 		reshape: function(orientation, rotation) {
 
