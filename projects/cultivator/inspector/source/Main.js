@@ -41,19 +41,23 @@ lychee.define('inspector.Main').requires([
 
 							if (typeof asset.constructor === 'string') {
 
-								assets.push({
-									type:   asset.constructor,
-									url:    asset.arguments[0],
-									buffer: asset.blob.buffer
-								});
+								if (asset.constructor === 'Object') {
 
-							} else {
+									assets.push({
+										type:   asset.constructor,
+										url:    asset.arguments[0].url    || '(unknown URL)',
+										buffer: asset.arguments[0].buffer || null
+									});
 
-								assets.push({
-									type:   'Buffer',
-									url:    asset.url    || null,
-									buffer: asset.buffer || null
-								});
+								} else {
+
+									assets.push({
+										type:   asset.constructor,
+										url:    asset.arguments[0] || '(injected Buffer)',
+										buffer: (asset.blob instanceof Object) ? (asset.blob.buffer || null) : null
+									});
+
+								}
 
 							}
 

@@ -42,6 +42,7 @@ lychee.define('inspector.state.Definition').includes([
 		if (definition.attaches !== null && definition.attaches.length > 0) {
 
 			definition.attaches.forEach(function(url) {
+				if (typeof url !== 'string') return;
 				content += '<li><a onclick="MAIN.changeState(\'asset\');MAIN.state.view(\'' + url + '\')">' + url.split('/').pop() + '</a></li>';
 			});
 

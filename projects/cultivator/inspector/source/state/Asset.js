@@ -7,6 +7,7 @@ lychee.define('inspector.state.Asset').includes([
 	 * HELPERS
 	 */
 
+	var _font    = new Font();
 	var _config  = new Config();
 	var _texture = new Texture();
 
@@ -19,8 +20,20 @@ lychee.define('inspector.state.Asset').includes([
 
 		switch(asset.type) {
 
+			case 'Object':
+				content += '<div class="center">This Asset is injected at runtime and might not be used on other platforms.</div>';
+				content += '<br>';
+				content += '<br>';
+				content += '<pre>' + asset.buffer + '</pre>';
+			break;
 			case 'Font':
-				content += '<div class="center">Sorry, this Asset Type is not displayable without a lychee.Renderer instance.</div>';
+				content += '<div class="center">This Asset is injected at runtime and might not be used on other platforms.</div>';
+				content += '<br>';
+				content += '<br>';
+				_font.deserialize.call(_font, { buffer: asset.buffer });
+				content += '<div class="center"><img src="' + _font.__buffer.texture + '"></div>';
+				content += '<br>';
+				content += '<pre class="json">' + JSON.stringify(_font.__buffer, null, '\t') + '</pre>';
 			break;
 
 			case 'Config':
