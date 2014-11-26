@@ -204,6 +204,15 @@ body > main > section menu li.active {
 
 
 
+footer {
+	margin: 32px 0px 0px 0px;
+	font-family: 'exolight';
+	font-size: 0.5em;
+	text-align: center;
+}
+
+
+
 /*
  * CONTENT
  */
@@ -389,25 +398,14 @@ article em {
 	background: #444444;
 }
 
-
-
-/*
- * CONTENT
- */
-
-article.small {
-	max-width: 512px;
-}
-
 article b {
 	font-family: "exobold";
 	font-weight: normal;
 }
 
-
 article table {
 	font-family: 'exolight';
-	margin: 0px auto;
+	margin: 32px auto;
 	padding: 0px 0px;
 	width: 80%;
 }
@@ -467,22 +465,6 @@ article .scrollarea {
 	-moz-overflow-scrolling: touch;
 	-webkit-overflow-scrolling: touch;
 	overflow-scrolling: touch;
-}
-
-
-
-
-article table {
-	margin: 1em auto;
-}
- 
-
-
-footer {
-	margin: 1em 0px 0px 0px;
-	text-align: center;
-	font-size: 0.8em;
-	font-family: 'exolight';
 }
 
 
