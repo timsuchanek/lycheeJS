@@ -162,10 +162,10 @@ body > main > section menu {
 	padding: 0px;
 	width: 245px;
 	background: 0px 0px url(./menu-background.png) repeat-y #708391;
-	border-color: transparent;
+	border-color: #708391;
 	border-style: solid;
-	border-width: 0px 11px 0px 0px;
-	border-image: url('./menu-border.png') 11 11 repeat repeat;
+	border-width: 16px 16px 0px 0px;
+	border-image: url('./menu-border.png') 16 16 repeat repeat;
 	overflow-x: hidden;
 	overflow-y: auto;
 	z-index: 2;
