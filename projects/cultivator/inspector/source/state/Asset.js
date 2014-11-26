@@ -15,42 +15,54 @@ lychee.define('inspector.state.Asset').includes([
 
 		var content = '';
 
-		content += '<h2>new ' + asset.type + '(\'' + asset.url.split('/').pop() + '\')<br><small>(loaded from ' + asset.url + ')</small></h2>';
+		content += '<h2>new ' + asset.type + '(\'' + asset.url.split('/').pop() + '\')</h2>';
+		content += '<p>URL: <a href="' + asset.url + '">' + asset.url + '</a></p>';
 
 
 		switch(asset.type) {
 
 			case 'Object':
-				content += '<div class="center">This Asset is injected at runtime and might not be used on other platforms.</div>';
+				content += '<p>Note: This Asset is injected at runtime and might not be used on other platforms.</p>';
 				content += '<br>';
 				content += '<br>';
 				content += '<pre>' + asset.buffer + '</pre>';
 			break;
 			case 'Font':
-				content += '<div class="center">This Asset is injected at runtime and might not be used on other platforms.</div>';
+				content += '<p>Note: This Asset is injected at runtime and might not be used on other platforms.</p>';
 				content += '<br>';
 				content += '<br>';
 				_font.deserialize.call(_font, { buffer: asset.buffer });
-				content += '<div class="center"><img src="' + _font.__buffer.texture + '"></div>';
+				content += '<div class="center"><figure class="texture"><img src="' + _font.__buffer.texture + '"></figure></div>';
 				content += '<br>';
-				content += '<pre class="json">' + JSON.stringify(_font.__buffer, null, '\t') + '</pre>';
+				content += '<pre class="json">' + JSON.stringify(_font.__buffer, null, '    ') + '</pre>';
 			break;
 
 			case 'Config':
+				content += '<p>Note: This Asset is available on all platforms.</p>';
+				content += '<br>';
+				content += '<br>';
 				_config.deserialize.call(_config, { buffer: asset.buffer });
-				content += '<pre class="json">' + JSON.stringify(_config.buffer, null, '\t') + '</pre>';
+				content += '<pre class="json">' + JSON.stringify(_config.buffer, null, '    ') + '</pre>';
 			break;
 
 			case 'Texture':
+				content += '<p>Note: This Asset is available on all platforms.</p>';
+				content += '<br>';
+				content += '<br>';
 				// _texture.deserialize.call(_texture, { buffer: asset.buffer });
-				content += '<div class="center"><img src="' + asset.buffer + '"></div>';
+				content += '<div class="center"><figure class="texture"><img src="' + asset.buffer + '"></figure></div>';
 			break;
 
 			case 'Sound':
 			case 'Music':
-				content += '<div class="center">MP3 File<br><audio src="' + asset.buffer.mp3 + '" controls/></div>';
+				content += '<p>Note: This Asset is available on all platforms.</p>';
 				content += '<br>';
-				content += '<div class="center">OGG File<br><audio src="' + asset.buffer.ogg + '" controls/></div>';
+				content += '<br>';
+				content += '<p class="center">Embedded OGG file:</p>';
+				content += '<div class="center"><figure class="music"><audio src="' + asset.buffer.ogg + '" controls/></figure></div>';
+				content += '<br>';
+				content += '<p class="center">Embedded MP3 file:</p>';
+				content += '<div class="center"><figure class="music"><audio src="' + asset.buffer.mp3 + '" controls/></figure></div>';
 			break;
 
 		}

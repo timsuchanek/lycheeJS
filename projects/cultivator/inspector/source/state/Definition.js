@@ -94,7 +94,7 @@ lychee.define('inspector.state.Definition').includes([
 		content += '<h3>.exports(/* Code */)</h3>';
 
 		if (definition.exports !== null) {
-			content += '<pre class="javascript">' + definition.exports + '</pre>';
+			content += '<pre class="javascript">' + definition.exports.replace(/\t/g, '    ') + '</pre>';
 		} else {
 			content += '<pre class="javascript">/* no Code exported */</pre>';
 		}

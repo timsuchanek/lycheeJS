@@ -19,14 +19,11 @@
 		<li><a href="./documenter/index.html" title="Cultivation Documenter">Documenter</a></li>
 	</menu>
 
-	<h2>Getting Started</h2>
-
 	<article>
-		<h3>1. Play with the Nursery Garden</h3>
-		<p>
-			Play around with the existing lycheeJS Projects
-			and learn how they are builtup and integrated
-			with controllers, networking and devices.
+		<h2>1. Play with the Nursery Garden</h2>
+		<p class="center">
+			Play around with the existing lycheeJS Projects and learn<br>
+			how they are builtup and integrated with the engine stack.
 		</p>
 		<ul class="teaser-List">
 			<li>
@@ -51,11 +48,10 @@
 	</article>
 
 	<article>
-		<h3>2. Learn from the Nursery Garden</h3>
-		<p>
-			Inspect the existing lycheeJS Projects and learn how
-			environment snapshots and different environment builts
-			are builtup.
+		<h2>2. Learn from the Nursery Garden</h2>
+		<p class="center">
+			Inspect the existing lycheeJS Projects and learn how<br>
+			environment snapshots and environment builts work.
 		</p>
 		<ul class="teaser-List">
 			<li>
@@ -80,7 +76,7 @@
 	</article>
 
 	<article>
-		<h3>3. Plant your own Project</h3>
+		<h2>3. Plant your own Project</h2>
 		<p>
 			Start a new project from the boilerplate by copying its
 			contents into a new folder.
@@ -92,7 +88,8 @@ cp -R ./boilerplate ./myproject; # Replace myproject with unique identifier
 		<br>
 		<p>
 			Modify the unique identifier of the lychee.Environment in
-			the index.html, so you have sweet remote debugging features.
+			the index.html, so that the project is now integrated with
+			the remote debugging features and the lycheeJS Inspector.
 		</p>
 		<pre class="javascript">
 var environment = new lychee.Environment({
@@ -106,9 +103,15 @@ var environment = new lychee.Environment({
 			connect to the lychee.net.Server.
 		</p>
 		<p>
-			The API call can be replaced by either a Settings Object
-			(e.g. <em>{ host: 'myproject.lycheejs.org', port: 1337 }</em>) or
-			an API call String (e.g. <em>"/api/Server/?identifier=myproject")</em>.
+			The API call should be replaced by an API call String (e.g.
+			<em>"/api/Server/?identifier=myproject"</em>) in order to
+			be automatically integrated with the Sorbet WebSocket server
+			balancer.
+		<p>
+		<p>
+			Alternatively you can manually start your WebSocket server
+			and/or use a fixed configuration for both the lychee.net.Server
+			and lychee.net.Client (e.g. <em>{ host: 'myproject.lycheejs.org', port: 1337 }</em>).
 		</p>
 		<pre class="javascript">
 var settings = {
@@ -119,8 +122,8 @@ var settings = {
 	</article>
 
 	<article>
-		<h3>4. Become a Gardening Master</h3>
-		<p>
+		<h2>4. Become a Gardening Master</h2>
+		<p class="center">
 			Watch the <a href="http://www.youtube.com/embed/videoseries?list=PLN8QSMXLHp7Q8FcbqSS7MJkqvsE8_CSHw">Playlist on YouTube</a>
 			and learn from the Tutorials.
 		</p>
@@ -131,7 +134,11 @@ var settings = {
 	</article>
 
 	<article>
-		<h3>5. Cultivate your Project</h3>
+		<h2>5. Cultivate your Project</h2>
+		<p class="center">
+			Use the Tools of the Cultivator Project<br>
+			to water and fertilize your new Plant.
+		</p>
 		<ul class="teaser-List">
 			<li>
 				<a href="./wizard/index.html">
@@ -155,8 +162,8 @@ var settings = {
 	</article>
 
 	<article>
-		<h3>Need Help?</h3>
-		<p>
+		<h2>Need Help?</h2>
+		<p class="center">
 			Check out the <a href="./tutorials/index.html">Tutorials</a>
 			or contact us on <a href="https://facebook.com/lycheeJS">Facebook</a>
 			or <a href="https://youtube.com/lycheeJS">YouTube</a>!
