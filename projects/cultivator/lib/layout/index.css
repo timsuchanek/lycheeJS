@@ -162,7 +162,7 @@ body > main > section menu {
 	padding: 0px;
 	width: 245px;
 	background: 0px 0px url(./menu-background.png) repeat-y #708391;
-	border-color: #708391;
+	border-color: transparent;
 	border-style: solid;
 	border-width: 16px 16px 0px 0px;
 	border-image: url('./menu-border.png') 16 16 repeat repeat;
@@ -196,7 +196,7 @@ body > main > section menu li:hover,
 body > main > section menu li:focus,
 body > main > section menu li.active {
 	color: #ffffff;
-	background-position: 0px 0px;
+	background-position: -36px 0px;
 	text-shadow: 0px 0px 2px #ebbf10,
 				 0px 0px 4px #ebbf10,
 				 0px 0px 6px #ebbf10,
