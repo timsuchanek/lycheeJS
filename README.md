@@ -106,9 +106,9 @@ user@box:~$          cd ~/lycheeJS;
 user@box:~/lycheeJS$ sudo ./tool/ubuntu/install.js;
 ```
 
-- If you want **no** LSB init integration, you can alternatively add
+- If you want **no LSB init integration**, you can alternatively add
 an own script to the *package.json/scripts* section. Take a look
-at the **localhost** or **lycheejs.org** example.
+at the *localhost* or *lycheejs.org* example.
 
 ```bash
 # This is identical to npm start, but will run forever
@@ -162,7 +162,7 @@ There are plenty of tutorials available at [http://lycheejs.org/tutorials](http:
 
 ## Documentation
 
-The documentation is available online at [http://lycheejs.org/docs](http://lycheejs.org/docs).
+The documentation is available online at [http://lycheejs.org/documentation/index.html](http://lycheejs.org/documentation).
 
 
 ## Roadmap
@@ -183,13 +183,13 @@ The lycheeJS architecture is independent of the environment which
 means it will run on any theoretical JavaScript environment.
 
 The only requirement for such a platform is a fully implemented
-[bootstrap API](http://lycheejs.org/docs/api-bootstrap.html).
+[bootstrap API](http://lycheejs.org/documentation/api-bootstrap.html).
 
 For fully supporting a client-side environment, you will also have to implement
-a [lychee.Input](http://lycheejs.org/docs/api-lychee-Input.html),
-a [lychee.Renderer](http://lycheejs.org/docs/api-lychee-Renderer.html),
-a [lychee.Storage](http://lycheejs.org/docs/api-lychee-Storage.html),
-and a [lychee.Viewport](http://lycheejs.org/docs/api-lychee-Viewport.html).
+a [lychee.Input](http://lycheejs.org/documentation/api-lychee-Input.html),
+a [lychee.Renderer](http://lycheejs.org/documentation/api-lychee-Renderer.html),
+a [lychee.Storage](http://lycheejs.org/documentation/api-lychee-Storage.html),
+and a [lychee.Viewport](http://lycheejs.org/documentation/api-lychee-Viewport.html).
 
 These implementations are fully optional and only necessary if you are using
 them inside your Game or App.
