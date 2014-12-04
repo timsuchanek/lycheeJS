@@ -14,16 +14,16 @@
 <body>
 
 	<menu>
-		<li><a href="./wizard/index.html" title="Cultivation Wizard">Wizard</a></li>
+		<li><a href="./font/index.html" title="Font Tool">Font&nbsp;Tool</a></li>
+		<li><a href="./sprite/index.html" title="Sprite Tool">Sprite&nbsp;Tool</a></li>
 		<li><a href="./inspector/index.html" title="Environment Inspector">Inspector</a></li>
-		<li><a href="./documenter/index.html" title="Cultivation Documenter">Documenter</a></li>
 	</menu>
 
 	<article>
 		<h2>1. Play with the Nursery Garden</h2>
 		<p class="center">
-			Play around with the existing lycheeJS Projects and learn<br>
-			how they are builtup and integrated with the engine stack.
+			Play around with existing Projects and learn
+			how they are integrated with the engine.
 		</p>
 		<ul class="teaser-List">
 			<li>
@@ -50,8 +50,8 @@
 	<article>
 		<h2>2. Learn from the Nursery Garden</h2>
 		<p class="center">
-			Inspect the existing lycheeJS Projects and learn how<br>
-			environment snapshots and environment builts work.
+			Inspect existing Projects and learn how
+			environment snapshots and builds work.
 		</p>
 		<ul class="teaser-List">
 			<li>
@@ -91,9 +91,8 @@ cp -R ./boilerplate ./myproject; # Replace myproject with unique identifier
 			the index.html, so that the project is now integrated with
 			the remote debugging features and the lycheeJS Inspector.
 		</p>
-		<pre class="javascript">
+		<pre class="javascript" title="/projects/myproject/source/index.html#L48">
 var environment = new lychee.Environment({
-	// /projects/myproject/source/index.html#L48
 	id: 'boilerplate', // Replace boilerplate with unique identifier
 });
 		</pre>
@@ -113,9 +112,8 @@ var environment = new lychee.Environment({
 			and/or use a fixed configuration for both the lychee.net.Server
 			and lychee.net.Client (e.g. <em>{ host: 'myproject.lycheejs.org', port: 1337 }</em>).
 		</p>
-		<pre class="javascript">
+		<pre class="javascript" title="/projects/myproject/source/Main.js#L16">
 var settings = {
-	// /projects/myproject/source/Main.js#L16
 	client: '/api/Server/?identifier=boilerplate', // Replace boilerplate with unique identifier
 };
 		</pre>
@@ -136,14 +134,20 @@ var settings = {
 	<article>
 		<h2>5. Cultivate your Project</h2>
 		<p class="center">
-			Use the Tools of the Cultivator Project<br>
-			to water and fertilize your new Plant.
+			Use the Tools of the Cultivator Project
+			to water and fertilize your new plant.
 		</p>
 		<ul class="teaser-List">
 			<li>
-				<a href="./wizard/index.html">
-					<img src="./welcome/entity.png">
-					<span>Wizard</span>
+				<a href="./font/index.html">
+					<img src="./welcome/font.png">
+					<span>Font Tool</span>
+				</a>
+			</li>
+			<li>
+				<a href="./sprite/index.html">
+					<img src="./welcome/sprite.png">
+					<span>Sprite Tool</span>
 				</a>
 			</li>
 			<li>
@@ -152,19 +156,13 @@ var settings = {
 					<span>Inspector</span>
 				</a>
 			</li>
-			<li>
-				<a href="./documenter/index.html">
-					<img src="./welcome/documenter.png">
-					<span>Documenter</span>
-				</a>
-			</li>
 		</ul>
 	</article>
 
 	<article>
 		<h2>Need Help?</h2>
 		<p class="center">
-			Check out the <a href="./tutorials/index.html">Tutorials</a>
+			Check out the <a href="http://lycheejs.org/tutorials/index.html">Tutorials</a>
 			or contact us on <a href="https://facebook.com/lycheeJS">Facebook</a>
 			or <a href="https://youtube.com/lycheeJS">YouTube</a>!
 		</p>

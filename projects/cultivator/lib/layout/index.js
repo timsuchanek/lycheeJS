@@ -77,5 +77,153 @@
 
 	}
 
+
+
+	/*
+	 * FORM POLYFILL
+	 */
+
+	var _set_value = function(key, value) {
+
+		// TODO: Add support for key = 'test.sub[index]' notation
+		this[key] = value;
+
+	};
+
+	var _encode_form = function(type, elements) {
+
+		var data = null;
+
+
+		if (type === 'application/json') {
+
+			data = {};
+
+
+			elements.forEach(function(element) {
+
+				var tag = element.tagName.toLowerCase();
+				if (tag === 'input') {
+
+					var type = element.type;
+					if (type === 'text' || type === 'hidden') {
+
+						_set_value.call(data, element.name, '' + element.value);
+
+					} else if (type === 'number' || type === 'range') {
+
+						_set_value.call(data, element.name, parseInt(element.value, 10));
+
+					}
+
+				} else if (tag === 'select') {
+
+					var index = element.selectedIndex;
+					if (index !== -1) {
+						_set_value.call(data, element.name, element.options[index].value || element.options[index].innerText);
+					}
+
+				}
+
+			});
+
+		}
+
+
+		return data;
+
+	};
+
+	var _resolve_target = function(identifier) {
+
+		var pointer = this;
+
+		var ns = identifier.split('.');
+		for (var n = 0, l = ns.length; n < l; n++) {
+
+			var name = ns[n];
+
+			if (pointer[name] !== undefined) {
+				pointer = pointer[name];
+			} else {
+				pointer = null;
+				break;
+			}
+
+		}
+
+
+		return pointer;
+
+	};
+
+
+	document.addEventListener('DOMContentLoaded', function() {
+
+		var forms = [].slice.call(document.querySelectorAll('form[method="javascript"]'));
+		if (forms.length > 0) {
+
+			forms.forEach(function(form) {
+
+				form.onsubmit = function() {
+
+					try {
+
+						var data   = _encode_form(form.getAttribute('enctype'), [].slice.call(form.querySelectorAll('input, select')));
+						var target = _resolve_target.call(global, form.getAttribute('action'));
+						if (target !== null) {
+
+							if (target instanceof Function) {
+
+								target(data);
+
+							} else if (target instanceof Object && typeof target.trigger === 'function') {
+
+								target.trigger('submit', [ data ]);
+
+							}
+
+						}
+
+					} catch(e) {
+					}
+
+
+					return false;
+
+				};
+
+			});
+
+
+			forms.forEach(function(form) {
+
+				if (typeof form.onsubmit === 'function') {
+
+					var elements = [].slice.call(form.querySelectorAll('input, select'));
+					if (elements.length > 0) {
+
+						elements.forEach(function(element) {
+
+							element.onchange = function(a) {
+
+								if (this.checkValidity() === true) {
+									form.onsubmit();
+								}
+
+							};
+
+						});
+
+					}
+
+				}
+
+			});
+
+		}
+
+	}, true);
+
 })(this);
 
