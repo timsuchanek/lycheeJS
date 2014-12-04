@@ -223,7 +223,7 @@ lychee.Package = typeof lychee.Package !== 'undefined' ? lychee.Package : (funct
 			// Fastest path, file doesn't exist
 			if (result === false) {
 
-				delete environment.definitions[identifier];
+				delete that.environment.definitions[identifier];
 				that.__blacklist[candidate] = 1;
 
 				return;

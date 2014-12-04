@@ -71,7 +71,7 @@ lychee.define('lychee.data.BitON').exports(function(lychee, global) {
 
 	_Stream.prototype = {
 
-		buffer: function() {
+		toString: function() {
 
 			if (this.__mode === _Stream.MODE.write) {
 
@@ -635,7 +635,7 @@ lychee.define('lychee.data.BitON').exports(function(lychee, global) {
 
 		_encode(stream, data);
 
-		return stream.buffer();
+		return stream.toString();
 
 	};
 

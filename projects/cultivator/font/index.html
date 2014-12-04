@@ -10,6 +10,9 @@
 	<link rel="stylesheet" href="../lib/layout/index.css">
 	<script src="../lib/layout/index.js"></script>
 
+	<!-- BOOTSTRAP -->
+	<script src="/lychee/build/html/core.js"></script>
+
 </head>
 <body>
 
@@ -23,7 +26,7 @@
 			Modify the settings for the new Font here.<br>
 			The preview will be automatically refreshed.
 		</p>
-		<form enctype="application/json" action="APP.render" method="javascript">
+		<form id="settings" enctype="application/json" action="MAIN" method="javascript">
 			<table>
 				<tr>
 					<th>Family</th>
@@ -122,11 +125,39 @@ lychee.define('game.Example').exports(function(lychee, game, global, attachments
 	<footer>lycheeJS is (c) 2014 by LazerUnicorns Ltd. and released under MIT license.</footer>
 
 	<script>
-	var APP = {
-		render: function(data) {
-			console.log('RENDERING NAO', data);
-		}
-	};
+	/*
+	 * INITIALIZATION
+	 */
+
+	(function(lychee, global) {
+
+		var environment = new lychee.Environment({
+			id:      'font',
+			debug:   false,
+			sandbox: false,
+			build:   'tool.Main',
+			packages: [
+				new lychee.Package('tool', './lychee.pkg')
+			],
+			tags:     {
+				platform: [ 'html' ]
+			}
+		});
+
+
+		lychee.setEnvironment(environment);
+
+		lychee.init(function(sandbox) {
+
+			var lychee = sandbox.lychee;
+			var tool   = sandbox.tool;
+
+			sandbox.MAIN = new tool.Main();
+			sandbox.MAIN.init();
+
+		});
+
+	})(lychee, typeof global !== 'undefined' ? global : this);
 	</script>
 
 </body>

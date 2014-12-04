@@ -179,7 +179,12 @@
 
 							} else if (target instanceof Object && typeof target.trigger === 'function') {
 
-								target.trigger('submit', [ data ]);
+								var id = form.getAttribute('id') || null;
+								if (id !== null) {
+									target.trigger('submit', [   id, data ]);
+								} else {
+									target.trigger('submit', [ null, data ]);
+								}
 
 							}
 

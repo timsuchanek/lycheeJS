@@ -23,7 +23,7 @@ lychee.define('lychee.data.JSON').exports(function(lychee, global) {
 
 	_Stream.prototype = {
 
-		buffer: function() {
+		toString: function() {
 			return this.__buffer;
 		},
 
@@ -352,7 +352,7 @@ lychee.define('lychee.data.JSON').exports(function(lychee, global) {
 
 		_encode(stream, data);
 
-		return stream.buffer();
+		return stream.toString();
 
 	};
 
