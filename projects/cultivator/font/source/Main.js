@@ -17,16 +17,87 @@ lychee.define('tool.Main').requires([
 	 * HELPERS
 	 */
 
-	var _update_preview = function(image, json) {
+	var _download = function(filename, buffer) {
 
-		var img = document.querySelector('img#preview-texture');
-		if (img !== null) {
-			img.src = image;
+		filename = typeof filename === 'string' ? filename : null;
+		buffer   = buffer instanceof Buffer     ? buffer   : null;
+
+
+		if (filename !== null && buffer !== null) {
+
+			var ext  = filename.split('.').pop();
+			var type = 'plain/text';
+			if (ext.match(/fnt|json/)) {
+				type = 'application/json';
+			} else if (ext.match(/png/)) {
+				type = 'image/png';
+			}
+
+			var url     = 'data:' + type + ';base64,' + buffer.toString('base64');
+			var event   = document.createEvent('MouseEvents');
+			var element = document.createElement('a');
+
+
+			element.download = filename;
+			element.href     = url;
+
+			event.initMouseEvent(
+				'click',
+				true,
+				false,
+				window,
+				0,
+				0,
+				0,
+				0,
+				0,
+				false,
+				false,
+				false,
+				false,
+				0,
+				null
+			);
+
+			element.dispatchEvent(event);
+
+
+			return true;
+
 		}
 
-		var pre = document.querySelector('pre#preview-json');
-		if (pre !== null) {
-			pre.innerText = json;
+
+		return false;
+
+	};
+
+	var _update_preview = function(blob, settings) {
+
+		var data = _JSON.decode(blob);
+		if (data instanceof Object) {
+
+			if (data.texture !== null) {
+
+				var img = document.querySelector('img#preview-texture');
+				if (img !== null) {
+					img.src = data.texture;
+				}
+
+			}
+
+			var button = document.querySelector('button#preview-download');
+			if (button !== null) {
+
+				var filename = settings.family + '_' + settings.size + 'x' + settings.outline + '.fnt';
+				var buffer   = new Buffer(blob, 'utf8');
+
+				button.innerHTML = 'Download ' + filename;
+				button.onclick = function() {
+					_download(filename, buffer);
+				};
+
+			}
+
 		}
 
 	};
@@ -80,14 +151,9 @@ lychee.define('tool.Main').requires([
 
 			if (id === 'settings') {
 
-				var json = _FNT.encode(settings);
-				if (json !== null) {
-
-					var data = _JSON.decode(json);
-					if (data instanceof Object && data.texture !== null) {
-						_update_preview(data.texture, json);
-					}
-
+				var font = _FNT.encode(settings);
+				if (font !== null) {
+					_update_preview(font, settings);
 				}
 
 			}
