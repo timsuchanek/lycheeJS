@@ -9,8 +9,9 @@ back into master, tagged and published.
 
 ## v0.8.4
 
-- Wizard Tool (generates Fonts, Sprites and Entities)
-- Documenter Tool (generates API docs and parses lychee.pkg Packages)
+- API Tool (documents API of Definitions)
+- Package Tool (inspects and verifies integrity of lychee.pkg files)
+- Sprite Tool (creates Sprite.png, Sprite.json and Sprite.js)
 
 
 ## v0.8.5
