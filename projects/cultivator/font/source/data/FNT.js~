@@ -24,7 +24,7 @@ lychee.define('tool.data.FNT').requires([
 		defaults.color        = '#ffffff';
 		defaults.outline      = 0;
 		defaults.outlinecolor = '#000000';
-		defaults.charset      = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+		defaults.charset      = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 
 	})(_defaults);
 
@@ -263,7 +263,7 @@ lychee.define('tool.data.FNT').requires([
 			var context = canvas.getContext('2d');
 
 			measurements.width  = settings.spacing;
-			measurements.height = settings.size * 3 + settings.outline * 2;
+			measurements.height = settings.size * 3;
 
 			context.font         = settings.style + ' ' + settings.size + 'px "' + settings.family + '"';
 			context.textBaseline = 'top';
@@ -348,7 +348,7 @@ lychee.define('tool.data.FNT').requires([
 				var data  = this.getImageData(0, 0, measurements.width, measurements.height);
 				var found = false;
 
-				var mtop    = measurements.height;
+				var mtop    = 96;
 				var mbottom = 0;
 
 				var d, dl, y;
@@ -362,8 +362,16 @@ lychee.define('tool.data.FNT').requires([
 						mtop = y;
 					}
 
+				}
+
+				for (d = data.data.length - 1; d >= 0; d -= 4) {
+
+					// var x = (d / 4) % data.width;
+					y = Math.floor((d / 4) / data.width);
+
 					if (y > mbottom && data.data[d + 3] > 0) {
 						mbottom = y;
+						break;
 					}
 
 				}
@@ -387,7 +395,7 @@ lychee.define('tool.data.FNT').requires([
 
 
 				var outline = settings.outline;
-				var m       = settings.spacing;
+				var margin  = settings.spacing;
 
 				for (var c = 0; c < settings.charset.length; c++) {
 
@@ -397,7 +405,7 @@ lychee.define('tool.data.FNT').requires([
 
 							this.fillText(
 								settings.charset[c],
-								m      + x,
+								margin + x,
 								offset + y
 							);
 
@@ -405,7 +413,7 @@ lychee.define('tool.data.FNT').requires([
 
 					}
 
-					m += measurements.map[c] + settings.spacing * 2;
+					margin += measurements.map[c] + settings.spacing * 2;
 
 				}
 
@@ -420,18 +428,18 @@ lychee.define('tool.data.FNT').requires([
 				this.textBaseline = 'top';
 
 
-				var m = settings.spacing;
+				var margin = settings.spacing;
 
 				for (var c = 0; c < settings.charset.length; c++) {
 
 					this.fillStyle = settings.color;
 					this.fillText(
 						settings.charset[c],
-						m,
+						margin,
 						offset
 					);
 
-					m += measurements.map[c] + settings.spacing * 2;
+					margin += measurements.map[c] + settings.spacing * 2;
 
 				}
 
@@ -443,10 +451,10 @@ lychee.define('tool.data.FNT').requires([
 			 */
 
 			if (settings.outline > 0) {
-				render_outline.call(canvas.getContext('2d'), settings.size + settings.outline);
+				render_outline.call(canvas.getContext('2d'), settings.size);
 			}
 
-			render_font.call(canvas.getContext('2d'), settings.size + settings.outline);
+			render_font.call(canvas.getContext('2d'), settings.size);
 
 
 
@@ -458,15 +466,14 @@ lychee.define('tool.data.FNT').requires([
 			if (margin.top > 0 || margin.bottom > 0) {
 
 				measurements.height = measurements.height - margin.top - margin.bottom;
-				canvas.height       = 0;
+				canvas.height       = 0; // This will clear the canvas
 				canvas.height       = measurements.height;
 
-
 				if (settings.outline > 0) {
-					render_outline.call(canvas.getContext('2d'), settings.size + settings.outline - margin.top);
+					render_outline.call(canvas.getContext('2d'), settings.size - margin.top);
 				}
 
-				render_font.call(canvas.getContext('2d'), settings.size + settings.outline - margin.top);
+				render_font.call(canvas.getContext('2d'), settings.size - margin.top);
 
 			}
 

@@ -138,7 +138,7 @@ lychee.define('lychee.data.JSON').exports(function(lychee, global) {
 
 			stream.writeRAW('"');
 
-			stream.writeRAW(data);
+			stream.writeRAW(data.replace(/\\/g, '\\\\').replace('"', '\\"'));
 
 			stream.writeRAW('"');
 
@@ -149,8 +149,13 @@ lychee.define('lychee.data.JSON').exports(function(lychee, global) {
 			stream.writeRAW('[');
 
 			for (var d = 0, dl = data.length; d < dl; d++) {
+
 				_encode(stream, data[d]);
-				stream.writeRAW(',');
+
+				if (d < dl - 1) {
+					stream.writeRAW(',');
+				}
+
 			}
 
 			stream.writeRAW(']');
@@ -246,7 +251,7 @@ lychee.define('lychee.data.JSON').exports(function(lychee, global) {
 
 				stream.readRAW(1);
 
-				size = stream.seek([ '"' ]);
+				size = stream.seek([ '\\', '"' ]);
 
 				if (size > 0) {
 					value = stream.readRAW(size);
@@ -254,7 +259,18 @@ lychee.define('lychee.data.JSON').exports(function(lychee, global) {
 					value = '';
 				}
 
-				stream.readRAW(1);
+				check = stream.readRAW(1);
+
+
+				while (check === '\\') {
+
+					value[value.length - 1] = check;
+
+					size   = stream.seek([ '\\', '"' ]);
+					value += stream.readRAW(size);
+					check  = stream.readRAW(1);
+
+				}
 
 
 			// []: Array

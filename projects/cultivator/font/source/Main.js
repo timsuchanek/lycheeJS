@@ -1,11 +1,41 @@
 
 lychee.define('tool.Main').requires([
+	'lychee.data.JSON',
 	'tool.data.FNT'
 ]).includes([
 	'lychee.game.Main'
-]).exports(function(lychee, tool, global, attachments) {
+]).tags({
+	platform: 'html'
+}).exports(function(lychee, tool, global, attachments) {
 
-	var _FNT = tool.data.FNT;
+	var _FNT  = tool.data.FNT;
+	var _JSON = lychee.data.JSON;
+
+
+
+	/*
+	 * HELPERS
+	 */
+
+	var _update_preview = function(image, json) {
+
+		var img = document.querySelector('img#preview-texture');
+		if (img !== null) {
+			img.src = image;
+		}
+
+		var pre = document.querySelector('pre#preview-json');
+		if (pre !== null) {
+			pre.innerText = json;
+		}
+
+	};
+
+
+
+	/*
+	 * IMPLEMENTATION
+	 */
 
 	var Class = function(data) {
 
@@ -38,17 +68,28 @@ lychee.define('tool.Main').requires([
 
 		this.bind('init', function() {
 
-//			this.setState('game', new game.state.Game(this));
-//			this.setState('menu', new game.state.Menu(this));
-//			this.changeState('menu');
+			var onsubmit = document.querySelector('form').onsubmit;
+			if (onsubmit instanceof Function) {
+				onsubmit();
+			}
 
 		}, this, true);
 
 
-		this.bind('submit', function(id, data) {
+		this.bind('submit', function(id, settings) {
 
 			if (id === 'settings') {
-console.log('SETTINGS UPDATE', data);
+
+				var json = _FNT.encode(settings);
+				if (json !== null) {
+
+					var data = _JSON.decode(json);
+					if (data instanceof Object && data.texture !== null) {
+						_update_preview(data.texture, json);
+					}
+
+				}
+
 			}
 
 		}, this);
