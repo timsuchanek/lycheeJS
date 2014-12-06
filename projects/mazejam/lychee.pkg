@@ -1,0 +1,119 @@
+{
+
+	"build": {
+
+		"environments": {
+
+			"html-nw/main": {
+				"build":    "game.Main",
+				"debug":    false,
+				"sandbox":  false,
+				"type":     "folder",
+				"packages": [
+					[ "game", "./lychee.pkg" ]
+				],
+				"tags": {
+					"platform": [ "html-nw", "html" ]
+				}
+			},
+
+			"html/main": {
+				"build":    "game.Main",
+				"debug":    false,
+				"sandbox":  false,
+				"type":     "folder",
+				"packages": [
+					[ "game", "./lychee.pkg" ]
+				],
+				"tags": {
+					"platform": [ "html" ]
+				}
+			},
+
+			"nodejs/server": {
+				"build":    "game.net.Server",
+				"debug":    false,
+				"sandbox":  false,
+				"type":     "file",
+				"packages": [
+					[ "game", "./lychee.pkg" ]
+				],
+				"tags": {
+					"platform": [ "nodejs" ]
+				}
+			}
+
+		},
+
+		"files": {
+
+		}
+
+	},
+
+	"source": {
+
+		"environments": {
+
+		},
+
+		"tags": {
+
+		},
+
+		"files": {
+
+			"layer": {
+				"Effects": [ "js" ],
+				"Floor":   [ "js" ],
+				"Objects": [ "js" ]
+			},
+
+			"effect": {
+				"Explosion": [ "js", "json", "png" ]
+			},
+
+			"entity": {
+				"Bullet":    [ "js", "json", "png" ],
+				"Floor":     [ "js", "json", "png" ],
+				"Item":      [ "js", "json", "png" ],
+				"Switch":    [ "js", "json", "png" ],
+				"Tank":      [ "js", "json", "png", "snd" ],
+				"Wall":      [ "js", "json", "png" ],
+				"lycheeJS":  [ "js", "png" ]
+			},
+
+			"net": {
+
+				"client": {
+					"Highscore": [ "js" ]
+				},
+
+				"remote": {
+					"Highscore": [ "js" ]
+				},
+
+				"Client": [ "js" ],
+				"Server": [ "js" ]
+
+			},
+
+			"state": {
+				"Game": [ "js", "json", "levels.json", "fnt", "death.snd", "explosion.snd", "powerup.snd", "msc" ],
+				"Menu": [ "js", "json" ]
+			},
+
+			"ui": {
+				"Button":     [ "js", "json", "png", "fnt" ],
+				"Highscores": [ "js", "fnt" ],
+				"Layer":      [ "js", "json", "png", "fnt" ]
+			},
+
+			"DeviceSpecificHacks": [ "js" ],
+			"Main":                [ "js" ]
+
+		}
+
+	}
+
+}

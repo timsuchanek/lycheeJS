@@ -1,0 +1,25 @@
+{
+	"layers": {
+		"game": {
+			"constructor": "lychee.game.Layer",
+			"arguments": [{}],
+			"blob": {
+				"entities": [{
+					"constructor": "game.layer.Floor",
+					"arguments": [{}]
+				}, {
+					"constructor": "game.layer.Objects",
+					"arguments": [{}]
+				}, {
+					"constructor": "game.layer.Effects",
+					"arguments": [{}]
+				}],
+				"map": {
+					"floor":   0,
+					"objects": 1,
+					"effects": 2
+				}
+			}
+		}
+	}
+}
