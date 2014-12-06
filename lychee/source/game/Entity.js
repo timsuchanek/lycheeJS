@@ -204,8 +204,8 @@ lychee.define('lychee.game.Entity').exports(function(lychee, global) {
 		render: function(renderer, offsetX, offsetY) {
 
 			var effects = this.effects;
-			for (var e = 0, el = this.effects.length; e < el; e++) {
-				this.effects[e].render(renderer, offsetX, offsetY);
+			for (var e = 0, el = effects.length; e < el; e++) {
+				effects[e].render(renderer, offsetX, offsetY);
 			}
 
 		},

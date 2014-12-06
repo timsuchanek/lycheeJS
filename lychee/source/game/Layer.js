@@ -195,6 +195,12 @@ lychee.define('lychee.game.Layer').requires([
 			}
 
 
+			var effects = this.effects;
+			for (var e = 0, el = effects.length; e < el; e++) {
+				effects[e].render(renderer, offsetX, offsetY);
+			}
+
+
 			if (lychee.debug === true) {
 
 				ox = position.x + offsetX;

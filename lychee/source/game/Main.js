@@ -5,6 +5,7 @@ lychee.define('lychee.game.Main').requires([
 	'lychee.Storage',
 	'lychee.Viewport',
 	'lychee.game.Jukebox',
+	'lychee.game.Logic',
 	'lychee.game.Loop',
 	'lychee.game.State',
 	'lychee.net.Client'
@@ -77,6 +78,10 @@ lychee.define('lychee.game.Main').requires([
 			this.jukebox = new lychee.game.Jukebox(settings.jukebox);
 		}
 
+		if (settings.logic !== null) {
+			this.logic = new lychee.game.Logic(settings.logic);
+		}
+
 		if (settings.loop !== null) {
 			this.loop = new lychee.game.Loop(settings.loop);
 			this.loop.bind('render', this.render, this);
@@ -126,6 +131,10 @@ lychee.define('lychee.game.Main').requires([
 			sound:    true
 		},
 
+		logic: {
+			projection: lychee.game.Logic.PROJECTION.pixel
+		},
+
 		loop: {
 			render: 60,
 			update: 60
@@ -167,6 +176,7 @@ lychee.define('lychee.game.Main').requires([
 		this.client   = null;
 		this.input    = null;
 		this.jukebox  = null;
+		this.logic    = null;
 		this.loop     = null;
 		this.renderer = null;
 		this.storage  = null;
