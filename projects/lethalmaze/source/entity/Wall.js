@@ -32,6 +32,16 @@ lychee.define('game.entity.Wall').includes([
 
 	Class.prototype = {
 
+		toggleAlpha: function() {
+
+			if (this.alpha === 0) {
+				this.alpha = 1;
+			} else {
+				this.alpha = 0;
+			}
+
+		}
+
 	};
 
 

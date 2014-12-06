@@ -1,5 +1,5 @@
 
-lychee.define('game.entity.Switch').includes([
+lychee.define('game.entity.Button').includes([
 	'lychee.game.Sprite'
 ]).exports(function(lychee, game, global, attachments) {
 
@@ -17,10 +17,11 @@ lychee.define('game.entity.Switch').includes([
 		var settings = lychee.extend({}, data);
 
 
+		settings.collision = lychee.game.Entity.COLLISION.A;
 		settings.texture = _texture;
 		settings.map     = _config.map;
-		settings.width   = _config.width;
-		settings.height  = _config.height;
+		settings.width   = _config.width  - 4;
+		settings.height  = _config.height - 4;
 		settings.shape   = lychee.game.Entity.SHAPE.rectangle;
 		settings.states  = _config.states;
 		settings.state   = _TYPES[settings.type] || 'default';

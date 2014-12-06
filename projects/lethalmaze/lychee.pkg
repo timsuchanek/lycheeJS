@@ -75,9 +75,9 @@
 
 			"entity": {
 				"Bullet":    [ "js", "json", "png" ],
+				"Button":    [ "js", "json", "png" ],
 				"Floor":     [ "js", "json", "png" ],
 				"Item":      [ "js", "json", "png" ],
-				"Switch":    [ "js", "json", "png" ],
 				"Tank":      [ "js", "json", "png", "snd" ],
 				"Wall":      [ "js", "json", "png" ],
 				"lycheeJS":  [ "js", "png" ]

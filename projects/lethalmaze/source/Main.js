@@ -13,7 +13,7 @@ lychee.define('game.Main').requires([
 		var settings = lychee.extend({
 
 			// Is configured by Sorbet API
-			client: '/api/Server?identifier=mazejam',
+			client: '/api/Server?identifier=lethalmaze',
 
 			input: {
 				delay:       0,
@@ -38,7 +38,7 @@ lychee.define('game.Main').requires([
 			},
 
 			renderer: {
-				id:         'mazejam',
+				id:         'lethalmaze',
 				width:      768,
 				height:     768,
 				background: '#67b843'

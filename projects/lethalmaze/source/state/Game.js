@@ -6,9 +6,9 @@ lychee.define('game.state.Game').requires([
 	'lychee.game.Background',
 	'game.effect.Explosion',
 	'game.entity.Bullet',
+	'game.entity.Button',
 	'game.entity.Floor',
 	'game.entity.Item',
-	'game.entity.Switch',
 	'game.entity.Tank',
 	'game.entity.Wall',
 	'game.layer.Floor',
@@ -165,9 +165,13 @@ lychee.define('game.state.Game').requires([
 
 				} else if (type === 3) {
 
-					layer.addEntity(new game.entity.Switch({
+
+					var button = new game.entity.Button({
 						position: position
-					}));
+					});
+
+					that.buttons.push(button);
+					layer.addEntity(button);
 
 				} else if (type === 4) {
 
@@ -200,6 +204,7 @@ lychee.define('game.state.Game').requires([
 
 	var _leave_level = function() {
 
+		this.buttons = [];
 		this.items   = [];
 		this.players = [];
 
@@ -214,6 +219,56 @@ lychee.define('game.state.Game').requires([
 		// TODO: Multiplayer setup
 
 		this.setPlayer(this.players[0]);
+
+	};
+
+	var _button_action = function() {
+
+		this.__action++;
+		this.__action %= 2;
+
+
+		if (this.__action === 0) {
+
+			var objects = this.queryLayer('game', 'objects').entities;
+			if (objects.length > 0) {
+
+				objects.forEach(function(object) {
+
+					if (object instanceof game.entity.Wall) {
+						object.toggleAlpha();
+					}
+
+				});
+
+
+				this.loop.setTimeout(10000, function() {
+					// TODO: Spawn new random button where tile is empty
+				}, this);
+
+			}
+
+		} else if (this.__action === 1) {
+
+			var positions = [];
+
+			this.players.forEach(function(player) {
+
+				player.removeEffects();
+
+				positions.push({
+					x: player.position.x,
+					y: player.position.y,
+					z: player.position.z
+				});
+
+			});
+
+			this.players.forEach(function(player) {
+				player.setPosition(positions.pop());
+			});
+
+		}
 
 	};
 
@@ -420,8 +475,8 @@ lychee.define('game.state.Game').requires([
 
 					var object = this.queryLayer('game', 'objects').getEntity(null, position);
 					if (object === null || (
-							   object instanceof game.entity.Item
-							|| object instanceof game.entity.Switch
+							   object instanceof game.entity.Button
+							|| object instanceof game.entity.Item
 						) || (
 							   (!object instanceof game.entity.Wall)
 							&& (!object instanceof game.entity.Tank)
@@ -456,10 +511,13 @@ lychee.define('game.state.Game').requires([
 		lychee.game.State.call(this, main);
 
 
-		this.bullets = [];
-		this.items   = [];
-		this.player  = null;
-		this.players = [];
+		this.bullets  = [];
+		this.buttons  = [];
+		this.items    = [];
+		this.player   = null;
+		this.players  = [];
+
+		this.__action = 0;
 
 
 		this.deserialize(_blob);
@@ -609,6 +667,44 @@ lychee.define('game.state.Game').requires([
 
 					objects_layer.removeEntity(bullet);
 					this.bullets.splice(b, 1);
+					bl--;
+					b--;
+
+				}
+
+			}
+
+
+
+			/*
+			 * COLLISION WITH BUTTONS
+			 */
+
+			for (var b = 0, bl = this.buttons.length; b < bl; b++) {
+
+				var button = this.buttons[b];
+				var action = false;
+
+				for (var p = 0, pl = this.players.length; p < pl; p++) {
+
+					var player = this.players[p];
+					if (player.collidesWith(button) === true) {
+						action = true;
+						break;
+					}
+
+				}
+
+
+				if (action === true) {
+
+					this.main.jukebox.play(_sounds.powerup);
+
+					_button_action.call(this);
+
+
+					objects_layer.removeEntity(button);
+					this.buttons.splice(b, 1);
 					bl--;
 					b--;
 
