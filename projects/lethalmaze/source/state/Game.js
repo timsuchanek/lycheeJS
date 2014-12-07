@@ -14,7 +14,8 @@ lychee.define('game.state.Game').requires([
 	'game.layer.Floor',
 	'game.layer.Objects',
 	'game.layer.Effects',
-	'game.ui.Dialog'
+	'game.ui.Dialog',
+	'game.ui.Result'
 ]).includes([
 	'lychee.game.State'
 ]).exports(function(lychee, game, global, attachments) {
@@ -216,30 +217,7 @@ lychee.define('game.state.Game').requires([
 		this.queryLayer('game', 'objects').removeEntities();
 		this.queryLayer('game', 'effects').removeEntities();
 		this.queryLayer('ui',   'dialog').setVisible(true);
-
-	};
-
-	var _start_game = function() {
-
-		this.queryLayer('ui', 'dialog').setVisible(false);
-
-		this.main.input.bind('escape', function() {
-			_stop_game.call(this);
-		}, this, true);
-
-
-		// TODO: Multiplayer setup
-
-console.log('STARTING GAME NAO');
-
-	};
-
-	var _stop_game = function() {
-
-		_leave_game.call(this);
-		_enter_game.call(this, _LEVELS[1]);
-
-console.log('STOPPING GAME NAO');
+		this.queryLayer('ui',   'result').setVisible(false);
 
 	};
 
@@ -608,17 +586,36 @@ console.log('STOPPING GAME NAO');
 
 					var service = client.getService('multiplayer');
 					if (service !== null) {
+
 						service.start();
+
+						this.queryLayer('ui', 'dialog').setVisible(false);
+
+						this.main.input.bind('escape', function() {
+							service.stop();
+							this.main.changeState('menu');
+						}, this, true);
+
 					}
 
 				}
 
-				_start_game.call(this);
-
 			}, this);
 
 			this.queryLayer('ui', 'dialog').bind('stop', function() {
+
+				var client = this.client;
+				if (client !== null) {
+
+					var service = client.getService('multiplayer');
+					if (service !== null) {
+						service.leave();
+					}
+
+				}
+
 				this.main.changeState('menu');
+
 			}, this);
 
 		},
@@ -866,7 +863,17 @@ console.log('STOPPING GAME NAO');
 					if (service !== null) {
 
 						service.bind('start', function(data) {
-							_start_game.call(this);
+
+							this.queryLayer('ui', 'dialog').setVisible(false);
+
+							this.main.input.bind('escape', function() {
+								service.leave();
+								this.main.changeState('menu');
+							}, this, true);
+
+						}, this);
+
+						service.bind('stop', function(data) {
 						}, this);
 
 						service.bind('update', function(data) {
@@ -932,8 +939,11 @@ console.log('STOPPING GAME NAO');
 
 				var service = client.getService('multiplayer');
 				if (service !== null) {
-					service.unbind('update', null, this);
-					service.unbind('error',  null, this);
+					service.unbind('start',     null, this);
+					service.unbind('stop',      null, this);
+					service.unbind('update',    null, this);
+					service.unbind('multicast', null, this);
+					service.unbind('error',     null, this);
 					service.leave();
 				}
 
