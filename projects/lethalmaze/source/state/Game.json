@@ -67,11 +67,13 @@
 									"y": 96
 								}
 							}]
-						}]
-					},
-					"map": {
-						"desktop": 0,
-						"tablet":  1
+						}],
+						"map": {
+							"desktop": 0,
+							"tablet":  1,
+							"start":   2,
+							"stop":    3
+						}
 					}
 				}],
 				"map": {

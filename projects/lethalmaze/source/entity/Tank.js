@@ -46,6 +46,12 @@ lychee.define('game.entity.Tank').includes([
 
 	Class.prototype = {
 
+		destroy: function() {
+
+			_id--;
+
+		},
+
 		update: function(clock, delta) {
 
 			this.__clock = clock;

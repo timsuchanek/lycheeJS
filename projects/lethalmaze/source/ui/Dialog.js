@@ -36,6 +36,38 @@ lychee.define('game.ui.Dialog').includes([
 
 			lychee.ui.Layer.prototype.deserialize.call(this, blob);
 
+
+
+			/*
+			 * INITIALIZATION
+			 */
+
+			this.getEntity('tablet').bind('touch', function() {
+
+				this.getEntity('desktop').setState('device-desktop-default');
+				this.getEntity('tablet').setState('device-tablet-active');
+
+				this.trigger('device', [ 'tablet' ]);
+
+			}, this);
+
+			this.getEntity('desktop').bind('touch', function() {
+
+				this.getEntity('desktop').setState('device-desktop-active');
+				this.getEntity('tablet').setState('device-tablet-default');
+
+				this.trigger('device', [ 'desktop' ]);
+
+			}, this);
+
+			this.getEntity('start').bind('touch', function() {
+				this.trigger('start', []);
+			}, this);
+
+			this.getEntity('stop').bind('touch', function() {
+				this.trigger('stop', []);
+			}, this);
+
 		},
 
 		serialize: function() {

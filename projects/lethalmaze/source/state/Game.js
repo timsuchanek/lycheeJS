@@ -101,7 +101,7 @@ lychee.define('game.state.Game').requires([
 
 	};
 
-	var _enter_level = function(level) {
+	var _enter_game = function(level) {
 
 		var that   = this;
 		var layer  = null;
@@ -202,7 +202,11 @@ lychee.define('game.state.Game').requires([
 
 	};
 
-	var _leave_level = function() {
+	var _leave_game = function() {
+
+		this.players.forEach(function(player) {
+			player.destroy();
+		});
 
 		this.buttons = [];
 		this.items   = [];
@@ -211,14 +215,33 @@ lychee.define('game.state.Game').requires([
 		this.queryLayer('game', 'floor').removeEntities();
 		this.queryLayer('game', 'objects').removeEntities();
 		this.queryLayer('game', 'effects').removeEntities();
+		this.queryLayer('ui',   'dialog').setVisible(true);
 
 	};
 
-	var _enter_game = function() {
+	var _start_game = function() {
+
+		this.queryLayer('ui', 'dialog').setVisible(false);
+
+		this.main.input.bind('escape', function() {
+			_stop_game.call(this);
+		}, this, true);
+
 
 		// TODO: Multiplayer setup
 
 		this.setPlayer(this.players[0]);
+
+console.log('STARTING GAME NAO');
+
+	};
+
+	var _stop_game = function() {
+
+		_leave_game.call(this);
+		_enter_game.call(this, _LEVELS[1]);
+
+console.log('STOPPING GAME NAO');
 
 	};
 
@@ -307,10 +330,6 @@ lychee.define('game.state.Game').requires([
 			}
 
 		}, this);
-
-	};
-
-	var _leave_game = function() {
 
 	};
 
@@ -545,6 +564,26 @@ lychee.define('game.state.Game').requires([
 		deserialize: function(blob) {
 
 			lychee.game.State.prototype.deserialize.call(this, blob);
+
+
+
+			/*
+			 * INITIALIZATION
+			 */
+
+			this.queryLayer('ui', 'dialog').bind('device', function(device) {
+
+// TODO: Tablet UI integration
+
+			}, this);
+
+			this.queryLayer('ui', 'dialog').bind('start', function() {
+				_start_game.call(this);
+			}, this);
+
+			this.queryLayer('ui', 'dialog').bind('stop', function() {
+				this.main.changeState('menu');
+			}, this);
 
 		},
 
@@ -781,8 +820,7 @@ lychee.define('game.state.Game').requires([
 			var level = _LEVELS[data.level] || _LEVELS[1] || null;
 			if (level !== null) {
 
-				_enter_level.call(this, level);
-				_enter_game.call(this);
+				_enter_game.call(this, level);
 
 			} else {
 
@@ -799,7 +837,6 @@ lychee.define('game.state.Game').requires([
 
 		leave: function() {
 
-			_leave_level.call(this);
 			_leave_game.call(this);
 
 			this.main.jukebox.stop(_music);
