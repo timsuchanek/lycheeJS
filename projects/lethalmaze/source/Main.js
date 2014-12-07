@@ -19,7 +19,7 @@ lychee.define('game.Main').requires([
 				delay:       0,
 				key:         true,
 				keymodifier: false,
-				touch:       false,
+				touch:       true,
 				swipe:       false
 			},
 
@@ -70,8 +70,7 @@ lychee.define('game.Main').requires([
 
 			this.setState('game', new game.state.Game(this));
 			this.setState('menu', new game.state.Menu(this));
-//			this.changeState('menu');
-			this.changeState('game');
+			this.changeState('menu');
 
 		}, this, true);
 

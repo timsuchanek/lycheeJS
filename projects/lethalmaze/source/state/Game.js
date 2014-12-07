@@ -13,7 +13,8 @@ lychee.define('game.state.Game').requires([
 	'game.entity.Wall',
 	'game.layer.Floor',
 	'game.layer.Objects',
-	'game.layer.Effects'
+	'game.layer.Effects',
+	'game.ui.Dialog'
 ]).includes([
 	'lychee.game.State'
 ]).exports(function(lychee, game, global, attachments) {

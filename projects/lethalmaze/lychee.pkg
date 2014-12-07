@@ -105,6 +105,7 @@
 
 			"ui": {
 				"Button":     [ "js", "json", "png", "fnt" ],
+				"Dialog":     [ "js", "json", "png" ],
 				"Highscores": [ "js", "fnt" ],
 				"Layer":      [ "js", "json", "png", "fnt" ]
 			},
