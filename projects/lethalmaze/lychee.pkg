@@ -86,11 +86,13 @@
 			"net": {
 
 				"client": {
-					"Highscore": [ "js" ]
+					"Highscore":   [ "js" ],
+					"Multiplayer": [ "js" ]
 				},
 
 				"remote": {
-					"Highscore": [ "js" ]
+					"Highscore":   [ "js" ],
+					"Multiplayer": [ "js" ]
 				},
 
 				"Client": [ "js" ],

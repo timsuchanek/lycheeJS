@@ -1,13 +1,15 @@
 
 lychee.define('game.net.Client').requires([
 	'lychee.data.BitON',
-	'game.net.client.Highscore'
+	'game.net.client.Highscore',
+	'game.net.client.Multiplayer'
 ]).includes([
 	'lychee.net.Client'
 ]).exports(function(lychee, game, global, attachments) {
 
-	var _BitON     = lychee.data.BitON;
-	var _highscore = game.net.client.Highscore;
+	var _BitON       = lychee.data.BitON;
+	var _highscore   = game.net.client.Highscore;
+	var _multiplayer = game.net.client.Multiplayer;
 
 
 	var Class = function(data, main) {
@@ -29,9 +31,10 @@ lychee.define('game.net.Client').requires([
 		this.bind('connect', function() {
 
 			this.addService(new _highscore(this));
+			this.addService(new _multiplayer(this));
 
 			if (lychee.debug === true) {
-				console.log('(Boilerplate) game.net.Client: Remote connected');
+				console.log('(Lethal Maze) game.net.Client: Remote connected');
 			}
 
 		}, this);
@@ -39,7 +42,7 @@ lychee.define('game.net.Client').requires([
 		this.bind('disconnect', function(code) {
 
 			if (lychee.debug === true) {
-				console.log('(Boilerplate) game.net.Client: Remote disconnected (' + code + ')');
+				console.log('(Lethal Maze) game.net.Client: Remote disconnected (' + code + ')');
 			}
 
 		}, this);

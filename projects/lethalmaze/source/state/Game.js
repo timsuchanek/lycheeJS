@@ -230,8 +230,6 @@ lychee.define('game.state.Game').requires([
 
 		// TODO: Multiplayer setup
 
-		this.setPlayer(this.players[0]);
-
 console.log('STARTING GAME NAO');
 
 	};
@@ -822,6 +820,42 @@ console.log('STOPPING GAME NAO');
 
 				_enter_game.call(this, level);
 
+
+				var client = this.client;
+				if (client !== null) {
+
+					var service = client.getService('multiplayer');
+					if (service !== null) {
+
+						service.bind('update', function(data) {
+
+							var index = data.tunnels.indexOf(data.tid);
+							if (index !== this.players.indexOf(this.player)) {
+								this.setPlayer(this.players[index]);
+							}
+
+
+							var dialog = this.queryLayer('ui', 'dialog');
+							if (dialog !== null) {
+								dialog.setMultiplayer(index, this.players);
+							}
+
+						}, this);
+
+						service.bind('error', function() {
+
+							this.loop.setTimeout(5000, function() {
+								service.join();
+							}, this);
+
+						}, this);
+
+						service.join();
+
+					}
+
+				}
+
 			} else {
 
 				this.main.changeState('menu');
@@ -838,6 +872,18 @@ console.log('STOPPING GAME NAO');
 		leave: function() {
 
 			_leave_game.call(this);
+
+			var client = this.client;
+			if (client !== null) {
+
+				var service = client.getService('multiplayer');
+				if (service !== null) {
+					service.unbind('update', null, this);
+					service.unbind('error',  null, this);
+					service.leave();
+				}
+
+			}
 
 			this.main.jukebox.stop(_music);
 

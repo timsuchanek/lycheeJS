@@ -12,6 +12,8 @@ lychee.define('game.ui.Dialog').includes([
 		var settings = lychee.extend({}, data);
 
 
+		this.__index    = 0;
+		this.__players  = [];
 		this.__statemap = _config.map['default'][0];
 
 
@@ -127,9 +129,73 @@ lychee.define('game.ui.Dialog').includes([
 			lychee.ui.Layer.prototype.render.call(this, renderer, offsetX, offsetY);
 
 
+			var index   = this.__index;
+			var players = this.__players;
+
+			if (players[index]) {
+
+				for (var p = 0, pl = players.length; p < pl; p++) {
+
+					var player = players[p];
+					var ox     = position.x + offsetX - this.width / 2 + 64 + 64 * p;
+					var oy     = position.y + offsetY + 80;
+
+
+					if (player === players[index]) {
+
+						renderer.drawBox(
+							ox - 16,
+							oy - 16,
+							ox + 16,
+							oy + 16,
+							'#88e060',
+							true
+						);
+
+						renderer.drawBox(
+							ox - 16,
+							oy - 16,
+							ox + 16,
+							oy + 16,
+							'#ff0000',
+							false,
+							3
+						);
+
+					}
+
+
+					player.render(
+						renderer,
+						ox - player.position.x,
+						oy - player.position.y
+					);
+
+				}
+
+			}
+
+
 			if (alpha !== 1) {
 				renderer.setAlpha(1);
 			}
+
+		},
+
+		setMultiplayer: function(index, players) {
+
+			this.__index   = index;
+			this.__players = players;
+
+
+			if (index === 0) {
+				this.getEntity('start').setVisible(true);
+			} else {
+				this.getEntity('start').setVisible(false);
+			}
+
+
+			return true;
 
 		}
 
