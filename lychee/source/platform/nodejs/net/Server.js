@@ -131,7 +131,7 @@ lychee.define('lychee.net.Server').tags({
 		var settings = lychee.extend({}, data);
 
 
-		this.host = 'localhost';
+		this.host = null;
 		this.port = 1337;
 
 
