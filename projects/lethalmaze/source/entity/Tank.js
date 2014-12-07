@@ -8,14 +8,20 @@ lychee.define('game.entity.Tank').includes([
 	var _sound   = attachments["snd"];
 
 
+	var _id  = 0;
+	var _IDS = [ 'rainbow', 'red', 'green', 'blue', 'black', 'white' ];
+
+
 	var Class = function(data, main) {
 
 		var settings = lychee.extend({}, data);
 
 		this.main = main || null;
 
-		this.ammo = 4;
-		this.life = 4;
+		this.id        = _IDS[_id++];
+		this.direction = 'top';
+		this.ammo      = 4;
+		this.life      = 4;
 
 
 		this.__clock     = null;
@@ -30,10 +36,7 @@ lychee.define('game.entity.Tank').includes([
 		settings.height    = _config.height;
 		settings.shape     = lychee.game.Entity.SHAPE.rectangle;
 		settings.states    = _config.states;
-		settings.state     = 'top';
-
-
-		delete settings.type;
+		settings.state     = this.id + '-' + this.direction;
 
 
 		lychee.game.Sprite.call(this, settings);
@@ -150,6 +153,22 @@ lychee.define('game.entity.Tank').includes([
 
 				this.__lifeclock = this.__clock + 2000;
 				this.life++;
+
+				return true;
+
+			}
+
+
+			return false;
+
+		},
+
+		setDirection: function(direction) {
+
+			var result = this.setState(this.id + '-' + direction);
+			if (result === true) {
+
+				this.direction = direction;
 
 				return true;
 

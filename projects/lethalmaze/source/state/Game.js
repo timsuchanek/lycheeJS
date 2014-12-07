@@ -166,7 +166,6 @@ lychee.define('game.state.Game').requires([
 
 				} else if (type === 3) {
 
-
 					var button = new game.entity.Button({
 						position: position
 					});
@@ -342,7 +341,7 @@ lychee.define('game.state.Game').requires([
 
 					this.loop.setTimeout(200, function() {
 
-						player.setState(move_direction);
+						player.setDirection(move_direction);
 						player.addEffect(new lychee.effect.Position({
 							type:     lychee.effect.Position.TYPE.linear,
 							duration: move_duration,
@@ -373,7 +372,7 @@ lychee.define('game.state.Game').requires([
 
 		if (action === 'fire') {
 
-			var direction = player.state;
+			var direction = player.direction;
 			var position  = {
 				x: player.position.x,
 				y: player.position.y,
@@ -458,7 +457,7 @@ lychee.define('game.state.Game').requires([
 
 					if (move_target !== null && move_target instanceof game.entity.Floor) {
 
-						player.setState(direction);
+						player.setDirection(direction);
 						player.addEffect(new lychee.effect.Position({
 							type:     lychee.effect.Position.TYPE.linear,
 							duration: 200,
@@ -483,7 +482,7 @@ lychee.define('game.state.Game').requires([
 							&& (!object instanceof game.entity.Tank)
 					)) {
 
-						player.setState(direction);
+						player.setDirection(direction);
 						player.addEffect(new lychee.effect.Position({
 							type:     lychee.effect.Position.TYPE.linear,
 							duration: 200,
