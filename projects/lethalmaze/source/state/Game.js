@@ -14,8 +14,8 @@ lychee.define('game.state.Game').requires([
 	'game.layer.Floor',
 	'game.layer.Objects',
 	'game.layer.Effects',
-	'game.ui.Dialog'
-//	'game.ui.Result'
+	'game.ui.Dialog',
+	'game.ui.Result'
 ]).includes([
 	'lychee.game.State'
 ]).exports(function(lychee, game, global, attachments) {
@@ -294,7 +294,7 @@ lychee.define('game.state.Game').requires([
 
 			if (this.player === player) {
 
-// TODO: If player === this.player, show YouLost screen
+				this.queryLayer('ui', 'result').setVisible(true);
 
 			} else {
 
@@ -508,8 +508,13 @@ lychee.define('game.state.Game').requires([
 				if (service !== null) {
 
 					service.control({
-						player: player.id,
-						action: action
+						player:   player.id,
+						action:   action,
+						position: {
+							x: player.position.x,
+							y: player.position.y,
+							z: player.position.z
+						}
 					});
 
 				}
@@ -573,6 +578,7 @@ lychee.define('game.state.Game').requires([
 			 * INITIALIZATION
 			 */
 
+			this.queryLayer('ui', 'result').setVisible(false);
 			this.queryLayer('ui', 'dialog').bind('device', function(device) {
 
 // TODO: Tablet UI integration
@@ -865,6 +871,7 @@ lychee.define('game.state.Game').requires([
 						service.bind('start', function(data) {
 
 							this.queryLayer('ui', 'dialog').setVisible(false);
+							this.queryLayer('ui', 'result').setVisible(false);
 
 							this.main.input.bind('escape', function() {
 								service.leave();
@@ -898,6 +905,8 @@ lychee.define('game.state.Game').requires([
 							})[0] || null;
 
 							if (player !== null && player !== this.player) {
+								player.removeEffects();
+								player.setPosition(data.position);
 								_handle_action.call(this, player, data.action);
 							}
 

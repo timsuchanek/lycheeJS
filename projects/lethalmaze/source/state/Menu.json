@@ -26,13 +26,13 @@
 				"entities": [{
 					"constructor": "game.ui.Layer",
 					"arguments": [{
-						"label": "MazeJam"
+						"label": "Lethal Maze"
 					}],
 					"blob": {
 						"entities": [{
 							"constructor": "game.ui.Button",
 							"arguments": [{
-								"label": "New Game",
+								"label": "Multiplayer",
 								"position": {
 									"x": 0,
 									"y": -16

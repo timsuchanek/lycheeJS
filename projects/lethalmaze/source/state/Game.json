@@ -75,9 +75,30 @@
 							"stop":    3
 						}
 					}
+				}, {
+					"constructor": "game.ui.Result",
+					"arguments": [{
+						"visible": false
+					}],
+					"blob": {
+						"entities": [{
+							"constructor": "game.ui.Button",
+							"arguments": [{
+								"state": "stop",
+								"position": {
+									"x": 0,
+									"y": 32
+								}
+							}]
+						}],
+						"map": {
+							"stop": 0
+						}
+					}
 				}],
 				"map": {
-					"dialog": 0
+					"dialog": 0,
+					"result": 1
 				}
 			}
 		}

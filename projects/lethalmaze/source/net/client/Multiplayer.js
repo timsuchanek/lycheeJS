@@ -103,11 +103,16 @@ lychee.define('game.net.client.Multiplayer').includes([
 
 			if (data instanceof Object) {
 
-				if (typeof data.player === 'string' && typeof data.action === 'string') {
+				if (
+					   typeof data.player === 'string'
+					&& typeof data.action === 'string'
+					&& data.position instanceof Object
+				) {
 
 					this.multicast({
-						player: data.player,
-						action: data.action
+						player:   data.player,
+						action:   data.action,
+						position: data.position
 					});
 
 

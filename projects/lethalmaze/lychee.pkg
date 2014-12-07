@@ -109,7 +109,8 @@
 				"Button":     [ "js", "json", "png", "fnt" ],
 				"Dialog":     [ "js", "json", "png" ],
 				"Highscores": [ "js", "fnt" ],
-				"Layer":      [ "js", "json", "png", "fnt" ]
+				"Layer":      [ "js", "json", "png", "fnt" ],
+				"Result":     [ "js", "json", "png" ]
 			},
 
 			"DeviceSpecificHacks": [ "js" ],
