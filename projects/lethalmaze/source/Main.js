@@ -85,7 +85,10 @@ lychee.define('game.Main').requires([
 
 			lychee.game.Main.prototype.reshape.call(this, orientation, rotation);
 
-		}
+		},
+
+		show: function() {},
+		hide: function() {}
 
 	};
 

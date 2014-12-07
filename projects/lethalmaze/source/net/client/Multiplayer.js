@@ -64,20 +64,12 @@ lychee.define('game.net.client.Multiplayer').includes([
 		var settings = {};
 
 
-		this.player = 'rainbow';
-
-
 		settings.autostart = false;
 		settings.autolock  = true;
 		settings.min       = 2;
 		settings.max       = 6;
 		settings.sid       = '';
 		settings.sid       = _SIDS[_sid++];
-
-
-		this.setPlayer(settings.player);
-
-		delete settings.player;
 
 
 		lychee.net.client.Session.call(this, 'multiplayer', client, settings);
@@ -107,16 +99,21 @@ lychee.define('game.net.client.Multiplayer').includes([
 		 * CUSTOM API
 		 */
 
-		setPlayer: function(player) {
+		control: function(data) {
 
-			player = typeof player === 'string' ? player : null;
+			if (data instanceof Object) {
+
+				if (typeof data.player === 'string' && typeof data.action === 'string') {
+
+					this.multicast({
+						player: data.player,
+						action: data.action
+					});
 
 
-			if (player !== null) {
+					return true;
 
-				this.player = player;
-
-				return true;
+				}
 
 			}
 

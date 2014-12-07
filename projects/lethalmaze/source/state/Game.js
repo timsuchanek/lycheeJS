@@ -387,6 +387,22 @@ console.log('STOPPING GAME NAO');
 		if (player.effects.length !== 0) return;
 
 
+		var client = this.client;
+		if (client !== null) {
+
+			var service = client.getService('multiplayer');
+			if (service !== null) {
+
+				service.control({
+					player: player.id,
+					action: action
+				});
+
+			}
+
+		}
+
+
 		if (action === 'fire') {
 
 			var direction = player.direction;
@@ -576,7 +592,19 @@ console.log('STOPPING GAME NAO');
 			}, this);
 
 			this.queryLayer('ui', 'dialog').bind('start', function() {
+
+				var client = this.client;
+				if (client !== null) {
+
+					var service = client.getService('multiplayer');
+					if (service !== null) {
+						service.start();
+					}
+
+				}
+
 				_start_game.call(this);
+
 			}, this);
 
 			this.queryLayer('ui', 'dialog').bind('stop', function() {
@@ -827,6 +855,10 @@ console.log('STOPPING GAME NAO');
 					var service = client.getService('multiplayer');
 					if (service !== null) {
 
+						service.bind('start', function(data) {
+							_start_game.call(this);
+						}, this);
+
 						service.bind('update', function(data) {
 
 							var index = data.tunnels.indexOf(data.tid);
@@ -838,6 +870,18 @@ console.log('STOPPING GAME NAO');
 							var dialog = this.queryLayer('ui', 'dialog');
 							if (dialog !== null) {
 								dialog.setMultiplayer(index, this.players);
+							}
+
+						}, this);
+
+						service.bind('multicast', function(data) {
+
+							var player = this.players.filter(function(player) {
+								return player.id === data.player;
+							})[0] || null;
+
+							if (player !== null && player !== this.player) {
+								_handle_action.call(this, player, data.action);
 							}
 
 						}, this);

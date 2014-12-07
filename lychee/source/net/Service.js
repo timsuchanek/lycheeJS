@@ -221,7 +221,7 @@ lychee.define('lychee.net.Service').includes([
 						var tunnel = this.__multicast[m];
 						if (tunnel !== this.tunnel) {
 
-							data.data.tid = this.tunnel.id;
+							data.data.tid = this.tunnel.host + ':' + this.tunnel.port;
 
 							tunnel.send(
 								data.data,
@@ -293,7 +293,7 @@ lychee.define('lychee.net.Service').includes([
 							var tunnel = broadcast[b].tunnel;
 							if (tunnel !== this.tunnel) {
 
-								data.data.tid = this.tunnel.id;
+								data.data.tid = this.tunnel.host + ':' + this.tunnel.port;
 
 								tunnel.send(
 									data.data,
