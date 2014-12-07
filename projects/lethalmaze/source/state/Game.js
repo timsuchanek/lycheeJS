@@ -624,6 +624,22 @@ lychee.define('game.state.Game').requires([
 
 			}, this);
 
+			this.queryLayer('ui', 'result').bind('stop', function() {
+
+				var client = this.client;
+				if (client !== null) {
+
+					var service = client.getService('multiplayer');
+					if (service !== null) {
+						service.leave();
+					}
+
+				}
+
+				this.main.changeState('menu');
+
+			}, this);
+
 		},
 
 
