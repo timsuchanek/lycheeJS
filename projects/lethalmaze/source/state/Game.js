@@ -387,20 +387,6 @@ console.log('STOPPING GAME NAO');
 		if (player.effects.length !== 0) return;
 
 
-		var client = this.client;
-		if (client !== null) {
-
-			var service = client.getService('multiplayer');
-			if (service !== null) {
-
-				service.control({
-					player: player.id,
-					action: action
-				});
-
-			}
-
-		}
 
 
 		if (action === 'fire') {
@@ -448,6 +434,8 @@ console.log('STOPPING GAME NAO');
 
 				if (player.shoot() === true) {
 
+					valid_action = true;
+
 					var bullet = new game.entity.Bullet({
 						position: position,
 						velocity: velocity
@@ -481,6 +469,8 @@ console.log('STOPPING GAME NAO');
 
 			var floor = this.queryLayer('game', 'floor').getEntity(null, position);
 			if (floor !== null) {
+
+				valid_action = true;
 
 				if (floor.state.substr(0, 5) === 'arrow') {
 
@@ -523,6 +513,26 @@ console.log('STOPPING GAME NAO');
 						}));
 
 					}
+
+				}
+
+			}
+
+		}
+
+
+		if (valid_action === true) {
+
+			var client = this.client;
+			if (client !== null) {
+
+				var service = client.getService('multiplayer');
+				if (service !== null) {
+
+					service.control({
+						player: player.id,
+						action: action
+					});
 
 				}
 
