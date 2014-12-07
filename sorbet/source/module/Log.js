@@ -97,7 +97,7 @@ lychee.define('sorbet.module.Log').requires([
 
 		var tmp, id;
 
-		if (url !== null) {
+		if (url !== null && parameters !== null) {
 
 			if (url === '/api/Server') {
 
