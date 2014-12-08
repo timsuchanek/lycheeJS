@@ -5,11 +5,9 @@
 	"api": {
 
 		"Blacklist":   "sorbet.api.remote.Blacklist",
-		"Debugger":    "sorbet.api.remote.Debugger",
 		"Log":         "sorbet.api.remote.Log",
 		"Project":     "sorbet.api.remote.Project",
-		"Server":      "sorbet.api.remote.Server",
-		"VirtualHost": "sorbet.api.remote.VirtualHost"
+		"Server":      "sorbet.api.remote.Server"
 
 	},
 
@@ -48,10 +46,10 @@
 	}, {
 
 		"hosts": [
-			"dashboard.lycheejs.org"
+			"lethalmaze.lycheejs.org"
 		],
 		"config": {
-			"root": "%root%"
+			"root": "%root%/projects/lethalmaze"
 		}
 
 	}]
