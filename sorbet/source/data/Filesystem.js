@@ -34,8 +34,15 @@ lychee.define('sorbet.data.Filesystem').includes([
 
 			if (err.code === 'ENOENT') {
 
-				_mkdir_p(_path.dirname(path), mode);
-				_fs.mkdirSync(path, mode);
+				try {
+
+					_mkdir_p(_path.dirname(path), mode);
+					_fs.mkdirSync(path, mode);
+
+				} catch(e) {
+					return false;
+				}
+
 
 				return true;
 
