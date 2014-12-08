@@ -37,19 +37,19 @@
 	}, {
 
 		"hosts": [
-			"slides.lycheejs.org"
+			"lethalmaze.lycheejs.org"
 		],
 		"config": {
-			"root": "%root%/projects/lycheeJS-slides"
+			"root": "%root%/projects/lethalmaze"
 		}
 
 	}, {
 
 		"hosts": [
-			"lethalmaze.lycheejs.org"
+			"cultivator.lycheejs.org"
 		],
 		"config": {
-			"root": "%root%/projects/lethalmaze"
+			"root": "%root%"
 		}
 
 	}]
