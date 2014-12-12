@@ -446,6 +446,8 @@ article table {
 	margin: 32px auto;
 	padding: 0px 0px;
 	width: 80%;
+	border: 0;
+	border-spacing: 2px;
 }
 
 article table.fixed {

@@ -1,15 +1,16 @@
 
 lychee.define('tool.Main').requires([
 	'lychee.data.JSON',
-	'tool.data.FNT'
+	'tool.data.SPRITE',
+	'tool.ui.Dropzone'
 ]).includes([
 	'lychee.game.Main'
 ]).tags({
 	platform: 'html'
 }).exports(function(lychee, tool, global, attachments) {
 
-	var _FNT  = tool.data.FNT;
-	var _JSON = lychee.data.JSON;
+	var _SPRITE = tool.data.SPRITE;
+	var _JSON   = lychee.data.JSON;
 
 
 
@@ -71,7 +72,7 @@ lychee.define('tool.Main').requires([
 
 	};
 
-	var _update_preview = function(blob, settings) {
+	var _update_preview = function(blob) {
 
 		var data = _JSON.decode(blob);
 		if (data instanceof Object) {
@@ -85,15 +86,25 @@ lychee.define('tool.Main').requires([
 
 			}
 
-			var button = document.querySelector('button#preview-download');
-			if (button !== null) {
 
-				var filename = settings.family + '_' + settings.size + 'x' + settings.outline + '.fnt';
-				var buffer   = new Buffer(blob, 'utf8');
+			var button1 = document.querySelector('button#preview-download-config');
+			if (button1 !== null) {
 
-				button.innerHTML = 'Download ' + filename;
-				button.onclick = function() {
-					_download(filename, buffer);
+				var buffer1 = new Buffer(data.config, 'utf8');
+
+				button1.onclick = function() {
+					_download('Entity.json', buffer1);
+				};
+
+			}
+
+			var button2 = document.querySelector('button#preview-download-texture');
+			if (button2 !== null) {
+
+				var buffer2 = new Buffer(data.texture, 'utf8');
+
+				button2.onclick = function() {
+					_download('Entity.png', buffer2);
 				};
 
 			}
@@ -118,6 +129,13 @@ lychee.define('tool.Main').requires([
 			renderer: null,
 			server:   null,
 
+			dropzone: {
+				element:    null,
+				extensions: {
+					'png': true
+				}
+			},
+
 			viewport: {
 				fullscreen: false
 			}
@@ -133,27 +151,36 @@ lychee.define('tool.Main').requires([
 		 * INITIALIZATION
 		 */
 
-		this.bind('load', function() {
-
-		}, this, true);
-
 		this.bind('init', function() {
 
-			var onsubmit = document.querySelector('form').onsubmit;
-			if (onsubmit instanceof Function) {
-				onsubmit();
+			var settings = this.settings;
+			if (settings.dropzone !== null) {
+
+				this.dropzone = new tool.ui.Dropzone(settings.dropzone);
+				this.dropzone.bind('change', function() {
+
+					var onsubmit = document.querySelector('form').onsubmit;
+					if (onsubmit instanceof Function) {
+						onsubmit();
+					}
+
+				}, this);
+
 			}
 
 		}, this, true);
 
-
 		this.bind('submit', function(id, settings) {
+
+console.log('SUBMITTED!', settings);
 
 			if (id === 'settings') {
 
-				var font = _FNT.encode(settings);
-				if (font !== null) {
-					_update_preview(font, settings);
+				settings.files = this.dropzone.files;
+
+				var sprite = _SPRITE.encode(settings);
+				if (sprite !== null) {
+					_update_preview(sprite);
 				}
 
 			}
