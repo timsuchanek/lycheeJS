@@ -112,7 +112,11 @@
 
 					} else if (type === 'number' || type === 'range') {
 
-						_set_value.call(data, element.name, parseInt(element.value, 10));
+						var tmp = parseInt(element.value, 10);
+
+						if (!isNaN(tmp)) {
+							_set_value.call(data, element.name, tmp);
+						}
 
 					}
 
@@ -120,7 +124,16 @@
 
 					var index = element.selectedIndex;
 					if (index !== -1) {
-						_set_value.call(data, element.name, element.options[index].value || element.options[index].innerText);
+
+						var tmp1 = element.options[index].value || element.options[index].innerText;
+						var tmp2 = parseInt(tmp1, 10);
+
+						if (!isNaN(tmp2)) {
+							_set_value.call(data, element.name, tmp2);
+						} else {
+							_set_value.call(data, element.name, tmp1);
+						}
+
 					}
 
 				}
