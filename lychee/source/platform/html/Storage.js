@@ -7,7 +7,14 @@ lychee.define('Storage').tags({
 
 	if (typeof Storage !== 'undefined') {
 
-		if (typeof global.localStorage === 'object' && typeof global.sessionStorage === 'object') {
+		try {
+
+			if (typeof global.localStorage === 'object' && typeof global.sessionStorage === 'object') {
+				return true;
+			}
+
+		} catch(e) {
+			// TODO: Implement temporary storage if localStorage and sessionStorage access is denied
 			return true;
 		}
 

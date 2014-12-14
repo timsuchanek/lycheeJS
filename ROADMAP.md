@@ -9,6 +9,7 @@ back into master, tagged and published.
 
 ## v0.8.4
 
+- Fix lychee.Storage in html if SecurityError is thrown on localStorage/sessionStorage access
 - API Tool (documents API of Definitions)
 - Package Tool (inspects and verifies integrity of lychee.pkg files)
 - Sprite Tool (creates Sprite.png, Sprite.json and Sprite.js)

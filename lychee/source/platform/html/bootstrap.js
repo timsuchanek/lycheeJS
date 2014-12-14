@@ -1836,6 +1836,8 @@
 
 				image.onload = function() {
 					that.buffer = this;
+					that.width  = this.width;
+					that.height = this.height;
 				};
 
 				image.src   = blob.buffer;

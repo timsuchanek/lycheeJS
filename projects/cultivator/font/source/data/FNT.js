@@ -281,6 +281,7 @@ lychee.define('tool.data.FNT').requires([
 		})();
 
 
+
 		/*
 		 * 2. Render Texture
 		 */
@@ -473,21 +474,25 @@ lychee.define('tool.data.FNT').requires([
 
 
 			/*
-			 * 2.2 Export Baseline and Texture
+			 * 2.3 Export Baseline and Texture
 			 */
 
 			baseline   = measure_baseline.call(canvas.getContext('2d'));
 			lineheight = canvas.height;
-			texture    = new Texture(canvas.toDataURL('image/png'));
-			texture.deserialize({ buffer: canvas.toDataURL('image/png') });
+
+
+			var blob = canvas.toDataURL('image/png');
+
+			texture    = new Texture(blob);
+			texture.deserialize({ buffer: blob });
 
 		})();
+
 
 
 		/*
 		 * 3. Save Buffer
 		 */
-
 
 		buffer.setBaseline(baseline);
 		buffer.setLineHeight(lineheight);

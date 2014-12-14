@@ -90,7 +90,7 @@ lychee.define('tool.Main').requires([
 			var button1 = document.querySelector('button#preview-download-config');
 			if (button1 !== null) {
 
-				var buffer1 = new Buffer(data.config, 'utf8');
+				var buffer1 = new Buffer(data.config.substr(29), 'base64');
 
 				button1.onclick = function() {
 					_download('Entity.json', buffer1);
@@ -101,7 +101,7 @@ lychee.define('tool.Main').requires([
 			var button2 = document.querySelector('button#preview-download-texture');
 			if (button2 !== null) {
 
-				var buffer2 = new Buffer(data.texture, 'utf8');
+				var buffer2 = new Buffer(data.texture.substr(22), 'base64');
 
 				button2.onclick = function() {
 					_download('Entity.png', buffer2);
@@ -143,6 +143,9 @@ lychee.define('tool.Main').requires([
 		}, data);
 
 
+		this.locked = false;
+
+
 		lychee.game.Main.call(this, settings);
 
 
@@ -170,17 +173,29 @@ lychee.define('tool.Main').requires([
 
 		}, this, true);
 
-		this.bind('submit', function(id, settings) {
 
-console.log('SUBMITTED!', settings);
+		this.bind('submit', function(id, settings) {
 
 			if (id === 'settings') {
 
 				settings.files = this.dropzone.files;
 
-				var sprite = _SPRITE.encode(settings);
-				if (sprite !== null) {
-					_update_preview(sprite);
+
+				if (this.locked === false) {
+
+					this.locked = true;
+
+					this.loop.setTimeout(100, function() {
+
+						var sprite = _SPRITE.encode(settings);
+						if (sprite !== null) {
+							_update_preview(sprite);
+						}
+
+						this.locked = false;
+
+					}, this);
+
 				}
 
 			}
