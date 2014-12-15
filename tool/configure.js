@@ -216,7 +216,7 @@
 		console.log('> Checking Environment');
 
 
-		if (_fs.existsSync(_path.resolve(_root, './lychee/build')) === true) {
+		if (_fs.existsSync(_path.resolve(_root, './lychee')) === true) {
 			console.log('\tprocess cwd: OKAY');
 		} else {
 			console.log('\tprocess cwd: FAIL (' + _root + ' is not the lycheeJS directory)');
