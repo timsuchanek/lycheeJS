@@ -9,10 +9,10 @@ back into master, tagged and published.
 
 ## v0.8.4
 
+- Remove sorbet.api Stack and found sorbet.net Stack, port APIs to websockets (except /api/Server and /api/Peers)
 - Fix lychee.Storage in html if SecurityError is thrown on localStorage/sessionStorage access
 - API Tool (documents API of Definitions)
 - Package Tool (inspects and verifies integrity of lychee.pkg files)
-- Sprite Tool (creates Sprite.png, Sprite.json and Sprite.js)
 
 
 ## v0.8.5

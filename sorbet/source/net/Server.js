@@ -1,15 +1,13 @@
 
 lychee.define('sorbet.net.Server').requires([
 	'lychee.data.BitON',
-	'sorbet.net.remote.Debugger',
-	'sorbet.net.remote.Session'
+	'sorbet.net.remote.Debugger'
 ]).includes([
 	'lychee.net.Server'
 ]).exports(function(lychee, sorbet, global, attachments) {
 
 	var _BitON    = lychee.data.BitON;
 	var _debugger = sorbet.net.remote.Debugger;
-	var _session  = sorbet.net.remote.Session;
 
 
 	var Class = function(data) {
@@ -31,7 +29,6 @@ lychee.define('sorbet.net.Server').requires([
 			console.log('(Sorbet) sorbet.net.Server: New Remote (' + remote.host + ':' + remote.port + ')');
 
 			remote.addService(new _debugger(remote));
-			remote.addService(new _session(remote));
 
 		}, this);
 

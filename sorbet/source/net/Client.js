@@ -2,14 +2,14 @@
 lychee.define('sorbet.net.Client').requires([
 	'lychee.data.BitON',
 	'sorbet.net.client.Debugger',
-	'sorbet.net.client.Session'
+	'sorbet.net.client.Service'
 ]).includes([
 	'lychee.net.Client'
 ]).exports(function(lychee, sorbet, global, attachments) {
 
 	var _BitON    = lychee.data.BitON;
 	var _debugger = sorbet.net.client.Debugger;
-	var _session  = sorbet.net.client.Session;
+	var _service  = sorbet.net.client.Service;
 
 
 
@@ -69,18 +69,18 @@ lychee.define('sorbet.net.Client').requires([
 		this.bind('connect', function() {
 
 			this.addService(new _debugger(this));
-			this.addService(new _session(this));
+			this.addService(new _service(this));
 
 			if (lychee.debug === true) {
-				console.log('(Sorbet) sorbet.net.Client: Client connected');
+				console.log('(Sorbet) sorbet.net.Client: Remote connected');
 			}
 
 		}, this);
 
-		this.bind('disconnect', function(code, reason) {
+		this.bind('disconnect', function(code) {
 
 			if (lychee.debug === true) {
-				console.log('(Sorbet) sorbet.net.Client: Client disconnected (' + code + ' | ' + reason + ')');
+				console.log('(Sorbet) sorbet.net.Client: Remote disconnected (' + code + ')');
 			}
 
 		}, this);

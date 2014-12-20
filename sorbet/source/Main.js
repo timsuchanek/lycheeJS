@@ -1,11 +1,7 @@
 
 lychee.define('sorbet.Main').requires([
 	'lychee.Input',
-	'sorbet.api.remote.Debugger',
-	'sorbet.api.remote.Log',
-	'sorbet.api.remote.Project',
 	'sorbet.api.remote.Server',
-	'sorbet.api.remote.VirtualHost',
 	'sorbet.module.Blacklist',
 	'sorbet.module.Error',
 	'sorbet.module.Fertilizer',
@@ -289,16 +285,20 @@ lychee.define('sorbet.Main').requires([
 
 			for (var aid in profile.api) {
 
-				var apiconstruct = _resolve_constructor(profile.api[aid], global);
-				if (apiconstruct instanceof Function) {
+				if (profile.api[aid] === true) {
 
-					if (this.apis.get(aid) === null) {
+					var apiconstruct = _resolve_constructor('sorbet.api.remote.' + aid, global);
+					if (apiconstruct instanceof Function) {
 
-						if (lychee.debug === true) {
-							console.info('sorbet.Main: Spawning API "' + aid + '" from "' + profile.api[aid] + '"');
+						if (this.apis.get(aid) === null) {
+
+							if (lychee.debug === true) {
+								console.info('sorbet.Main: Spawning API "' + aid + '"');
+							}
+
+							this.apis.set(aid, new apiconstruct(this));
+
 						}
-
-						this.apis.set(aid.toLowerCase(), new apiconstruct(this));
 
 					}
 
@@ -313,16 +313,20 @@ lychee.define('sorbet.Main').requires([
 
 			for (var mid in profile.module) {
 
-				var modconstruct = _resolve_constructor(profile.module[mid], global);
-				if (modconstruct instanceof Function) {
+				if (profile.module[mid] === true) {
 
-					if (this.modules.get(mid) === null) {
+					var modconstruct = _resolve_constructor('sorbet.module.' + mid, global);
+					if (modconstruct instanceof Function) {
 
-						if (lychee.debug === true) {
-							console.info('sorbet.Main: Spawning Module "' + mid + '" from "' + profile.module[mid] + '"');
+						if (this.modules.get(mid) === null) {
+
+							if (lychee.debug === true) {
+								console.info('sorbet.Main: Spawning Module "' + mid + '"');
+							}
+
+							this.modules.set(mid, new modconstruct(this));
+
 						}
-
-						this.modules.set(mid, new modconstruct(this));
 
 					}
 
@@ -494,8 +498,6 @@ lychee.define('sorbet.Main').requires([
 
 					var moduleid = url.split('/')[2] || null;
 					if (moduleid !== null) {
-
-						moduleid = moduleid.toLowerCase();
 
 						var module = this.apis.get(moduleid);
 						if (module !== null) {

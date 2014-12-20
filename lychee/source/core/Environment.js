@@ -16,6 +16,7 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 		var that  = this;
 		var load  = cache.load;
 		var ready = cache.ready;
+		var track = cache.track;
 
 		var identifier, definition;
 
@@ -33,6 +34,7 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 				}
 
 				load.splice(l, 1);
+				track.splice(l, 1);
 				ll--;
 				l--;
 
@@ -57,6 +59,7 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 
 							that.load(dependency);
 							load.push(dependency);
+							track.push(identifier);
 
 						}
 
@@ -699,10 +702,9 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 			start:    0,
 			end:      0,
 			timeout:  0,
-			build:    {
-				'load':  [],
-				'ready': []
-			}
+			load:     [],
+			ready:    [],
+			track:    []
 		};
 
 
@@ -1152,8 +1154,12 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 							if (Date.now() > cache.timeout) {
 
 								if (that.debug === true) {
+
 									that.global.console.error('lychee-Environment-' + that.id + ': BUILD TIMEOUT (' + (Date.now() - cache.start) + 'ms)');
-									that.global.console.error('lychee-Environment-' + that.id + ': Invalid Dependencies "' + cache.build['load'] + '"');
+									that.global.console.error('lychee-Environment-' + that.id + ': Invalid Dependencies ' + cache.load.map(function(value, index) {
+										return '"' + value + '" (required by ' + cache.track[index] + ')';
+									}).join(', '));
+
 								}
 
 							} else {

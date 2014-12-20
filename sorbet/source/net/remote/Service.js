@@ -1,6 +1,8 @@
 
-lychee.define('sorbet.net.remote.Session').includes([
+lychee.define('sorbet.net.remote.Service').includes([
 	'lychee.net.Service'
+]).requires([
+	'lychee.Storage'
 ]).exports(function(lychee, sorbet, global, attachments) {
 
 	/*
@@ -15,7 +17,7 @@ lychee.define('sorbet.net.remote.Session').includes([
 
 	var Class = function(remote) {
 
-		lychee.net.Service.call(this, 'session', remote, lychee.net.Service.TYPE.remote);
+		lychee.net.Service.call(this, 'service', remote, lychee.net.Service.TYPE.remote);
 
 	};
 
