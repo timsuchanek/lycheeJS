@@ -36,12 +36,11 @@
 html,
 body {
 	margin: 0;
-	height: 100%;
 }
 
 body {
 	padding: 0px;
-	background: #000000;
+	background: url('./body-background.png') repeat #050a0d;
 }
 
 body > a#fork-me {
@@ -108,6 +107,12 @@ body > menu {
 	background-repeat: no-repeat, repeat-x;
 	background-position: 0px 0px, 256px 0px;
 	text-align: left;
+	position: fixed;
+	top: 0px;
+	right: 0px;
+	bottom: auto;
+	left: 0px;
+	z-index: 1000;
 }
 
 body > menu li {
@@ -144,6 +149,20 @@ body > menu li a.active {
 	border-radius: 20px;
 	border-image: url('./border-glass.png') 13 13 repeat;
 	text-shadow: 0 0 8px #ffffff, 0 0 16px #ffffff;
+}
+
+body > menu li del a {
+	color: #888888;
+	text-shadow: 0 0 8px #000000, 0 0 16px #000000;
+	cursor: default;
+}
+
+body > menu li del a:hover,
+body > menu li del a:focus {
+	background: transparent;
+	border-radius: 0px;
+	border-image: none;
+	text-shadow: 0 0 8px #000000, 0 0 16px #000000;
 }
 
 body > menu#title {
@@ -262,6 +281,10 @@ body *::selection,
 article *::selection {
 	color: #ffffff;
 	background: #8f202f;
+}
+
+body > article:nth-child(2) {
+	margin-top: 96px;
 }
 
 body > main > section menu ~ article {
