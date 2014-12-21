@@ -75,22 +75,6 @@ body > a#fork-me:focus {
 	text-shadow: 0 0 8px #ffffff, 0 0 16px #ffffff;
 }
 
-h1 {
-	display: block;
-	position: relative;
-	margin: 16px auto;
-}
-
-h1 a {
-	display: block;
-	width: 384px;
-	height: 64px;
-	margin: 0px auto;
-	background: url('./logo.png') no-repeat;
-	font-size: 1px;
-	color: transparent;
-}
-
 
 
 /*
@@ -733,12 +717,6 @@ input.ui-Slider::slider-thumb {
 
 	body {
 		min-width: 192px;
-	}
-
-	h1 a {
-		width: 192px;
-		height: 32px;
-		background: url(./logo-small.png) no-repeat;
 	}
 
 }
