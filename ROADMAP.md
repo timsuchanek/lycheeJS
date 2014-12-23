@@ -9,12 +9,12 @@ back into master, tagged and published.
 
 ## v0.8.4
 
-- Remove sorbet.api Stack and found sorbet.net Stack, port APIs to websockets (except /api/Server and /api/Peers)
-- Fix lychee.Storage in html if SecurityError is thrown on localStorage/sessionStorage access
 - API Tool (documents API of Definitions)
 
 
 ## v0.8.5
+- lychee.net.remote.Peer (has own lychee.Storage instance and stores all peers in a /project-specific/lychee.store)
+- sorbet.api.remote.Peer (returns an Array of project-specific Peer Servers, based on project identifier)
 - Project Tool (inspects and verifies integrity of lychee.pkg files)
 - Inspector Tool: Timeline State (that shows bind/trigger/unbind calls)
 - Mode7 Game finalization (lane switch), required assets: racing car, box sprite, explosion sprite

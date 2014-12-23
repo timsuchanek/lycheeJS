@@ -14,7 +14,6 @@ lychee.define('Storage').tags({
 			}
 
 		} catch(e) {
-			// TODO: Implement temporary storage if localStorage and sessionStorage access is denied
 			return true;
 		}
 
@@ -40,14 +39,44 @@ lychee.define('Storage').tags({
 
 	(function() {
 
-		var local = 'localStorage' in global;
-		if (local === true) {
-			_persistent = global.localStorage;
-		}
+		var local   = false;
+		var session = false;
 
-		var session = 'sessionStorage' in global;
-		if (session === true) {
-			_temporary = global.sessionStorage;
+
+		try {
+
+			local = 'localStorage' in global;
+
+			if (local === true) {
+				_persistent = global.localStorage;
+			}
+
+			session = 'sessionStorage' in global;
+
+			if (session === true) {
+				_temporary = global.sessionStorage;
+			}
+
+		} catch(e) {
+
+			local   = false;
+			session = true;
+
+			_persistent = null;
+			_temporary  = {
+
+				data: {},
+
+				getItem: function(id) {
+					return this.data[id] || null;
+				},
+
+				setItem: function(id, data) {
+					this.data[id] = data;
+				}
+
+			};
+
 		}
 
 
