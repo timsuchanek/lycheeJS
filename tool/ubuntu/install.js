@@ -446,7 +446,7 @@
 
 					_fs.writeFileSync(_path.resolve(cron_folder, './sorbet'), buffer, 'utf8');
 
-					if (_exec_sync('chmod 755 ' + _path.resolve(script_folder, './sorbet')) !== null) {
+					if (_exec_sync('chmod 755 ' + _path.resolve(cron_folder, './sorbet')) !== null) {
 						cron_result = true;
 					} else {
 						cron_result = false;
