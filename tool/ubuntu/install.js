@@ -408,5 +408,74 @@
 
 	})();
 
+
+
+	/*
+	 * 3: UPDATE INTEGRATION
+	 */
+
+	(function() {
+
+		var errors = 0;
+
+		console.log('> Integrating Daily Updates');
+
+
+		var cron_folder = _path.resolve('/etc/cron.daily');
+		var cron_result = false;
+
+		if (_fs.existsSync(cron_folder) === true) {
+
+			var buffer = null;
+			try {
+				buffer = _fs.readFileSync(_path.resolve(__dirname, './_etc_cron_daily_sorbet.sh'), 'utf8');
+				buffer = buffer.toString();
+			} catch(e) {
+				buffer = null;
+			}
+
+
+			if (buffer !== null) {
+
+				buffer = buffer.replacetemplate('{{lycheejs_root}}',  _root);
+				buffer = buffer.replacetemplate('{{sorbet_user}}',    _sorbet_user);
+				buffer = buffer.replacetemplate('{{sorbet_group}}',   _sorbet_group);
+
+
+				try {
+
+					_fs.writeFileSync(_path.resolve(cron_folder, './sorbet'), buffer, 'utf8');
+
+					if (_exec_sync('chmod 755 ' + _path.resolve(script_folder, './sorbet')) !== null) {
+						cron_result = true;
+					} else {
+						cron_result = false;
+					}
+
+				} catch(e) {
+					cron_result = false;
+				}
+
+			}
+
+		}
+
+		if (cron_result === true) {
+			console.log('\t/etc/cron.daily/sorbet: OKAY');
+		} else {
+			console.log('\t/etc/cron.daily/sorbet: FAIL');
+			errors++;
+		}
+
+
+
+		if (errors === 0) {
+			console.log('> OKAY\n');
+		} else {
+			console.log('> FAIL\n');
+		}
+
+	})();
+
 })();
 

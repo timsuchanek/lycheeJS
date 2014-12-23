@@ -119,8 +119,8 @@ case "$1" in
 
 			kill `get_pid`;
 
-			# Give process 10 seconds to terminate
-			for i in {1..10}
+			# Give process 5 seconds to terminate
+			for i in {1..5}
 			do
 				sleep 1;
 			done;

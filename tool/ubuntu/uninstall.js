@@ -106,7 +106,50 @@
 
 
 	/*
-	 * 1: SERVICE DISINTEGRATION
+	 * 1: UPDATE DISINTEGRATION
+	 */
+
+	(function() {
+
+		var errors = 0;
+
+		console.log('> Disintegrating Daily Updates');
+
+
+		var cron_result = false;
+
+		if (_fs.existsSync('/etc/cron.daily/sorbet') === true) {
+
+			try {
+				_fs.unlinkSync('/etc/cron.daily/sorbet');
+				cron_result = true;
+			} catch(e) {
+				cron_result = false;
+			}
+
+		}
+
+		if (cron_result === true) {
+			console.log('\t/etc/cron.daily/sorbet: OKAY');
+		} else {
+			console.log('\t/etc/cron.daily/sorbet: SKIP');
+		}
+
+
+
+		if (errors === 0) {
+			console.log('> OKAY\n');
+		} else {
+			console.log('> FAIL\n');
+			process.exit(1);
+		}
+
+	})();
+
+
+
+	/*
+	 * 2: SERVICE DISINTEGRATION
 	 */
 
 	(function() {
@@ -175,7 +218,7 @@
 
 
 	/*
-	 * 1: PROFILE DISINTEGRATION
+	 * 3: PROFILE DISINTEGRATION
 	 */
 
 	(function() {
