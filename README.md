@@ -74,7 +74,7 @@ user@box:~/lycheeJS$ npm start;
 ```
 
 - Open your Web Browser and navigate to **http://localhost:8080**
-to open the lycheeJS Dashboard. You are now ready to go.
+to open the lycheeJS welcome page. You are now ready to go.
 
 The shipped [example projects](./projects) show you best practices on how
 to develop cross-platform games.
@@ -98,18 +98,18 @@ user@box:~/lycheeJS$ nodejs ./tool/install-fertilizers.js
 
 lycheeJS and Sorbet can also be integrated with your root server.
 
-- If you want to have full-blown daemon integration, you can do so by running
-the install.js script. The profile parameter is equivalent to the profiles
-located in the */sorbet/profile/* folder. This also includes daily automatic
-pulls if your lycheeJS folder is a git repository.
+- If you want to have full-blown daemon and daily automatic update
+integration, you can do so by running the install.js script. The profile
+parameter is equivalent to the available profiles in
+*~/lycheeJS/sorbet/profile/<profile.json>*.
 
 ```bash
 user@box:~$          cd ~/lycheeJS;
 user@box:~/lycheeJS$ sudo ./tool/ubuntu/install.js --profile=localhost.json;
 ```
 
-- If you want **no daemon integration**, you can alternatively add
-your own script to the *package.json/scripts* section. Take a look
+- If you want no daemon integration, you can alternatively add your own
+script to the **~/lycheeJS/package.json**/*scripts* section. Take a look
 at the *localhost* or *lycheejs.org* example.
 
 ```bash
@@ -131,12 +131,13 @@ cp -R ./boilerplate ./myproject; # Replace myproject with a unique name
 
 Each project has a unique identifier (e.g. /projects/boilerplate has the
 identifier **boilerplate**). A project's folder name is equivalent to
-its unique identifier.
+its unique identifier, no matter in which hierachy of subfolders the
+project is located.
 
-This identifier is used to integrate the project with sorbet's remote
-debugging and continous integration components. In order to integrate
-your project with all these capabilities and the Dashboard, you will
-have to modify the game.Main's settings.client property accordingly.
+This identifier is used to integrate the project with remote debugging
+and continous integration components.
+
+You have to modify the game.Main's settings.client property accordingly:
 
 ```javascript
   var settings = {
@@ -145,9 +146,7 @@ have to modify the game.Main's settings.client property accordingly.
   };
 ```
 
-It is wise to change the identifier of the lychee.Environment
-in order to find debugging reports in the remote debugger and the
-lycheeJS Dashboard.
+You also have to modify the identifier of the lychee.Environment instance:
 
 ```html
   var environment = new lychee.Environment({
