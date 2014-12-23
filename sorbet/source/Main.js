@@ -108,6 +108,10 @@ lychee.define('sorbet.Main').requires([
 		if (data.status === 304) {
 
 			response.writeHead(data.status);
+
+			data = null;
+			delete data;
+
 			response.end();
 
 		} else {
@@ -134,6 +138,9 @@ lychee.define('sorbet.Main').requires([
 
 					}
 
+					data = null;
+					delete data;
+
 					response.end();
 
 				});
@@ -144,6 +151,9 @@ lychee.define('sorbet.Main').requires([
 
 				response.writeHead(data.status, data.header);
 				response.write(data.content);
+
+				data = null;
+				delete data;
 
 				response.end();
 
