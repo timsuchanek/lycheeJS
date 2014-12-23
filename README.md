@@ -98,16 +98,18 @@ user@box:~/lycheeJS$ nodejs ./tool/install-fertilizers.js
 
 lycheeJS and Sorbet can also be integrated with your root server.
 
-- If you want to have LSB init integration, you can do so by running
-the install.js script.
+- If you want to have full-blown daemon integration, you can do so by running
+the install.js script. The profile parameter is equivalent to the profiles
+located in the */sorbet/profile/* folder. This also includes daily automatic
+pulls if your lycheeJS folder is a git repository.
 
 ```bash
 user@box:~$          cd ~/lycheeJS;
-user@box:~/lycheeJS$ sudo ./tool/ubuntu/install.js;
+user@box:~/lycheeJS$ sudo ./tool/ubuntu/install.js --profile=localhost.json;
 ```
 
-- If you want **no LSB init integration**, you can alternatively add
-an own script to the *package.json/scripts* section. Take a look
+- If you want **no daemon integration**, you can alternatively add
+your own script to the *package.json/scripts* section. Take a look
 at the *localhost* or *lycheejs.org* example.
 
 ```bash
@@ -139,7 +141,7 @@ have to modify the game.Main's settings.client property accordingly.
 ```javascript
   var settings = {
     // ./projects/myproject/source/Main.js#L16
-    client: '/api/server?identifier=boilerplate', // Replace boilerplate with correct identifier
+    client: '/api/Server?identifier=boilerplate', // Replace boilerplate with correct identifier
   };
 ```
 
