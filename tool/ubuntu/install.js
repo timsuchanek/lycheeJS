@@ -10,6 +10,31 @@
 	var _sorbet_user    = 'lycheejs';
 	var _sorbet_group   = 'lycheejs';
 
+	(function(args) {
+
+		for (var a = 0, al = process.argv.length; a < al; a++) {
+
+			var arg = process.argv[a].replace(/"/g, '');
+			if (arg.substr(0, 2) === '--' && arg.indexOf('=') !== -1) {
+
+				var key = arg.substr(2).split('=')[0];
+				var val = arg.substr(2).split('=')[1];
+
+				if (!isNaN(parseInt(val, 10))) {
+					val = parseInt(val, 10);
+				}
+
+
+				if (key === 'profile') {
+					_sorbet_profile = val;
+				}
+
+			}
+
+		}
+
+	})();
+
 	/*
 	 * END OF CUSTOM SETTINGS
 	 */
