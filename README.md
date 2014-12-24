@@ -101,7 +101,7 @@ lycheeJS and Sorbet can also be integrated with your root server.
 - If you want to have full-blown daemon and daily automatic update
 integration, you can do so by running the install.js script. The profile
 parameter is equivalent to the available profiles in
-*~/lycheeJS/sorbet/profile/<profile.json>*.
+**~/lycheeJS/sorbet/profile/[profile.json]**.
 
 ```bash
 user@box:~$          cd ~/lycheeJS;
@@ -129,9 +129,9 @@ cd ~/lycheeJS/projects;
 cp -R ./boilerplate ./myproject; # Replace myproject with a unique name
 ```
 
-Each project has a unique identifier (e.g. /projects/boilerplate has the
-identifier **boilerplate**). A project's folder name is equivalent to
-its unique identifier, no matter in which hierachy of subfolders the
+Each project has a unique identifier (e.g. **/projects/boilerplate** has
+the identifier **boilerplate**). A project's folder name is equivalent
+to its unique identifier, no matter in which hierachy of subfolders the
 project is located.
 
 This identifier is used to integrate the project with remote debugging
