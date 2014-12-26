@@ -61,13 +61,32 @@
 
 				if (key !== null) {
 
-					var keyl = key.length;
-					var keyi = this.indexOf(key);
-					if (keyi !== -1) {
-						return '' + this.substr(0, keyi) + value + this.substr(keyi + keyl);
+					var indexes = [];
+					var index   = this.indexOf(key);
+
+					while (index !== -1) {
+						indexes.push(index);
+						index = this.indexOf(key, index + 1);
 					}
 
+
+					var keyo   = 0;
+					var keyl   = key.length;
+					var vall   = value.length;
+					var buffer = '' + this;
+
+					indexes.forEach(function(keyi) {
+
+						buffer  = buffer.substr(0, keyi + keyo) + value + buffer.substr(keyi + keyo + keyl);
+						keyo   += (vall - keyl);
+
+					});
+
+
+					return buffer;
+
 				}
+
 
 				return this;
 

@@ -7,97 +7,147 @@ lychee.define('inspector.state.Definition').includes([
 	 * HELPERS
 	 */
 
-	var _render_article = function(definition) {
+	if (typeof String.prototype.replacetemplate !== 'function') {
+
+		String.prototype.replacetemplate = function(key, value) {
+
+			key   = typeof key === 'string'   ? key   : null;
+			value = typeof value === 'string' ? value : '';
+
+
+			if (key !== null) {
+
+				var indexes = [];
+				var index   = this.indexOf(key);
+
+				while (index !== -1) {
+					indexes.push(index);
+					index = this.indexOf(key, index + 1);
+				}
+
+
+				var keyo   = 0;
+				var keyl   = key.length;
+				var vall   = value.length;
+				var buffer = '' + this;
+
+				indexes.forEach(function(keyi) {
+
+					buffer  = buffer.substr(0, keyi + keyo) + value + buffer.substr(keyi + keyo + keyl);
+					keyo   += (vall - keyl);
+
+				});
+
+
+				return buffer;
+
+			}
+
+
+			return this;
+
+		};
+
+	}
+
+
+	var _render_article = function(definition, menu) {
 
 		var content = '';
 
 		if (definition.id !== definition.origin) {
-			content += '<h2>lychee.define(\'' + definition.id + '\')<br><small>(injected from ' + definition.origin + ')</small></h2>';
+			content += '<h2>' + definition.id + '<br><small>(injected from ' + definition.origin + ')</small></h2>';
 		} else {
-			content += '<h2>lychee.define(\'' + definition.id + '\')</h2>';
+			content += '<h2>' + definition.id + '</h2>';
 		}
 
 
-		content += '<h3>.tags(/* tag: value */)</h3>';
-		content += '<ul>';
+		content += '<pre class="javascript">';
+		content += 'lychee.define(\'' + definition.id + '\')';
+
 
 		if (definition.tags !== null) {
 
+			content += '.tags({\n';
 			Object.keys(definition.tags).forEach(function(key) {
-				content += '<li>' + key + ': ' + definition.tags[key] + '</li>';
+				content += '    ' + key + ': "' + definition.tags[key] + '"\n';
 			});
-
-		} else {
-
-			content += '<li> -- no Tags assigned -- </li>';
+			content += '})';
 
 		}
 
-		content += '</ul>';
-
-
-		content += '<h3>.attaches(/* Assets */)</h3>';
-		content += '<ul>';
 
 		if (definition.attaches !== null && definition.attaches.length > 0) {
 
+			content += '.attaches({\n';
 			definition.attaches.forEach(function(url) {
 				if (typeof url !== 'string') return;
-				content += '<li><a onclick="MAIN.changeState(\'asset\');MAIN.state.view(\'' + url + '\')">' + url.split('/').pop() + '</a></li>';
+				content += '    ' + url.split('.').pop() + ': <a onclick="MAIN.changeState(\'asset\');MAIN.state.view(\'' + url + '\')">' + url.split('/').pop() + '</a>\n';
 			});
-
-		} else {
-
-			content += '<li> -- no Assets attached -- </li>';
+			content += '})';
 
 		}
 
-		content += '</ul>';
-
-
-		content += '<h3>.requires(/* Definitions */)</h3>';
-		content += '<ul>';
-
-		if (definition.requires !== null && definition.requires.length > 0) {
-
-			definition.requires.forEach(function(item) {
-				content += '<li><a onclick="MAIN.state.view(\'' + item + '\')">' + item + '</a></li>';
-			});
-
-		} else {
-
-			content += '<li> -- no Definitions required -- </li>';
-
-		}
-
-		content += '</ul>';
-
-
-		content += '<h3>.includes(/* Definitions */)</h3>';
-		content += '<ul>';
 
 		if (definition.includes !== null && definition.includes.length > 0) {
 
-			definition.includes.forEach(function(item) {
-				content += '<li><a onclick="MAIN.state.view(\'' + item + '\')">' + item + '</a></li>';
+			content += '.includes([\n';
+			definition.includes.forEach(function(item, index) {
+				content += '    "<a onclick="MAIN.state.view(\'' + item + '\')">' + item + '</a>"';
+				if (index !== definition.includes.length - 1) content += ',';
+				content += '\n';
 			});
-
-		} else {
-
-			content += '<li> -- no Definitions included -- </li>';
+			content += '])';
 
 		}
 
-		content += '</ul>';
+
+		if (definition.requires !== null && definition.requires.length > 0) {
+
+			content += '.requires([\n';
+			definition.requires.forEach(function(item, index) {
+				content += '    "<a onclick="MAIN.state.view(\'' + item + '\')">' + item + '</a>"';
+				if (index !== definition.requires.length - 1) content += ',';
+				content += '\n';
+			});
+			content += '])';
+
+		}
 
 
-		content += '<h3>.exports(/* Code */)</h3>';
+		if (definition.supports !== null) {
+
+			content += '.supports(';
+			content += definition.supports.replace(/\t/g, '    ');
+			content += ')';
+
+		}
+
 
 		if (definition.exports !== null) {
-			content += '<pre class="javascript">' + definition.exports.replace(/\t/g, '    ') + '</pre>';
-		} else {
-			content += '<pre class="javascript">/* no Code exported */</pre>';
+
+			content += '.exports(';
+
+			var code = definition.exports.replace(/\t/g, '    ');
+
+			[].slice.call(menu).sort(function(a, b) {
+				if (a.length < b.length) return  1;
+				if (a.length > b.length) return -1;
+				return 0;
+			}).forEach(function(item) {
+
+				code = code.replacetemplate(item + '.prototype', '<a onclick="MAIN.state.view(\'' + item + '\')">' + item + '</a>.prototype');
+				code = code.replacetemplate('new ' + item,       'new <a onclick="MAIN.state.view(\'' + item + '\')">' + item + '</a>');
+				code = code.replacetemplate(item + '.call(',     '<a onclick="MAIN.state.view(\'' + item + '\')">' + item + '</a>.call(');
+
+			});
+
+			content += code;
+			content += ')';
+
 		}
+
+		content += ';</pre>';
 
 
 		return content;
@@ -138,7 +188,7 @@ lychee.define('inspector.state.Definition').includes([
 				var articles = {};
 
 				definitions.forEach(function(definition) {
-					articles[definition.id] = _render_article(definition);
+					articles[definition.id] = _render_article(definition, menu);
 				});
 
 

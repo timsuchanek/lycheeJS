@@ -94,6 +94,7 @@ lychee.define('inspector.Main').requires([
 				attaches: attaches           || null,
 				includes: data.blob.includes || null,
 				requires: data.blob.requires || null,
+				supports: data.blob.supports || null,
 				exports:  data.blob.exports  || null
 			});
 
