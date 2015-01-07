@@ -41,8 +41,8 @@ cross-compilation reasons. Windows also can't support SPDY
 and WebSocket extensions without routing issues.
 
 Always remember, there's no client-side and server-side
-whatsoever, because all the network components can be used
-on either side and peer-to-peer.
+application code whatsoever, because all the network components
+can be used on either side and peer-to-peer.
 
 ### 1. Download
 

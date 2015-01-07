@@ -297,7 +297,6 @@ var _sandbox     = null;
 		} else {
 
 			console.error('fertilizer: Mode not supported by Template');
-
 			process.exit(1);
 
 		}

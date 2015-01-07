@@ -190,12 +190,23 @@ lychee.Package = typeof lychee.Package !== 'undefined' ? lychee.Package : (funct
 			this.requests[classId] = map;
 
 
-			for (var c = 0, cl = candidates.length; c < cl; c++) {
+			var candidate = candidates.shift();
 
-				var candidate = candidates[c];
-				if (this.__blacklist[candidate] === 1) continue;
+			while (candidate !== undefined) {
 
-				var url            = _resolve_root.call(this) + '/' + candidates[c] + '.js';
+				if (this.__blacklist[candidate] === 1) {
+					candidate = candidates.shift();
+					map.loading--;
+				} else {
+					break;
+				}
+
+			}
+
+
+			if (candidate !== undefined) {
+
+				var url            = _resolve_root.call(this) + '/' + candidate + '.js';
 				var implementation = lychee.Environment.createAsset(url);
 				var attachments    = _resolve_attachments.call(this, candidate);
 

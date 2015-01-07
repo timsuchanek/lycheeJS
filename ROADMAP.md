@@ -9,10 +9,12 @@ back into master, tagged and published.
 
 ## v0.8.4
 
-- API Tool (documents API of Definitions)
+- Dispenser CLI Tool (creates Templates and validates API Docs of an Entity)
 
 
 ## v0.8.5
+- Website: Overhauling and Architecture Diagrams
+- Sorbet Log File serialization (sorbet.data.LOG encode/decode that runs every 5 minutes)
 - lychee.net.remote.Peer (has own lychee.Storage instance and stores all peers in a /project-specific/lychee.store)
 - sorbet.api.remote.Peer (returns an Array of project-specific Peer Servers, based on project identifier)
 - Project Tool (inspects and verifies integrity of lychee.pkg files)
