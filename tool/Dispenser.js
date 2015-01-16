@@ -259,15 +259,14 @@ var _settings = null;
 
 	};
 
-	var _parse_api = function(identifier, code) {
+	var _parse_definition = function(identifier, code) {
 
 		var classindex  = code.indexOf('\n\tvar Class = function(');
 		var moduleindex = code.indexOf('\n\tvar Module = {');
 		if (classindex !== -1) {
-			return _parse_api_class(identifier, code.substr(classindex));
+			return _parse_definition_class(identifier, code.substr(classindex));
 		} else if (moduleindex !== -1) {
-			// TODO: Implement Module API
-			// return _parse_api_module(identifier, code.substr(moduleindex));
+			return _parse_definition_module(identifier, code.substr(moduleindex));
 		}
 
 
@@ -275,7 +274,7 @@ var _settings = null;
 
 	};
 
-	var _parse_api_class = function(identifier, code) {
+	var _parse_definition_class = function(identifier, code) {
 
 		var api = {
 			identifier: identifier,
@@ -420,7 +419,7 @@ var _settings = null;
 
 
 		/*
-		 * 2. TODO: Parse Enums
+		 * 2. Parse Enums
 		 */
 
 		(function(chunk) {
@@ -571,6 +570,14 @@ var _settings = null;
 								args[tmp1.indexOf(argname)].type = argtype;
 							}
 
+						} else if (line.indexOf('if (') !== -1 && line.indexOf(' === true') !== -1 && line.indexOf(' === false') !== -1) {
+
+							var argname = line.trim().substr('if ('.length).split('=')[0].trim();
+
+							if (tmp1.indexOf(argname) !== -1) {
+								args[tmp1.indexOf(argname)].type = 'Boolean';
+							}
+
 						} else if (line.substr(0, l4) === str4) {
 
 							var tmp2    = line.substr(l4, line.indexOf(')') - l4);
@@ -615,6 +622,169 @@ var _settings = null;
 
 	};
 
+	var _parse_definition_module = function(identifier, code) {
+
+		var api = {
+			identifier: identifier,
+			type:       'Module',
+			methods:    []
+		};
+
+
+
+		/*
+		 * 1. Parse Methods
+		 */
+
+		(function(chunk) {
+
+			var str1 = '\n\tvar Module = {';
+			var str2 = 'function(';
+			var str3 = 'return';
+			var str4 = '\t\tif (lychee.enumof(';
+
+			var l1   = str1.length;
+			var l2   = str2.length;
+			var l3   = str3.length;
+			var l4   = str4.length;
+
+			var methods = chunk.substr(l1).split('\n\t\t},');
+			if (methods.length > 0) {
+
+				methods.forEach(function(ch) {
+
+					var name   = null;
+					var args   = [];
+					var values = [];
+
+
+					ch.split('\n').forEach(function(line) {
+
+						if (line.trim().substr(0, 2) === '//') return;
+
+						if (line.indexOf(str2) !== -1) {
+
+							name = line.split(':')[0].trim();
+							args = line.split(':')[1].trim().substr(l2).split(')')[0].split(', ').map(function(value) {
+								return { name: value, type: 'undefined' };
+							});
+
+							if (args[0].name === '') {
+								args = [];
+							}
+
+						}
+
+					});
+
+
+					ch.split('\n').forEach(function(line) {
+
+						if (line.indexOf(str3) !== -1) {
+
+							var expr = line.substr(line.indexOf(str3) + l3).trim().split(';')[0];
+							if (expr.substr(0, 1) === '{') {
+
+								if (name === 'serialize') {
+
+									if (values.indexOf('Serialization Object') === -1) {
+										values.push('Serialization Object');
+									}
+
+								} else {
+
+									if (values.indexOf('Object') === -1) {
+										values.push('Object');
+									}
+
+								}
+
+							} else if (expr === 'true' || expr === 'false' || expr.indexOf('&&') !== -1) {
+
+								if (values.indexOf('true') === -1) {
+									values.push('true');
+								}
+
+								if (values.indexOf('false') === -1) {
+									values.push('false');
+								}
+
+							} else if (expr === 'null') {
+
+								if (values.indexOf('null') === -1) {
+									values.push('null');
+								}
+
+							} else if (expr === 'object') {
+
+								if (values.indexOf('Object') === -1) {
+									values.push('Object');
+								}
+
+							} else if (expr.indexOf('toString()') !== -1) {
+
+								if (values.indexOf('String') === -1) {
+									values.push('String');
+								}
+
+							}
+
+						}
+
+					});
+
+
+					ch.split('\n').forEach(function(line) {
+
+						var tmp1 = args.map(function(val) { return val.name });
+
+						if (line.substr(0, 3) === '\t\t\t' && line.indexOf('=') !== -1 && line.indexOf('?') !== -1) {
+
+							var argname = line.split('=')[0].trim();
+							var argtype = _parse_expression(argname, line.split('=').slice(1).join('=').trim());
+
+							if (argtype !== undefined && tmp1.indexOf(argname) !== -1) {
+								args[tmp1.indexOf(argname)].type = argtype;
+							}
+
+						} else if (line.substr(0, l4) === str4) {
+
+							var tmp2    = line.substr(l4, line.indexOf(')') - l4);
+							var argenum = tmp2.split(',')[0].trim();
+							var argname = tmp2.split(',')[1].trim();
+							var argtype = 'Enum';
+
+							if (tmp1.indexOf(argname) !== -1) {
+								args[tmp1.indexOf(argname)].type = argtype;
+								args[tmp1.indexOf(argname)].enum = argenum;
+							}
+
+						}
+
+					});
+
+
+					if (name !== null) {
+
+						api.methods.push({
+							name:      name,
+							arguments: args,
+							returns:   values
+						});
+
+					}
+
+				});
+
+			}
+
+		})(code.substr(code.indexOf('\n\tvar Module = {'), code.indexOf('\n\t};')));
+
+
+		return api;
+
+	};
+
 
 
 	/*
@@ -648,13 +818,13 @@ var _settings = null;
 
 			main_candidate  = candidates.pop();
 			main_definition = definitions.pop();
-			main_api        = _parse_api(identifier, main_definition);
+			main_api        = _parse_definition(identifier, main_definition);
 
 
 			definitions.forEach(function(test_definition, index) {
 
 				var test_candidate = candidates[index];
-				var test_api       = _parse_api(identifier, test_definition);
+				var test_api       = _parse_definition(identifier, test_definition);
 
 				if (lychee.diff(main_api, test_api) === true) {
 
@@ -693,26 +863,27 @@ var _settings = null;
 
 					});
 
-
-//console.log(JSON.stringify(main_api, null, '\t'))
-//console.log(JSON.stringify(test_api, null, '\t'))
-
 				}
-
-process.exit();
 
 			});
 
 		}
 
 
-// TODO: Parse Markdown File into API structure
+// TODO: Parse Markdown into API structure
 // TODO: Compare Markdown File with Definition API
 
 
 		if (main_api !== null) {
 
-// console.log('APIDATA', api);
+			if (settings.mode === 'validate') {
+				// TODO: Validate API against Markdown API
+			} else if (settings.mode === 'create') {
+
+			}
+
+console.log(settings);
+console.log('APIDATA', JSON.stringify(main_api, null, '\t'));
 
 		} else {
 
