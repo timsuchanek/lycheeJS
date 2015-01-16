@@ -30,52 +30,36 @@ lychee.define('lychee.net.Server').tags({
 	 * HELPERS
 	 */
 
-	var _get_websocket_headers = function(httpheaders) {
-
-		var wsheaders = {
-			host:    httpheaders.host,
-			origin:  httpheaders.origin || null,
-			version: +httpheaders.version || 0
-		};
-
-
-		for (var prop in httpheaders) {
-
-			if (prop.substr(0, 14) === 'sec-websocket-') {
-				wsheaders[prop.substr(14)] = httpheaders[prop];
-			}
-
-		}
-
-
-		if (wsheaders.version) {
-			return wsheaders;
-		}
-
-
-		return null;
-
-	};
-
 	var _get_websocket_handshake = function(request) {
 
-		var headers = _get_websocket_headers(request.headers);
-		if (headers !== null && headers.origin !== null) {
+		var origin   = request.headers.origin || null;
+		var host     = request.headers.host   || null;
+		var nonce    = request.headers['sec-websocket-key']      || null;
+		var protocol = request.headers['sec-websocket-protocol'] || null;
 
-			var sha1 = crypto.createHash('sha1');
-			sha1.update(headers.key + '258EAFA5-E914-47DA-95CA-C5AB0DC85B11');
+
+		if (origin !== null && nonce !== null && protocol === 'lycheejs') {
+
+			var handshake = '';
+			var accept    = (function(nonce) {
+
+				var sha1 = crypto.createHash('sha1');
+				sha1.update(nonce + '258EAFA5-E914-47DA-95CA-C5AB0DC85B11');
+				return sha1.digest('base64');
+
+			})(nonce);
 
 
 			// HEAD
-			var handshake = '';
+
 			handshake += 'HTTP/1.1 101 WebSocket Protocol Handshake\r\n';
 			handshake += 'Upgrade: WebSocket\r\n';
 			handshake += 'Connection: Upgrade\r\n';
 
-			handshake += 'Sec-WebSocket-Version: '  + headers.version       + '\r\n';
-			handshake += 'Sec-WebSocket-Origin: '   + headers.origin        + '\r\n';
-			handshake += 'Sec-WebSocket-Protocol: ' + 'lycheejs'            + '\r\n';
-			handshake += 'Sec-WebSocket-Accept: '   + sha1.digest('base64') + '\r\n';
+			handshake += 'Sec-WebSocket-Version: '  + '13'       + '\r\n';
+			handshake += 'Sec-WebSocket-Origin: '   + origin     + '\r\n';
+			handshake += 'Sec-WebSocket-Protocol: ' + 'lycheejs' + '\r\n';
+			handshake += 'Sec-WebSocket-Accept: '   + accept     + '\r\n';
 
 
 			// BODY
@@ -93,29 +77,30 @@ lychee.define('lychee.net.Server').tags({
 
 	var _upgrade_to_websocket = function(request, socket, head) {
 
-		var reqheaders = request.headers;
-		if (typeof reqheaders.upgrade === 'string' && reqheaders.upgrade.toLowerCase() === 'websocket') {
-
-			if (typeof reqheaders.connection === 'string' && reqheaders.connection.toLowerCase().indexOf('upgrade') !== -1) {
-
-				var handshake = _get_websocket_handshake(request);
-				if (handshake !== null) {
-
-					socket.write(handshake, 'ascii');
-					socket.setTimeout(0);
-					socket.setNoDelay(true);
-					socket.setKeepAlive(true, 0);
-					socket.removeAllListeners('timeout');
+		var connection = (request.headers.connection || '').toLowerCase();
+		var upgrade    = (request.headers.upgrade    || '').toLowerCase();
 
 
-					return true;
+		if (connection === 'upgrade' && upgrade === 'websocket') {
 
-				}
+			var handshake = _get_websocket_handshake(request);
+			if (handshake !== null) {
+
+				socket.write(handshake, 'ascii');
+				socket.setTimeout(0);
+				socket.setNoDelay(true);
+				socket.setKeepAlive(true, 0);
+				socket.removeAllListeners('timeout');
+
+				return true;
 
 			}
 
 		}
 
+
+		socket.end();
+		socket.destroy();
 
 		return false;
 
@@ -222,11 +207,6 @@ lychee.define('lychee.net.Server').tags({
 
 						remote.connect(socket);
 						remote.trigger('connect', []);
-
-					} else {
-
-						socket.end();
-						socket.destroy();
 
 					}
 
