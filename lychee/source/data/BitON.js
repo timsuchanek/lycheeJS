@@ -626,29 +626,57 @@ lychee.define('lychee.data.BitON').exports(function(lychee, global) {
 	 * IMPLEMENTATION
 	 */
 
-	var Module = {};
+	var Module = {
+
+		// deserialize: function(blob) {},
+
+		serialize: function() {
+
+			return {
+				'reference': '#lychee.data.BitON',
+				'blob':      null
+			};
+
+		},
+
+		encode: function(data) {
+
+			data = data instanceof Object ? data : null;
 
 
-	Module.encode = function(data) {
+			if (data !== null) {
 
-		var stream = new _Stream('', _Stream.MODE.write);
+				var stream = new _Stream('', _Stream.MODE.write);
 
-		_encode(stream, data);
+				_encode(stream, data);
 
-		return stream.toString();
+				return stream.toString();
 
-	};
+			}
 
 
-	Module.decode = function(data) {
-
-		var stream = new _Stream(data, _Stream.MODE.read);
-
-		var value = _decode(stream);
-		if (value === undefined) {
 			return null;
-		} else {
-			return value;
+
+		},
+
+		decode: function(data) {
+
+			data = typeof data === 'string' ? data : null;
+
+
+			if (data !== null) {
+
+				var stream = new _Stream(data, _Stream.MODE.read);
+				var object = _decode(stream);
+				if (object !== undefined) {
+					return object;
+				}
+
+			}
+
+
+			return null;
+
 		}
 
 	};

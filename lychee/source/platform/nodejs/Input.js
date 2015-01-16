@@ -272,11 +272,23 @@ lychee.define('Input').tags({
 		},
 
 		setTouch: function(touch) {
+
+			if (touch === true || touch === false) {
+				return false;
+			}
+
 			return false;
+
 		},
 
 		setSwipe: function(swipe) {
+
+			if (swipe === true || swipe === false) {
+				return false;
+			}
+
 			return false;
+
 		}
 
 	};

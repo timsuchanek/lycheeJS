@@ -195,7 +195,8 @@ lychee.define('lychee.game.Entity').exports(function(lychee, global) {
 
 			return {
 				'constructor': 'lychee.game.Entity',
-				'arguments':   [ settings ]
+				'arguments':   [ settings ],
+				'blob':        null
 			};
 
 		},
