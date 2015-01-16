@@ -185,7 +185,13 @@ lychee.define('lychee.net.Tunnel').requires([
 		 * ENTITY API
 		 */
 
-		// deserialize: function(blob) {},
+		deserialize: function(blob) {
+
+			if (blob.codec instanceof Object) {
+				this.__codec = lychee.deserialize(blob.codec);
+			}
+
+		},
 
 		serialize: function() {
 
@@ -193,16 +199,25 @@ lychee.define('lychee.net.Tunnel').requires([
 			data['constructor'] = 'lychee.net.Tunnel';
 
 			var settings = {};
+			var blob     = data['blob'] = (data['blob'] || {});
 
 
 			if (this.binary !== false) settings.binary    = this.binary;
 			if (this.reconnect !== 0)  settings.reconnect = this.reconnect;
 
 
-			// TODO: Serialize services to data['blob']
+			if (this.__codec !== _JSON) {
+				blob.codec = lychee.serialize(this.__codec);
+			}
+
+
+			if (this.__services.active.length > 0) {
+				// TODO: Serialize active services to data['blob']
+			}
 
 
 			data['arguments'][0] = settings;
+			data['blob']         = Object.keys(blob).length > 0 ? blob : null;
 
 
 			return data;
