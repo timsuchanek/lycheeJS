@@ -95,7 +95,7 @@ lychee.define('lychee.net.Client').tags({
 				var that = this;
 
 
-				this.__socket = new WebSocket('ws://' + this.host + ':' + this.port);
+				this.__socket = new WebSocket('ws://' + this.host + ':' + this.port, [ 'lycheejs' ]);
 
 				this.__socket.onopen = function() {
 					that.trigger('connect', []);
@@ -108,6 +108,11 @@ lychee.define('lychee.net.Client').tags({
 				this.__socket.onclose = function(event) {
 					that.__socket = null;
 					that.trigger('disconnect', [ event.code || null ]);
+				};
+
+				this.__socket.onerror = function(event) {
+					that.setReconnect(0);
+					this.close();
 				};
 
 

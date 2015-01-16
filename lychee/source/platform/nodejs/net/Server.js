@@ -72,9 +72,10 @@ lychee.define('lychee.net.Server').tags({
 			handshake += 'Upgrade: WebSocket\r\n';
 			handshake += 'Connection: Upgrade\r\n';
 
-			handshake += 'Sec-WebSocket-Version: ' + headers.version       + '\r\n';
-			handshake += 'Sec-WebSocket-Origin: '  + headers.origin        + '\r\n';
-			handshake += 'Sec-WebSocket-Accept: '  + sha1.digest('base64') + '\r\n';
+			handshake += 'Sec-WebSocket-Version: '  + headers.version       + '\r\n';
+			handshake += 'Sec-WebSocket-Origin: '   + headers.origin        + '\r\n';
+			handshake += 'Sec-WebSocket-Protocol: ' + 'lycheejs'            + '\r\n';
+			handshake += 'Sec-WebSocket-Accept: '   + sha1.digest('base64') + '\r\n';
 
 
 			// BODY
