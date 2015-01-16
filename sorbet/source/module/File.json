@@ -36,6 +36,12 @@
 		"stream":   false
 	},
 
+	"md": {
+		"encoding": "utf8",
+		"type":     "text/x-markdown",
+		"stream":   false
+	},
+
 	"mf": {
 		"encoding": "utf8",
 		"type":     "text/cache-manifest",
