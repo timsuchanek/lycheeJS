@@ -98,6 +98,16 @@ user@box:~/lycheeJS$ nodejs ./tool/install-fertilizers.js
 
 lycheeJS and Sorbet can also be integrated with your root server.
 
+| Daemon integration                                                           | No Daemon integration |
+|------------------------------------------------------------------------------|-----------------------|
+|                                                                              |                       |
+| ```bash                                                                      |                       |
+| user@box:~$          cd ~/lycheeJS;                                          |                       |
+| user@box:~/lycheeJS$ sudo ./tool/ubuntu/install.js --profile=localhost.json; |                       |
+| ```                                                                          |                       |
+ 
+
+
 - If you want to have full-blown daemon and daily automatic update
 integration, you can do so by running the install.js script. The profile
 parameter is equivalent to the available profiles in
