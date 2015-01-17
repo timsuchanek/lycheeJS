@@ -1,13 +1,9 @@
 
 # lycheeJS (v0.8.4)
 
-[![Code Climate][climate-image]][climate-url]
 [![NPM Version][npm-image]][npm-url]
 [![NPM Downloads][downloads-image]][downloads-url]
 [![Gratipay][gratipay-image]][gratipay-url]
-
-[climate-image]: https://codeclimate.com/github/LazerUnicorns/lycheeJS/badges/gpa.svg
-[climate-url]: https://codeclimate.com/github/LazerUnicorns/lycheeJS
 
 [npm-image]: https://img.shields.io/npm/v/lycheejs.svg
 [npm-url]: https://npmjs.org/package/lycheejs
@@ -24,8 +20,9 @@ complete solution for prototyping and deployment
 of HTML5 Canvas, WebGL or native OpenGL(ES) or libSDL2
 based games inside the Web Browser or native runtimes.
 
-The development process is optimized for Google Chrome
-and its developer tools.
+The development process is optimized for Blink-based
+browsers (Chromium, Google Chrome, Opera) and their
+developer tools.
 
 
 ## Installation
@@ -76,8 +73,8 @@ user@box:~/lycheeJS$ npm start;
 - Open your Web Browser and navigate to **http://localhost:8080**
 to open the lycheeJS welcome page. You are now ready to go.
 
-The shipped [example projects](./projects) show you best practices on how
-to develop cross-platform games.
+The shipped [example projects](./projects) show you best practices
+on how to develop cross-platform games.
 
 
 ### 3. Install Fertilizers (optional)
@@ -112,6 +109,7 @@ The profile parameter is equivalent to the available profiles in
 ```bash
 user@box:~$          cd ~/lycheeJS;
 user@box:~/lycheeJS$ sudo ./tool/ubuntu/install.js --profile=localhost.json;
+user@box:~$          sudo /etc/init.d/sorbet restart;
 ```
 
 #### 4.b) NPM Setup
@@ -127,51 +125,16 @@ user@box:~/lycheeJS$ npm run-script localhost
 ```
 
 
-## Getting Started
-
-First of all, a project's server is a websocket server, not a webserver.
-The best way to get started is to clone the Boilerplate.
-
-```bash
-cd ~/lycheeJS/projects;
-cp -R ./boilerplate ./myproject; # Replace myproject with a unique name
-```
-
-Each project has a unique identifier (e.g. **/projects/boilerplate** has
-the identifier **boilerplate**). A project's folder name is equivalent
-to its unique identifier, no matter in which hierachy of subfolders the
-project is located.
-
-This identifier is used to integrate the project with remote debugging
-and continous integration components.
-
-You have to modify the game.Main's settings.client property accordingly:
-
-```javascript
-  var settings = {
-    // ./projects/myproject/source/Main.js#L16
-    client: '/api/Server?identifier=boilerplate', // Replace boilerplate with correct identifier
-  };
-```
-
-You also have to modify the identifier of the lychee.Environment instance:
-
-```html
-  var environment = new lychee.Environment({
-    // ./projects/myproject/source/index.html#L48
-	id: 'boilerplate', // Replace boilerplate with correct identifier
-  });
-```
-
-
 ## Tutorials
 
-There are plenty of tutorials available at [http://lycheejs.org/tutorials](http://lycheejs.org/tutorials).
+There are plenty of tutorials available at
+[http://lycheejs.org/tutorials](http://lycheejs.org/tutorials).
 
 
 ## Documentation
 
-The documentation is available online at [http://lycheejs.org/documentation/index.html](http://lycheejs.org/documentation).
+The documentation is available online at
+[http://lycheejs.org/documentation/index.html](http://lycheejs.org/documentation).
 
 
 ## Roadmap
@@ -201,7 +164,7 @@ a [lychee.Storage](http://lycheejs.org/documentation/api-lychee-Storage.html),
 and a [lychee.Viewport](http://lycheejs.org/documentation/api-lychee-Viewport.html).
 
 These implementations are fully optional and only necessary if you are using
-them inside your Game or App.
+them inside your Game or Application.
 
 
 ## License
