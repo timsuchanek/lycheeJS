@@ -41,7 +41,7 @@ Always remember, there's no client-side and server-side
 application code whatsoever, because all the network components
 can be used on either side and peer-to-peer.
 
-### 1. Download
+### 1. Download lycheeJS
 
 - Download and install the newest stable release of
 NodeJS from [nodejs.org](http://nodejs.org).
@@ -60,9 +60,10 @@ zip-file is renamed to lycheeJS to follow up with the
 tutorials.
 
 
-### 2. Start lycheeJS Webserver (Sorbet)
+### 2. Start lycheeJS
 
-- After building the core, you are ready to go. Start Sorbet.
+- After building the core, you are ready to go. Start Sorbet,
+the lycheeJS webserver:
 
 ```bash
 user@box:~$          cd ~/lycheeJS;
@@ -71,10 +72,8 @@ user@box:~/lycheeJS$ npm start;
 ```
 
 - Open your Web Browser and navigate to **http://localhost:8080**
-to open the lycheeJS welcome page. You are now ready to go.
-
-The shipped [example projects](./projects) show you best practices
-on how to develop cross-platform games.
+to open the lycheeJS welcome page. The shipped [example projects](./projects)
+show you best practices on how to develop cross-platform games.
 
 
 ### 3. Install Fertilizers (optional)
@@ -121,7 +120,7 @@ or *lycheejs.org*:
 ```bash
 # This is identical to npm start, but will run forever
 user@box:~$          cd ~/lycheeJS;
-user@box:~/lycheeJS$ npm run-script localhost
+user@box:~/lycheeJS$ npm run-script localhost;
 ```
 
 
