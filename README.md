@@ -98,29 +98,27 @@ user@box:~/lycheeJS$ nodejs ./tool/install-fertilizers.js
 
 lycheeJS and Sorbet can also be integrated with your root server.
 
-| Daemon integration                                                           | No Daemon integration |
-|------------------------------------------------------------------------------|-----------------------|
-|                                                                              |                       |
-| ```bash                                                                      |                       |
-| user@box:~$          cd ~/lycheeJS;                                          |                       |
-| user@box:~/lycheeJS$ sudo ./tool/ubuntu/install.js --profile=localhost.json; |                       |
-| ```                                                                          |                       |
- 
+It is recommended to use the daemon setup on production environments
+and to use the npm setup on development environments.
 
+The daemon setup integrates better with Debian / Ubuntu systems and
+features daily automatic updates with your git repository.
 
-- If you want to have full-blown daemon and daily automatic update
-integration, you can do so by running the install.js script. The profile
-parameter is equivalent to the available profiles in
-**~/lycheeJS/sorbet/profile/[profile.json]**.
+#### 4.a) Daemon Setup
+
+The profile parameter is equivalent to the available profiles in
+**~/lycheeJS/sorbet/profile/[profile.json]**:
 
 ```bash
 user@box:~$          cd ~/lycheeJS;
 user@box:~/lycheeJS$ sudo ./tool/ubuntu/install.js --profile=localhost.json;
 ```
 
-- If you want no daemon integration, you can alternatively add your own
-script to the **~/lycheeJS/package.json**/*scripts* section. Take a look
-at the *localhost* or *lycheejs.org* example.
+#### 4.b) NPM Setup
+
+You can modify the **~/lycheeJS/package.json**/*scripts* section to
+use your own sorbet profile. Take a look at the examples *localhost*
+or *lycheejs.org*:
 
 ```bash
 # This is identical to npm start, but will run forever
