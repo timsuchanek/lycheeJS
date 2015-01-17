@@ -89,29 +89,29 @@ lychee.define('lychee.net.Protocol').supports(function(lychee, global) {
 				this.__mode = -1;
 
 			// 1: Text Frame
-			} else if (this.__op === 1) {
+			} else if (this.__op === 0x01) {
 
 				this.__mode = 1;
 
 			// 2: Binary Frame
-			} else if (this.__op === 2) {
+			} else if (this.__op === 0x02) {
 
 				this.__mode = 1;
 
 			// 8: Connection Close Frame
-			} else if (this.__op === 8) {
+			} else if (this.__op === 0x08) {
 
 				this.__mode = -1;
 
 
 			// 9: Ping Frame
-			} else if (this.__op === 9) {
+			} else if (this.__op === 0x09) {
 
 				this.__mode = 1;
 
 
 			// 10: Pong Frame
-			} else if (this.__op === 10) {
+			} else if (this.__op === 0x0a) {
 
 				this.__mode = 1;
 
@@ -127,8 +127,7 @@ lychee.define('lychee.net.Protocol').supports(function(lychee, global) {
 
 			data = buffer[this.__offset++];
 
-			this.__isMasked    = this.__op !== 10 ? true : false;
-			// this.__isMasked    = this.__op !== 10 ? (data & 1) === 1 : false;
+			this.__isMasked    = this.__op !== 0x0a ? true : false;
 			this.__frameLength = data & 127;
 
 
@@ -217,11 +216,11 @@ lychee.define('lychee.net.Protocol').supports(function(lychee, global) {
 
 
 			// Handle Ping Frame & Pong Frame
-			if (this.__op === 9 || this.__op === 10) {
+			if (this.__op === 0x09 || this.__op === 0x0a) {
 
 				// Answer the Ping with a Pong
-				if (this.__op === 9) {
-					this.write(message, isBinary);
+				if (this.__op === 0x09) {
+					this.pong();
 				}
 
 
@@ -337,6 +336,54 @@ lychee.define('lychee.net.Protocol').supports(function(lychee, global) {
 
 	Class.prototype = {
 
+		ping: function() {
+
+			// 8 Bit Data Frame
+			var buffer = new Buffer(2 + 4);
+
+
+			// Set OP and FIN
+			buffer[0] = 128 | (0x09 & 0x0f);
+			buffer[1] = 128 | (0x00 & 0x7f);
+
+
+			// Set MASK
+			// Ping Frame is sent by Client (with mask)
+
+			buffer[2] = (Math.random() * 0xff) | 0;
+			buffer[3] = (Math.random() * 0xff) | 0;
+			buffer[4] = (Math.random() * 0xff) | 0;
+			buffer[5] = (Math.random() * 0xff) | 0;
+
+
+			return this.socket.write(buffer);
+
+		},
+
+		pong: function() {
+
+			// 8 Bit Data Frame
+			var buffer = new Buffer(2 + 4);
+
+
+			// Set OP and FIN
+			buffer[0] = 128 | (0x0A & 0x0f);
+			buffer[1] = 0   | (0x00 & 0x7f);
+
+
+			// Set MASK
+			// Pong Frame is sent by Server (without mask)
+
+			buffer[2] = 0;
+			buffer[3] = 0;
+			buffer[4] = 0;
+			buffer[5] = 0;
+
+
+			return this.socket.write(buffer);
+
+		},
+
 		send: function(blob) {
 
 			var result = this.write(blob, false);
@@ -348,7 +395,6 @@ lychee.define('lychee.net.Protocol').supports(function(lychee, global) {
 			return false;
 
 		},
-
 
 		write: function(data, isBinary) {
 

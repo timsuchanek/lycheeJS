@@ -102,9 +102,9 @@ lychee.define('lychee.net.Remote').tags({
 					that.receive(blob);
 				};
 
-				this.__socket.onclose = function() {
+				this.__socket.onclose = function(code) {
 					that.__socket = null;
-					that.trigger('disconnect', []);
+					that.trigger('disconnect', [ code ]);
 				};
 
 

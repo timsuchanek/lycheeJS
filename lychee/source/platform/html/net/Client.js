@@ -117,7 +117,7 @@ lychee.define('lychee.net.Client').tags({
 
 
 				if (lychee.debug === true) {
-					console.log('lychee.net.Client: Listening on ' + this.host + ':' + this.port);
+					console.log('lychee.net.Client: Connected to ' + this.host + ':' + this.port);
 				}
 
 

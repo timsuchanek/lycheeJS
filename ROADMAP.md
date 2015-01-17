@@ -9,7 +9,7 @@ back into master, tagged and published.
 
 ## v0.8.4
 
-- Dispenser CLI Tool (creates Templates and validates API Docs of an Entity)
+- Dispenser CLI Tool (creates Templates and validates API Docs of a Definition)
 
 
 ## v0.8.5
@@ -30,8 +30,7 @@ back into master, tagged and published.
 - lychee.game.Logic
 - lychee.game.Physic
 - lychee.verlet Stack serialization and finalization
-- lychee.net.Tunnel integration (event-based abstraction for Client and Remote)
-- lychee.net.Protocol refactor for sending AND receiving
+- lychee.net.Protocol Ping/Pong verification
 - html-webgl platform finalization (webgl2d refactor)
 - Automatized Fuzztest suite (based on API docs)
 
@@ -41,14 +40,7 @@ back into master, tagged and published.
 - Sorbet needs major support for Content-Security-Policy
 - sorbet.module.Blacklist integration with Content-Security-Policy
 
-## v0.8.8
-
-- port ws (*1*) project for identical API on html and nodejs
-- lychee.net.Client for nodejs
-- lychee.net.Protocol for nodejs (should work due to Buffer implementation in bootstrap.js)
-
 
 # References (Articles and Sources)
 
-1. [ws project](https://github.com/einaros/ws)
 

@@ -8,7 +8,7 @@ lychee.define('lychee.net.Client').tags({
 	'lychee.net.Tunnel'
 ]).supports(function(lychee, global) {
 
-	if (typeof WebSocket !== 'undefined') {
+	if (typeof process !== 'undefined') {
 		return true;
 	}
 
@@ -17,8 +17,67 @@ lychee.define('lychee.net.Client').tags({
 
 }).exports(function(lychee, global, attachments) {
 
+	var http   = require('http');
+	var crypto = require('crypto');
+
 	var _BitON = lychee.data.BitON;
 	var _JSON  = lychee.data.JSON;
+
+
+
+	/*
+	 * HELPERS
+	 */
+
+	var _get_websocket_nonce = function() {
+
+		var buffer = new Buffer(16);
+		for (var b = 0; b < 16; b++) {
+			buffer[b] = Math.round(Math.random() * 0xff);
+		}
+
+		return buffer.toString('base64');
+
+	};
+
+	var _upgrade_to_websocket = function(response, socket, head) {
+
+		var connection = (response.headers.connection || '').toLowerCase();
+		var upgrade    = (response.headers.upgrade    || '').toLowerCase();
+
+		if (connection === 'upgrade' && upgrade === 'websocket') {
+
+			var protocol = (response.headers['sec-websocket-protocol'] || '').toLowerCase();
+			var accept   = (response.headers['sec-websocket-accept']   || '').toLowerCase();
+			var expected = (function(nonce) {
+
+				var sha1 = crypto.createHash('sha1');
+				sha1.update(nonce + '258EAFA5-E914-47DA-95CA-C5AB0DC85B11');
+				return sha1.digest('base64');
+
+			})(this.__nonce);
+
+
+			if (protocol === 'lycheejs' && accept === expected) {
+
+				socket.setTimeout(0);
+				socket.setNoDelay(true);
+				socket.setKeepAlive(true, 0);
+				socket.removeAllListeners('timeout');
+
+				return true;
+
+			}
+
+		}
+
+
+		socket.end();
+		socket.destroy();
+
+		return false;
+
+	};
 
 
 
@@ -31,6 +90,7 @@ lychee.define('lychee.net.Client').tags({
 		var settings = lychee.extend({}, data);
 
 
+		this.__nonce       = null;
 		this.__socket      = null;
 		this.__isConnected = false;
 
@@ -95,20 +155,69 @@ lychee.define('lychee.net.Client').tags({
 				var that = this;
 
 
-				this.__socket = new WebSocket('ws://' + this.host + ':' + this.port);
+				this.__nonce = _get_websocket_nonce();
 
-				this.__socket.onopen = function() {
-					that.trigger('connect', []);
-				};
+				var request  = http.request({
+					hostname: this.host,
+					port:     this.port,
+					method:   'GET',
+					headers:  {
+						'Upgrade':                'websocket',
+						'Connection':             'Upgrade',
+						'Origin':                 'ws://' + this.host + ':' + this.port,
+						'Host':                   this.host + ':' + this.port,
+						'Sec-WebSocket-Key':      this.__nonce,
+						'Sec-WebSocket-Version':  '13',
+						'Sec-WebSocket-Protocol': 'lycheejs'
+					}
+				});
 
-				this.__socket.onmessage = function(event) {
-					that.receive(event.data);
-				};
 
-				this.__socket.onclose = function(event) {
-					that.__socket = null;
-					that.trigger('disconnect', [ event.code || null]);
-				};
+				request.on('upgrade', function(response, socket, head) {
+
+					if (_upgrade_to_websocket.call(that, response, socket, head) === true) {
+
+						that.__socket = new lychee.net.Protocol(socket);
+
+						that.__socket.ondata = function(blob) {
+							that.receive(blob);
+						};
+
+						that.__socket.onclose = function(code) {
+							that.__socket = null;
+							that.trigger('disconnect', [ code ]);
+						};
+
+						that.trigger('connect', []);
+
+
+						var handle = setInterval(function() {
+
+							if (that.__isConnected === true) {
+								that.__socket.ping();
+							} else {
+								clearInterval(handle);
+							}
+
+						}, 60000);
+
+					}
+
+				});
+
+
+				request.on('response', function(response) {
+
+					var socket = response.socket || null;
+					if (socket !== null) {
+						socket.end();
+						socket.destroy();
+					}
+
+				});
+
+
+				request.end();
 
 
 				if (lychee.debug === true) {
