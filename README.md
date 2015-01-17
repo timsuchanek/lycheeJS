@@ -27,19 +27,20 @@ developer tools.
 
 ## Installation
 
-### 0. Requirements
-
 The *client-side* lycheeJS Engine Stack is supporting
 all Operating Systems that can execute JavaScript.
 
 The *server-side* CDN, CI-, Web-, and Websocket Stack though
 is only supporting Linux and Mac OSX due to sandboxing and
 cross-compilation reasons. Windows also can't support SPDY
-and WebSocket extensions without routing issues.
+and WebSocket extensions without Ephermal Port issues.
 
 Always remember, there's no client-side and server-side
 application code whatsoever, because all the network components
-can be used on either side and peer-to-peer.
+can be used on either side and peer-to-peer. That means you
+can run a native build on Windows using the client-side and
+server-side stack.
+
 
 ### 1. Download lycheeJS
 
