@@ -20,7 +20,7 @@ service.
 ### Start server via:
 
 cd ~/Software/lycheeJS/projects/p2pdemo;
-nodejs client.js ~/Software/lycheeJS/ 1337 localhost
+nodejs server.js ~/Software/lycheeJS/ 1337 localhost
 
 
 ### Start client via:
