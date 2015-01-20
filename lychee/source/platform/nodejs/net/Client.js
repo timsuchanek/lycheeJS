@@ -3,7 +3,8 @@ lychee.define('lychee.net.Client').tags({
 	platform: 'nodejs'
 }).requires([
 	'lychee.data.BitON',
-	'lychee.data.JSON'
+	'lychee.data.JSON',
+	'lychee.net.Protocol'
 ]).includes([
 	'lychee.net.Tunnel'
 ]).supports(function(lychee, global) {
@@ -44,11 +45,11 @@ lychee.define('lychee.net.Client').tags({
 
 		var connection = (response.headers.connection || '').toLowerCase();
 		var upgrade    = (response.headers.upgrade    || '').toLowerCase();
+		var protocol   = (response.headers['sec-websocket-protocol'] || '').toLowerCase();
 
-		if (connection === 'upgrade' && upgrade === 'websocket') {
+		if (connection === 'upgrade' && upgrade === 'websocket' && protocol === 'lycheejs') {
 
-			var protocol = (response.headers['sec-websocket-protocol'] || '').toLowerCase();
-			var accept   = (response.headers['sec-websocket-accept']   || '').toLowerCase();
+			var accept   = (response.headers['sec-websocket-accept'] || '');
 			var expected = (function(nonce) {
 
 				var sha1 = crypto.createHash('sha1');
@@ -58,7 +59,7 @@ lychee.define('lychee.net.Client').tags({
 			})(this.__nonce);
 
 
-			if (protocol === 'lycheejs' && accept === expected) {
+			if (accept === expected) {
 
 				socket.setTimeout(0);
 				socket.setNoDelay(true);
@@ -177,7 +178,7 @@ lychee.define('lychee.net.Client').tags({
 
 					if (_upgrade_to_websocket.call(that, response, socket, head) === true) {
 
-						that.__socket = new lychee.net.Protocol(socket);
+						that.__socket = new lychee.net.Protocol(socket, lychee.net.Protocol.TYPE.client);
 
 						that.__socket.ondata = function(blob) {
 							that.receive(blob);
@@ -190,7 +191,7 @@ lychee.define('lychee.net.Client').tags({
 
 						that.trigger('connect', []);
 
-
+/*
 						var handle = setInterval(function() {
 
 							if (that.__isConnected === true) {
@@ -200,6 +201,7 @@ lychee.define('lychee.net.Client').tags({
 							}
 
 						}, 60000);
+*/
 
 					}
 

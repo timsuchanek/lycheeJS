@@ -267,7 +267,7 @@ lychee.define('lychee.net.Tunnel').requires([
 				}
 
 
-				this.trigger('send', [ blob ]);
+				this.trigger('send', [ blob, this.binary ]);
 
 				return true;
 

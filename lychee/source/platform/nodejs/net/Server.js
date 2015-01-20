@@ -34,11 +34,9 @@ lychee.define('lychee.net.Server').tags({
 
 		var origin   = request.headers.origin || null;
 		var host     = request.headers.host   || null;
-		var nonce    = request.headers['sec-websocket-key']      || null;
-		var protocol = request.headers['sec-websocket-protocol'] || null;
+		var nonce    = request.headers['sec-websocket-key'] || null;
 
-
-		if (origin !== null && nonce !== null && protocol === 'lycheejs') {
+		if (origin !== null && nonce !== null) {
 
 			var handshake = '';
 			var accept    = (function(nonce) {
@@ -79,9 +77,9 @@ lychee.define('lychee.net.Server').tags({
 
 		var connection = (request.headers.connection || '').toLowerCase();
 		var upgrade    = (request.headers.upgrade    || '').toLowerCase();
+		var protocol   = (request.headers['sec-websocket-protocol'] || '').toLowerCase();
 
-
-		if (connection === 'upgrade' && upgrade === 'websocket') {
+		if (connection === 'upgrade' && upgrade === 'websocket' && protocol === 'lycheejs') {
 
 			var handshake = _get_websocket_handshake(request);
 			if (handshake !== null) {
@@ -215,11 +213,6 @@ lychee.define('lychee.net.Server').tags({
 				this.__socket.on('error', function(err) {
 
 					console.error('lychee.net.Server: Error "' + err + '" on ' + that.host + ':' + that.port);
-
-					try {
-						that.__socket.close();
-					} catch(e) {
-					}
 
 				});
 

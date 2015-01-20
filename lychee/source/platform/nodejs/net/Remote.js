@@ -96,7 +96,7 @@ lychee.define('lychee.net.Remote').tags({
 				var that = this;
 
 
-				this.__socket = new lychee.net.Protocol(socket);
+				this.__socket = new lychee.net.Protocol(socket, lychee.net.Protocol.TYPE.remote);
 
 				this.__socket.ondata = function(blob) {
 					that.receive(blob);
