@@ -7,12 +7,8 @@ Only if all features are completed, the lycheeJS release is merged
 back into master, tagged and published.
 
 
-## v0.8.4
-
-- Dispenser CLI Tool (creates Templates and validates API Docs of a Definition)
-
-
 ## v0.8.5
+
 - Website: Overhauling and Architecture Diagrams
 - Sorbet Log File serialization (sorbet.data.LOG encode/decode that runs every 5 minutes)
 - lychee.net.remote.Peer (has own lychee.Storage instance and stores all peers in a /project-specific/lychee.store)
@@ -25,6 +21,7 @@ back into master, tagged and published.
 
 ## v0.8.6
 
+- Dispenser CLI Tool (creates Templates and validates API Docs of a Definition)
 - Blitzkrieg Game finalization (auto-connect 4 players and let them play against each other)
 - lychee.net.remote.Controller and lychee.net.client.Controller
 - lychee.game.Logic

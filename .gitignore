@@ -10,6 +10,7 @@
 !/projects/lethalmaze
 !/projects/mode7
 !/projects/pong
+!/projects/p2pdemo
 
 /lychee/build/*
 /lychee/docs/*
