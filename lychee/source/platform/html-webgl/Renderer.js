@@ -12,7 +12,6 @@ lychee.define('Renderer').tags({
 	 *
 	 */
 
-
 	if (
 		   typeof global.document !== 'undefined'
 		&& typeof global.document.createElement === 'function'
@@ -88,15 +87,12 @@ lychee.define('Renderer').tags({
 			gl.shaderSource(fs, shader.fs);
 			gl.compileShader(fs);
 
-console.log(gl.getShaderInfoLog(fs));
-
 
 			var vs = gl.createShader(gl.VERTEX_SHADER);
 
 			gl.shaderSource(vs, shader.vs);
 			gl.compileShader(vs);
 
-console.log(gl.getShaderInfoLog(vs));
 
 			gl.attachShader(program, vs);
 			gl.attachShader(program, fs);
@@ -107,16 +103,6 @@ console.log(gl.getShaderInfoLog(vs));
 			if (status === true) {
 
 				gl.useProgram(program);
-
-				program._uTexture  = gl.getUniformLocation(program, 'uTexture');
-				program._uViewport = gl.getUniformLocation(program, 'uViewport');
-
-				program._aPosition = gl.getAttribLocation(program,  'aPosition');
-				gl.enableVertexAttribArray(program._aPosition);
-
-				program._aTexture  = gl.getAttribLocation(program,  'aTexture');
-				gl.enableVertexAttribArray(program._aTexture);
-
 
 				return program;
 
@@ -208,13 +194,14 @@ console.log(gl.getShaderInfoLog(vs));
 		var gltexture = gl.createTexture();
 		var size      = gl.getParameter(gl.MAX_TEXTURE_SIZE);
 
+
 		if (
 			   texture.width  <= size
 			&& texture.height <= size
 		) {
 
 			gl.bindTexture(gl.TEXTURE_2D, gltexture);
-//			gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+// gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
 			gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
 			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.buffer);
 
@@ -791,6 +778,12 @@ return;
 			texture = texture instanceof Texture ? texture : null;
 			map     = map instanceof Object      ? map     : null;
 
+console.log(x1, y1);
+
+if (y1 < 0) {
+	return;
+}
+
 
 			var program = this.__programs['Sprite'];
 			if (
@@ -816,18 +809,18 @@ return;
 
 					tx1 = 0;
 					ty1 = 0;
-					tx2 = texture.width;
-					ty2 = texture.height;
+					tx2 = 1.0;
+					ty2 = 1.0;
 
 				} else {
 
 					x2  = x1 + map.w;
 					y2  = y1 + map.h;
 
-					tx1 = map.x;
-					ty1 = map.y;
-					tx2 = tx1 + map.w;
-					ty2 = ty1 + map.h;
+					tx1 = map.x / texture.width;
+					ty1 = map.y / texture.height;
+					tx2 = tx1 + (map.w / texture.width);
+					ty2 = ty1 + (map.h / texture.height);
 
 					if (lychee.debug === true) {
 
@@ -848,39 +841,212 @@ return;
 
 				gl.useProgram(program);
 				gl.bindTexture(gl.TEXTURE_2D, tex);
-				gl.uniform2f(program._uViewport, gl._width, gl._height);
-				gl.uniform1i(program._uSampler, 0);
-				gl.uniform2f(program._uTexture, texture.width, texture.height);
 
 
-				var position = gl.createBuffer();
-				var texture  = gl.createBuffer();
+
+				console.log(tx1, ty1, ' > ', tx2, ty2);
+				console.log(x1, y1, ' >> ', x2, y2);
 
 
-				gl.bindBuffer(gl.ARRAY_BUFFER, position);
+				var texCoordLocation = gl.getAttribLocation(program, 'a_texCoord');
+				var texCoordBuffer   = gl.createBuffer();
+
+				gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
+				gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+					tx1, ty1,
+					tx2, ty1,
+					tx1, ty2,
+					tx1, ty2,
+					tx2, ty1,
+					tx2, ty2
+				]), gl.STATIC_DRAW);
+
+				gl.enableVertexAttribArray(texCoordLocation);
+				gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, 0);
+
+
+				var resolutionLocation = gl.getUniformLocation(program, 'u_resolution');
+
+				gl.uniform2f(resolutionLocation, gl._width, gl._height);
+
+
+				var positionLocation = gl.getAttribLocation(program, 'a_position');
+				var positionBuffer   = gl.createBuffer();
+
+				gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+
+				gl.enableVertexAttribArray(positionLocation);
+				gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+
+
 				gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
 					x1, y1,
 					x2, y1,
-					x2, y2,
-					x1, y2
+					x1, y2,
+					x1, y2,
+					x2, y1,
+					x2, y2
+				]), gl.STATIC_DRAW);
+
+
+				gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+
+ // setup GLSL program
+  gl.useProgram(program);
+
+  // look up where the vertex data needs to go.
+  var positionLocation = gl.getAttribLocation(program, "a_position");
+
+  // Create a texture.
+  var texture = gl.createTexture();
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+
+  // Set the parameters so we can render any size image.
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+
+  // Upload the image into the texture.
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+
+
+
+
+}
+
+function randomInt(range) {
+  return Math.floor(Math.random() * range);
+}
+
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+				var textureBuffer = gl.createBuffer();
+
+				gl.bindBuffer(gl.ARRAY_BUFFER, textureBuffer);
+				gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+					tx1 / texture.width, ty1 / texture.height,
+					tx2 / texture.width, ty1 / texture.height,
+					tx1 / texture.width, ty2 / texture.height,
+					tx1 / texture.width, ty2 / texture.height,
+					tx2 / texture.width, ty1 / texture.height,
+					tx2 / texture.width, ty2 / texture.height
+				]), gl.STATIC_DRAW);
+				gl.vertexAttribPointer(program._aTexture, 2, gl.FLOAT, false, 0, 0);
+
+				gl.bindTexture(gl.TEXTURE_2D, tex);
+
+
+				gl.uniform2f(program._uViewport, gl._width, gl._height);
+				gl.uniform1i(program._uSampler, 0);
+
+
+				var positionBuffer = gl.createBuffer();
+
+				gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+				gl.enableVertexAttribArray(program._aPosition);
+				gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+					x1 / gl._width, y1 / gl._height,
+					x2 / gl._width, y1 / gl._height,
+					x1 / gl._width, y2 / gl._height,
+					x1 / gl._width, y2 / gl._height,
+					x2 / gl._width, y1 / gl._height,
+					x2 / gl._width, y2 / gl._height
 				]), gl.STATIC_DRAW);
 				gl.vertexAttribPointer(program._aPosition, 2, gl.FLOAT, false, 0, 0);
 
 
-				gl.bindBuffer(gl.ARRAY_BUFFER, texture);
-				gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-					tx1, ty1,
-					tx2, ty1,
-					tx2, ty2,
-					tx1, ty2
-				]), gl.STATIC_DRAW);
-				gl.vertexAttribPointer(program._aTexture,  2, gl.FLOAT, false, 0, 0);
+				gl.drawArrays(gl.TRIANGLES, 0, 6);
 
+				gl.deleteBuffer(positionBuffer);
+				gl.deleteBuffer(textureBuffer);
 
-				gl.drawArrays(gl.TRIANGLE_FAN, 0, 4);
-
-				gl.deleteBuffer(position);
-				gl.deleteBuffer(texture);
+*/
 
 			}
 

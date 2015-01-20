@@ -1,19 +1,27 @@
 
-attribute vec2 aPosition;
-attribute vec2 aTexture;
+attribute vec2 a_position;
+attribute vec2 a_texCoord;
 
-uniform vec2 uTexture;  // texture width/height
-uniform vec2 uViewport; // viewport width/height
+uniform vec2 u_resolution; // viewport width/height
 
-varying vec2 vTexture;
+varying vec2 v_texCoord;
 
 void main(void) {
 
-	vTexture.x = aTexture.x / uTexture.x;
-	vTexture.y = aTexture.y / uTexture.y;
-
-	gl_Position.zw = vec2(1.0, 1.0);
-	gl_Position.x  =         (aPosition.x / uViewport.x) * 2.0 - 1.0;
-	gl_Position.y  = -1.0 * ((aPosition.y / uViewport.y) * 2.0 - 1.0);
+// convert the rectangle from pixels to 0.0 to 1.0
+vec2 zeroToOne = a_position / u_resolution;
+	  
+// convert from 0->1 to 0->2
+vec2 zeroToTwo = zeroToOne * 2.0;
+			
+// convert from 0->2 to -1->+1 (clipspace)
+vec2 clipSpace = zeroToTwo - 1.0;
+				  
+gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
+					 
+// pass the texCoord to the fragment shader
+// The GPU will interpolate this value between points.
+v_texCoord = a_texCoord;
 
 }
+
