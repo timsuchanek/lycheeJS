@@ -1,256 +1,342 @@
 
-lychee.define('lychee.net.Protocol').supports(function(lychee, global) {
-
-	if (typeof Buffer !== 'undefined' && typeof Buffer.byteLength === 'function') {
-
-		var buffer = new Buffer(8);
-		if (typeof buffer.copy === 'function' && typeof buffer.length === 'number' && typeof buffer.toString === 'function') {
-			return true;
-		}
-
-	}
-
-
-	return false;
-
-}).exports(function(lychee, global) {
+lychee.define('lychee.net.Protocol').exports(function(lychee, global) {
 
 	/*
 	 * HELPERS
 	 */
 
-	var _read_buffer = function(data) {
+	/*
+	 * WebSocket Framing Protocol
+	 *
+	 *  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+	 * +-+-+-+-+-------+-+-------------+-------------------------------+
+	 * |F|R|R|R| opcode|M| Payload len |    Extended payload length    |
+	 * |I|S|S|S|  (4)  |A|     (7)     |             (16/64)           |
+	 * |N|V|V|V|       |S|             |   (if payload len==126/127)   |
+	 * | |1|2|3|       |K|             |                               |
+	 * +-+-+-+-+-------+-+-------------+ - - - - - - - - - - - - - - - +
+	 * |     Extended payload length continued, if payload len == 127  |
+	 * + - - - - - - - - - - - - - - - +-------------------------------+
+	 * |                               |Masking-key, if MASK set to 1  |
+	 * +-------------------------------+-------------------------------+
+	 * | Masking-key (continued)       |          Payload Data         |
+	 * +-------------------------------- - - - - - - - - - - - - - - - +
+	 * :                     Payload Data continued ...                :
+	 * + - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - +
+	 * |                     Payload Data continued ...                |
+	 * +---------------------------------------------------------------+
+	 *
+	 */
 
-		if (data.length > Class.FRAMESIZE) {
-			return this.close(Class.STATUS.message_too_big);
-		}
-
-
-		if (this.__isClosed === false) {
-
-			var tmp = new Buffer(this.__buffer.length + data.length);
-
-			this.__buffer.copy(tmp);
-			data.copy(tmp, this.__buffer.length);
-
-			this.__buffer = tmp;
-
-
-			var length = this.__buffer.length;
-			while (length > 0) {
-
-				// Invalid Message Frame
-				var result = _parse_buffer.call(this, length);
-				if (result === -1 || this.__isClosed === true) {
-
-					break;
-
-				// Header Frames, continue parsing modes
-				} else if (result === 0) {
-
-
-				// Valid Message Frame, resize Buffer afterwards
-				} else if (result === 1) {
-
-					length = this.__buffer.length - this.__offset;
-
-					tmp = new Buffer(length);
-					this.__buffer.copy(tmp, 0, this.__offset);
-					this.__buffer = tmp;
-					this.__offset = 0;
-
-				}
-
-			}
-
-		}
-
+	var _fragment = {
+		operator: 0x00,
+		payload:  new Buffer(0)
 	};
 
+	var _encode_buffer = function(data, binary) {
 
-	var _parse_buffer = function(length) {
+		var type           = this.type;
+		var buffer         = null;
 
-		var bytes  = length - this.__offset;
-		var buffer = this.__buffer;
+		var payload_length = data.length;
+		var mask           = false;
+		var mask_data      = null;
+		var payload_data   = null;
 
 
-		var data;
+		if (type === Class.TYPE.client) {
 
-		if (this.__mode === 0 && bytes >= 1) {
+			mask      = true;
+			mask_data = new Buffer(4);
 
-			data       = buffer[this.__offset++];
-			this.__op  = data & 15;
-			data      &= 240;
+			mask_data[0] = (Math.random() * 0xff) | 0;
+			mask_data[1] = (Math.random() * 0xff) | 0;
+			mask_data[2] = (Math.random() * 0xff) | 0;
+			mask_data[3] = (Math.random() * 0xff) | 0;
 
-
-			// 0: Continuation Frame
-			if ((data & 2) === 2 || (data & 4) === 4 || (data & 8) === 8) {
-
-				this.__mode = -1;
-
-			// 1: Text Frame
-			} else if (this.__op === 0x01) {
-
-				this.__mode = 1;
-
-			// 2: Binary Frame
-			} else if (this.__op === 0x02) {
-
-				this.__mode = 1;
-
-			// 8: Connection Close Frame
-			} else if (this.__op === 0x08) {
-
-				this.__mode = -1;
-
-
-			// 9: Ping Frame
-			} else if (this.__op === 0x09) {
-
-				this.__mode = 1;
-
-
-			// 10: Pong Frame
-			} else if (this.__op === 0x0a) {
-
-				this.__mode = 1;
-
-
-			// 3-7, 11-15: Unassigned OP Codes
-			} else {
-
-				this.__mode = -1;
-
-			}
-
-		} else if (this.__mode === 1 && bytes >= 1) {
-
-			data = buffer[this.__offset++];
-
-			this.__isMasked    = this.__op !== 0x0a ? true : false;
-			this.__frameLength = data & 127;
-
-
-			if (this.__frameLength <= 125) {
-
-				this.__mode = this.__isMasked === true ? 4 : 5;
-
-			} else if (this.__frameLength === 126) {
-
-				this.__frameLength = 0;
-				this.__mode        = 2;
-
-			} else if (this.__frameLength === 127) {
-
-				this.__frameLength = 0;
-				this.__mode        = 3;
-
-			} else {
-
-				// Protocol Error
-				this.__mode      = -1;
-
-			}
-
-
-		// Read 16 Bit Frame Length
-		} else if (this.__mode === 2 && bytes >= 2) {
-
-			this.__frameLength  = buffer[this.__offset + 1] + (buffer[this.__offset] << 8);
-			this.__mode         = this.__isMasked === true ? 4 : 5;
-			this.__offset      += 2;
-
-
-		// Read 64 Bit Frame Length
-		} else if (this.__mode === 3 && bytes >= 8) {
-
-			var hi = (buffer[this.__offset + 0] << 24) + (buffer[this.__offset + 1] << 16) + (buffer[this.__offset + 2] <<  8) + buffer[this.__offset + 3];
-			var lo = (buffer[this.__offset + 4] << 24) + (buffer[this.__offset + 5] << 16) + (buffer[this.__offset + 6] <<  8) + buffer[this.__offset + 7];
-
-
-			this.__frameLength  = (hi * 4294967296) + lo;
-			this.__mode         = this.__isMasked === true ? 4 : 5;
-			this.__offset      += 8;
-
-
-		// Read Frame Mask
-		} else if (this.__mode === 4 && bytes >= 4) {
-
-			this.__moffset  = this.__offset;
-			this.__mode     = 5;
-			this.__offset  += 4;
-
-
-		// Read Frame Data
-		} else if (this.__mode === 5 && bytes >= this.__frameLength) {
-
-			var message;
-			var isBinary = this.__op === 2;
-
-			if (this.__frameLength > 0) {
-
-				if (this.__isMasked === true) {
-
-					var i = 0;
-					while (i < this.__frameLength) {
-						buffer[this.__offset + i] ^= buffer[this.__moffset + (i % 4)];
-						i++;
-					}
-
-				}
-
-
-				if (isBinary === true) {
-					message = buffer.toString('binary', this.__offset, this.__offset + this.__frameLength);
-				} else {
-					message = buffer.toString('utf8',   this.__offset, this.__offset + this.__frameLength);
-				}
-
-			} else {
-				message = '';
-			}
-
-
-			this.__mode    = 0;
-			this.__offset += this.__frameLength;
-
-
-			// Handle Ping Frame & Pong Frame
-			if (this.__op === 0x09 || this.__op === 0x0a) {
-
-				// Answer the Ping with a Pong
-				if (this.__op === 0x09) {
-					this.pong();
-				}
-
-
-			// Message Frame
-			} else {
-
-				this.ondata(message, isBinary);
-
-			}
-
-
-			return 1;
+			payload_data = data.map(function(value, index) {
+				return value ^ mask_data[index % 4];
+			});
 
 		} else {
 
-			return -1;
+			mask         = false;
+			mask_data    = new Buffer(4);
+			payload_data = data.map(function(value) {
+				return value;
+			});
 
 		}
 
 
-		if (this.__mode === -1) {
+		// 64 Bit Extended Payload Length
+		if (payload_length > 0xffff) {
+
+			var lo = payload_length | 0;
+			var hi = (payload_length - lo) / 4294967296;
+
+			buffer = new Buffer((mask === true ? 14 : 10) + payload_length);
+
+			buffer[0] = 128 + (binary === true ? 0x02 : 0x01);
+			buffer[1] = (mask === true ? 128 : 0) + 127;
+
+			buffer[2] = (hi >> 24) & 0xff;
+			buffer[3] = (hi >> 16) & 0xff;
+			buffer[4] = (hi >>  8) & 0xff;
+			buffer[5] = (hi >>  0) & 0xff;
+
+			buffer[6] = (lo >> 24) & 0xff;
+			buffer[7] = (lo >> 16) & 0xff;
+			buffer[8] = (lo >>  8) & 0xff;
+			buffer[9] = (lo >>  0) & 0xff;
+
+
+			if (mask === true) {
+
+				mask_data.copy(buffer, 10);
+				payload_data.copy(buffer, 14);
+
+			} else {
+
+				payload_data.copy(buffer, 10);
+
+			}
+
+
+		// 16 Bit Extended Payload Length
+		} else if (payload_length > 125) {
+
+			buffer = new Buffer((mask === true ? 8 : 4) + payload_length);
+
+			buffer[0] = 128 + (binary === true ? 0x02 : 0x01);
+			buffer[1] = (mask === true ? 128 : 0) + 126;
+
+			buffer[2] = (payload_length >> 8) & 0xff;
+			buffer[3] = (payload_length >> 0) & 0xff;
+
+
+			if (mask === true) {
+
+				mask_data.copy(buffer, 4);
+				payload_data.copy(buffer, 8);
+
+			} else {
+
+				payload_data.copy(buffer, 4);
+
+			}
+
+
+		// 7 Bit Payload Length
+		} else {
+
+			buffer = new Buffer((mask === true ? 6 : 2) + payload_length);
+
+			buffer[0] = 128 + (binary === true ? 0x02 : 0x01);
+			buffer[1] = (mask === true ? 128 : 0) + payload_length;
+
+
+			if (mask === true) {
+
+				mask_data.copy(buffer, 2);
+				payload_data.copy(buffer, 6);
+
+			} else {
+
+				payload_data.copy(buffer, 2);
+
+			}
+
+		}
+
+
+		return buffer;
+
+	};
+
+	var _decode_buffer = function(buffer) {
+
+		var parsed_bytes = -1;
+		var type         = this.type;
+
+
+		var fin            = (buffer[0] & 128) === 128;
+		// var rsv1        = (buffer[0] & 64) === 64;
+		// var rsv2        = (buffer[0] & 32) === 32;
+		// var rsv3        = (buffer[0] & 16) === 16;
+		var operator       = buffer[0] & 15;
+		var mask           = (buffer[1] & 128) === 128;
+		var mask_data      = new Buffer(4);
+		var payload_length = buffer[1] & 127;
+		var payload_data   = null;
+
+		if (payload_length <= 125) {
+
+			if (mask === true) {
+				mask_data    = buffer.slice(2, 6);
+				payload_data = buffer.slice(6, 6 + payload_length);
+				parsed_bytes = 6 + payload_length;
+			} else {
+				mask_data    = null;
+				payload_data = buffer.slice(2, 2 + payload_length);
+				parsed_bytes = 2 + payload_length;
+			}
+
+		} else if (payload_length === 126) {
+
+			payload_length = (buffer[2] << 8) + buffer[3];
+
+			if (mask === true) {
+				mask_data    = buffer.slice(4, 8);
+				payload_data = buffer.slice(8, 8 + payload_length);
+				parsed_bytes = 8 + payload_length;
+			} else {
+				mask_data    = null;
+				payload_data = buffer.slice(4, 4 + payload_length);
+				parsed_bytes = 4 + payload_length;
+			}
+
+		} else if (payload_length === 127) {
+
+			var hi = (buffer[2] << 24) + (buffer[3] << 16) + (buffer[4] << 8) + buffer[5];
+			var lo = (buffer[6] << 24) + (buffer[7] << 16) + (buffer[8] << 8) + buffer[9];
+
+			payload_length = (hi * 4294967296) + lo;
+
+			if (mask === true) {
+				mask_data    = buffer.slice(10, 14);
+				payload_data = buffer.slice(14, 14 + payload_length);
+				parsed_bytes = 14 + payload_length;
+			} else {
+				mask_data    = null;
+				payload_data = buffer.slice(10, 10 + payload_length);
+				parsed_bytes = 10 + payload_length;
+			}
+
+		}
+
+
+		if (mask_data !== null) {
+
+			payload_data = payload_data.map(function(value, index) {
+				return value ^ mask_data[index % 4];
+			});
+
+		}
+
+
+		// 0: Continuation Frame (Fragmentation)
+		if (operator === 0x00) {
+
+			if (fin === true) {
+
+				if (_fragment.operator === 0x01) {
+					this.ondata(_fragment.payload.toString('utf8'));
+				} else if (_fragment.operator === 0x02) {
+					this.ondata(_fragment.payload.toString('binary'));
+				}
+
+
+				_fragment.operator = 0x00;
+				_fragment.payload  = new Buffer(0);
+
+			} else if (payload_data !== null) {
+
+				var payload = new Buffer(_fragment.payload.length + payload_length);
+
+				_fragment.payload.copy(payload, 0);
+				_payload_data.copy(payload, _fragment.payload.length);
+
+				_fragment.payload = payload;
+
+			}
+
+
+		// 1: Text Frame
+		} else if (operator === 0x01) {
+
+			if (fin === true) {
+
+				this.ondata(payload_data.toString('utf8'));
+
+			} else {
+
+				_fragment.operator = operator;
+				_fragment.payload  = payload_data;
+
+			}
+
+
+		// 2: Binary Frame
+		} else if (operator === 0x02) {
+
+			if (fin === true) {
+
+				this.ondata(payload_data.toString('binary'));
+
+			} else {
+
+				_fragment.operator = operator;
+				_fragment.payload  = payload_data;
+
+			}
+
+
+		// 8: Connection Close
+		} else if (operator === 0x08) {
+
+			this.close(Class.STATUS.normal_closure);
+
+
+		// 9: Ping Frame
+		} else if (operator === 0x09) {
+
+			this.__lastping = Date.now();
+
+			if (type === Class.TYPE.remote) {
+				this.pong();
+			}
+
+
+		// 10: Pong Frame
+		} else if (operator === 0x0a) {
+
+			this.__lastpong = Date.now();
+
+			if (type === Class.TYPE.client) {
+				_reset_ping.call(this);
+			}
+
+
+		// 3-7: Reserved Non-Control Frames, 11-15: Reserved Control Frames
+		} else {
 
 			this.close(Class.STATUS.protocol_error);
 
-			return -1;
-
 		}
 
 
-		return 0;
+		return parsed_bytes;
+
+	};
+
+	var _reset_ping = function() {
+
+		var type = this.type;
+		if (type === Class.TYPE.client) {
+
+			if (this.__interval !== null) {
+				clearInterval(this.__interval);
+			}
+
+
+			var that = this;
+
+			this.__interval = setInterval(function() {
+				that.ping();
+			}, 60000);
+
+		}
 
 	};
 
@@ -260,29 +346,66 @@ lychee.define('lychee.net.Protocol').supports(function(lychee, global) {
 	 * IMPLEMENTATION
 	 */
 
-	var Class = function(socket) {
+	var Class = function(socket, type) {
+
+		type = lychee.enumof(Class.TYPE, type) ? type : null;
+
 
 		this.socket  = socket;
+		this.type    = type;
 		this.ondata  = function() {};
 		this.onclose = function(err) {};
 
 
-		this.__buffer      = new Buffer(0);
-		this.__offset      = 0;
-		this.__moffset     = 0;
+		this.__lastping = 0;
+		this.__lastpong = 0;
+		this.__interval = null;
+		this.__isClosed = false;
 
-		this.__op          = 0;
-		this.__mode        = 0;
-		this.__frameLength = 0;
 
-		this.__isClosed    = false;
-		this.__isMasked    = false;
 
+		if (lychee.debug === true) {
+
+			if (this.type === null) {
+				console.error('lychee.net.Protocol: Invalid (lychee.net.Protocol.TYPE) type.');
+			}
+
+		}
+
+
+
+		/*
+		 * INITIALIZATION
+		 */
 
 		var that = this;
+		var temp = new Buffer(0);
 
 		this.socket.on('data', function(data) {
-			_read_buffer.call(that, data);
+
+			if (data.length > Class.FRAMESIZE) {
+
+				that.close(Class.STATUS.message_too_big);
+
+			} else if (that.__isClosed === false) {
+
+				// Use a temporary Buffer for easier parsing
+				tmp = new Buffer(temp.length + data.length);
+				temp.copy(tmp);
+				data.copy(tmp, temp.length);
+				temp = tmp;
+
+				var parsed_bytes = _decode_buffer.call(that, temp);
+				if (parsed_bytes !== -1) {
+
+					tmp = new Buffer(temp.length - parsed_bytes);
+					temp.copy(tmp, 0, parsed_bytes);
+					temp = tmp;
+
+				}
+
+			}
+
 		});
 
 		this.socket.on('error', function() {
@@ -301,12 +424,14 @@ lychee.define('lychee.net.Protocol').supports(function(lychee, global) {
 			that.close(Class.STATUS.normal_closure);
 		});
 
+
+		_reset_ping.call(this);
+
 	};
 
 
 	// Class.FRAMESIZE = 32768; // 32kB
 	Class.FRAMESIZE = 0x800000; // 8MiB
-	Class.VERSION   = 13;
 
 
 	Class.STATUS = {
@@ -334,61 +459,41 @@ lychee.define('lychee.net.Protocol').supports(function(lychee, global) {
 	};
 
 
+	Class.TYPE = {
+		// 'default': 0, (deactivated)
+		'client': 1,
+		'remote': 2
+	};
+
+
 	Class.prototype = {
 
 		ping: function() {
 
-			// 8 Bit Data Frame
-			var buffer = new Buffer(2 + 4);
+			var type = this.type;
+			if (type === Class.TYPE.client) {
+
+				if (Date.now() > this.__lastping + 10000) {
+
+					var buffer = new Buffer(6);
+
+					// FIN, Ping
+					// Masked, 0 payload
+
+					buffer[0] = 128 + 0x09;
+					buffer[1] = 128 + 0x00;
+
+					buffer[2] = (Math.random() * 0xff) | 0;
+					buffer[3] = (Math.random() * 0xff) | 0;
+					buffer[4] = (Math.random() * 0xff) | 0;
+					buffer[5] = (Math.random() * 0xff) | 0;
 
 
-			// Set OP and FIN
-			buffer[0] = 128 | (0x09 & 0x0f);
-			buffer[1] = 128 | (0x00 & 0x7f);
+					return this.socket.write(buffer);
 
 
-			// Set MASK
-			// Ping Frame is sent by Client (with mask)
+				}
 
-			buffer[2] = (Math.random() * 0xff) | 0;
-			buffer[3] = (Math.random() * 0xff) | 0;
-			buffer[4] = (Math.random() * 0xff) | 0;
-			buffer[5] = (Math.random() * 0xff) | 0;
-
-
-			return this.socket.write(buffer);
-
-		},
-
-		pong: function() {
-
-			// 8 Bit Data Frame
-			var buffer = new Buffer(2 + 4);
-
-
-			// Set OP and FIN
-			buffer[0] = 128 | (0x0A & 0x0f);
-			buffer[1] = 0   | (0x00 & 0x7f);
-
-
-			// Set MASK
-			// Pong Frame is sent by Server (without mask)
-
-			buffer[2] = 0;
-			buffer[3] = 0;
-			buffer[4] = 0;
-			buffer[5] = 0;
-
-
-			return this.socket.write(buffer);
-
-		},
-
-		send: function(blob) {
-
-			var result = this.write(blob, false);
-			if (result === true) {
-				return true;
 			}
 
 
@@ -396,76 +501,57 @@ lychee.define('lychee.net.Protocol').supports(function(lychee, global) {
 
 		},
 
-		write: function(data, isBinary) {
+		pong: function() {
 
-			if (this.socket.writable === false) {
-				return this.close(Class.STATUS.internal_error);
-			}
+			var type = this.type;
+			if (type === Class.TYPE.remote) {
 
+				if (Date.now() > this.__lastping) {
 
-			var enc    = isBinary === true ? 'binary' : 'utf8';
-			var length = Buffer.byteLength(data, enc);
-			var bytes  = 2;
+					var buffer = new Buffer(2);
 
+					// FIN, Pong
+					// Unmasked, 0 payload
 
-			var buffer;
-
-
-			// 64 Bit Data Frame
-			if (length > 0xffff) {
-
-				var lo = length | 0;
-				var hi = (length - lo) / 4294967296;
+					buffer[0] = 128 + 0x0a;
+					buffer[1] =   0 + 0x00;
 
 
-				buffer = new Buffer(10 + length);
-				buffer[1] = 127;
+					return this.socket.write(buffer);
 
-				buffer[2] = (hi >> 24) & 0xff;
-				buffer[3] = (hi >> 16) & 0xff;
-				buffer[4] = (hi >>  8) & 0xff;
-				buffer[5] = (hi >>  0) & 0xff;
-
-				buffer[6] = (lo >> 24) & 0xff;
-				buffer[7] = (lo >> 16) & 0xff;
-				buffer[8] = (lo >>  8) & 0xff;
-				buffer[9] = (lo >>  0) & 0xff;
-
-
-				bytes += 8;
-
-
-			// 16 Bit Data Frame
-			} else if (length > 125) {
-
-				buffer = new Buffer(4 + length);
-				buffer[1] = 126;
-
-				buffer[2] = (length >>  8) & 0xff;
-				buffer[3] = (length >>  0) & 0xff;
-
-
-				bytes += 2;
-
-
-			// 8 Bit Data Frame
-			} else {
-
-				buffer = new Buffer(2 + length);
-				buffer[1] = length;
+				}
 
 			}
 
 
-			// Set OP and FIN
-			buffer[0]  = 128 + (isBinary === true ? 2 : 1);
-			buffer[1] &= ~128;
+			return false;
+
+		},
+
+		send: function(data) {
+
+			var blob = null;
+
+			if (typeof data === 'string') {
+				blob = new Buffer(data, 'utf8');
+			}
 
 
-			buffer.write(data, bytes, enc);
+			if (blob !== null) {
+
+				if (this.__isClosed === false) {
+
+					var buffer = _encode_buffer.call(this, blob, false);
+					if (buffer !== null) {
+						return this.socket.write(buffer);
+					}
+
+				}
+
+			}
 
 
-			return this.socket.write(buffer);
+			return false;
 
 		},
 
@@ -478,16 +564,10 @@ lychee.define('lychee.net.Protocol').supports(function(lychee, global) {
 
 				var buffer = new Buffer(4);
 
-				buffer[1]  = 2;
-				buffer[0]  = 128 + 8;
-				buffer[1] &= ~128;
+				buffer[0]  = 128 + 0x08;
+				buffer[1]  =   0 + 0x02;
 
-
-				var code = String.fromCharCode((status >> 8) & 0xff)
-						 + String.fromCharCode((status >> 0) & 0xff);
-
-				buffer.write(code, 2, 'binary');
-				buffer.write('',   4, 'binary');
+				buffer.write(String.fromCharCode((status >> 8) & 0xff) + String.fromCharCode((status >> 0) & 0xff), 2, 'binary');
 
 
 				this.socket.write(buffer);

@@ -191,18 +191,6 @@ lychee.define('lychee.net.Client').tags({
 
 						that.trigger('connect', []);
 
-/*
-						var handle = setInterval(function() {
-
-							if (that.__isConnected === true) {
-								that.__socket.ping();
-							} else {
-								clearInterval(handle);
-							}
-
-						}, 60000);
-*/
-
 					}
 
 				});
