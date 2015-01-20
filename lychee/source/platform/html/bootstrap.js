@@ -336,10 +336,10 @@
 
 			var methods = [];
 
-			if (consol)  methods.push('console');
-			if (audio)   methods.push('Audio');
-			if (buffer)  methods.push('Buffer');
-			if (image)   methods.push('Image');
+			if (consol) methods.push('console');
+			if (audio)  methods.push('Audio');
+			if (buffer) methods.push('Buffer');
+			if (image)  methods.push('Image');
 
 			if (methods.length === 0) {
 				console.error('bootstrap.js: Supported methods are NONE');
@@ -707,6 +707,21 @@
 			for (var b = 0; b < diff; b++) {
 				target[b + target_start] = this[b + start];
 			}
+
+		},
+
+		map: function(callback) {
+
+			callback = callback instanceof Function ? callback : function(value) { return value; };
+
+
+			var clone = new Buffer(this.length);
+
+			for (var b = 0; b < this.length; b++) {
+				clone[b] = callback(this[b], b);
+			}
+
+			return clone;
 
 		},
 

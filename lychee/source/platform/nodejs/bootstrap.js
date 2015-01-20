@@ -363,6 +363,37 @@
 
 
 	/*
+	 * BUFFER IMPLEMENTATION
+	 */
+
+	Buffer.prototype.serialize = function() {
+
+		return {
+			'constructor': 'Buffer',
+			'arguments':   [ this.toString('base64'), 'base64' ]
+		};
+
+	};
+
+	Buffer.prototype.map = function(callback) {
+
+		callback = callback instanceof Function ? callback : function(value) { return value; };
+
+
+		var clone = new Buffer(this.length);
+
+		for (var b = 0; b < this.length; b++) {
+			clone[b] = callback(this[b], b);
+		}
+
+		return clone;
+
+	};
+
+
+
+
+	/*
 	 * CONFIG IMPLEMENTATION
 	 */
 
