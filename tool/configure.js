@@ -343,7 +343,7 @@
 			if (result === true) {
 				console.log('\t' + platform + ': OKAY');
 			} else {
-				console.log('~\t' + platform + ': SKIP (Empty platform adapter variant)');
+				console.log('~\t' + platform + ': OKAY (Merged platform adapter variant)');
 			}
 
 		});
