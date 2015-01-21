@@ -10,11 +10,12 @@ back into master, tagged and published.
 ## v0.8.5
 
 - Website: Overhauling and Architecture Diagrams
+
+- lychee.net.(client||remote).DHT as described in Bittorrent's DHT protocol [1] which extends lychee.net.(client||remote).KRPC for its codec behaviours
 - Sorbet Log File serialization (sorbet.data.LOG encode/decode that runs every 5 minutes)
-- lychee.net.remote.Peer (has own lychee.Storage instance and stores all peers in a /project-specific/lychee.store)
-- sorbet.api.remote.Peer (returns an Array of project-specific Peer Servers, based on project identifier)
 - Project Tool (inspects and verifies integrity of lychee.pkg files)
 - Inspector Tool: Timeline State (that shows bind/trigger/unbind calls)
+
 - Mode7 Game finalization (lane switch), required assets: racing car, box sprite, explosion sprite
 - Color Game finalization (UI, Timeout and Point Calculation)
 - lychee.Environment needs serializable injection API
@@ -39,5 +40,7 @@ back into master, tagged and published.
 
 
 # References (Articles and Sources)
+
+[1] (DHT Protocol Specification)[http://www.bittorrent.org/beps/bep_0005.html]
 
 
