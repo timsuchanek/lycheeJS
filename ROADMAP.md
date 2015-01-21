@@ -42,5 +42,6 @@ back into master, tagged and published.
 # References (Articles and Sources)
 
 1. [DHT Protocol Specification](http://www.bittorrent.org/beps/bep_0005.html)
-
+2. [Mainline DHT on wikipedia](http://en.wikipedia.org/wiki/Mainline_DHT#Routing_Table)
+3. [webtorrent implementation](https://github.com/feross/bittorrent-dht)
 
