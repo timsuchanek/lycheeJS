@@ -106,8 +106,9 @@
 			},
 
 			"data": {
-				"BitON": [ "js" ],
-				"JSON":  [ "js" ]
+				"BENCODE": [ "js" ],
+				"BitON":   [ "js" ],
+				"JSON":    [ "js" ]
 			},
 
 			"effect": {

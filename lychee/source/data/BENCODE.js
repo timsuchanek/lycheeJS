@@ -1,5 +1,5 @@
 
-lychee.define('lychee.data.JSON').exports(function(lychee, global) {
+lychee.define('lychee.data.BENCODE').exports(function(lychee, global) {
 
 	/*
 	 * HELPERS
@@ -91,116 +91,98 @@ lychee.define('lychee.data.JSON').exports(function(lychee, global) {
 
 	var _encode = function(stream, data) {
 
-		// null,false,true: Boolean or Null or EOS
+		// bne, bfe, bte : null, false, true
 		if (typeof data === 'boolean' || data === null) {
 
 			if (data === null) {
-				stream.writeRAW('null');
+				stream.writeRAW('bne');
 			} else if (data === false) {
-				stream.writeRAW('false');
+				stream.writeRAW('bfe');
 			} else if (data === true) {
-				stream.writeRAW('true');
+				stream.writeRAW('bte');
 			}
 
 
-		// 123,12.3: Integer or Float
+		// i123e : Integer or Float (converted as Integer)
 		} else if (typeof data === 'number') {
 
-			var type = 1;
-			if (data < 268435456 && data !== (data | 0)) {
-				type = 2;
-			}
+			var hi = (data / 0x80000000) << 0;
+			var lo = (data % 0x80000000) << 0;
+
+			stream.writeRAW('i');
+			stream.writeRAW('' + (hi * 0x80000000 + lo).toString());
+			stream.writeRAW('e');
 
 
-			// Negative value
-			var sign = 0;
-			if (data < 0) {
-				data = -data;
-				sign = 1;
-			}
-
-
-			if (sign === 1) {
-				stream.writeRAW('-');
-			}
-
-
-			// TODO: Find a better way to serialize Numbers
-			if (type === 1) {
-				stream.writeRAW('' + data.toString());
-			} else {
-				stream.writeRAW('' + data.toString());
-			}
-
-
-		// "": String
+		// <length>:<contents> : String
 		} else if (typeof data === 'string') {
 
-			stream.writeRAW('"');
-
-			stream.writeRAW(data.replace(/\\/g, '\\\\').replace('"', '\\"'));
-
-			stream.writeRAW('"');
+			stream.writeRAW(data.length + ':' + data);
 
 
-		// []: Array
+		// l<contents>e : Array
 		} else if (data instanceof Array) {
 
-			stream.writeRAW('[');
+			stream.writeRAW('l');
 
 			for (var d = 0, dl = data.length; d < dl; d++) {
-
 				_encode(stream, data[d]);
-
-				if (d < dl - 1) {
-					stream.writeRAW(',');
-				}
-
 			}
 
-			stream.writeRAW(']');
+			stream.writeRAW('e');
 
 
-		// {}: Object
+		// d<contents>e : Object
 		} else if (data instanceof Object && typeof data.serialize !== 'function') {
 
-			stream.writeRAW('{');
+			stream.writeRAW('d');
 
-			var keys = Object.keys(data);
+			var keys = Object.keys(data).sort(function(a, b) {
+				if (a < b) return -1;
+				if (b > a) return  1;
+				return 0;
+			});
 
 			for (var k = 0, kl = keys.length; k < kl; k++) {
 
 				var key = keys[k];
 
 				_encode(stream, key);
-				stream.writeRAW(':');
-
 				_encode(stream, data[key]);
-
-				if (k < kl - 1) {
-					stream.writeRAW(',');
-				}
 
 			}
 
-			stream.writeRAW('}');
+			stream.writeRAW('e');
 
 
-		// Custom High-Level Implementation
+		// s<contents>e : Custom High-Level Implementation
 		} else if (data instanceof Object && typeof data.serialize === 'function') {
 
-			stream.writeRAW('%');
+			stream.writeRAW('s');
 
 			var blob = lychee.serialize(data);
 
 			_encode(stream, blob);
 
-			stream.writeRAW('%');
+			stream.writeRAW('e');
 
 		}
 
 	};
 
+
+	var _is_decodable_value = function(str) {
+
+		var head = str.charAt(0);
+		if (head.match(/([bilds]+)/g)) {
+			return true;
+		} else if (!isNaN(parseInt(head, 10))) {
+			return true;
+		}
+
+		return false;
+
+	};
 
 	var _decode = function(stream) {
 
@@ -216,67 +198,56 @@ lychee.define('lychee.data.JSON').exports(function(lychee, global) {
 			var seek = stream.seekRAW(1);
 
 
-			// null,false,true: Boolean or Null or EOS
-			if (seek === 'n' || seek === 'f' || seek === 't') {
+			// bne, bfe, bte : null, false, true
+			if (seek === 'b') {
 
-				if (stream.seekRAW(4) === 'null') {
-					stream.readRAW(4);
+				if (stream.seekRAW(3) === 'bne') {
+					stream.readRAW(3);
 					value = null;
-				} else if (stream.seekRAW(5) === 'false') {
-					stream.readRAW(5);
+				} else if (stream.seekRAW(3) === 'bfe') {
+					stream.readRAW(3);
 					value = false;
-				} else if (stream.seekRAW(4) === 'true') {
-					stream.readRAW(4);
+				} else if (stream.seekRAW(3) === 'bte') {
+					stream.readRAW(3);
 					value = true;
 				}
 
 
-			// 123: Number
-			} else if (!isNaN(parseInt(seek, 10))) {
+			// i123e : Integer or Float (converted as Integer)
+			} else if (seek === 'i') {
 
-				size = stream.seek([ ',', ']', '}' ]);
+				stream.readRAW(1);
+
+				size = stream.seek('e');
 
 				if (size > 0) {
 
-					tmp = stream.readRAW(size);
+					tmp   = stream.readRAW(size);
+					value = parseInt(tmp, 10);
+					check = stream.readRAW(1);
 
-					if (tmp.indexOf('.') !== -1) {
-						value = parseFloat(tmp, 10);
-					} else {
-						value = parseInt(tmp, 10);
+				}
+
+
+			// <length>:<contents> : String
+			} else if (!isNaN(parseInt(seek, 10))) {
+
+				size = stream.seek(':');
+
+				if (size > 0) {
+
+					size  = parseInt(stream.readRAW(size), 10);
+					check = stream.readRAW(1);
+
+					if (!isNaN(size) && check === ':') {
+						value = stream.readRAW(size);
 					}
 
 				}
 
-			// "": String
-			} else if (seek === '"') {
 
-				stream.readRAW(1);
-
-				size = stream.seek([ '\\', '"' ]);
-
-				if (size > 0) {
-					value = stream.readRAW(size);
-				} else {
-					value = '';
-				}
-
-				check = stream.readRAW(1);
-
-
-				while (check === '\\') {
-
-					value[value.length - 1] = check;
-
-					size   = stream.seek([ '\\', '"' ]);
-					value += stream.readRAW(size);
-					check  = stream.readRAW(1);
-
-				}
-
-
-			// []: Array
-			} else if (seek === '[') {
+			// l<contents>e : Array
+			} else if (seek === 'l') {
 
 				value = [];
 
@@ -289,11 +260,9 @@ lychee.define('lychee.data.JSON').exports(function(lychee, global) {
 
 					check = stream.seekRAW(1);
 
-					if (check === ',') {
-						stream.readRAW(1);
-					} else if (check === ']') {
+					if (check === 'e') {
 						break;
-					} else {
+					} else if (_is_decodable_value(check) === false) {
 						errors++;
 					}
 
@@ -302,8 +271,8 @@ lychee.define('lychee.data.JSON').exports(function(lychee, global) {
 				stream.readRAW(1);
 
 
-			// {}: Object
-			} else if (seek === '{') {
+			// d<contents>e : Object
+			} else if (seek === 'd') {
 
 				value = {};
 
@@ -312,19 +281,16 @@ lychee.define('lychee.data.JSON').exports(function(lychee, global) {
 
 				while (errors === 0) {
 
-					var object_key = _decode(stream);
-					stream.readRAW(1);
-
+					var object_key   = _decode(stream);
 					var object_value = _decode(stream);
+
 					check = stream.seekRAW(1);
 
 					value[object_key] = object_value;
 
-					if (check === ',') {
-						stream.readRAW(1);
-					} else if (check === '}') {
+					if (check === 'e') {
 						break;
-					} else {
+					} else if (isNaN(parseInt(check, 10))) {
 						errors++;
 					}
 
@@ -332,8 +298,9 @@ lychee.define('lychee.data.JSON').exports(function(lychee, global) {
 
 				stream.readRAW(1);
 
-			// %%: Custom High-Level Implementation
-			} else if (seek === '%') {
+
+			// s<contents>e : Custom High-Level Implementation
+			} else if (seek === 's') {
 
 				stream.readRAW(1);
 
@@ -342,7 +309,7 @@ lychee.define('lychee.data.JSON').exports(function(lychee, global) {
 				value = lychee.deserialize(blob);
 				check = stream.readRAW(1);
 
-				if (check !== '%') {
+				if (check !== 'e') {
 					value = undefined;
 				}
 
@@ -368,7 +335,7 @@ lychee.define('lychee.data.JSON').exports(function(lychee, global) {
 		serialize: function() {
 
 			return {
-				'reference': '#lychee.data.JSON',
+				'reference': 'lychee.data.BENCODE',
 				'blob':      null
 			};
 
