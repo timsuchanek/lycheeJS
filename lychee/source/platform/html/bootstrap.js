@@ -1894,13 +1894,15 @@
 			}
 
 
-			var url = this.url;
+			var buffer;
+			var that = this;
+
+			var url  = this.url;
 			if (url.substr(0, 5) === 'data:') {
 
 				if (url.substr(0, 15) === 'data:image/png;') {
 
-					var that   = this;
-					var buffer = new Image();
+					buffer = new Image();
 
 					buffer.onload = function() {
 
@@ -1954,8 +1956,7 @@
 
 				if (url.split('.').pop() === 'png') {
 
-					var that   = this;
-					var buffer = new Image();
+					buffer = new Image();
 
 					buffer.onload = function() {
 

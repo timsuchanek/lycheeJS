@@ -260,22 +260,9 @@ var _profile  = null;
 			var servers = storage['servers'] || null;
 			if (servers !== null) {
 
-				var found = [];
-
-				for (var s = 0, sl = servers.length; s < sl; s++) {
-
-					if (
-						   (servers[s].id === id   || id === null)
-						&& (servers[s].pid === pid || pid === null)
-					) {
-
-						found.push(servers[s]);
-						break;
-
-					}
-
-				}
-
+				var found = servers.filter(function(server) {
+					return ((id === null || server.id === id) && (pid === null || server.pid === pid));
+				});
 
 				if (found.length > 0) {
 

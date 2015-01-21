@@ -51,8 +51,8 @@
 
 			try {
 				callback.call(scope, raw);
-			} catch(err) {
-				lychee.Debugger.report(lychee.environment, err, null);
+			} catch(error) {
+				lychee.Debugger.report(lychee.environment, error, null);
 			}
 
 		});
