@@ -41,6 +41,6 @@ back into master, tagged and published.
 
 # References (Articles and Sources)
 
-1. [http://www.bittorrent.org/beps/bep_0005.html](DHT Protocol Specification)
+1. [DHT Protocol Specification](http://www.bittorrent.org/beps/bep_0005.html)
 
 
