@@ -108,7 +108,8 @@
 			"data": {
 				"BENCODE": [ "js" ],
 				"BitON":   [ "js" ],
-				"JSON":    [ "js" ]
+				"JSON":    [ "js" ],
+				"KRPC":    [ "js" ]
 			},
 
 			"effect": {
@@ -158,12 +159,14 @@
 
 				"client": {
 					"Chat":        [ "js" ],
+					"KRPC":        [ "js" ],
 					"Multiplayer": [ "js" ],
 					"Session":     [ "js" ]
 				},
 
 				"remote": {
 					"Chat":        [ "js" ],
+					"KRPC":        [ "js" ],
 					"Multiplayer": [ "js" ],
 					"Session":     [ "js" ]
 				}
