@@ -73,6 +73,7 @@ lychee.define('lychee.game.State').requires([
 		this.logic    = main.logic    || null;
 		this.loop     = main.loop     || null;
 		this.renderer = main.renderer || null;
+		this.viewport = main.viewport || null;
 
 
 		this.__layers  = {};
