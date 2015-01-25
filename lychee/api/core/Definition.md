@@ -50,7 +50,8 @@ var Foo1 = new lychee.Definition('foo.Foo');
 var data = Foo1.serialize();
 var Foo2 = lychee.deserialize(data);
 
-console.log(Foo2, data);
+data; // { constructor: 'lychee.Definition', arguments: [ 'foo.Foo' ]}
+Foo2; // lychee.Definition instance
 ```
 
 
@@ -68,7 +69,8 @@ var Foo1 = new lychee.Definition('foo.Foo');
 var data = Foo1.serialize();
 var Foo2 = lychee.deserialize(data);
 
-console.log(Foo2, data);
+data; // { constructor: 'lychee.Definition', arguments: [ 'foo.Foo' ]}
+Foo2; // lychee.Definition instance
 ```
 
 
