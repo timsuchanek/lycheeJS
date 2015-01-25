@@ -156,7 +156,11 @@ lychee = typeof lychee !== 'undefined' ? lychee : (function(global) {
 				if (object) {
 
 					for (var prop in object) {
-						target[prop] = object[prop];
+
+						if (object.hasOwnProperty(prop) === true) {
+							target[prop] = object[prop];
+						}
+
 					}
 
 				}
@@ -177,19 +181,23 @@ lychee = typeof lychee !== 'undefined' ? lychee : (function(global) {
 
 					for (var prop in object) {
 
-						var tvalue = target[prop];
-						var ovalue = object[prop];
-						if (tvalue instanceof Array && ovalue instanceof Array) {
+						if (object.hasOwnProperty(prop) === true) {
 
-							lychee.extendsafe(target[prop], object[prop]);
+							var tvalue = target[prop];
+							var ovalue = object[prop];
+							if (tvalue instanceof Array && ovalue instanceof Array) {
 
-						} else if (tvalue instanceof Object && ovalue instanceof Object) {
+								lychee.extendsafe(target[prop], object[prop]);
 
-							lychee.extendsafe(target[prop], object[prop]);
+							} else if (tvalue instanceof Object && ovalue instanceof Object) {
 
-						} else if (typeof tvalue === typeof ovalue) {
+								lychee.extendsafe(target[prop], object[prop]);
 
-							target[prop] = object[prop];
+							} else if (typeof tvalue === typeof ovalue) {
+
+								target[prop] = object[prop];
+
+							}
 
 						}
 
@@ -213,13 +221,20 @@ lychee = typeof lychee !== 'undefined' ? lychee : (function(global) {
 
 					for (var prop in object) {
 
-						var tvalue = target[prop];
-						var ovalue = object[prop];
-						if (tvalue instanceof Object && ovalue instanceof Object) {
-							target[prop] = {};
-							lychee.extendunlink(target[prop], object[prop]);
-						} else {
-							target[prop] = object[prop];
+						if (object.hasOwnProperty(prop) === true) {
+
+							var tvalue = target[prop];
+							var ovalue = object[prop];
+							if (tvalue instanceof Array && ovalue instanceof Array) {
+								target[prop] = [];
+								lychee.extendunlink(target[prop], object[prop]);
+							} else if (tvalue instanceof Object && ovalue instanceof Object) {
+								target[prop] = {};
+								lychee.extendunlink(target[prop], object[prop]);
+							} else {
+								target[prop] = object[prop];
+							}
+
 						}
 
 					}
@@ -298,44 +313,6 @@ lychee = typeof lychee !== 'undefined' ? lychee : (function(global) {
 		/*
 		 * ENTITY API
 		 */
-
-		serialize: function(definition) {
-
-			definition = definition !== undefined ? definition : null;
-
-
-			var data = null;
-
-			if (definition !== null) {
-
-				if (typeof definition === 'object') {
-
-					if (typeof definition.serialize === 'function') {
-
-						data = definition.serialize();
-
-					} else {
-
-						try {
-							data = JSON.parse(JSON.stringify(definition));
-						} catch(e) {
-							data = null;
-						}
-
-					}
-
-				} else if (typeof definition === 'function') {
-
-					data = definition.toString();
-
-				}
-
-			}
-
-
-			return data;
-
-		},
 
 		deserialize: function(data) {
 
@@ -430,6 +407,44 @@ lychee = typeof lychee !== 'undefined' ? lychee : (function(global) {
 
 		},
 
+		serialize: function(definition) {
+
+			definition = definition !== undefined ? definition : null;
+
+
+			var data = null;
+
+			if (definition !== null) {
+
+				if (typeof definition === 'object') {
+
+					if (typeof definition.serialize === 'function') {
+
+						data = definition.serialize();
+
+					} else {
+
+						try {
+							data = JSON.parse(JSON.stringify(definition));
+						} catch(e) {
+							data = null;
+						}
+
+					}
+
+				} else if (typeof definition === 'function') {
+
+					data = definition.toString();
+
+				}
+
+			}
+
+
+			return data;
+
+		},
+
 
 
 		/*
@@ -456,7 +471,7 @@ lychee = typeof lychee !== 'undefined' ? lychee : (function(global) {
 
 			_bootstrap_environment.call(this);
 
-			return this.environment.init(callback);
+			this.environment.init(callback);
 
 		},
 
@@ -466,15 +481,21 @@ lychee = typeof lychee !== 'undefined' ? lychee : (function(global) {
 
 
 			if (environment !== null) {
+
 				this.environment = environment;
 				this.debug = this.environment.debug;
+
+				return true;
+
 			} else {
+
 				this.environment = _environment;
 				this.debug = this.environment.debug;
+
 			}
 
 
-			return true;
+			return false;
 
 		}
 

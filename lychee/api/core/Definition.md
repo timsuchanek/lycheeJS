@@ -36,6 +36,25 @@ in the current [lychee.environment](lychee.html#properties-environment).
 
 
 
+={methods-deserialize}
+
+### (void) lychee.Definition.prototype.deserialize(blob);
+
+- *(Object) blob* is an Object that is part of the Serialization Object.
+
+This method is not intended for direct usage. You can deserialize an
+object using the lychee.deserialize() method.
+
+```javascript
+var Foo1 = new lychee.Definition('foo.Foo');
+var data = Foo1.serialize();
+var Foo2 = lychee.deserialize(data);
+
+console.log(Foo2, data);
+```
+
+
+
 ={methods-serialize}
 
 ### (Serialization Object) lychee.Definition.prototype.serialize(void);
@@ -43,6 +62,14 @@ in the current [lychee.environment](lychee.html#properties-environment).
 - This method has no arguments.
 
 This method returns the *Serialization Object* of the instance.
+
+```javascript
+var Foo1 = new lychee.Definition('foo.Foo');
+var data = Foo1.serialize();
+var Foo2 = lychee.deserialize(data);
+
+console.log(Foo2, data);
+```
 
 
 
@@ -109,11 +136,37 @@ This method returns *true* on success and *false* on failure.
 
 ```javascript
 var Foo = new lychee.Definition('foo.Foo');
+var Bar = new lychee.Definition('foo.Bar');
 
-Foo.includes([
+
+Foo.exports(function(lychee, foo, global, attachments) {
+
+	var Class = function() {};
+	Class.prototype = { doStuff: function() { console.log('doStuff() from Foo'); } };
+	return Class;
+
+});
+
+Bar.includes([
 	'foo.Bar',
 	'foo.Qux'
 ]);
+ 
+Bar.exports(function(lychee, foo, global, attachments) {
+
+	var _Foo  = foo.Foo;
+	var Class = function() {};
+
+	Class.prototype = {
+		doStuff: function() {
+			_Foo.doStuff();
+			console.log('doStuff() from Bar');
+		}
+	};
+
+	return Class;
+
+});
 ```
 
 
@@ -128,11 +181,37 @@ This method returns *true* on success and *false* on failure.
 
 ```javascript
 var Foo = new lychee.Definition('foo.Foo');
+var Bar = new lychee.Definition('foo.Bar');
 
-Foo.requires([
+
+Foo.exports(function(lychee, foo, global, attachments) {
+
+	var Class = function() {};
+	Class.prototype = { doStuff: function() { console.log('doStuff() from Foo'); } };
+	return Class;
+
+});
+
+Bar.requires([
 	'foo.Bar',
 	'foo.Qux'
 ]);
+ 
+Bar.exports(function(lychee, foo, global, attachments) {
+
+	var _Foo  = foo.Foo;
+	var Class = function() {};
+
+	Class.prototype = {
+		doStuff: function() {
+			_Foo.doStuff();
+			console.log('doStuff() from Bar');
+		}
+	};
+
+	return Class;
+
+});
 ```
 
 
