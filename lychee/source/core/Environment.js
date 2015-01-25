@@ -1326,9 +1326,24 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 
 			if (packages !== null) {
 
-				for (var p = 0, pl = packages.length; p < pl; p++) {
+				var p, pl, pkg;
 
-					var pkg = packages[p];
+				for (p = 0, pl = this.packages.length; p < pl; p++) {
+
+					pkg = this.packages[p];
+					pkg.setEnvironment(null);
+
+					this.packages.splice(p, 1);
+					pl--;
+					p--;
+
+				}
+
+
+				for (p = 0, pl = packages.length; p < pl; p++) {
+
+					pkg = packages[p];
+
 					if (pkg instanceof lychee.Package) {
 
 						if (this.debug === true) {

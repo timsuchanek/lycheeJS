@@ -9,10 +9,13 @@ back into master, tagged and published.
 
 ## v0.8.5
 
-- Website: Overhauling and Architecture Diagrams
+- API: lychee.Environment
+- API: lychee.Renderer
 
-- lychee.net.(client||remote).DHT as described in Bittorrent's DHT protocol [1] which extends lychee.net.(client||remote).KRPC for its codec behaviours
+
+- Website: Overhauling and Architecture Diagrams
 - Sorbet Log File serialization (sorbet.data.LOG encode/decode that runs every 5 minutes)
+- lychee.net.(client||remote).DHT as described in Bittorrent's DHT protocol [1] which extends lychee.net.(client||remote).KRPC for its codec behaviours
 - Project Tool (inspects and verifies integrity of lychee.pkg files)
 - Inspector Tool: Timeline State (that shows bind/trigger/unbind calls)
 

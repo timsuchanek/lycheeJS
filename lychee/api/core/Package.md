@@ -18,6 +18,64 @@ var pkg2 = new lychee.Package('myname', '/lychee/lychee.pkg');
 
 
 
+={properties-id}
+
+### (String) new lychee.Package().id;
+
+The *(String) id* property is the unique identifier of
+the package.
+
+It influences into which namespace the Definitions are
+mapped after they were loaded.
+
+It is set via *id* in the [constructor](#constructor).
+
+```javascript
+var pkg = new lychee.Package('game', './lychee.pkg');
+
+pkg.id; // 'game'
+```
+
+
+
+={properties-url}
+
+### (String || null) new lychee.Package().url;
+
+The *(String) url* property represents the location of
+the *lychee.pkg* file.
+
+If the property is set to *null*, the *url* argument
+in the constructor had an invalid value.
+
+```javascript
+var foo = new lychee.Package('foo', './lychee.pkg');
+var bar = new lychee.Package('bar', './invalid/value');
+
+foo.url; // './lychee.pkg'
+bar.url; // null
+```
+
+
+
+={properties-root}
+
+The *(String) root* property represents the folder
+of the *lychee.pkg* file.
+
+If the property is set to *null*, the *url* argument
+in the constructor had an invalid value.
+
+```javascript
+var foo = new lychee.Package('foo', './path/to/lychee.pkg');
+var bar = new lychee.Package('bar', './invalid/value');
+
+foo.root; // './path/to'
+bar.root; // null
+```
+
+
+
 ={methods-serialize}
 
 ### (Serialization Object) lychee.Package.prototype.serialize(void);
