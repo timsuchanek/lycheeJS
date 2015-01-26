@@ -6,7 +6,6 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 
 
 
-
 	/*
 	 * EVENTS
 	 */
@@ -100,32 +99,6 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 	 * HELPERS
 	 */
 
-	var _validate_values = function(array) {
-
-		if (array instanceof Array) {
-
-			var valid = true;
-
-			for (var a = 0, al = array.length; a < al; a++) {
-
-				var value = array[a];
-				if (typeof value !== 'string') {
-					valid = false;
-					break;
-				}
-
-			}
-
-
-			return valid;
-
-		}
-
-
-		return false;
-
-	};
-
 	var _validate_definition = function(definition) {
 
 		if (!definition instanceof lychee.Definition) {
@@ -169,15 +142,16 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 		}
 
 
-		if (this.type === 'build') {
+		var type = this.type;
+		if (type === 'build') {
 
 			return tagged;
 
-		} else if (this.type === 'export') {
+		} else if (type === 'export') {
 
 			return tagged;
 
-		} else if (this.type === 'source') {
+		} else if (type === 'source') {
 
 			return supported && tagged;
 
@@ -775,53 +749,6 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 
 	Class.__FILENAME = null;
 
-	var _asset_types = {};
-
-	Class.createAsset = function(url, type) {
-
-		url  = typeof url === 'string'  ? url  : null;
-		type = typeof type === 'string' ? type : null;
-
-
-		if (url !== null) {
-
-			if (type === null) {
-				type = url.split('/').pop().split('.').pop();
-			}
-
-
-			var construct = _asset_types[type] || _asset_types['*'] || null;
-			if (construct !== null) {
-				return new construct(url);
-			}
-
-		}
-
-
-		return null;
-
-	};
-
-	Class.setAssetType = function(type, construct) {
-
-		type      = typeof type === 'string'      ? type      : null;
-		construct = construct instanceof Function ? construct : null;
-
-
-		if (type !== null && construct !== null) {
-
-			_asset_types[type] = construct;
-
-
-			return true;
-
-		}
-
-
-		return false;
-
-	};
-
 
 
 	/*
@@ -829,11 +756,6 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 	 */
 
 	Class.prototype = {
-
-		createAsset: function(url) {
-			return Class.createAsset(url);
-		},
-
 
 		/*
 		 * ENTITY API
@@ -1397,11 +1319,18 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 
 			if (tags !== null) {
 
+				this.tags = {};
+
+
 				for (var type in tags) {
 
 					var values = tags[type];
-					if (_validate_values(values) === true) {
-						this.tags[type] = values;
+					if (values instanceof Array) {
+
+						this.tags[type] = values.filter(function(value) {
+							return typeof value === 'string';
+						});
+
 					}
 
 				}

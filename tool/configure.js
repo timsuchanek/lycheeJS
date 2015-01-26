@@ -292,6 +292,7 @@
 
 	})([
 		'lychee.js',
+		'Asset.js',
 		'Debugger.js',
 		'Definition.js',
 		'Environment.js',

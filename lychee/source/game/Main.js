@@ -23,12 +23,12 @@ lychee.define('lychee.game.Main').requires([
 		url = typeof url === 'string' ? url : '/api/Server?identifier=boilerplate';
 
 
-		var asset = lychee.Environment.createAsset(url, 'json');
-		if (asset !== null) {
+		var config = new Config(url);
+		if (config !== null) {
 
 			var that = this;
 
-			asset.onload = function(result) {
+			config.onload = function(result) {
 
 				if (result === true) {
 					that.settings.client = lychee.extend({}, this.buffer);
@@ -38,7 +38,7 @@ lychee.define('lychee.game.Main').requires([
 
 			};
 
-			asset.load();
+			config.load();
 
 		}
 

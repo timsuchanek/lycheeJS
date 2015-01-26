@@ -216,7 +216,7 @@ lychee.Package = typeof lychee.Package !== 'undefined' ? lychee.Package : (funct
 			if (candidate !== undefined) {
 
 				var url            = _resolve_root.call(this) + '/' + candidate + '.js';
-				var implementation = lychee.Environment.createAsset(url);
+				var implementation = new lychee.Asset(url);
 				var attachments    = _resolve_attachments.call(this, candidate);
 
 				if (implementation !== null) {
@@ -272,7 +272,7 @@ lychee.Package = typeof lychee.Package !== 'undefined' ? lychee.Package : (funct
 					attachmentIds.forEach(function(assetId) {
 
 						var url   = attachments[assetId];
-						var asset = lychee.Environment.createAsset(url);
+						var asset = new lychee.Asset(url);
 						if (asset !== null) {
 
 							asset.onload = function(result) {
