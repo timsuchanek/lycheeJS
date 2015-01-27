@@ -579,7 +579,6 @@ lychee.define('sorbet.data.Filesystem').includes([
 				if (raw !== null) {
 
 					return {
-						index:  raw.ino,
 						length: raw.size,
 						time:   raw.mtime
 					};

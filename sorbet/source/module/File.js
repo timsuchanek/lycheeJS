@@ -125,7 +125,7 @@ lychee.define('sorbet.module.File').exports(function(lychee, sorbet, global, att
 
 
 				response.async                   = true;
-				response.header['ETag']          = '"' + info.index + '-' + info.length + '-' + Date.parse(info.time) + '"';
+				response.header['ETag']          = '"' + info.length + '-' + Date.parse(info.time) + '"';
 				response.header['Last-Modified'] = new Date(info.time).toUTCString();
 				response.header['Cache-Control'] = 'no-transform';
 				response.header['Content-Type']  = mime.type;
