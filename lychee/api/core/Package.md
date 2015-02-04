@@ -82,7 +82,17 @@ bar.root; // null
 
 - This method has no arguments.
 
-This method returns the *Serialization Object* of the instance.
+This method is not intended for direct usage. You can serialize an
+object using the [lychee.serialize()](lychee.html#methods-serialize) method.
+
+```
+var foo1 = new lychee.Package('example', './lychee.pkg');
+var data = lychee.serialize(foo1);
+var foo2 = lychee.deserialize(data);
+
+data; // { constructor: 'lychee.Package', arguments: [ 'example', './lychee.pkg' ]}
+foo2; // lychee.Package instance
+```
 
 
 

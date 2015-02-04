@@ -42,12 +42,13 @@ in the current [lychee.environment](lychee.html#properties-environment).
 
 - *(Object) blob* is an Object that is part of the Serialization Object.
 
-This method is not intended for direct usage. You can deserialize an
+This method returns nothing.
+It is not intended for direct usage. You can deserialize an
 object using the lychee.deserialize() method.
 
 ```javascript
 var Foo1 = new lychee.Definition('foo.Foo');
-var data = Foo1.serialize();
+var data = lychee.serialize(Foo1);
 var Foo2 = lychee.deserialize(data);
 
 data; // { constructor: 'lychee.Definition', arguments: [ 'foo.Foo' ]}
@@ -63,10 +64,12 @@ Foo2; // lychee.Definition instance
 - This method has no arguments.
 
 This method returns the *Serialization Object* of the instance.
+It is not intended for direct usage. You can serialize an
+object using the [lychee.serialize()](lychee.html#methods-serialize) method.
 
 ```javascript
 var Foo1 = new lychee.Definition('foo.Foo');
-var data = Foo1.serialize();
+var data = lychee.serialize(Foo1);
 var Foo2 = lychee.deserialize(data);
 
 data; // { constructor: 'lychee.Definition', arguments: [ 'foo.Foo' ]}
