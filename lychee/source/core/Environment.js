@@ -162,22 +162,6 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 
 	};
 
-	var _get_package = function(packageId) {
-
-		for (var p = 0, pl = this.packages.length; p < pl; p++) {
-
-			var pkg = this.packages[p];
-			if (pkg.id === packageId) {
-				return pkg;
-			}
-
-		}
-
-
-		return null;
-
-	};
-
 	var _resolve_definition = function(definition) {
 
 		var dependencies = [];
@@ -720,7 +704,10 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 		var type = this.type;
 		if (type === 'source' || type === 'export') {
 
-			var lypkg = _get_package.call(this, 'lychee');
+			var lypkg = this.packages.find(function(pkg) {
+				return pkg.id === 'lychee';
+			}) || null;
+
 			if (lypkg === null) {
 
 				lypkg = new lychee.Package('lychee', '/lychee/lychee.pkg');
@@ -890,7 +877,10 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 
 				} else {
 
-					var pkg = _get_package.call(this, packageId);
+					var pkg = this.packages.find(function(pkg) {
+						return pkg.id === packageId;
+					}) || null;
+
 					if (pkg !== null && pkg.isReady() === true) {
 
 						var result = pkg.load(classId, this.tags);
@@ -988,9 +978,6 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 				}
 
 			}
-
-
-			return definition;
 
 		},
 
@@ -1159,7 +1146,10 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 
 				} else {
 
-					var pkg = _get_package.call(this, identifier.split('.')[0]);
+					var pkg = this.packages.find(function(pkg) {
+						return pkg.id === identifier.split('.')[0];
+					});
+
 					if (pkg !== null) {
 
 						this.build = identifier;
@@ -1248,23 +1238,11 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 
 			if (packages !== null) {
 
-				var p, pl, pkg;
-
-				for (p = 0, pl = this.packages.length; p < pl; p++) {
-
-					pkg = this.packages[p];
+				this.packages.forEach(function(pkg) {
 					pkg.setEnvironment(null);
+				});
 
-					this.packages.splice(p, 1);
-					pl--;
-					p--;
-
-				}
-
-
-				for (p = 0, pl = packages.length; p < pl; p++) {
-
-					pkg = packages[p];
+				this.packages = packages.filter(function(pkg) {
 
 					if (pkg instanceof lychee.Package) {
 
@@ -1273,11 +1251,15 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 						}
 
 						pkg.setEnvironment(this);
-						this.packages.push(pkg);
+
+						return true;
 
 					}
 
-				}
+
+					return false;
+
+				}.bind(this));
 
 
 				return true;
