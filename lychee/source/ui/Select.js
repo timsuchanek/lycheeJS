@@ -399,15 +399,14 @@ lychee.define('lychee.ui.Select').includes([
 
 		setOptions: function(options) {
 
-			if (options instanceof Array) {
+			options = options instanceof Array ? options : null;
 
-				var filtered = [];
 
-				for (var o = 0, ol = options.length; o < ol; o++) {
-					filtered.push(options[o] + '');
-				}
+			if (options !== null) {
 
-				this.options = filtered;
+				this.options = options.map(function(option) {
+					return '' + option;
+				});
 
 				return true;
 
