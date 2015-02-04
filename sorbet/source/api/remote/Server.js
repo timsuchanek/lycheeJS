@@ -30,41 +30,34 @@ lychee.define('sorbet.api.remote.Server').includes([
 
 	var _get_servers = function(vhost, filters) {
 
-		var filtered = [];
+		return Object.values(vhost.projects).map(function(project) {
 
-		for (var pid in vhost.projects) {
+			var data = _serialize_project(project);
+			if (data.host === null) data.host = filters.host;
 
-			var blob = _serialize_project(vhost.projects[pid]);
-			if (blob.host === null) blob.host = filters.host;
+			return data;
 
-			filtered.push(blob);
-
-		}
-
-
-		filtered.sort(function(a, b) {
+		}).sort(function(a, b) {
 			if (a.identifier < b.identifier) return -1;
 			if (a.identifier > b.identifier) return  1;
 			return 0;
 		});
 
-
-		return filtered;
-
 	};
 
 	var _get_server = function(vhost, filters) {
 
-		for (var pid in vhost.projects) {
+		var project = Object.values(vhost.projects).find(function(project) {
+			return project.id === filters.identifier;
+		}) || null;
 
-			if (vhost.projects[pid].id === filters.identifier) {
 
-				var blob = _serialize_project(vhost.projects[pid]);
-				if (blob.host === null) blob.host = filters.host;
-				if (blob.port !== null) {
-					return blob;
-				}
+		if (project !== null) {
 
+			var data = _serialize_project(project);
+			if (data.host === null) data.host = filters.host;
+			if (data.port !== null) {
+				return data;
 			}
 
 		}

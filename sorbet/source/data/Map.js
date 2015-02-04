@@ -10,33 +10,15 @@ lychee.define('sorbet.data.Map').exports(function(lychee, sorbet, global, attach
 
 		values: function() {
 
-			var filtered = [];
-
-			for (var id in this.__map) {
-
-				var data = this.__map[id];
-
-				if (filtered.indexOf(data) === -1) {
-					filtered.push(data);
-				}
-
-			}
-
-
-			return filtered;
+			return Object.values(this.__map).filter(function(value, index, self) {
+				return self.indexOf(value) === index;
+			});
 
 		},
 
 		ids: function() {
 
-			var filtered = [];
-
-			for (var id in this.__map) {
-				filtered.push(id);
-			}
-
-
-			return filtered;
+			return Object.keys(this.__map);
 
 		},
 
