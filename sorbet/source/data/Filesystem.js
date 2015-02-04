@@ -628,21 +628,24 @@ lychee.define('sorbet.data.Filesystem').includes([
 			if (suffix !== null) sl = suffix.length;
 
 
-			var filtered = [];
-			for (var path in this.__cache) {
+			return Object.keys(this.__cache).filter(function(path) {
 
 				if (prefix === null || path.substr(0, pl) === prefix) {
+
 					if (suffix === null || path.substr(-1 * sl) === suffix) {
+
 						if (type === null || this.__cache[path] === type) {
-							filtered.push(path);
+							return true;
 						}
+
 					}
+
 				}
 
-			}
 
+				return false;
 
-			return filtered;
+			}.bind(this));
 
 		},
 

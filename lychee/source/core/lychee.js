@@ -15,6 +15,56 @@ lychee = typeof lychee !== 'undefined' ? lychee : (function(global) {
 	 * POLYFILLS
 	 */
 
+	if (typeof Object.keys !== 'function') {
+
+		Object.keys = function(object) {
+
+			if (object !== Object(object)) {
+				throw new TypeError('Object.keys called on a non-object');
+			}
+
+
+			var keys = [];
+
+			for (var prop in object) {
+
+				if (Object.prototype.hasOwnProperty.call(object, prop)) {
+					keys.push(prop);
+				}
+
+			}
+
+			return keys;
+
+		};
+
+	}
+
+	if (typeof Object.values !== 'function') {
+
+		Object.values = function(object) {
+
+			if (object !== Object(object)) {
+				throw new TypeError('Object.values called on a non-object');
+			}
+
+
+			var values = [];
+
+			for (var prop in object) {
+
+				if (Object.prototype.hasOwnProperty.call(object, prop)) {
+					values.push(object[prop]);
+				}
+
+			}
+
+			return values;
+
+		};
+
+	}
+
 	if (typeof Array.prototype.find !== 'function') {
 
 		Array.prototype.find = function(predicate) {
@@ -41,6 +91,7 @@ lychee = typeof lychee !== 'undefined' ? lychee : (function(global) {
 				}
 
 			}
+
 
 			return undefined;
 
