@@ -210,7 +210,7 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 
 		if (this.debug === true) {
 			var info = Object.keys(definition._attaches).length > 0 ? ('(' + Object.keys(definition._attaches).length + ' Attachment(s))') : '';
-			this.global.console.log('lychee-Environment-' + this.id + ': Exporting "' + definition.id + '" ' + info);
+			this.global.console.log('lychee-Environment (' + this.id + '): Exporting "' + definition.id + '" ' + info);
 		}
 
 
@@ -349,7 +349,7 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 					} else {
 
 						if (this.debug === true) {
-							console.error('lychee-Environment-' + this.id + ': Invalid Inclusion of "' + includes[i] + '"');
+							console.error('lychee-Environment (' + this.id + '): Invalid Inclusion of "' + includes[i] + '"');
 						}
 
 					}
@@ -387,7 +387,7 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 			namespace[classId] = function() {};
 
 			if (this.debug === true) {
-				this.global.console.error('lychee-Environment-' + this.id + ': Invalid Definition "' + definition.id + '", it is a Dummy now.');
+				this.global.console.error('lychee-Environment (' + this.id + '): Invalid Definition "' + definition.id + '", it is a Dummy now.');
 			}
 
 		}
@@ -643,7 +643,7 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 		var settings = lychee.extend({}, data);
 
 
-		this.id          = '' + _id++;
+		this.id          = 'lychee-Environment-' + _id++;
 		this.build       = 'game.Main';
 		this.debug       = true;
 		this.definitions = {};
@@ -713,7 +713,7 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 				lypkg = new lychee.Package('lychee', '/lychee/lychee.pkg');
 
 				if (this.debug === true) {
-					this.global.console.log('lychee-Environment-' + this.id + ': Injecting Package "lychee"');
+					this.global.console.log('lychee-Environment (' + this.id + '): Injecting Package "lychee"');
 				}
 
 				lypkg.setEnvironment(this);
@@ -887,7 +887,7 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 						if (result === true) {
 
 							if (this.debug === true) {
-								this.global.console.log('lychee-Environment-' + this.id + ': Loading "' + identifier + '" from Package "' + pkg.id + '"');
+								this.global.console.log('lychee-Environment (' + this.id + '): Loading "' + identifier + '" from Package "' + pkg.id + '"');
 							}
 
 						}
@@ -930,7 +930,7 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 					if (newPackageId !== null && newPackageId !== oldPackageId) {
 
 						if (this.debug === true) {
-							this.global.console.log('lychee-Environment-' + this.id + ': Injecting Definition "' + definition.id + '" as "' + newPackageId + '.' + definition.classId + '"');
+							this.global.console.log('lychee-Environment (' + this.id + '): Injecting Definition "' + definition.id + '" as "' + newPackageId + '.' + definition.classId + '"');
 						}
 
 
@@ -966,7 +966,7 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 
 				if (this.debug === true) {
 					var info = Object.keys(definition._tags).length > 0 ? ('(' + JSON.stringify(definition._tags) + ')') : '';
-					this.global.console.log('lychee-Environment-' + this.id + ': Mapping "' + definition.id + '" ' + info);
+					this.global.console.log('lychee-Environment (' + this.id + '): Mapping "' + definition.id + '" ' + info);
 				}
 
 				this.definitions[definition.id] = definition;
@@ -974,7 +974,7 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 			} else {
 
 				if (this.debug === true) {
-					this.global.console.error('lychee-Environment-' + this.id + ': Invalid Definition "' + definition.id + '"');
+					this.global.console.error('lychee-Environment (' + this.id + '): Invalid Definition "' + definition.id + '"');
 				}
 
 			}
@@ -996,7 +996,7 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 				if (result === true) {
 
 					if (this.debug === true) {
-						this.global.console.log('lychee-Environment-' + this.id + ': BUILD START ("' + this.build + '")');
+						this.global.console.log('lychee-Environment (' + this.id + '): BUILD START ("' + this.build + '")');
 					}
 
 
@@ -1012,7 +1012,7 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 						cache.end = Date.now();
 
 						if (this.debug === true) {
-							this.global.console.log('lychee-Environment-' + this.id + ': BUILD END (' + (cache.end - cache.start) + 'ms)');
+							this.global.console.log('lychee-Environment (' + this.id + '): BUILD END (' + (cache.end - cache.start) + 'ms)');
 						}
 
 
@@ -1064,8 +1064,8 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 
 								if (that.debug === true) {
 
-									that.global.console.error('lychee-Environment-' + that.id + ': BUILD TIMEOUT (' + (Date.now() - cache.start) + 'ms)');
-									that.global.console.error('lychee-Environment-' + that.id + ': Invalid Dependencies ' + cache.load.map(function(value, index) {
+									that.global.console.error('lychee-Environment (' + that.id + '): BUILD TIMEOUT (' + (Date.now() - cache.start) + 'ms)');
+									that.global.console.error('lychee-Environment (' + that.id + '): Invalid Dependencies ' + cache.load.map(function(value, index) {
 										return '"' + value + '" (required by ' + cache.track[index] + ')';
 									}).join(', '));
 
@@ -1082,7 +1082,7 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 				} else {
 
 					if (this.debug === true) {
-						this.global.console.log('lychee-Environment-' + this.id + ': Package not ready, retrying in 100ms ...');
+						this.global.console.log('lychee-Environment (' + this.id + '): Package not ready, retrying in 100ms ...');
 					}
 
 
@@ -1110,7 +1110,7 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 
 						if (this.debug === true) {
 							var info = Object.keys(definition._tags).length > 0 ? ('(' + JSON.stringify(definition._tags) + ')') : '';
-							this.global.console.log('lychee-Environment-' + this.id + ': Injecting "' + definition.id + '" ' + info);
+							this.global.console.log('lychee-Environment (' + this.id + '): Injecting "' + definition.id + '" ' + info);
 						}
 
 						// Inject definition as environment knows definition
@@ -1247,7 +1247,7 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 					if (pkg instanceof lychee.Package) {
 
 						if (this.debug === true) {
-							this.global.console.log('lychee-Environment-' + this.id + ': Adding Package "' + pkg.id + '"');
+							this.global.console.log('lychee-Environment (' + this.id + '): Adding Package "' + pkg.id + '"');
 						}
 
 						pkg.setEnvironment(this);
