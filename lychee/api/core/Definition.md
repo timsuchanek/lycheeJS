@@ -32,7 +32,7 @@ new lychee.Definition('foo.Bar').requires([
 ## Implementation Notes:
 
 The unique identifier is used for determination of all dependencies
-in the current [lychee.environment](lychee.html#properties-environment).
+in the current [lychee.environment](lychee#properties-environment).
 
 
 
@@ -65,7 +65,7 @@ Foo2; // lychee.Definition instance
 
 This method returns the *Serialization Object* of the instance.
 It is not intended for direct usage. You can serialize an
-object using the [lychee.serialize()](lychee.html#methods-serialize) method.
+object using the [lychee.serialize()](lychee#methods-serialize) method.
 
 ```javascript
 var Foo1 = new lychee.Definition('foo.Foo');

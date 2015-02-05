@@ -12,7 +12,7 @@ console.log(lychee.Debugger); // lychee.Debugger
 ## Implementation Notes:
 
 The Debugger offers an integration with a server-side
-[lychee.net.Service](lychee-net-Service.html) with
+[lychee.net.Service](lychee.net.Service) with
 the identifier *debugger*.
 
 For easier integration with the Sorbet Stack, you

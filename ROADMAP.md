@@ -9,9 +9,13 @@ back into master, tagged and published.
 
 ## v0.8.5
 
-- API: lychee.Environment
-- API: lychee.Renderer
+- Refactor lychee.Environment's inject() to setInjections()
+- API: lychee.Environment.prototype.setInjections()
 
+- API: lychee.Renderer
+- API: lychee.Storage
+- lychee.net.Peer
+- lychee.net.Router
 
 - Website: Overhauling and Architecture Diagrams
 - Sorbet Log File serialization (sorbet.data.LOG encode/decode that runs every 5 minutes)

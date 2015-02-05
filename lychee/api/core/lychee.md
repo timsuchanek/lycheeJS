@@ -333,7 +333,7 @@ if (data !== null) {
 for the lychee.Definition.
 
 This method returns a *lychee.Definition* instance.
-It will currify the [exports()](lychee-Definition.html#methods-exports)
+It will currify the [exports()](lychee.Definition#methods-exports)
 method in order to define the definition in the
 currently active [lychee.environment](#properties-environment).
 
@@ -348,7 +348,7 @@ executed once the active [lychee.environment](#properties-environment)
 is initialized successfully.
 
 This method returns nothing.
-It will initialize the active [lychee.Environment](lychee-Environment.html)
+It will initialize the active [lychee.Environment](lychee.Environment)
 instance which is reflected by the [lychee.environment](#properties-environment)
 property.
 
@@ -374,12 +374,12 @@ lychee.init(function(sandbox) {
 
 ### (Boolean) lychee.setEnvironment(environment);
 
-- *(lychee.Environment) environment* is a [lychee.Environment](lychee-Environment.html)
+- *(lychee.Environment) environment* is a [lychee.Environment](lychee.Environment)
 instance. If set to *null*, the original environment will be used.
 
 This method returns *true* on success and *false* on failure.
 It will set the active environment and dispatch its
-[debug](lychee-Environment.html#properties-debug) property.
+[debug](lychee.Environment#properties-debug) property.
 
 ```javascript
 var env = new lychee.Environment({ /* ... */ });

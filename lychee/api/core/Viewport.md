@@ -175,7 +175,7 @@ It will destroy the instance from any interaction bindings.
 - This method has no arguments.
 
 This method is not intended for direct usage. You can serialize an
-object using the [lychee.serialize()](lychee.html#methods-serialize) method.
+object using the [lychee.serialize()](lychee#methods-serialize) method.
 
 ```
 var foo1 = new lychee.Viewport({ fullscreen: true });

@@ -38,11 +38,10 @@ var environment = new lychee.Environment({
 
 ### (String) new lychee.Environment().id;
 
-The *(String) id* property is the unique identifier
-of the environment.
+The *(String) id* property is the unique identifier of the environment.
 
-It influences the behaviour of the
-[lychee.Debugger](lychee-Debugger.html).
+It influences the behaviour of the [lychee.Debugger](lychee.Debugger).
+It is important that this identifier is unique across the peer cloud.
 
 It is set via *settings.id* in the [constructor](#constructor)
 or via [setId](#methods-setId).
@@ -65,8 +64,7 @@ environment.id;               // 'example'
 
 ### (String) new lychee.Environment().build;
 
-The *(String) build* property is the build target of the
-environment instance.
+The *(String) build* property is the build target of the environment instance.
 
 It influences the [init()](#methods-init) callback behaviour.
 
@@ -100,12 +98,13 @@ environment.init(function(sandbox) {
 
 ### (Boolean) new lychee.Environment().debug;
 
-The *(Boolean) debug* property is the state whether the debugging
-mode is activated or not.
+The *(Boolean) debug* property is the state whether the environment
+and its loaded definitions should print debug output to the console
+or not.
 
 It influences the logging of additional debug data to the console.
-It is reflected by the [lychee.debug](lychee.html#properties-debug)
-property inside the sandbox.
+It is reflected by the [lychee.debug property](lychee#properties-debug)
+inside the sandbox.
 
 It is set via *settings.debug* in the [constructor](#constructor)
 or via [setDebug()](#methods-setDebug).
@@ -137,7 +136,7 @@ environment.init(function(sandbox) {
 ### (Object) new lychee.Environment().definitions;
 
 The *(Object) definitions* property is the object consisting of
-the map of available [lychee.Definition](lychee-Definition.html)
+the map of available [lychee.Definition](lychee.Definition)
 instances inside the environment, each mapped as the available
 identifier.
 
@@ -179,9 +178,9 @@ environment.init(function(sandbox) {
 ### (Object) new lychee.Environment().global;
 
 The *(Object) global* property is the scope that is the result
-of the build process. If the [sandbox](#properties-sandbox)
-property is set to *false*, this is identical to the global scope
-of the runtime.
+of the build process. If the [sandbox property](#properties-sandbox)
+is set to *false*, this is identical to the global scope of the
+runtime.
 
 
 
@@ -190,7 +189,7 @@ of the runtime.
 ### (Array) new lychee.Environment().packages;
 
 The *(Array) packages* property is an array of all registered
-[lychee.Package](lychee-Package.html) instances.
+[lychee.Package](lychee.Package) instances.
 
 It influences the behaviour of loading additional definitions
 into the environment. As each package's id is associated with
@@ -225,7 +224,7 @@ environment.packages.length;           // 3
 The *(Boolean) sandbox* property is the state whether the sandboxing
 mode is activated or not.
 
-It influences how the [global](#properties-global) property of the
+It influences how the [global property](#properties-global) of the
 environment is built up. If set to *true*, it will create an isolated
 scope for the build. If set to *false*, it will use the global scope
 of the runtime and dispatch all namespaces there.
@@ -259,7 +258,7 @@ that contains all specific tags for the build.
 It influences how the environment is built up. If
 the tags are set, the environment tries to match
 each loaded definition to the tags, dependent on
-the [type](#properties-type) property.
+the [type property](#properties-type).
 
 It will use the preferred tags of the build in
 descending order and fallback to later entries
@@ -272,7 +271,7 @@ or set via [setTags()](#methods-setTags).
 
 ```javascript
 var environment = new lychee.Environment({
-	build: 'game.Main',
+	build: 'example.Main',
 	tags:  {
 		platform: [ 'html-webgl', 'html' ]
 	}
@@ -281,7 +280,7 @@ var environment = new lychee.Environment({
 environment.init(function(sandbox) {
 
 	var lychee     = sandbox.lychee;
-	var definition = lychee.environment.definitions['game.Main'] || null;
+	var definition = lychee.environment.definitions['example.Main'] || null;
 	if (definition !== null) {
 		definition.tags; // { platform: 'html-webgl' } or { platform: 'html' }
 	}
@@ -299,8 +298,7 @@ The *(Number) timeout* property is the timeout
 in milliseconds until the active build stops.
 
 It influences when the environment build stops.
-If set to *0*, there is no timeout active until
-the active build stops.
+If set to *0*, there is no timeout active until the active build stops.
 
 It is set via *settings.timeout* in the [constructor](#constructor)
 or set via [setTimeout()](#methods-setTimeout).
@@ -379,7 +377,7 @@ environment.init(function(sandbox) {
 
 This method returns nothing.
 It is not intended for direct usage. You can deserialize an
-object using the [lychee.deserialize()](lychee.html#methods-deserialize) method.
+object using the [lychee.deserialize()](lychee#methods-deserialize) method.
 
 ```
 var foo1 = new lychee.Environment({ id: 'example' });
@@ -400,7 +398,7 @@ foo2; // lychee.Environment instance
 
 This method returns the *Serialization Object* of the instance.
 It is not intended for direct usage. You can serialize an
-object using the [lychee.serialize()](lychee.html#methods-serialize) method.
+object using the [lychee.serialize()](lychee#methods-serialize) method.
 
 ```
 var foo1 = new lychee.Environment({ id: 'example' });
@@ -423,8 +421,7 @@ including its namespace.
 This method returns *true* on success and *false* on failure.
 It will try to load the definition if both the package and
 the definition is ready. After the definition is ready, it
-is available in the [definitions](#properties-definitions)
-property.
+is available in the [definitions property](#properties-definitions).
 
 ```javascript
 var environment = new lychee.Environment({
@@ -458,7 +455,7 @@ setTimeout(function() {
 to be dispatched to the environment.
 
 This method is not intended for direct usage.
-It is called by [lychee.define()](lychee.html#methods-define)
+It is called by [lychee.define()](lychee#methods-define)
 in order to map all definitions to the active environment.
 
 ```javascript
@@ -495,7 +492,7 @@ It initializes the build of the environment based on the given
 settings.
 
 The callback is called with the *sandbox* parameter which reflects
-the ([global](#properties-global) property) of the environment.
+the ([global property](#properties-global)) of the environment.
 
 ```javascript
 var environment = new lychee.Environment({
@@ -540,20 +537,243 @@ var environment = new lychee.Environment({
 });
 
 environment.build;                 // 'game.Main', defaulted
-environment.setBuild('game.Main'); // false, no such package available
+environment.setBuild('example.Main'); // false, no such package available
 
-environment.setPackages([])
+environment.setPackages([
+	new lychee.Package('example', './lychee.pkg'),
+	new lychee.Package('other',   '../other/lychee.pkg')
+]);
+
+environment.setBuild('example.Main'); // true, if package contains such a definition
+
+environment.init(function(sandbox) {
+	// example.Main and its requirements are ready
+});
 ```
 
-// TODO:
-={methods-inject}
-={methods-setBuild}
+
+
 ={methods-setDebug}
+
+### (Boolean) lychee.Environment.prototype.setDebug(debug);
+
+- *(Boolean) debug* is a flag. If set to *true*, the *console* prints additional debug messages.
+
+This method returns *true* on success and *false* on failure.
+It will set the [debug property](#properties-debug) of the instance.
+
+It also reflects the property onto the [lychee.debug property](lychee#properties-debug)
+to maintaim concurrency.
+
+```javascript
+var environment = new lychee.Environment({
+	id: 'example'
+});
+
+environment.debug;               // true
+environment.global.lychee.debug; // true
+
+environment.setDebug(false);     // true
+
+environment.debug;               // false
+environment.global.lychee.debug; // false
+```
+
+
+
 ={methods-setDefinitions}
+
+### (Boolean) lychee.Environment.prototype.setDefinitions(definitions);
+
+- *(Array) definitions* is an array of [lychee.Definitions](lychee.Definition).
+
+This method returns *true* on success and *false* on failure.
+It will try to inject definitions into the environment, which will be available
+with their identifier as the key in the
+[definitions property](#properties-definitions).
+
+```javascript
+var Foo         = new lychee.Definition('example.Foo').requires([ 'example.Bar' ]);
+var Bar         = new lychee.Definition('example.Bar');
+var environment = new lychee.Environment({
+	id:    'example',
+	build: 'example.Foo'
+});
+
+environment.definitions;                  // {}
+environment.setDefinitions([ Foo, Bar ]); // true
+environment.definitions;                  // { 'example.Foo': lychee.Definition, 'example.Bar': lychee.Definition }
+```
+
+
+
 ={methods-setId}
+
+### (Boolean) lychee.Environment.prototype.setId(id);
+
+- *(String) id* is the unique identifier of the environment.
+
+This method returns *true* on success and *false* on failure.
+It will set the [id property](#properties-id) of the instance.
+
+It is important that this identifier is unique across the peer cloud.
+
+```javascript
+var environment = new lychee.Environment({
+	id: 'example'
+});
+
+environment.id;             // 'example'
+environment.setId('blubb'); // true
+environment.id;             // 'blubb'
+```
+
+
+
 ={methods-setPackages}
+
+### (Boolean) lychee.Environment.prototype.setPackages(packages);
+
+- *(Array) packages* is an array of [lychee.Packages](lychee.Package).
+
+This method returns *true* on success and *false* on failure.
+It will set the [packages property](#properties-packages) of the instance.
+
+It is important that each package has a unique namespace (identifier) as
+what it is included. Each package can refer its components internally under
+a different namespace compared to as under what namespace they are available.
+
+For example, you can include two game projects that have internally all
+definitions in the *game* namespace. If you want to do so, you can include
+one game as *foo* and the other as *bar*, so now their *game.Main* is available
+as *foo.Main* or *bar.Main*.
+
+```javascript
+// The packages themselves have both a 'game.Main' identifier
+var foo = new lychee.Package('foo', '../projects/foo/lychee.pkg');
+var bar = new lychee.Package('bar', '../projects/bar/lychee.pkg');
+
+var environment = new lychee.Environment({
+	id: 'example'
+});
+
+environment.setPackages([ foo, bar ]);
+
+environment.setBuild('game.Main'); // false, Package not ready
+
+environment.setBuild('foo.Main'); // true
+environment.setBuild('bar.Main'); // true
+```
+
+
+
 ={methods-setSandbox}
+
+### (Boolean) lychee.Environment.prototype.setSandbox(sandbox);
+
+- *(Boolean) sandbox* is a flag. If set to *true*, the environment will create
+an isolated [global property](#properties-global).
+
+This method returns *true* on success and *false* on failure.
+It will set the [sandbox property](#properties-sandbox) of the instance.
+
+This method creates a new sandbox each time the method is called.
+
+```javascript
+var da_real_global = typeof global !== 'undefined' ? global : this;
+var environment    = new lychee.Environment({
+	id: 'example'
+});
+
+environment.sandbox;                   // true
+environment.global === da_real_global; // false
+
+environment.setSandbox(false);         // true
+environment.sandbox;                   // false
+environment.global === da_real_global; // true
+```
+
+
+
 ={methods-setTags}
+
+### (Boolean) lychee.Environment.prototype.setTags(tags);
+
+- *(Object) tags* is an object that contains all specific tags for the build.
+
+This method returns *true* on success and *false* on failure.
+It will set the [tags property](#properties-tags) of the instance.
+
+```javascript
+var environment = new lychee.Environment({
+	build: 'example.Main',
+	tags:  {
+		platform: [ 'html-webgl', 'html' ]
+	}
+});
+
+environment.init(function(sandbox) {
+
+	var lychee     = sandbox.lychee;
+	var definition = lychee.environment.definitions['example.Main'] || null;
+	if (definition !== null) {
+		definition.tags; // { platform: 'html-webgl' } or { platform: 'html' }
+	}
+
+});
+```
+
+
+
 ={methods-setTimeout}
+
+### (Boolean) lychee.Environment.prototype.setTimeout(timeout);
+
+- *(Number) timeout* is the timeout in milliseconds
+until the active build stops.
+
+This method returns *true* on success and *false* on failure.
+It will set the [timeout property](#properties-timeout) of the instance.
+
+```javascript
+var environment = new lychee.Environment({
+	id: 'example'
+});
+
+environment.timeout;          // 10000
+environment.setTimeout(5000); // true
+environment.timeout;          // 5000
+```
+
+
+
 ={methods-setType}
- 
+
+### (Boolean) lychee.Environment.prototype.setType(type);
+
+- *(String) type* is the type if the active build.
+
+This method returns *true* on success and *false* on failure.
+It will set the [type property](#properties-type) of the instance.
+
+If *type* is set to *source*, the environment loads all definitions
+from *project/source* and matches them against the given
+[tags](#properties-tags).
+
+If *type* is set to *export*, the environment loads all definitions
+from *project/source* and does not match them against the given *tags*.
+
+If *type* is set to *build*, the environment assumes all definitions
+and requirements are included already. This type is used to deserialize
+a serialized environment snapshot.
+
+```javascript
+var environment = new lychee.Environment({
+	id: 'example'
+});
+
+environment.type;             // 'source'
+environment.setType('build'); // true
+environment.type;             // 'build'
+```
+

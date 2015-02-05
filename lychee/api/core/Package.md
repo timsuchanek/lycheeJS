@@ -83,7 +83,7 @@ bar.root; // null
 - This method has no arguments.
 
 This method is not intended for direct usage. You can serialize an
-object using the [lychee.serialize()](lychee.html#methods-serialize) method.
+object using the [lychee.serialize()](lychee#methods-serialize) method.
 
 ```
 var foo1 = new lychee.Package('example', './lychee.pkg');
@@ -109,7 +109,7 @@ file is loaded and parsed. After this process is done, the *lychee.Package*
 instance is marked as being ready.
 
 This method is not intended for public usage. It is called
-by the [lychee.Environment](lychee-Environment.html) instance.
+by the [lychee.Environment](lychee.Environment) instance.
 
 
 
@@ -125,7 +125,7 @@ It will try to load a Definition that matches the given tags
 and is properly supporting the target environment.
 
 This method is not intended for public usage. It is called
-by the [lychee.Environment](lychee-Environment.html) instance.
+by the [lychee.Environment](lychee.Environment) instance.
 
 
 
@@ -134,7 +134,7 @@ by the [lychee.Environment](lychee-Environment.html) instance.
 ### (Boolean) lychee.Package.prototype.setEnvironment(environment);
 
 - *(lychee.Environment) environment* is a
-[lychee.Environment](lychee-Environment.html) instance.
+[lychee.Environment](lychee.Environment) instance.
 
 This method returns *true* on success and *false* on failure.
 It will set the [environment property](#properties-delay) of the instance.
@@ -161,5 +161,5 @@ It will set the type of the package that influences the
 behaviour of the [load()](#methods-load) method.
 
 This method is not intended for public usage. It is called
-by the [lychee.Environment](lychee-Environment.html) instance.
+by the [lychee.Environment](lychee.Environment) instance.
 
