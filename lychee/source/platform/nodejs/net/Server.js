@@ -115,11 +115,11 @@ lychee.define('lychee.net.Server').tags({
 		var settings = lychee.extend({}, data);
 
 
-		this.host = null;
-		this.port = 1337;
+		this.codec = lychee.interfaceof(settings.codec, _JSON) ? settings.codec : _JSON;
+		this.host  = null;
+		this.port  = 1337;
 
 
-		this.__codec  = lychee.interfaceof(settings.codec, _JSON) ? settings.codec : _JSON;
 		this.__socket = null;
 
 
@@ -150,8 +150,9 @@ lychee.define('lychee.net.Server').tags({
 			var settings = {};
 
 
-			if (this.host !== 'localhost') settings.host = this.host;
-			if (this.port !== 1337)        settings.port = this.port;
+			if (this.codec !== _JSON)      settings.codec = lychee.serialize(this.codec);
+			if (this.host !== 'localhost') settings.host  = this.host;
+			if (this.port !== 1337)        settings.port  = this.port;
 
 
 			data['arguments'][0] = settings;
@@ -192,7 +193,7 @@ lychee.define('lychee.net.Server').tags({
 						var remote = new lychee.net.Remote({
 							host:  host,
 							port:  port,
-							codec: that.__codec
+							codec: that.codec
 						});
 
 						remote.bind('connect', function() {

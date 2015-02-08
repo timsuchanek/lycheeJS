@@ -175,6 +175,7 @@ lychee.define('lychee.event.Emitter').exports(function(lychee, global) {
 					type:     type,
 					callback: lychee.serialize(callback),
 					// scope:    lychee.serialize(scope),
+					scope:    null,
 					once:     once
 				});
 
@@ -210,7 +211,8 @@ lychee.define('lychee.event.Emitter').exports(function(lychee, global) {
 					time:     Date.now(),
 					type:     type,
 					callback: lychee.serialize(callback),
-					scope:    lychee.serialize(scope)
+					// scope:    lychee.serialize(scope)
+					scope:    null
 				});
 
 			}
@@ -245,11 +247,49 @@ lychee.define('lychee.event.Emitter').exports(function(lychee, global) {
 		 * ENTITY API
 		 */
 
-		// deserialize: function(blob) {},
+		deserialize: function(blob) {
+
+			if (blob.events instanceof Object) {
+				// TODO: deserialize events
+			}
+
+			if (blob.timeline instanceof Object) {
+				// TODO: deserialize timeline
+			}
+
+		},
 
 		serialize: function() {
 
 			var blob = {};
+
+
+			if (Object.keys(this.___events).length > 0) {
+
+				blob.events = {};
+
+				for (var type in this.___events) {
+
+					blob.events[type] = [];
+
+					for (var e = 0, el = this.___events[type].length; e < el; e++) {
+
+						var entry = this.___events[type][e];
+
+						blob.events[type].push({
+							passAction: entry.passAction,
+							passSelf:   entry.passSelf,
+							callback:   lychee.serialize(entry.callback),
+							// scope:      lychee.serialize(entry.scope),
+							scope:      null,
+							once:       entry.once
+						});
+
+					}
+
+				}
+
+			}
 
 
 			if (this.___timeline.bind.length > 0 || this.___timeline.trigger.length > 0 || this.___timeline.unbind.length > 0) {

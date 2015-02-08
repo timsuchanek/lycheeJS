@@ -1,7 +1,7 @@
 
 lychee.define('lychee.game.Background').includes([
 	'lychee.game.Sprite'
-]).exports(function(lychee, global) {
+]).exports(function(lychee, global, attachments) {
 
 	/*
 	 * HELPERS

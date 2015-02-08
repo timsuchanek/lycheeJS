@@ -50,6 +50,52 @@ lychee.define('lychee.event.Promise').includes([
 
 	Class.prototype = {
 
+		/*
+		 * ENTITY API
+		 */
+
+		// deserialize: function(blob) {},
+
+		serialize: function() {
+
+			var data = lychee.event.Emitter.prototype.serialize.call(this);
+			data['constructor'] = 'lychee.event.Promise';
+
+			var blob = (data['blob'] || {});
+
+
+			if (this.___stack.length > 0) {
+
+				blob.stack = [];
+
+				for (var s = 0, sl = this.___stack.length; s < sl; s++) {
+
+					var entry = this.___stack[s];
+
+					blob.stack.push({
+						callback: lychee.serialize(entry.callback),
+						// scope:    lychee.serialize(entry.scope)
+						scope:    null
+					});
+
+				}
+
+			}
+
+
+			data['blob'] = Object.keys(blob).length > 0 ? blob : null;
+
+
+			return data;
+
+		},
+
+
+
+		/*
+		 * CUSTOM API
+		 */
+
 		then: function(callback, scope) {
 
 			callback = callback instanceof Function ? callback : null;

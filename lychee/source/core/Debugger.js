@@ -94,9 +94,16 @@ lychee.Debugger = typeof lychee.Debugger !== 'undefined' ? lychee.Debugger : (fu
 
 	var Module = {
 
-		/*
-		 * CUSTOM API
-		 */
+		// deserialize: function(blob) {},
+
+		serialize: function() {
+
+			return {
+				'reference': 'lychee.Debugger',
+				'blob':      null
+			};
+
+		},
 
 		expose: function(environment) {
 

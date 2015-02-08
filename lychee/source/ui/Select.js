@@ -123,7 +123,7 @@ lychee.define('lychee.ui.Select').includes([
 			data['constructor'] = 'lyche.ui.Select';
 
 			var settings = data['arguments'][0];
-			var blob     = data['blob'] = (data['blob'] || {});
+			var blob     = (data['blob'] || {});
 
 
 			if (this.options.length !== 0) settings.options = [].slice.call(this.options, 0);
@@ -131,6 +131,9 @@ lychee.define('lychee.ui.Select').includes([
 
 
 			if (this.font !== null) blob.font = lychee.serialize(this.font);
+
+
+			data['blob'] = Object.keys(blob).length > 0 ? blob : null;
 
 
 			return data;

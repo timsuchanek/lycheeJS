@@ -415,9 +415,9 @@ lychee = typeof lychee !== 'undefined' ? lychee : (function(global) {
 				var scope    = this.environment.global;
 
 
-				if (typeof data.reference === 'string' && data.reference.charAt(0) === '#') {
+				if (typeof data.reference === 'string') {
 
-					var resolved_module = _resolve_constructor.call(scope, data.reference.substr(1));
+					var resolved_module = _resolve_constructor.call(scope, data.reference);
 					if (typeof resolved_module === 'object') {
 						instance = resolved_module;
 					}

@@ -368,7 +368,7 @@ lychee.define('lychee.data.JSON').exports(function(lychee, global) {
 		serialize: function() {
 
 			return {
-				'reference': '#lychee.data.JSON',
+				'reference': 'lychee.data.JSON',
 				'blob':      null
 			};
 

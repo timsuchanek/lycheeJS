@@ -367,7 +367,7 @@ lychee.define('Storage').tags({
 			data['constructor'] = 'lychee.Storage';
 
 			var settings = {};
-			var blob     = data['blob'] || {};
+			var blob     = (data['blob'] || {});
 
 
 			if (this.id.substr(0, 15) !== 'lychee-Storage-') settings.id    = this.id;
