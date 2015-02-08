@@ -9,13 +9,9 @@ back into master, tagged and published.
 
 ## v0.8.5
 
-- Refactor lychee.Environment's inject() to setInjections()
-- API: lychee.Environment.prototype.setInjections()
-
 - API: lychee.Renderer
 - API: lychee.Storage
-- lychee.net.Peer
-- lychee.net.Router
+
 
 - Website: Overhauling and Architecture Diagrams
 - Sorbet Log File serialization (sorbet.data.LOG encode/decode that runs every 5 minutes)
@@ -25,15 +21,14 @@ back into master, tagged and published.
 
 - Mode7 Game finalization (lane switch), required assets: racing car, box sprite, explosion sprite
 - Color Game finalization (UI, Timeout and Point Calculation)
-- lychee.Environment needs serializable injection API
 
 ## v0.8.6
 
 - Dispenser CLI Tool (creates Templates and validates API Docs of a Definition)
 - Blitzkrieg Game finalization (auto-connect 4 players and let them play against each other)
 - lychee.net.remote.Controller and lychee.net.client.Controller
-- lychee.game.Logic
-- lychee.game.Physic
+- API + Serialization: lychee.game.Logic
+- API + Serialization: lychee.game.Physic
 - lychee.verlet Stack serialization and finalization
 - lychee.net.Protocol Ping/Pong verification
 - html-webgl platform finalization (webgl2d refactor)

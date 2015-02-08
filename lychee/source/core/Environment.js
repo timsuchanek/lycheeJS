@@ -1137,40 +1137,6 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 
 		},
 
-		inject: function(environment) {
-
-			environment = environment instanceof Class ? environment : null;
-
-
-			if (environment !== null) {
-
-				for (var identifier in environment.definitions) {
-
-					var definition = environment.definitions[identifier];
-					if (_validate_definition.call(this, definition) === true) {
-
-						if (this.debug === true) {
-							var info = Object.keys(definition._tags).length > 0 ? ('(' + JSON.stringify(definition._tags) + ')') : '';
-							this.global.console.log('lychee-Environment (' + this.id + '): Injecting "' + definition.id + '" ' + info);
-						}
-
-						// Inject definition as environment knows definition
-						this.definitions[identifier] = definition;
-
-					}
-
-				}
-
-
-				return true;
-
-			}
-
-
-			return false;
-
-		},
-
 		setBuild: function(identifier) {
 
 			identifier = typeof identifier === 'string' ? identifier : null;
