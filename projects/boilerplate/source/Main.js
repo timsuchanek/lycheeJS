@@ -45,6 +45,11 @@ lychee.define('game.Main').requires([
 		lychee.game.Main.call(this, settings);
 
 
+
+		/*
+		 * INITIALIZATION
+		 */
+
 		this.bind('load', function() {
 
 			this.settings.gameclient = this.settings.client;
@@ -69,6 +74,28 @@ lychee.define('game.Main').requires([
 
 
 	Class.prototype = {
+
+		/*
+		 * ENTITY API
+		 */
+
+		// deserialize: function(blob) {},
+
+		serialize: function() {
+
+			var data = lychee.game.Main.prototype.serialize.call(this);
+			data['constructor'] = 'game.Main';
+
+
+			return data;
+
+		},
+
+
+
+		/*
+		 * CUSTOM API
+		 */
 
 		reshape: function(orientation, rotation) {
 
