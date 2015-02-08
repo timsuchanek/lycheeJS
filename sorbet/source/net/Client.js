@@ -21,27 +21,24 @@ lychee.define('sorbet.net.Client').requires([
 
 		var that = this;
 
-		var asset = lychee.Environment.createAsset('/api/Server?identifier=sorbet', 'json');
-		if (asset !== null) {
+		var config = new Config('/api/Server?identifier=sorbet');
 
-			asset.onload = function(result) {
+		config.onload = function(result) {
 
-				if (result === true) {
+			if (result === true) {
 
-					var port = this.buffer.port || 8081;
-					var host = this.buffer.host || null;
+				var port = this.buffer.port || 8081;
+				var host = this.buffer.host || null;
 
-					that.setHost(host);
-					that.setPort(port);
-					that.connect();
+				that.setHost(host);
+				that.setPort(port);
+				that.connect();
 
-				}
+			}
 
-			};
+		};
 
-			asset.load();
-
-		}
+		config.load();
 
 	};
 

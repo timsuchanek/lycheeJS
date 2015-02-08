@@ -67,7 +67,7 @@ lychee.define('lychee.game.Background').includes([
 		serialize: function() {
 
 			var data = lychee.game.Sprite.prototype.serialize.call(this);
-			data['constructor'] = 'lyche.game.Background';
+			data['constructor'] = 'lychee.game.Background';
 
 			var settings = data['arguments'][0];
 

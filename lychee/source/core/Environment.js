@@ -462,13 +462,12 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 	 * STRUCTS
 	 */
 
-	var _sandbox = function(settings) {
+	var _Sandbox = function(settings) {
 
-		this.__STDOUT = '';
-		this.__STDERR = '';
+		var that     = this;
+		var _std_err = '';
+		var _std_out = '';
 
-
-		var that = this;
 
 		this.console = {};
 		this.console.log = function() {
@@ -492,10 +491,11 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 
 			}
 
-			that.__STDOUT += str;
 
 			if (str.substr(0, 3) === '(E)') {
-				that.__STDERR += str;
+				_std_err += str;
+			} else {
+				_std_out += str;
 			}
 
 		};
@@ -536,6 +536,34 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 
 		};
 
+		this.console.deserialize = function(blob) {
+
+			if (typeof blob.stdout === 'string') {
+				_std_out = blob.stdout;
+			}
+
+			if (typeof blob.stderr === 'string') {
+				_std_err = blob.stderr;
+			}
+
+		};
+
+		this.console.serialize = function() {
+
+			var blob = {};
+
+
+			if (_std_out.length > 0) blob.stdout = _std_out;
+			if (_std_err.length > 0) blob.stderr = _std_err;
+
+
+			return {
+				'reference': 'console',
+				'blob':      Object.keys(blob).length > 0 ? blob : null
+			};
+
+		};
+
 
 		this.Buffer  = global.Buffer;
 		this.Config  = global.Config;
@@ -550,12 +578,24 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 		this.lychee.VERSION      = global.lychee.VERSION;
 
 		[
-			'debug', 'environment',
-			'diff', 'extend', 'extendsafe', 'extendunlink',
-			'enumof', 'interfaceof',
-			'serialize', 'deserialize',
-			'define', 'init', 'setEnvironment',
-			'Debugger', 'Definition', 'Environment', 'Package'
+			'debug',
+			'environment',
+			'diff',
+			'enumof',
+			'extend',
+			'extendsafe',
+			'extendunlink',
+			'interfaceof',
+			'deserialize',
+			'serialize',
+			'define',
+			'init',
+			'setEnvironment',
+			'Asset',
+			'Debugger',
+			'Definition',
+			'Environment',
+			'Package'
 		].forEach(function(identifier) {
 
 			that.lychee[identifier] = global.lychee[identifier];
@@ -572,31 +612,32 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 		};
 
 
+
+		/*
+		 * INITIALIZATION
+		 */
+
 		if (settings instanceof Object) {
 
-			for (var property in settings) {
+			Object.keys(settings).forEach(function(key) {
 
-				var instance = lychee.deserialize(settings[property]);
+				var instance = lychee.deserialize(settings[key]);
 				if (instance !== null) {
-					this[property] = instance;
+					this[key] = instance;
 				}
 
-			}
+			}.bind(this));
 
 		}
 
 	};
 
-	_sandbox.prototype = {
+	_Sandbox.prototype = {
 
 		deserialize: function(blob) {
 
-			if (typeof blob.STDOUT === 'string') {
-				this.__STDOUT = blob.STDOUT;
-			}
-
-			if (typeof blob.STDERR === 'string') {
-				this.__STDERR = blob.STDERR;
+			if (blob.console instanceof Object) {
+				this.console.deserialize(blob.console.blob);
 			}
 
 		},
@@ -607,21 +648,21 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 			var blob     = {};
 
 
-			for (var property in this) {
+			Object.keys(this).filter(function(key) {
+				return key.charAt(0) !== '_' && key === key.toUpperCase();
+			}).forEach(function(key) {
+				settings[key] = lychee.serialize(this[key]);
+			}.bind(this));
 
-				if (property.charAt(0) !== '_' && property === property.toUpperCase()) {
-					settings[property] = lychee.serialize(this[property]);
-				}
 
+			var data = this.console.serialize();
+			if (data.blob !== null) {
+				blob.console = data;
 			}
 
 
-			if (this.__STDOUT.length > 0) blob.STDOUT = this.__STDOUT;
-			if (this.__STDERR.length > 0) blob.STDERR = this.__STDERR;
-
-
 			return {
-				'constructor': '_sandbox',
+				'constructor': '_Sandbox',
 				'arguments':   [ settings ],
 				'blob':        Object.keys(blob).length > 0 ? blob : null
 			};
@@ -647,7 +688,7 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 		this.build       = 'game.Main';
 		this.debug       = true;
 		this.definitions = {};
-		this.global      = new _sandbox();
+		this.global      = new _Sandbox();
 		this.packages    = [];
 		this.sandbox     = true;
 		this.tags        = {};
@@ -782,7 +823,7 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 
 			if (blob.global instanceof Object) {
 
-				this.global = new _sandbox(blob.global.arguments[0]);
+				this.global = new _Sandbox(blob.global.arguments[0]);
 
 				if (blob.global.blob !== null) {
 					this.global.deserialize(blob.global.blob);
@@ -1279,7 +1320,7 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 
 
 				if (sandbox === true) {
-					this.global = new _sandbox();
+					this.global = new _Sandbox();
 				} else {
 					this.global = global;
 				}

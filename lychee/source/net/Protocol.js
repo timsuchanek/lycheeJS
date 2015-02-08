@@ -245,7 +245,7 @@ lychee.define('lychee.net.Protocol').exports(function(lychee, global) {
 				var payload = new Buffer(_fragment.payload.length + payload_length);
 
 				_fragment.payload.copy(payload, 0);
-				_payload_data.copy(payload, _fragment.payload.length);
+				payload_data.copy(payload, _fragment.payload.length);
 
 				_fragment.payload = payload;
 
