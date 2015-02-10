@@ -186,6 +186,12 @@
 		"stream":   false
 	},
 
+	"xml": {
+		"encoding": "utf8",
+		"type":     "text/xml",
+		"stream":   false
+	},
+
 	"zip": {
 		"encoding": "binary",
 		"type":     "application/zip",
