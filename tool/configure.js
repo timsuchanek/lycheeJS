@@ -596,6 +596,7 @@
 
 		return files.concat([
 			'/core/lychee.js',
+			'/core/Asset.js',
 			'/core/Debugger.js',
 			'/core/Definition.js',
 			'/core/Environment.js',

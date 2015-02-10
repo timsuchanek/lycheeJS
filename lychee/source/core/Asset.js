@@ -12,22 +12,22 @@ lychee.Asset = typeof lychee.Asset !== 'undefined' ? lychee.Asset : (function(gl
 
 	var _resolve_constructor = function(type) {
 
-		var construct;
+		var construct = null;
 
 
-		if (type === 'json') construct = global.Config;
-		if (type === 'fnt')  construct = global.Font;
-		if (type === 'msc')  construct = global.Music;
-		if (type === 'snd')  construct = global.Sound;
-		if (type === 'png')  construct = global.Texture;
+		if (type === 'json') construct = global.Config  || null;
+		if (type === 'fnt')  construct = global.Font    || null;
+		if (type === 'msc')  construct = global.Music   || null;
+		if (type === 'snd')  construct = global.Sound   || null;
+		if (type === 'png')  construct = global.Texture || null;
 
 
-		if (construct === undefined) {
-			construct = global.Stuff;
+		if (construct === null) {
+			construct = global.Stuff || null;
 		}
 
 
-		return construct || null;
+		return construct;
 
 	};
 
