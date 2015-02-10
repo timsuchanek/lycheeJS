@@ -9,7 +9,7 @@ This implementation is a Module and has no constructor.
 console.log(lychee.Debugger); // lychee.Debugger
 ```
 
-## Implementation Notes:
+#### Implementation Notes
 
 The Debugger offers an integration with a server-side
 [lychee.net.Service](lychee.net.Service) with

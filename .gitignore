@@ -13,7 +13,7 @@
 !/projects/p2pdemo
 
 /lychee/build/*
-/lychee/docs/*
+/lychee/doc/*
 /lychee.store
 
 /fertilizers/*

@@ -74,7 +74,9 @@
 		}
 
 
-		text = text.replace(/\[([^\]]+)\]\(([^)"]+)(?: \"([^\"]+)\")?\)/, '<a href="$2">$1</a>');
+//		text = text.replace(/\[([^\]]+)\]\(([^)"]+)(?: \"([^\"]+)\")?\)/, '<a href="$2">$1</a>');
+
+		text = text.replace(/\[([^\]]+)\]\(([^\)]+)\)/g, '<a href="$2">$1</a>');
 
 
 		return text;
@@ -111,6 +113,10 @@
 				}
 
 				open.article = true;
+
+			} else if (line.substr(0, 4) === '####') {
+
+				line = '\t<h4>' + line.substr(5) + '</h4>';
 
 			} else if (line.substr(0, 3) === '###') {
 
@@ -149,7 +155,7 @@
 
 			} else if (line !== '' && open.li === true) {
 
-				line = '\t\t\t' + line;
+				line = '\t\t\t' + _parse_documentation_line(line);
 
 			} else if (line !== '' && open.pre === true) {
 
@@ -461,8 +467,8 @@
 			if (classid === 'lychee.lychee') classid = 'lychee';
 
 			var pathid  = file.substr(0, file.length - 3).split('/').join('.');
-			var apipath = _path.resolve(_root, './lychee/api/'  + pathid.split('.').join('/')  + '.md');
-			var docpath = _path.resolve(_root, './lychee/docs/' + classid.split('.').join('-') + '.html');
+			var apipath = _path.resolve(_root, './lychee/api/' + pathid.split('.').join('/')  + '.md');
+			var docpath = _path.resolve(_root, './lychee/doc/' + classid.split('.').join('-') + '.html');
 
 
 			var result = false;
@@ -517,8 +523,8 @@
 			var classid = 'lychee.' + file.substr(0, file.length - 3).split('/').join('.');
 			var pathid  = ((file.indexOf('/') !== -1 ? '' : 'core/') + file.substr(0, file.length - 3)).split('/').join('.');
 
-			var apipath = _path.resolve(_root, './lychee/api/'  + pathid.split('.').join('/')  + '.md');
-			var docpath = _path.resolve(_root, './lychee/docs/' + classid.split('.').join('-') + '.html');
+			var apipath = _path.resolve(_root, './lychee/api/' + pathid.split('.').join('/')  + '.md');
+			var docpath = _path.resolve(_root, './lychee/doc/' + classid.split('.').join('-') + '.html');
 
 
 			var result = false;

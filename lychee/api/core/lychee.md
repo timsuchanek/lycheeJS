@@ -9,7 +9,7 @@ This implementation is a Module and has no constructor.
 console.log(lychee); // lychee core
 ```
 
-**Implementation Notes**
+#### Implementation Notes
 
 The lychee core offers many functionalities that are
 necessary across the whole Stack. These functions are
@@ -329,7 +329,7 @@ if (data !== null) {
 
 ### (lychee.Definition) lychee.define(identifier);
 
-- *(String) identifier is the unique identifier
+- *(String) identifier* is the unique identifier
 for the lychee.Definition.
 
 This method returns a *lychee.Definition* instance.
