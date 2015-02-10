@@ -16,7 +16,7 @@ var viewport = new lychee.Viewport({
 });
 ```
 
-## Implementation Notes:
+**Implementation Notes**
 
 Desktop systems are treated by their resolution, so if a
 monitor is rotated by 90 degrees, its *orientation* is *portrait*.

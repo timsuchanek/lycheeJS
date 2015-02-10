@@ -29,7 +29,7 @@ new lychee.Definition('foo.Bar').requires([
 });
 ```
 
-## Implementation Notes:
+**Implementation Notes**
 
 The unique identifier is used for determination of all dependencies
 in the current [lychee.environment](lychee#properties-environment).
