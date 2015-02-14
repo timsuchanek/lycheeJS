@@ -12,12 +12,14 @@ back into master, tagged and published.
 - API: lychee.Renderer
 - API: lychee.Storage
 
-
+- /lychee/dist build via configure script for CDNJS and standalone deployment
 - Website: Overhauling and Architecture Diagrams
 - Sorbet Log File serialization (sorbet.data.LOG encode/decode that runs every 5 minutes)
 - lychee.net.(client||remote).DHT as described in Bittorrent's DHT protocol [1] which extends lychee.net.(client||remote).KRPC for its codec behaviours
 - Project Tool (inspects and verifies integrity of lychee.pkg files)
 - Inspector Tool: Timeline State (that shows bind/trigger/unbind calls)
+
+- lychee.net.Hybrid
 
 - Mode7 Game finalization (lane switch), required assets: racing car, box sprite, explosion sprite
 - Color Game finalization (UI, Timeout and Point Calculation)

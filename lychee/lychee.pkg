@@ -158,6 +158,7 @@
 
 				"client": {
 					"Chat":        [ "js" ],
+					"Controller":  [ "js" ],
 					"KRPC":        [ "js" ],
 					"Multiplayer": [ "js" ],
 					"Session":     [ "js" ]
@@ -165,6 +166,7 @@
 
 				"remote": {
 					"Chat":        [ "js" ],
+					"Controller":  [ "js" ],
 					"KRPC":        [ "js" ],
 					"Multiplayer": [ "js" ],
 					"Session":     [ "js" ]

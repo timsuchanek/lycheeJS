@@ -13,7 +13,7 @@ lychee.define('lychee.game.Main').requires([
 	'lychee.net.Server'
 ]).includes([
 	'lychee.event.Emitter'
-]).exports(function(lychee, global) {
+]).exports(function(lychee, global, attachments) {
 
 	/*
 	 * HELPERS

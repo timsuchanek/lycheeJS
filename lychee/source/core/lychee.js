@@ -159,7 +159,7 @@ lychee = typeof lychee !== 'undefined' ? lychee : (function(global) {
 		environment:  _environment,
 
 		ENVIRONMENTS: {},
-		VERSION:      0.8,
+		VERSION:      0.84,
 
 
 
@@ -412,7 +412,7 @@ lychee = typeof lychee !== 'undefined' ? lychee : (function(global) {
 			if (data !== null) {
 
 				var instance = null;
-				var scope    = this.environment.global;
+				var scope    = (this.environment !== null ? this.environment.global : global);
 
 
 				if (typeof data.reference === 'string') {
@@ -432,7 +432,7 @@ lychee = typeof lychee !== 'undefined' ? lychee : (function(global) {
 							if (typeof value === 'string' && value.charAt(0) === '#') {
 
 								if (lychee.debug === true) {
-									console.log('lychee.deserialize: Injecting "' + value + '" from environment.global');
+									console.log('lychee.deserialize: Injecting "' + value + '" from global');
 								}
 
 								var resolved = _resolve_constructor.call(scope, value.substr(1));

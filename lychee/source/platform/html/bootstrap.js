@@ -2,6 +2,26 @@
 (function(lychee, global) {
 
 	/*
+	 * FEATURE DETECTION
+	 */
+
+	var _protocol = (function(location) {
+
+		if (location instanceof Object) {
+
+			if (typeof location.protocol === 'string') {
+				return location.protocol.split(':')[0];
+			}
+
+		}
+
+		return null;
+
+	})(global.location);
+
+
+
+	/*
 	 * HELPERS
 	 */
 
@@ -45,7 +65,12 @@
 
 		};
 
-		xhr.send(null);
+
+		if (_protocol !== 'file') {
+			xhr.send(null);
+		} else {
+			callback.call(scope, null);
+		}
 
 	};
 
