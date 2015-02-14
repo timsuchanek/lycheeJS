@@ -105,11 +105,18 @@
 
 			},
 
+			"core": {
+				"Asset":       [ "js" ],
+				"Debugger":    [ "js" ],
+				"Definition":  [ "js" ],
+				"Environment": [ "js" ],
+				"Package":     [ "js" ]
+			},
+
 			"data": {
 				"BENCODE": [ "js" ],
 				"BitON":   [ "js" ],
-				"JSON":    [ "js" ],
-				"KRPC":    [ "js" ]
+				"JSON":    [ "js" ]
 			},
 
 			"effect": {
@@ -159,16 +166,12 @@
 				"client": {
 					"Chat":        [ "js" ],
 					"Controller":  [ "js" ],
-					"KRPC":        [ "js" ],
-					"Multiplayer": [ "js" ],
 					"Session":     [ "js" ]
 				},
 
 				"remote": {
 					"Chat":        [ "js" ],
 					"Controller":  [ "js" ],
-					"KRPC":        [ "js" ],
-					"Multiplayer": [ "js" ],
 					"Session":     [ "js" ]
 				}
 

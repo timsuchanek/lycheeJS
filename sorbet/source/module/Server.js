@@ -17,11 +17,10 @@ lychee.define('sorbet.module.Server').requires([
 	var _get_port = function() {
 
 		var port  = _MIN_PORT;
-		var ports = [];
+		var ports = this.main.storage.filter().map(function(object) {
+			return object.port;
+		});
 
-		this.main.storage.filter(function(index, object) {
-			ports.push(object.port);
-		}, this);
 
 		while (ports.indexOf(port) !== -1) {
 			port++;
