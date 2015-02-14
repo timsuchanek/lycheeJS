@@ -109,10 +109,12 @@ lychee.define('lychee.event.Promise').includes([
 					scope:    scope
 				});
 
+				return true;
+
 			}
 
 
-			return this;
+			return false;
 
 		},
 
@@ -121,9 +123,20 @@ lychee.define('lychee.event.Promise').includes([
 			if (this.___initialized === false) {
 
 				this.___initialized = true;
-				_process_stack.call(this);
+
+
+				if (this.___stack.length > 0) {
+
+					_process_stack.call(this);
+
+					return true;
+
+				}
 
 			}
+
+
+			return false;
 
 		}
 

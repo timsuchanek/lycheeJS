@@ -11,21 +11,23 @@ back into master, tagged and published.
 
 - API: lychee.Renderer
 - API: lychee.Storage
-
+- API: lychee.game Stack
+- API: lychee.ui Stack
 - /lychee/dist build via configure script for CDNJS and standalone deployment
+
+## v0.8.6
+
 - Website: Overhauling and Architecture Diagrams
 - Sorbet Log File serialization (sorbet.data.LOG encode/decode that runs every 5 minutes)
 - lychee.net.(client||remote).DHT as described in Bittorrent's DHT protocol [1] which extends lychee.net.(client||remote).KRPC for its codec behaviours
 - Project Tool (inspects and verifies integrity of lychee.pkg files)
-- Inspector Tool: Timeline State (that shows bind/trigger/unbind calls)
-
 - lychee.net.Hybrid
-
 - Mode7 Game finalization (lane switch), required assets: racing car, box sprite, explosion sprite
 - Color Game finalization (UI, Timeout and Point Calculation)
 
-## v0.8.6
+## v0.8.7
 
+- Inspector Tool: Timeline State (that shows bind/trigger/unbind calls)
 - Dispenser CLI Tool (creates Templates and validates API Docs of a Definition)
 - Blitzkrieg Game finalization (auto-connect 4 players and let them play against each other)
 - lychee.net.remote.Controller and lychee.net.client.Controller
@@ -36,7 +38,7 @@ back into master, tagged and published.
 - html-webgl platform finalization (webgl2d refactor)
 - Automatized Fuzztest suite (based on API docs)
 
-## v0.8.7
+## v0.8.8
 
 - sorbet.module.Fertilizer needs injection references (and internal cache)
 - Sorbet needs major support for Content-Security-Policy
