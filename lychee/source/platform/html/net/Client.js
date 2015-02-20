@@ -2,6 +2,7 @@
 lychee.define('lychee.net.Client').tags({
 	platform: 'html'
 }).requires([
+	'lychee.data.BENCODE',
 	'lychee.data.BitON',
 	'lychee.data.JSON'
 ]).includes([
@@ -17,8 +18,7 @@ lychee.define('lychee.net.Client').tags({
 
 }).exports(function(lychee, global, attachments) {
 
-	var _BitON = lychee.data.BitON;
-	var _JSON  = lychee.data.JSON;
+	var _JSON = lychee.data.JSON;
 
 
 

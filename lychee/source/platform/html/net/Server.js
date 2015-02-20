@@ -2,6 +2,7 @@
 lychee.define('lychee.net.Server').tags({
 	platform: 'html'
 }).requires([
+	'lychee.data.BENCODE',
 	'lychee.data.BitON',
 	'lychee.data.JSON',
 	'lychee.net.Remote'
@@ -9,8 +10,7 @@ lychee.define('lychee.net.Server').tags({
 	'lychee.event.Emitter'
 ]).exports(function(lychee, global) {
 
-	var _BitON  = lychee.data.BitON;
-	var _JSON   = lychee.data.JSON;
+	var _JSON = lychee.data.JSON;
 
 
 

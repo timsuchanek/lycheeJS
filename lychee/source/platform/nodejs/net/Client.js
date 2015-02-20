@@ -2,6 +2,7 @@
 lychee.define('lychee.net.Client').tags({
 	platform: 'nodejs'
 }).requires([
+	'lychee.data.BENCODE',
 	'lychee.data.BitON',
 	'lychee.data.JSON',
 	'lychee.net.Protocol'
@@ -20,8 +21,6 @@ lychee.define('lychee.net.Client').tags({
 
 	var http   = require('http');
 	var crypto = require('crypto');
-
-	var _BitON = lychee.data.BitON;
 	var _JSON  = lychee.data.JSON;
 
 

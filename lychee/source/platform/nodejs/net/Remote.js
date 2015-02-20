@@ -2,6 +2,7 @@
 lychee.define('lychee.net.Remote').tags({
 	platform: 'nodejs'
 }).requires([
+	'lychee.data.BENCODE',
 	'lychee.data.BitON',
 	'lychee.data.JSON',
 	'lychee.net.Protocol'

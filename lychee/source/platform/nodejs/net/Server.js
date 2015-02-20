@@ -2,6 +2,7 @@
 lychee.define('lychee.net.Server').tags({
 	platform: 'nodejs'
 }).requires([
+	'lychee.data.BENCODE',
 	'lychee.data.BitON',
 	'lychee.data.JSON',
 	'lychee.net.Remote'
@@ -18,11 +19,9 @@ lychee.define('lychee.net.Server').tags({
 
 }).exports(function(lychee, global, attachments) {
 
-	var http    = require('http');
-	var crypto  = require('crypto');
-
-	var _BitON  = lychee.data.BitON;
-	var _JSON   = lychee.data.JSON;
+	var http   = require('http');
+	var crypto = require('crypto');
+	var _JSON  = lychee.data.JSON;
 
 
 

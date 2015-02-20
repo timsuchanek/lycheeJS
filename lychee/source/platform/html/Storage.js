@@ -150,6 +150,7 @@ lychee.define('Storage').tags({
 						this.__objects.push(objects[o]);
 					}
 
+
 					this.trigger('sync', [ this.__objects ]);
 
 
