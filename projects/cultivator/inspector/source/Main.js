@@ -214,8 +214,10 @@ lychee.define('inspector.Main').requires([
 
 					navi.forEach(function(item) {
 
-						var label = item.innerHTML + '';
-						if (label === id.charAt(0).toUpperCase() + id.substr(1) + 's') {
+						var label  = item.innerHTML + '';
+						var search = id.charAt(0).toUpperCase() + id.substr(1);
+
+						if (label.substr(0, search.length) === search) {
 							item.className = 'active';
 						} else {
 							item.className = '';
