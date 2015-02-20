@@ -69,7 +69,38 @@ lychee.define('game.state.Menu').requires([
 
 
 		this.deserialize(_blob);
-		this.reshape();
+
+
+
+		/*
+		 * INITIALIZATION
+		 */
+
+		var viewport = this.viewport;
+		if (viewport !== null) {
+
+			viewport.bind('reshape', function(orientation, rotation) {
+
+				var renderer = this.renderer;
+				if (renderer !== null) {
+
+					var entity = null;
+					var width  = renderer.width;
+					var height = renderer.height;
+
+
+					entity = this.queryLayer('background', 'background');
+					entity.width  = width;
+					entity.height = height;
+
+					entity = this.queryLayer('background', 'lycheeJS');
+					entity.position.y = 1/2 * height - 32;
+
+				}
+
+			}, this);
+
+		}
 
 	};
 
@@ -77,7 +108,7 @@ lychee.define('game.state.Menu').requires([
 	Class.prototype = {
 
 		/*
-		 * ENTITY API
+		 * STATE API
 		 */
 
 		serialize: function() {
@@ -215,36 +246,6 @@ lychee.define('game.state.Menu').requires([
 
 		},
 
-
-
-		/*
-		 * CUSTOM API
-		 */
-
-		reshape: function(orientation, rotation) {
-
-			var renderer = this.renderer;
-			if (renderer !== null) {
-
-				var entity = null;
-				var width  = renderer.width;
-				var height = renderer.height;
-
-
-				entity = this.queryLayer('background', 'background');
-				entity.width  = width;
-				entity.height = height;
-
-				entity = this.queryLayer('background', 'lycheeJS');
-				entity.position.y = 1/2 * height - 32;
-
-			}
-
-
-			lychee.game.State.prototype.reshape.call(this, orientation, rotation);
-
-		},
-
 		update: function(clock, delta) {
 
 			var background = this.queryLayer('background', 'background');
@@ -270,12 +271,6 @@ lychee.define('game.state.Menu').requires([
 
 
 			lychee.game.State.prototype.update.call(this, clock, delta);
-
-		},
-
-		enter: function(data) {
-
-			lychee.game.State.prototype.enter.call(this);
 
 		}
 

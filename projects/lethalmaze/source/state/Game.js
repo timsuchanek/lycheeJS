@@ -531,7 +531,6 @@ lychee.define('game.state.Game').requires([
 	 * IMPLEMENTATION
 	 */
 
-
 	var Class = function(main) {
 
 		lychee.game.State.call(this, main);
@@ -547,7 +546,49 @@ lychee.define('game.state.Game').requires([
 
 
 		this.deserialize(_blob);
-		this.reshape();
+
+
+
+		/*
+		 * INITIALIZATION
+		 */
+
+		var viewport = this.viewport;
+		if (viewport !== null) {
+
+			viewport.bind('reshape', function(orientation, rotation) {
+
+				var renderer = this.renderer;
+				if (renderer !== null) {
+
+					var entity = null;
+					var width  = renderer.width;
+					var height = renderer.height;
+
+
+					entity = this.queryLayer('game', 'floor');
+					entity.width  = width;
+					entity.height = height;
+					entity.position.x = 0;
+					entity.position.y = 0;
+
+					entity = this.queryLayer('game', 'objects');
+					entity.width  = width;
+					entity.height = height;
+					entity.position.x = 0;
+					entity.position.y = 0;
+
+					entity = this.queryLayer('game', 'effects');
+					entity.width  = width;
+					entity.height = height;
+					entity.position.x = 0;
+					entity.position.y = 0;
+
+				}
+
+			}, this);
+
+		}
 
 	};
 
@@ -555,7 +596,7 @@ lychee.define('game.state.Game').requires([
 	Class.prototype = {
 
 		/*
-		 * ENTITY API
+		 * STATE API
 		 */
 
 		serialize: function() {
@@ -639,47 +680,6 @@ lychee.define('game.state.Game').requires([
 				this.main.changeState('menu');
 
 			}, this);
-
-		},
-
-
-
-		/*
-		 * CUSTOM API
-		 */
-
-		reshape: function(orientation, rotation) {
-
-			lychee.game.State.prototype.reshape.call(this, orientation, rotation);
-
-
-			var renderer = this.renderer;
-			if (renderer !== null) {
-
-				var entity = null;
-				var width  = renderer.width;
-				var height = renderer.height;
-
-
-				entity = this.queryLayer('game', 'floor');
-				entity.width  = width;
-				entity.height = height;
-				entity.position.x = 0;
-				entity.position.y = 0;
-
-				entity = this.queryLayer('game', 'objects');
-				entity.width  = width;
-				entity.height = height;
-				entity.position.x = 0;
-				entity.position.y = 0;
-
-				entity = this.queryLayer('game', 'effects');
-				entity.width  = width;
-				entity.height = height;
-				entity.position.x = 0;
-				entity.position.y = 0;
-
-			}
 
 		},
 
@@ -980,6 +980,12 @@ lychee.define('game.state.Game').requires([
 			lychee.game.State.prototype.leave.call(this);
 
 		},
+
+
+
+		/*
+		 * CUSTOM API
+		 */
 
 		setPlayer: function(player) {
 

@@ -68,7 +68,6 @@ lychee.define('game.net.client.Multiplayer').includes([
 		settings.autolock  = true;
 		settings.min       = 2;
 		settings.max       = 6;
-		settings.sid       = '';
 		settings.sid       = _SIDS[_sid++];
 
 
