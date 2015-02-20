@@ -6,7 +6,6 @@ lychee.define('lychee.game.Main').requires([
 	'lychee.Viewport',
 	'lychee.event.Promise',
 	'lychee.game.Jukebox',
-	'lychee.game.Logic',
 	'lychee.game.Loop',
 	'lychee.game.State',
 	'lychee.net.Client',
@@ -59,14 +58,12 @@ lychee.define('lychee.game.Main').requires([
 			this.jukebox = new lychee.game.Jukebox(settings.jukebox);
 		}
 
-		if (settings.logic !== null) {
-			this.logic = new lychee.game.Logic(settings.logic);
-		}
-
 		if (settings.loop !== null) {
+
 			this.loop = new lychee.game.Loop(settings.loop);
-			this.loop.bind('render', this.render, this);
-			this.loop.bind('update', this.update, this);
+			this.loop.bind('render', _on_render, this);
+			this.loop.bind('update', _on_update, this);
+
 		}
 
 		if (settings.renderer !== null) {
@@ -80,9 +77,9 @@ lychee.define('lychee.game.Main').requires([
 		if (settings.viewport !== null) {
 
 			this.viewport = new lychee.Viewport();
-			this.viewport.bind('reshape', this.reshape, this);
-			this.viewport.bind('hide',    this.hide,    this);
-			this.viewport.bind('show',    this.show,    this);
+			this.viewport.bind('reshape', _on_reshape, this);
+			this.viewport.bind('hide',    _on_hide,    this);
+			this.viewport.bind('show',    _on_show,    this);
 
 			this.viewport.setFullscreen(settings.viewport.fullscreen);
 
@@ -90,6 +87,64 @@ lychee.define('lychee.game.Main').requires([
 
 
 		this.trigger('init', []);
+
+
+		if (this.loop !== null && this.viewport !== null) {
+
+			this.loop.setTimeout(10, function() {
+				this.trigger('reshape', []);
+			}, this.viewport);
+
+		}
+
+	};
+
+	var _on_hide = function() {
+
+		var loop = this.loop;
+		if (loop !== null) {
+			loop.pause();
+		}
+
+	};
+
+	var _on_render = function(clock, delta) {
+
+		if (this.state !== null) {
+			this.state.render(clock, delta);
+		}
+
+	};
+
+	var _on_reshape = function(orientation, rotation) {
+
+		var renderer = this.renderer;
+		if (renderer !== null) {
+
+			var settings = this.settings;
+			if (settings.renderer !== null) {
+				renderer.setWidth(settings.renderer.width);
+				renderer.setHeight(settings.renderer.height);
+			}
+
+		}
+
+	};
+
+	var _on_show = function() {
+
+		var loop = this.loop;
+		if (loop !== null) {
+			loop.resume();
+		}
+
+	};
+
+	var _on_update = function(clock, delta) {
+
+		if (this.state !== null) {
+			this.state.update(clock, delta);
+		}
 
 	};
 
@@ -117,10 +172,6 @@ lychee.define('lychee.game.Main').requires([
 			channels: 8,
 			music:    true,
 			sound:    true
-		},
-
-		logic: {
-			projection: lychee.game.Logic.PROJECTION.pixel
 		},
 
 		loop: {
@@ -163,7 +214,6 @@ lychee.define('lychee.game.Main').requires([
 
 		this.input    = null;
 		this.jukebox  = null;
-		this.logic    = null;
 		this.loop     = null;
 		this.renderer = null;
 		this.storage  = null;
@@ -191,7 +241,6 @@ lychee.define('lychee.game.Main').requires([
 
 			if (blob.input instanceof Object)    this.input    = lychee.deserialize(blob.input);
 			if (blob.jukebox instanceof Object)  this.jukebox  = lychee.deserialize(blob.jukebox);
-			if (blob.logic instanceof Object)    this.logic    = lychee.deserialize(blob.logic);
 			if (blob.loop instanceof Object)     this.loop     = lychee.deserialize(blob.loop);
 			if (blob.renderer instanceof Object) this.renderer = lychee.deserialize(blob.renderer);
 			if (blob.storage instanceof Object)  this.storage  = lychee.deserialize(blob.storage);
@@ -232,7 +281,6 @@ lychee.define('lychee.game.Main').requires([
 
 			if (this.input !== null)    blob.input    = lychee.serialize(this.input);
 			if (this.jukebox !== null)  blob.jukebox  = lychee.serialize(this.jukebox);
-			if (this.logic !== null)    blob.logic    = lychee.serialize(this.logic);
 			if (this.loop !== null)     blob.loop     = lychee.serialize(this.loop);
 			if (this.renderer !== null) blob.renderer = lychee.serialize(this.renderer);
 			if (this.storage !== null)  blob.storage  = lychee.serialize(this.storage);
@@ -255,89 +303,6 @@ lychee.define('lychee.game.Main').requires([
 
 
 			return data;
-
-		},
-
-
-
-		/*
-		 * LOOP INTEGRATION
-		 */
-
-		render: function(clock, delta) {
-
-			if (this.state !== null) {
-				this.state.render(clock, delta);
-			}
-
-		},
-
-		update: function(clock, delta) {
-
-			if (this.state !== null) {
-				this.state.update(clock, delta);
-			}
-
-		},
-
-
-
-		/*
-		 * VIEWPORT INTEGRATION
-		 */
-
-		show: function() {
-
-			var loop = this.loop;
-			if (loop !== null) {
-				loop.resume();
-			}
-
-			var state = this.state;
-			if (state !== null) {
-				state.show();
-			}
-
-		},
-
-		hide: function() {
-
-			var loop = this.loop;
-			if (loop !== null) {
-				loop.pause();
-			}
-
-			var state = this.state;
-			if (state !== null) {
-				state.hide();
-			}
-
-		},
-
-		reshape: function(orientation, rotation) {
-
-			var renderer = this.renderer;
-			if (renderer !== null) {
-
-				var settings = this.settings;
-				if (settings.renderer !== null) {
-					renderer.setWidth(settings.renderer.width);
-					renderer.setHeight(settings.renderer.height);
-				}
-
-			}
-
-
-			for (var id in this.__states) {
-
-				var state = this.__states[id];
-
-				state.reshape(
-					orientation,
-					rotation
-				);
-
-			}
 
 		},
 
