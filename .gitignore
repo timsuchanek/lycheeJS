@@ -3,12 +3,14 @@
 /projects/*/build
 /projects/*/lychee.store
 !/projects/README.md
-!/projects/blitzkrieg
 !/projects/boilerplate
 !/projects/cultivator
-!/projects/lethalmaze
 !/projects/mode7
 !/projects/pong
+!/projects/tictactoe
+
+!/projects/blitzkrieg
+!/projects/lethalmaze
 !/projects/p2pdemo
 
 /lychee/build/*
