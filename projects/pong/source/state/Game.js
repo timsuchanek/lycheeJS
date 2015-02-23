@@ -1,8 +1,11 @@
 
 lychee.define('game.state.Game').requires([
+	'lychee.effect.Color',
+	'lychee.effect.Shake',
 	'game.entity.Ball',
 	'game.entity.Paddle',
 	'game.ui.Welcome',
+	'lychee.game.Background',
 	'lychee.ui.Label'
 ]).includes([
 	'lychee.game.State'
@@ -13,6 +16,10 @@ lychee.define('game.state.Game').requires([
 		headline: attachments["headline.fnt"],
 		normal:   attachments["normal.fnt"]
 	};
+
+	var _music = attachments["music.msc"];
+	var _ping  = attachments["ping.snd"];
+	var _pong  = attachments["pong.snd"];
 
 
 
@@ -130,6 +137,10 @@ lychee.define('game.state.Game').requires([
 					this.getLayer('game').reshape();
 
 
+					entity = this.queryLayer('background', 'background');
+					entity.width  = width;
+					entity.height = height;
+
 					entity = this.queryLayer('ui', 'score');
 					entity.setPosition({
 						x: 0,
@@ -137,10 +148,10 @@ lychee.define('game.state.Game').requires([
 					});
 
 					entity = this.queryLayer('game', 'player');
-					entity.setPosition({ x: -1/2 * width + 20 });
+					entity.setPosition({ x: -1/2 * width + 42 });
 
 					entity = this.queryLayer('game', 'enemy');
-					entity.setPosition({ x:  1/2 * width - 40 });
+					entity.setPosition({ x:  1/2 * width - 42 });
 
 				}
 
@@ -209,6 +220,9 @@ lychee.define('game.state.Game').requires([
 
 			}
 
+
+			this.jukebox.play(_music);
+
 		},
 
 		leave: function() {
@@ -224,13 +238,17 @@ lychee.define('game.state.Game').requires([
 			lychee.game.State.prototype.update.call(this, clock, delta);
 
 
-			var ball   = this.queryLayer('game', 'ball');
-			var player = this.queryLayer('game', 'player');
-			var enemy  = this.queryLayer('game', 'enemy');
+			var jukebox    = this.jukebox;
+			var renderer   = this.renderer;
+			var background = this.queryLayer('background', 'background');
+			var gamelayer  = this.getLayer('game');
+			var uilayer    = this.getLayer('ui');
 
-			var hwidth  = this.renderer.width / 2;
-			var hheight = this.renderer.height / 2;
-
+			var ball     = this.queryLayer('game', 'ball');
+			var player   = this.queryLayer('game', 'player');
+			var enemy    = this.queryLayer('game', 'enemy');
+			var hwidth   = renderer.width / 2;
+			var hheight  = renderer.height / 2;
 			var position = ball.position;
 			var velocity = ball.velocity;
 
@@ -267,11 +285,79 @@ lychee.define('game.state.Game').requires([
 			 */
 
 			if (ball.collidesWith(player) === true) {
-				velocity.x = Math.abs(velocity.x);
-			}
 
-			if (ball.collidesWith(enemy) === true) {
+				position.x = player.position.x + 24;
+				velocity.x = Math.abs(velocity.x);
+				jukebox.play(_ping);
+
+				gamelayer.addEffect(new lychee.effect.Shake({
+					type:     lychee.effect.Shake.TYPE.bounceeaseout,
+					duration: 300,
+					shake:    {
+						x: (Math.random() * 16) | 0,
+						y: (Math.random() * 16) | 0
+					}
+				}));
+
+				uilayer.addEffect(new lychee.effect.Shake({
+					type:     lychee.effect.Shake.TYPE.bounceeaseout,
+					duration: 300,
+					shake:    {
+						x: (Math.random() * 16) | 0,
+						y: (Math.random() * 16) | 0
+					}
+				}));
+
+				background.addEffect(new lychee.effect.Color({
+					type:     lychee.effect.Color.TYPE.bounceeaseout,
+					duration: 300,
+					color:    '#14a5e2'
+				}));
+
+				background.addEffect(new lychee.effect.Color({
+					type:     lychee.effect.Color.TYPE.bounceeaseout,
+					delay:    300,
+					duration: 1000,
+					color:    '#000000'
+				}));
+
+			} else if (ball.collidesWith(enemy) === true) {
+
+				position.x = enemy.position.x - 24;
 				velocity.x = -1 * Math.abs(velocity.x);
+				jukebox.play(_pong);
+
+				gamelayer.addEffect(new lychee.effect.Shake({
+					type:     lychee.effect.Shake.TYPE.bounceeaseout,
+					duration: 300,
+					shake:    {
+						x: (Math.random() * 16) | 0,
+						y: (Math.random() * 16) | 0
+					}
+				}));
+
+				uilayer.addEffect(new lychee.effect.Shake({
+					type:     lychee.effect.Shake.TYPE.bounceeaseout,
+					duration: 300,
+					shake:    {
+						x: (Math.random() * 16) | 0,
+						y: (Math.random() * 16) | 0
+					}
+				}));
+
+				background.addEffect(new lychee.effect.Color({
+					type:     lychee.effect.Color.TYPE.bounceeaseout,
+					duration: 300,
+					color:    '#de1010'
+				}));
+
+				background.addEffect(new lychee.effect.Color({
+					type:     lychee.effect.Color.TYPE.bounceeaseout,
+					delay:    300,
+					duration: 1000,
+					color:    '#000000'
+				}));
+
 			}
 
 

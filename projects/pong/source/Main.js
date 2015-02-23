@@ -20,6 +20,11 @@ lychee.define('game.Main').requires([
 				swipe:       false
 			},
 
+			jukebox: {
+				music: true,
+				sound: true
+			},
+
 			renderer: {
 				width:  640,
 				height: 480
