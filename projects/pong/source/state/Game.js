@@ -2,10 +2,10 @@
 lychee.define('game.state.Game').requires([
 	'lychee.effect.Color',
 	'lychee.effect.Shake',
+	'game.entity.Background',
 	'game.entity.Ball',
 	'game.entity.Paddle',
 	'game.ui.Welcome',
-	'lychee.game.Background',
 	'lychee.ui.Label'
 ]).includes([
 	'lychee.game.State'
@@ -317,17 +317,11 @@ lychee.define('game.state.Game').requires([
 					}
 				}));
 
+				background.setColor('#14a5e2');
 				background.addEffect(new lychee.effect.Color({
-					type:     lychee.effect.Color.TYPE.bounceeaseout,
-					duration: 300,
-					color:    '#14a5e2'
-				}));
-
-				background.addEffect(new lychee.effect.Color({
-					type:     lychee.effect.Color.TYPE.bounceeaseout,
-					delay:    300,
+					type:     lychee.effect.Color.TYPE.linear,
 					duration: 1000,
-					color:    '#000000'
+					color:    '#050a0d'
 				}));
 
 			} else if (ball.collidesWith(enemy) === true) {
@@ -354,17 +348,11 @@ lychee.define('game.state.Game').requires([
 					}
 				}));
 
+				background.setColor('#de1010');
 				background.addEffect(new lychee.effect.Color({
-					type:     lychee.effect.Color.TYPE.bounceeaseout,
-					duration: 300,
-					color:    '#de1010'
-				}));
-
-				background.addEffect(new lychee.effect.Color({
-					type:     lychee.effect.Color.TYPE.bounceeaseout,
-					delay:    300,
+					type:     lychee.effect.Color.TYPE.easeout,
 					duration: 1000,
-					color:    '#000000'
+					color:    '#050a0d'
 				}));
 
 			}

@@ -117,7 +117,10 @@ lychee.define('lychee.game.Background').includes([
 					true
 				);
 
-			} else if (texture !== null && map !== null) {
+			}
+
+
+			if (texture !== null && map !== null) {
 
 				if (this.__buffer === null) {
 

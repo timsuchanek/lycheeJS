@@ -5,10 +5,8 @@
 			"arguments": [{}],
 			"blob": {
 				"entities": [{
-					"constructor": "lychee.game.Background",
-					"arguments": [{
-						"color": "#000000"
-					}]
+					"constructor": "game.entity.Background",
+					"arguments": [{}]
 				}],
 				"map": {
 					"background": 0

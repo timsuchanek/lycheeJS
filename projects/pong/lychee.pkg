@@ -51,8 +51,9 @@
 		"files": {
 
 			"entity": {
-				"Ball":     [ "js", "json", "png" ],
-				"Paddle":   [ "js", "json", "enemy.png", "player.png" ]
+				"Background": [ "js", "json", "png" ],
+				"Ball":       [ "js", "json", "png" ],
+				"Paddle":     [ "js", "json", "enemy.png", "player.png" ]
 			},
 
 			"state": {
