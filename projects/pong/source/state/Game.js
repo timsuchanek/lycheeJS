@@ -17,6 +17,8 @@ lychee.define('game.state.Game').requires([
 		normal:   attachments["normal.fnt"]
 	};
 
+	var _boo   = attachments["boo.snd"];
+	var _cheer = attachments["cheer.snd"];
 	var _music = attachments["music.msc"];
 	var _ping  = attachments["ping.snd"];
 	var _pong  = attachments["pong.snd"];
@@ -71,6 +73,13 @@ lychee.define('game.state.Game').requires([
 			ball.setPosition(position);
 			ball.setVelocity(velocity);
 
+		}
+
+
+		if (winner === 'player') {
+			this.jukebox.play(_cheer);
+		} else if (winner === 'enemy') {
+			this.jukebox.play(_boo);
 		}
 
 

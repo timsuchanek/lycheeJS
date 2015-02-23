@@ -56,7 +56,7 @@
 			},
 
 			"state": {
-				"Game": [ "js", "json", "music.msc", "ping.snd", "pong.snd", "headline.fnt", "normal.fnt" ]
+				"Game": [ "js", "json", "boo.snd", "cheer.snd", "music.msc", "ping.snd", "pong.snd", "headline.fnt", "normal.fnt" ]
 			},
 
 			"ui": {
