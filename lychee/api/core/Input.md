@@ -329,7 +329,7 @@ var foo1 = new lychee.Input({ delay: 5000 });
 var data = lychee.serialize(foo1);
 var foo2 = lychee.deserialize(data);
 
-data; // { constructor: 'lychee.Input', arguments: [ { delay: 5000 }]}
+data; // { constructor: 'lychee.Input', arguments: [{ delay: 5000 }]}
 foo2; // lychee.Input instance
 ```
 

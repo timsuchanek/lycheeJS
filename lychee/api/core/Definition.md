@@ -44,7 +44,7 @@ in the current [lychee.environment](lychee#properties-environment).
 
 This method returns nothing.
 It is not intended for direct usage. You can deserialize an
-object using the lychee.deserialize() method.
+object using the [lychee.deserialize()](lychee#methods-deserialize) method.
 
 ```javascript
 var Foo1 = new lychee.Definition('foo.Foo');

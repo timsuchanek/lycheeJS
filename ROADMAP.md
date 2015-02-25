@@ -16,6 +16,7 @@ back into master, tagged and published.
 - Fertilizer: html-nwjs for Linux, Mac OSX and Windows
 - Website: Overhauling and game.Main Architecture Diagram
 - Website: Refactor tool/configure.js script to generate API docs properly
+- Website: Refactor tool/configure.js script to generate Tutorials properly
 
 ## v0.8.6
 

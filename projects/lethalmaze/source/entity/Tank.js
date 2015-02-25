@@ -41,6 +41,8 @@ lychee.define('game.entity.Tank').includes([
 
 		lychee.game.Sprite.call(this, settings);
 
+		settings = null;
+
 	};
 
 
