@@ -50,7 +50,7 @@
 
 				"html":          "platform/html",
 				"html-webgl":    "platform/html-webgl",
-				"html-nw":       "platform/html-nw",
+				"html-nwjs":     "platform/html-nwjs",
 				"nodejs":        "platform/nodejs",
 				"nodejs-sdl":    "platform/nodejs-sdl",
 				"nodejs-webgl":  "platform/nodejs-webgl"

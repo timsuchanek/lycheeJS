@@ -9,45 +9,53 @@ back into master, tagged and published.
 
 ## v0.8.5
 
+- sorbet.module.Package should auto-update the lychee.pkg files in projects based on file tree
 - API: lychee.Renderer
 - API: lychee.Storage
-- API: lychee.game Stack
-- API: lychee.ui Stack
-- /lychee/dist build via configure script for CDNJS and standalone deployment
+- API: lychee.data Stack
+- Fertilizer: html-nwjs for Linux, Mac OSX and Windows
+- Website: Overhauling and game.Main Architecture Diagram
+- Website: Refactor tool/configure.js script to generate API docs properly
 
 ## v0.8.6
 
-- Website: Overhauling and Architecture Diagrams
+- /lychee/dist build via configure script for CDNJS and standalone deployment
 - Sorbet Log File serialization (sorbet.data.LOG encode/decode that runs every 5 minutes)
 - lychee.net.(client||remote).DHT as described in Bittorrent's DHT protocol [1] which extends lychee.net.(client||remote).KRPC for its codec behaviours
 - Project Tool (inspects and verifies integrity of lychee.pkg files)
-- lychee.net.Hybrid
 - Mode7 Game finalization (lane switch), required assets: racing car, box sprite, explosion sprite
-- Color Game finalization (UI, Timeout and Point Calculation)
+- LethalMaze Game finalization (multiplayer)
+- API + Implementation: lychee.net.Hybrid
+- API: lychee.game Stack
+- API: lychee.ui Stack
 
 ## v0.8.7
 
 - Inspector Tool: Timeline State (that shows bind/trigger/unbind calls)
 - Dispenser CLI Tool (creates Templates and validates API Docs of a Definition)
-- Blitzkrieg Game finalization (auto-connect 4 players and let them play against each other)
 - lychee.net.remote.Controller and lychee.net.client.Controller
-- API + Serialization: lychee.game.Logic
-- API + Serialization: lychee.game.Physic
-- lychee.verlet Stack serialization and finalization
-- lychee.net.Protocol Ping/Pong verification
-- html-webgl platform finalization (webgl2d refactor)
-- Automatized Fuzztest suite (based on API docs)
+- API + Implementation: lychee.game.Logic
+- API + Implementation: lychee.game.Physic
+- API + Major Refactor: lychee.verlet Stack
+- Fertilizer: html-webgl Refactor (webgl2d refactor)
+- Fertilizer: html-cordova for Android, iOS and Blackberry
 
 ## v0.8.8
 
-- sorbet.module.Fertilizer needs injection references (and internal cache)
 - Sorbet needs major support for Content-Security-Policy
 - sorbet.module.Blacklist integration with Content-Security-Policy
 
+## Backlog
 
-# References (Articles and Sources)
+- Blitzkrieg Game finalization (auto-connect 4 players and let them play against each other)
+- API + Implementation: lychee.data.BSON
+- API + Implementation: lychee.data.MSGPACK
+
+
+## References (Articles and Sources)
 
 1. [DHT Protocol Specification](http://www.bittorrent.org/beps/bep_0005.html)
 2. [Mainline DHT on wikipedia](http://en.wikipedia.org/wiki/Mainline_DHT#Routing_Table)
 3. [webtorrent implementation](https://github.com/feross/bittorrent-dht)
+4. [chrome app websocket server](https://github.com/GoogleChrome/chrome-app-samples/tree/master/samples/websocket-server)
 

@@ -6,7 +6,7 @@
 	var _BOOTSTRAP = {};
 	var _PLATFORMS = [
 		'html',
-		'html-nw',
+		'html-nwjs',
 		'html-webgl',
 		'nodejs',
 		'nodejs-sdl',
@@ -65,7 +65,7 @@
 	 * HELPERS
 	 */
 
-	var _mkdir_p = function(path, mode) {
+	var _mkdir = function(path, mode) {
 
 		path = _path.resolve(path);
 
@@ -76,7 +76,7 @@
 
 		try {
 
-			if (_fs.statSync(path).isDirectory()) {
+			if (_fs.lstatSync(path).isDirectory()) {
 				return true;
 			} else {
 				return false;
@@ -86,12 +86,35 @@
 
 			if (err.code === 'ENOENT') {
 
-				_mkdir_p(_path.dirname(path), mode);
+				_mkdir(_path.dirname(path), mode);
 				_fs.mkdirSync(path, mode);
 
 				return true;
 
 			}
+
+		}
+
+	};
+
+	var _rmdir = function(path) {
+
+		path = _path.resolve(path);
+
+
+		if (_fs.existsSync(path)) {
+
+			_fs.readdirSync(path).forEach(function(file) {
+
+				if (_fs.lstatSync(path + '/' + file).isDirectory()) {
+					_rmdir(path + '/' + file);
+				} else {
+					_fs.unlinkSync(path + '/' + file);
+				}
+
+			});
+
+			_fs.rmdirSync(path);
 
 		}
 
@@ -293,7 +316,7 @@
 	 * 0: ENVIRONMENT CHECK
 	 */
 
-	(function() {
+	(function(projects) {
 
 		var errors = 0;
 
@@ -330,6 +353,7 @@
 		}
 
 
+
 		if (errors === 0) {
 			console.log('> OKAY\n');
 		} else {
@@ -337,7 +361,52 @@
 			process.exit(1);
 		}
 
-	})();
+
+
+		console.log('> Cleaning lycheeJS builds');
+
+		if (projects instanceof Array) {
+
+			projects.forEach(function(path) {
+
+				if (_fs.existsSync(_path.resolve(_root, path + '/build')) === true) {
+
+					_rmdir(_path.resolve(_root, path + '/build'));
+
+					console.log('\t' + path + '/build: OKAY');
+
+				} else {
+
+					console.log('~\t' + path + '/build: SKIP');
+
+				}
+
+			});
+
+		}
+
+		console.log('> OKAY\n');
+
+	})((function() {
+
+		var projects = [];
+
+		var project_root = _path.resolve(_root, './projects');
+		if (_fs.existsSync(project_root) === true) {
+
+			projects = _fs.readdirSync(project_root).filter(function(file) {
+				return _fs.lstatSync(project_root + '/' + file).isDirectory();
+			}).map(function(file) {
+				return './projects/' + file;
+			});
+
+			projects = projects.concat([ './lychee' ]);
+
+		}
+
+		return projects;
+
+	})());
 
 
 
@@ -464,7 +533,7 @@
 			var dir    = _path.dirname(path);
 
 			if (_fs.existsSync(dir) === false) {
-				_mkdir_p(dir);
+				_mkdir(dir);
 			}
 
 
@@ -584,7 +653,7 @@
 
 
 			if (_fs.existsSync(dir) === false) {
-				_mkdir_p(dir);
+				_mkdir(dir);
 			}
 
 
@@ -661,7 +730,7 @@
 				if (content !== null) {
 
 					if (_fs.existsSync(_path.dirname(docpath)) === false) {
-						_mkdir_p(_path.dirname(docpath));
+						_mkdir(_path.dirname(docpath));
 					}
 
 					if (_fs.existsSync(_path.dirname(docpath)) === true) {
@@ -717,7 +786,7 @@
 				if (content !== null) {
 
 					if (_fs.existsSync(_path.dirname(docpath)) === false) {
-						_mkdir_p(_path.dirname(docpath));
+						_mkdir(_path.dirname(docpath));
 					}
 
 					if (_fs.existsSync(_path.dirname(docpath)) === true) {
