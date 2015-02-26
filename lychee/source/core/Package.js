@@ -190,22 +190,22 @@ lychee.Package = typeof lychee.Package !== 'undefined' ? lychee.Package : (funct
 			var map = {
 				id:           id,
 				candidate:    null,
+				candidates:   [].concat(candidates),
 				attachments:  [],
 				dependencies: [],
-				loading:      candidates.length
+				loading:      1
 			};
 
 
 			this.__requests[id] = map;
 
 
-			var candidate = candidates.shift();
+			var candidate = map.candidates.shift();
 
 			while (candidate !== undefined) {
 
 				if (this.__blacklist[candidate] === 1) {
-					candidate = candidates.shift();
-					map.loading--;
+					candidate = map.candidates.shift();
 				} else {
 					break;
 				}
@@ -213,6 +213,7 @@ lychee.Package = typeof lychee.Package !== 'undefined' ? lychee.Package : (funct
 			}
 
 
+			// Try to load the first suggested Candidate Implementation
 			if (candidate !== undefined) {
 
 				var url            = _resolve_root.call(this) + '/' + candidate + '.js';
@@ -240,86 +241,89 @@ lychee.Package = typeof lychee.Package !== 'undefined' ? lychee.Package : (funct
 			map.loading--;
 
 
-			// Fastest path, file doesn't exist
-			if (result === false) {
+			if (result === true) {
 
-				delete that.environment.definitions[identifier];
-				that.__blacklist[candidate] = 1;
+				var environment = that.environment;
+				var definition  = environment.definitions[identifier] || null;
+				if (definition !== null) {
 
-				return;
+					map.candidate = this;
+
+
+					var attachmentIds = Object.keys(attachments);
+
+
+					// Temporary delete definition from environment and re-define it after attachments are all loaded
+					if (attachmentIds.length > 0) {
+
+						delete environment.definitions[identifier];
+
+						map.loading += attachmentIds.length;
+
+
+						attachmentIds.forEach(function(assetId) {
+
+							var url   = attachments[assetId];
+							var asset = new lychee.Asset(url);
+							if (asset !== null) {
+
+								asset.onload = function(result) {
+
+									map.loading--;
+
+									var tmp = {};
+									if (result === true) {
+										tmp[assetId] = this;
+									} else {
+										tmp[assetId] = null;
+									}
+
+									definition.attaches(tmp);
+
+
+									if (map.loading === 0) {
+										environment.definitions[identifier] = definition;
+									}
+
+								};
+
+								asset.load();
+
+							} else {
+
+								map.loading--;
+
+							}
+
+						});
+
+					}
+
+
+					for (var i = 0, il = definition._includes.length; i < il; i++) {
+						environment.load(definition._includes[i]);
+					}
+
+					for (var r = 0, rl = definition._requires.length; r < rl; r++) {
+						environment.load(definition._requires[r]);
+					}
+
+
+					return true;
+
+				}
 
 			}
 
 
-			var environment = that.environment;
-			var definition  = environment.definitions[identifier] || null;
-			if (definition !== null) {
 
-				map.candidate = this;
+			// If code runs through here, candidate was invalid
+			delete that.environment.definitions[identifier];
+			that.__blacklist[candidate] = 1;
 
-
-				var attachmentIds = Object.keys(attachments);
-
-
-				// Temporary delete definition from environment and re-define it after attachments are all loaded
-				if (attachmentIds.length > 0) {
-
-					delete environment.definitions[identifier];
-
-					map.loading += attachmentIds.length;
-
-
-					attachmentIds.forEach(function(assetId) {
-
-						var url   = attachments[assetId];
-						var asset = new lychee.Asset(url);
-						if (asset !== null) {
-
-							asset.onload = function(result) {
-
-								map.loading--;
-
-								var tmp = {};
-								if (result === true) {
-									tmp[assetId] = this;
-								} else {
-									tmp[assetId] = null;
-								}
-
-								definition.attaches(tmp);
-
-
-								if (map.loading === 0) {
-									environment.definitions[identifier] = definition;
-								}
-
-							};
-
-							asset.load();
-
-						} else {
-
-							map.loading--;
-
-						}
-
-					});
-
-				}
-
-
-				for (var i = 0, il = definition._includes.length; i < il; i++) {
-					environment.load(definition._includes[i]);
-				}
-
-				for (var r = 0, rl = definition._requires.length; r < rl; r++) {
-					environment.load(definition._requires[r]);
-				}
-
-			} else {
-
-				that.__blacklist[candidate] = 1;
-
+			// Load next candidate, if any available
+			if (map.candidates.length > 0) {
+				_load_candidate.call(that, map.id, map.candidates);
 			}
 
 		};
