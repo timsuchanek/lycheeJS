@@ -4,7 +4,7 @@ lychee.define('game.state.Menu').requires([
 	'lychee.effect.Color',
 	'lychee.effect.Position',
 	'lychee.game.Background',
-	'game.entity.lycheeJS',
+	'game.entity.Emblem',
 	'game.ui.Button',
 	'game.ui.Highscores',
 	'game.ui.Layer'
@@ -93,7 +93,7 @@ lychee.define('game.state.Menu').requires([
 					entity.width  = width;
 					entity.height = height;
 
-					entity = this.queryLayer('background', 'lycheeJS');
+					entity = this.queryLayer('background', 'emblem');
 					entity.position.y = 1/2 * height - 32;
 
 				}
