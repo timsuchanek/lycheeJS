@@ -16,21 +16,34 @@ lychee.define('sorbet.module.Package').requires([
 		}
 
 
-		var found = false;
-
 		for (var id in vhost.projects) {
 
 			var project = vhost.projects[id];
-			if (Object.keys(project.builds).length > 0) {
+			if (project.sorbet === true && project.server === null) {
+				this.queue.add(project);
+			}
 
-				if (vhost.fs.isFile(project.root[0] + '/lychee.pkg') === true) {
+		}
 
-					this.queue.add({
-						id:    project.id,
-						vhost: vhost,
-						root:  project.root[0]
-					});
+	};
 
+	var _get_namespace = function(identifier) {
+
+		var pointer = this;
+
+		var ns = identifier.split('.');
+
+		for (var n = 0, l = ns.length; n < l; n++) {
+
+			var name = ns[n];
+
+			if (pointer[name] === undefined) {
+
+				var letter = name.charAt(0);
+				if (letter === letter.toUpperCase()) {
+					pointer[name] = [];
+				} else {
+					pointer[name] = {};
 				}
 
 			}
@@ -40,7 +53,44 @@ lychee.define('sorbet.module.Package').requires([
 	};
 
 	var _build_project = function(project) {
-		// TODO: Implement an algorithm that crawls the project's source folder and updates lychee.pkg/source/files object
+
+		var fs    = project.vhost.fs;
+		var files = fs.getFiles(project.root[0] + '/source');
+
+		var source = {};
+
+console.log('FILES', project.id, files);
+
+		if (files !== null) {
+
+			files.forEach(function(raw) {
+
+				var path = raw.split('/');
+				var file = path.pop();
+				var tmp  = file.split('.');
+
+				path.push(tmp.shift());
+
+
+				var ext = tmp[tmp.length - 1];
+				if (ext.match(/fnt|js|json|png|mp3|ogg/)) {
+
+					var definition = _get_namespace.call(source, path.join('.'));
+					var attachment = tmp.join('.');
+					if (definition instanceof Array) {
+
+						if (definition.indexOf(attachment) === -1) {
+							definition.push(attachment);
+						}
+
+					}
+
+				}
+
+			});
+
+		}
+
 	};
 
 
@@ -51,8 +101,8 @@ lychee.define('sorbet.module.Package').requires([
 
 	var Class = function(main) {
 
-		this.id   = 'Package';
-		this.main = main || null;
+		this.id    = 'Package';
+		this.main  = main || null;
 
 		this.queue = new sorbet.data.Queue();
 		this.queue.bind('update', _build_project, this);

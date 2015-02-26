@@ -8,6 +8,7 @@ lychee.define('sorbet.Main').requires([
 	'sorbet.module.File',
 	'sorbet.module.Honey',
 	'sorbet.module.Log',
+	'sorbet.module.Package',
 	'sorbet.module.Redirect',
 	'sorbet.module.Server',
 	'sorbet.data.Filesystem',

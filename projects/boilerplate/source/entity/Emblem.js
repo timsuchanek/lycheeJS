@@ -1,12 +1,12 @@
 
-lychee.define('game.entity.lycheeJS').includes([
+lychee.define('game.entity.Emblem').includes([
 	'lychee.game.Sprite'
 ]).exports(function(lychee, game, global, attachments) {
 
 	var _texture = attachments["png"];
 	var _config  = {
 		width:  256,
-		height: 48
+		height: 64
 	};
 
 

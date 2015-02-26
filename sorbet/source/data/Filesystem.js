@@ -24,9 +24,10 @@ lychee.define('sorbet.data.Filesystem').includes([
 
 		try {
 
-			if (_fs.statSync(path).isDirectory()) {
+			var stat = _fs.lstatSync(path);
+			if (stat.isDirectory() === true) {
 				return true;
-			} else {
+			} else if (stat.isFile() === true) {
 				return false;
 			}
 
@@ -66,13 +67,13 @@ lychee.define('sorbet.data.Filesystem').includes([
 
 				if (file.substr(0, 1) !== '.') {
 
-					var stat = _fs.statSync(directory + '/' + file);
+					var stat = _fs.lstatSync(directory + '/' + file);
 					if (stat.isDirectory() === true) {
 
 						that.__cache[directory + '/' + file] = Class.TYPE.directory;
 						_refresh_recursive.call(that, directory + '/' + file);
 
-					} else {
+					} else if (stat.isFile() === true) {
 
 						that.__cache[directory + '/' + file] = Class.TYPE.file;
 
@@ -597,7 +598,7 @@ lychee.define('sorbet.data.Filesystem').includes([
 			path = this.resolve(path, true);
 
 
-			if (this.isDirectory(path) === false) {
+			if (this.isDirectory(path) === false && this.isFile(path) === false) {
 
 				var result = _mkdir_p(path);
 				if (result === true) {
@@ -660,6 +661,30 @@ lychee.define('sorbet.data.Filesystem').includes([
 
 
 			return false;
+
+		},
+
+		getFiles: function(path) {
+
+			var directory = this.resolve(path);
+			if (directory !== null && this.isDirectory(directory) === true) {
+
+				var that  = this;
+				var files = Object.keys(this.__cache).filter(function(value) {
+					return that.isFile(value);
+				}).filter(function(value) {
+					return value.substr(0, directory.length) === directory;
+				}).map(function(value) {
+					return value.substr(directory.length + 1);
+				});
+
+
+				return files;
+
+			}
+
+
+			return [];
 
 		},
 

@@ -15,6 +15,7 @@
 		"Fertilizer": true,
 		"Honey":      true,
 		"Log":        true,
+		"Package":    true,
 		"Server":     true
 
 	},

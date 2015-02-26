@@ -82,6 +82,7 @@
 				"Honey":      [ "js" ],
 				"Log":        [ "js", "json" ],
 				"Fertilizer": [ "js" ],
+				"Package":    [ "js" ],
 				"Redirect":   [ "js" ],
 				"Server":     [ "js" ]
 
