@@ -40,8 +40,8 @@ lychee.define('lychee.event.Promise').includes([
 
 	var Class = function() {
 
-		this.___initialized = false;
-		this.___stack       = [];
+		this.___init  = false;
+		this.___stack = [];
 
 		lychee.event.Emitter.call(this);
 
@@ -120,9 +120,9 @@ lychee.define('lychee.event.Promise').includes([
 
 		init: function() {
 
-			if (this.___initialized === false) {
+			if (this.___init === false) {
 
-				this.___initialized = true;
+				this.___init = true;
 
 
 				if (this.___stack.length > 0) {
