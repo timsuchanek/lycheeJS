@@ -36,7 +36,7 @@
 
 			},
 
-			"Main": [ "js" ]
+			"Main": [ "js", "Entity.tpl" ]
 
 		}
 

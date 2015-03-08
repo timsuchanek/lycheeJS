@@ -9,8 +9,10 @@ lychee.define('tool.Main').requires([
 	platform: 'html'
 }).exports(function(lychee, tool, global, attachments) {
 
-	var _SPRITE = tool.data.SPRITE;
-	var _JSON   = lychee.data.JSON;
+	var _SPRITE     = tool.data.SPRITE;
+	var _JSON       = lychee.data.JSON;
+
+	var _definition = attachments["Entity.tpl"];
 
 
 
@@ -32,6 +34,8 @@ lychee.define('tool.Main').requires([
 				type = 'application/json';
 			} else if (ext.match(/png/)) {
 				type = 'image/png';
+			} else if (ext.match(/js/)) {
+				type = 'text/javascript';
 			}
 
 			var url     = 'data:' + type + ';base64,' + buffer.toString('base64');
@@ -87,24 +91,35 @@ lychee.define('tool.Main').requires([
 			}
 
 
-			var button1 = document.querySelector('button#preview-download-config');
+			var button1 = document.querySelector('button#preview-download-definition');
 			if (button1 !== null) {
 
-				var buffer1 = new Buffer(data.config.substr(29), 'base64');
+				var buffer1 = new Buffer(_definition.buffer, 'utf8');
 
 				button1.onclick = function() {
-					_download('Entity.json', buffer1);
+					_download('Entity.js', buffer1);
 				};
 
 			}
 
-			var button2 = document.querySelector('button#preview-download-texture');
+			var button2 = document.querySelector('button#preview-download-config');
 			if (button2 !== null) {
 
-				var buffer2 = new Buffer(data.texture.substr(22), 'base64');
+				var buffer2 = new Buffer(data.config.substr(29), 'base64');
 
 				button2.onclick = function() {
-					_download('Entity.png', buffer2);
+					_download('Entity.json', buffer2);
+				};
+
+			}
+
+			var button3 = document.querySelector('button#preview-download-texture');
+			if (button3 !== null) {
+
+				var buffer3 = new Buffer(data.texture.substr(22), 'base64');
+
+				button3.onclick = function() {
+					_download('Entity.png', buffer3);
 				};
 
 			}
