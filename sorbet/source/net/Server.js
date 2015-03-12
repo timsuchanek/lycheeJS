@@ -1,44 +1,246 @@
 
-lychee.define('sorbet.net.Server').requires([
-	'lychee.data.BitON',
-	'sorbet.net.remote.Debugger'
+lychee.define('sorbet.net.Server').tags({
+	platform: 'nodejs'
+}).requires([
+	'sorbet.net.Remote'
 ]).includes([
-	'lychee.net.Server'
-]).exports(function(lychee, sorbet, global, attachments) {
+	'lychee.event.Emitter'
+]).supports(function(lychee, global) {
 
-	var _BitON    = lychee.data.BitON;
-	var _debugger = sorbet.net.remote.Debugger;
+	if (typeof process !== 'undefined') {
 
+		try {
 
-	var Class = function(data) {
+			require('net');
 
-		var settings = lychee.extend({
-			codec: _BitON
-		}, data);
+			return true;
 
+		} catch(e) {
+		}
 
-		lychee.net.Server.call(this, settings);
+	}
 
+	return false;
 
-		/*
-		 * INITIALIZATION
-		 */
+}).exports(function(lychee, sorbet, global, attachments) {
 
-		this.bind('connect', function(remote) {
-
-			console.log('(Sorbet) sorbet.net.Server: New Remote (' + remote.host + ':' + remote.port + ')');
-
-			remote.addService(new _debugger(remote));
-
-		}, this);
+	var net = require('net');
 
 
-		this.connect();
+
+	/*
+	 * HELPERS
+	 */
+
+	var _generate_error = function(data) {
+
+		var content = 'text/plain';
+		var payload = 'File not found.';
+
+
+		var ext = data.headers.url.split('?')[0].split('.').pop();
+		if (ext === 'js') {
+			content = 'application/javascript';
+			payload = '"File not found.";';
+		} else if (ext === 'json') {
+			content = 'application/json';
+			payload = '{ "error": "File not found." }';
+		} else if (ext === 'xml') {
+			content = 'text/xml';
+			payload = '<error>File not found.</error>';
+		}
+
+
+		return {
+			status:  500,
+			headers: { 'Content-Type': content },
+			payload: payload
+		};
+
+	};
+
+
+
+	/*
+	 * IMPLEMENTATION
+	 */
+
+	var Class = function(data, main) {
+
+		var settings = lychee.extend({}, data);
+
+
+		this.main = main || null;
+		this.host = null;
+		this.port = 8080;
+
+
+		this.__socket = null;
+
+
+		this.setHost(settings.host);
+		this.setPort(settings.port);
+
+
+		lychee.event.Emitter.call(this);
+
+		settings = null;
 
 	};
 
 
 	Class.prototype = {
+
+		/*
+		 * ENTITY API
+		 */
+
+		// deserialize: function(blob) {},
+
+		serialize: function() {
+		},
+
+
+
+		/*
+		 * CUSTOM API
+		 */
+
+		connect: function() {
+
+			if (this.__socket === null) {
+
+				if (lychee.debug === true) {
+					console.log('sorbet.net.Server: Connected to ' + this.host + ':' + this.port);
+				}
+
+
+				var that = this;
+
+
+				this.__socket = new net.Server();
+
+				this.__socket.on('connection', function(socket) {
+
+					var host = socket.remoteAddress;
+					var port = socket.remotePort;
+
+
+					socket.setTimeout(10000);
+
+
+					var remote = new sorbet.net.Remote({
+						host: host,
+						port: port
+					});
+
+					remote.bind('connect', function() {
+						that.trigger('connect', [ this ]);
+					}, remote);
+
+					remote.bind('disconnect', function() {
+						that.trigger('disconnect', [ this ]);
+					}, remote);
+
+
+					remote.bind('receive', function(blob) {
+
+						var main = this.main || null;
+						if (main !== null) {
+
+							main.trigger('serve', [ blob, function(data) {
+
+								if (data !== null) {
+									remote.send(data);
+								} else {
+									remote.send(_generate_error(blob));
+								}
+
+							}]);
+
+						}
+
+					}, that);
+
+
+					remote.connect(socket);
+					remote.trigger('connect', []);
+
+				});
+
+
+				this.__socket.on('error', function(err) {
+					console.error('sorbet.net.Server: Error "' + err + '" on ' + that.host + ':' + that.port);
+				});
+
+				this.__socket.on('close', function() {
+					that.__socket = null;
+				});
+
+				this.__socket.listen(this.port, this.host);
+
+
+				return true;
+
+			}
+
+
+			return false;
+
+		},
+
+		disconnect: function() {
+
+			if (this.__socket !== null) {
+				this.__socket.close();
+			}
+
+
+			return true;
+
+		},
+
+
+
+		/*
+		 * TUNNEL API
+		 */
+
+		setHost: function(host) {
+
+			host = typeof host === 'string' ? host : null;
+
+
+			if (host !== null) {
+
+				this.host = host;
+
+				return true;
+
+			}
+
+
+			return false;
+
+		},
+
+		setPort: function(port) {
+
+			port = typeof port === 'number' ? (port | 0) : null;
+
+
+			if (port !== null) {
+
+				this.port = port;
+
+				return true;
+
+			}
+
+
+			return false;
+
+		}
 
 	};
 

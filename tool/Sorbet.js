@@ -37,16 +37,16 @@ var _print_help = function() {
 	console.log('   --pid="1337"                               The process identifier of the server.         ');
 	console.log('   --profile="./path/to/profile.json"         The static configuration file.                ');
 	console.log('                                                                                            ');
+	console.log('   --host="boilerplate.lycheejs.org"          The dynamic virtualhost identifier.           ');
 	console.log('   --port="8080"                              The dynamic configuration port number.        ');
-	console.log('   --sandbox="./path/to/project"              The dynamic configuration root directory.     ');
-	console.log('   --virtualhost="cosmo.lycheejs.org"         The dynamic virtualhost identifier.           ');
+	console.log('   --project="boilerplate"                    The dynamic configuration project id.         ');
 	console.log('                                                                                            ');
 	console.log('Important:                                                                                  ');
 	console.log('                                                                                            ');
 	console.log('- Profiles are static configuration. They setup ports, root folders and virtualhosts.       ');
+	console.log('- If no Host is set, it will default to "localhost".                                        ');
 	console.log('- If no Profile is set, it will default to using the dynamic configuration settings.        ');
-	console.log('- If no Sandbox Directory is set, it will default to the current working directory.         ');
-	console.log('- If no VirtualHost is set, it will default to "localhost".                                 ');
+	console.log('- If no Project is set, it will default to the root folder (null).                          ');
 	console.log('                                                                                            ');
 	console.log('Examples:                                                                                   ');
 	console.log('                                                                                            ');
@@ -54,10 +54,10 @@ var _print_help = function() {
 	console.log('                                                                                            ');
 	console.log('                                                                                            ');
 	console.log('cd ~/myproject; sorbet start --port="8081"                                                  ');
-	console.log('cd ~; sorbet start --port="8082" --sandbox="./myproject" --virtualhost="foo.lycheejs.org"   ');
+	console.log('cd ~; sorbet start --port="8082" --project="myproject" --virtualhost="foo.lycheejs.org"     ');
 	console.log('                                                                                            ');
 	console.log('                                                                                            ');
-	console.log('cd ~; sorbet start --port="8083" --sandbox="./myproject"                                    ');
+	console.log('cd ~; sorbet start --port="8083" --project="myproject"                                      ');
 	console.log('cd ~; sorbet status; # lists previously started server with PID 1337                        ');
 	console.log('cd ~; sorbet stop --pid="1337"                                                              ');
 	console.log('                                                                                            ');
@@ -75,9 +75,8 @@ var _profile  = null;
 		command:     null,
 		pid:         null,
 		profile:     null,
-		port:        null,
-		sandbox:     process.cwd(),
-		virtualhost: null
+		host:        null,
+		port:        null
 	};
 
 
@@ -125,31 +124,30 @@ var _profile  = null;
 	}
 
 
-	var id   = typeof settings.id === 'string'         ? settings.id         : null;
-	var pid  = typeof settings.pid === 'number'        ? settings.pid        : (settings.pid === '*' ? '*' : null);
-	var cmd  = typeof settings.command === 'string'    ? settings.command    : null;
-	var port = typeof settings.port === 'number'       ? settings.port       : 8080;
-	var host = typeof settings.host === 'string'       ? settings.host       : 'localhost';
-	var root = _cli.isDirectory(settings.sandbox)      ? settings.sandbox    : process.cwd();
+	var id      = typeof settings.id === 'string'      ? settings.id      : null;
+	var pid     = typeof settings.pid === 'number'     ? settings.pid     : (settings.pid === '*' ? '*' : null);
+	var cmd     = typeof settings.command === 'string' ? settings.command : null;
+	var port    = typeof settings.port === 'number'    ? settings.port    : 8080;
+	var host    = typeof settings.host === 'string'    ? settings.host    : 'localhost';
+	var project = typeof settings.project === 'string' ? settings.project : null;
 
 	if (settings.profile === null) {
 
-		console.warn('No Profile set, using dynamic configuration settings.');
+		console.info('No Profile set, using dynamic configuration settings.');
 
 		_command          = cmd;
 		_settings.pid     = pid;
 		_settings.id      = id;
 		_settings.profile = {
-			port:   port,
-			vhosts: [{
-				hosts:  [ host ],
-				config: { root: root }
-			}]
+			port: port,
+			host: {}
 		};
+
+		_settings.profile.host[host] = project;
 
 	} else {
 
-		console.warn('Profile set, using static configuration settings.');
+		console.info('Profile set, using static configuration settings.');
 
 		_command          = cmd;
 		_settings.profile = settings.profile;
@@ -196,7 +194,7 @@ var _profile  = null;
 
 		lychee.setEnvironment(new lychee.Environment({
 			id:      'sorbet',
-			debug:   true,
+			debug:   false,
 			sandbox: false,
 			build:   'sorbet.Main',
 			timeout: 3000,
@@ -214,17 +212,19 @@ var _profile  = null;
 			var lychee = sandbox.lychee;
 			var sorbet = sandbox.sorbet;
 
+
 			var main = new sorbet.Main(profile);
 
-			main.listen(profile.port);
+			main.init();
 
 
-			process.on('SIGHUP',  function() { main.destroy(); this.exit(0); });
-			process.on('SIGINT',  function() { main.destroy(); this.exit(0); });
-			process.on('SIGQUIT', function() { main.destroy(); this.exit(0); });
-			process.on('SIGABRT', function() { main.destroy(); this.exit(0); });
-			process.on('SIGTERM', function() { main.destroy(); this.exit(0); });
-			process.on('error',   function() { main.destroy(); this.exit(0); });
+			process.on('SIGHUP',  function() { main.destroy(); this.exit(1); });
+			process.on('SIGINT',  function() { main.destroy(); this.exit(1); });
+			process.on('SIGQUIT', function() { main.destroy(); this.exit(1); });
+			process.on('SIGABRT', function() { main.destroy(); this.exit(1); });
+			process.on('SIGTERM', function() { main.destroy(); this.exit(1); });
+			process.on('error',   function() { main.destroy(); this.exit(1); });
+			process.on('exit',    function() {});
 
 
 			new lychee.Input({
@@ -232,7 +232,7 @@ var _profile  = null;
 				keymodifier: true
 			}).bind('escape', function() {
 
-				console.log('sorbet.Main: [ESC] pressed, exiting Sorbet ...');
+				console.warn('sorbet.Main: [ESC] pressed, exiting Sorbet ...');
 
 				main.destroy();
 				process.exit(0);
@@ -320,9 +320,9 @@ var _profile  = null;
 				result = _start_server(profile);
 
 				if (result === true) {
-					console.info('SUCCESS');
+					console.info('> SUCCESS');
 				} else {
-					console.error('FAILURE');
+					console.error('> FAILURE');
 				}
 
 			} else {
@@ -360,9 +360,9 @@ var _profile  = null;
 				}
 
 				if (result === true) {
-					console.info('SUCCESS');
+					console.info('> SUCCESS');
 				} else {
-					console.error('FAILURE');
+					console.error('> FAILURE');
 				}
 
 			} else {
