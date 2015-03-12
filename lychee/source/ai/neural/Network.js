@@ -122,6 +122,7 @@ lychee.define('lychee.ai.neural.Network').exports(function(lychee, global, attac
 
 			var amount = 0;
 
+
 			var layers = this.layers;
 			if (layers.length > 0) {
 
@@ -142,28 +143,62 @@ lychee.define('lychee.ai.neural.Network').exports(function(lychee, global, attac
 
 		getWeights: function() {
 
-			var weights = [];
-
 			var layers = this.layers;
 			if (layers.length > 0) {
+
+				var weights = [];
+
 
 				layers.forEach(function(layer) {
 
 					layer.neurons.forEach(function(neuron) {
-						weights.push.apply(weights, neuron.weights);
+
+						neuron.weights.forEach(function(weight, w) {
+							weights.push(weight);
+						});
+
 					});
 
 				});
 
+
+				return weights;
+
 			}
 
 
-			return weights;
+			return null;
 
 		},
 
 		setWeights: function(weights) {
-			// TODO: setWeights via array
+
+			var layers = this.layers;
+			if (layers.length > 0) {
+
+				var index = 0;
+
+
+				layers.forEach(function(layer) {
+
+					layer.neurons.forEach(function(neuron) {
+
+						neuron.weights.forEach(function(weight, w) {
+							neuron.weights[w] = weights[index++];
+						});
+
+					});
+
+				});
+
+
+				return true;
+
+			}
+
+
+			return false;
+
 		}
 
 	};
