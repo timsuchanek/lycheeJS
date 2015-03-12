@@ -132,7 +132,8 @@
 
 			"event": {
 				"Emitter": [ "js" ],
-				"Promise": [ "js" ]
+				"Promise": [ "js" ],
+				"Queue":   [ "js" ]
 			},
 
 			"game": {
@@ -159,7 +160,6 @@
 
 			"net": {
 
-				"Protocol": [ "js" ],
 				"Service":  [ "js" ],
 				"Tunnel":   [ "js" ],
 
@@ -167,6 +167,11 @@
 					"Chat":        [ "js" ],
 					"Controller":  [ "js" ],
 					"Session":     [ "js" ]
+				},
+
+				"protocol": {
+					"HTTP": [ "js" ],
+					"WS":   [ "js" ]
 				},
 
 				"remote": {

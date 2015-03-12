@@ -1,5 +1,6 @@
 
 lychee.define('lychee.net.Tunnel').requires([
+	'lychee.data.BENCODE',
 	'lychee.data.BitON',
 	'lychee.data.JSON',
 	'lychee.net.Service'

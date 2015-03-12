@@ -1,5 +1,5 @@
 
-lychee.define('lychee.net.Protocol').exports(function(lychee, global) {
+lychee.define('lychee.net.protocol.WS').exports(function(lychee, global) {
 
 	/*
 	 * HELPERS
@@ -367,7 +367,7 @@ lychee.define('lychee.net.Protocol').exports(function(lychee, global) {
 		if (lychee.debug === true) {
 
 			if (this.type === null) {
-				console.error('lychee.net.Protocol: Invalid (lychee.net.Protocol.TYPE) type.');
+				console.error('lychee.net.protocol.WS: Invalid (lychee.net.protocol.WS.TYPE) type.');
 			}
 
 		}
@@ -390,7 +390,7 @@ lychee.define('lychee.net.Protocol').exports(function(lychee, global) {
 			} else if (that.__isClosed === false) {
 
 				// Use a temporary Buffer for easier parsing
-				tmp = new Buffer(temp.length + data.length);
+				var tmp = new Buffer(temp.length + data.length);
 				temp.copy(tmp);
 				data.copy(tmp, temp.length);
 				temp = tmp;
@@ -528,12 +528,17 @@ lychee.define('lychee.net.Protocol').exports(function(lychee, global) {
 
 		},
 
-		send: function(data) {
+		send: function(payload, binary) {
+
+			binary = binary === true;
+
 
 			var blob = null;
 
-			if (typeof data === 'string') {
-				blob = new Buffer(data, 'utf8');
+			if (typeof payload === 'string') {
+				blob = new Buffer(payload, 'utf8');
+			} else if (payload instanceof Buffer) {
+				blob = payload;
 			}
 
 
@@ -541,7 +546,7 @@ lychee.define('lychee.net.Protocol').exports(function(lychee, global) {
 
 				if (this.__isClosed === false) {
 
-					var buffer = _encode_buffer.call(this, blob, false);
+					var buffer = _encode_buffer.call(this, blob, binary);
 					if (buffer !== null) {
 						return this.socket.write(buffer);
 					}

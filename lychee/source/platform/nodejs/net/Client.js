@@ -2,16 +2,20 @@
 lychee.define('lychee.net.Client').tags({
 	platform: 'nodejs'
 }).requires([
-	'lychee.data.BENCODE',
-	'lychee.data.BitON',
-	'lychee.data.JSON',
-	'lychee.net.Protocol'
+	'lychee.net.protocol.HTTP',
+	'lychee.net.protocol.WS'
 ]).includes([
 	'lychee.net.Tunnel'
 ]).supports(function(lychee, global) {
 
-	if (typeof process !== 'undefined') {
+	try {
+
+		require('http');
+		require('crypto');
+
 		return true;
+
+	} catch(e) {
 	}
 
 
@@ -21,7 +25,6 @@ lychee.define('lychee.net.Client').tags({
 
 	var http   = require('http');
 	var crypto = require('crypto');
-	var _JSON  = lychee.data.JSON;
 
 
 
@@ -177,7 +180,7 @@ lychee.define('lychee.net.Client').tags({
 
 					if (_upgrade_to_websocket.call(that, response, socket, head) === true) {
 
-						that.__socket = new lychee.net.Protocol(socket, lychee.net.Protocol.TYPE.client);
+						that.__socket = new lychee.net.protocol.WS(socket, lychee.net.protocol.WS.TYPE.client);
 
 						that.__socket.ondata = function(blob) {
 							that.receive(blob);

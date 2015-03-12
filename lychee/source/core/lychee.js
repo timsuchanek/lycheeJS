@@ -15,6 +15,40 @@ lychee = typeof lychee !== 'undefined' ? lychee : (function(global) {
 	 * POLYFILLS
 	 */
 
+	if (typeof Array.prototype.find !== 'function') {
+
+		Array.prototype.find = function(predicate) {
+
+			if (this == null) {
+				throw new TypeError('Array.prototype.find called on null or undefined');
+			}
+
+			if (typeof predicate !== 'function') {
+				throw new TypeError('predicate must be a function');
+			}
+
+			var list    = Object(this);
+			var length  = list.length >>> 0;
+			var thisArg = arguments[1];
+			var value;
+
+			for (var i = 0; i < length; i++) {
+
+				value = list[i];
+
+				if (predicate.call(thisArg, value, i, list)) {
+					return value;
+				}
+
+			}
+
+
+			return undefined;
+
+		}
+
+	}
+
 	if (typeof Object.keys !== 'function') {
 
 		Object.keys = function(object) {
@@ -65,37 +99,11 @@ lychee = typeof lychee !== 'undefined' ? lychee : (function(global) {
 
 	}
 
-	if (typeof Array.prototype.find !== 'function') {
+	if (typeof String.prototype.trim !== 'function') {
 
-		Array.prototype.find = function(predicate) {
-
-			if (this == null) {
-				throw new TypeError('Array.prototype.find called on null or undefined');
-			}
-
-			if (typeof predicate !== 'function') {
-				throw new TypeError('predicate must be a function');
-			}
-
-			var list    = Object(this);
-			var length  = list.length >>> 0;
-			var thisArg = arguments[1];
-			var value;
-
-			for (var i = 0; i < length; i++) {
-
-				value = list[i];
-
-				if (predicate.call(thisArg, value, i, list)) {
-					return value;
-				}
-
-			}
-
-
-			return undefined;
-
-		}
+		String.prototype.trim = function() {
+			return this.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, "");
+		};
 
 	}
 

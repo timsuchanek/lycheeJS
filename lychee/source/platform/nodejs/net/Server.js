@@ -2,8 +2,6 @@
 lychee.define('lychee.net.Server').tags({
 	platform: 'nodejs'
 }).requires([
-	'lychee.data.BENCODE',
-	'lychee.data.BitON',
 	'lychee.data.JSON',
 	'lychee.net.Remote'
 ]).includes([
@@ -211,9 +209,7 @@ lychee.define('lychee.net.Server').tags({
 				});
 
 				this.__socket.on('error', function(err) {
-
 					console.error('lychee.net.Server: Error "' + err + '" on ' + that.host + ':' + that.port);
-
 				});
 
 				this.__socket.on('close', function() {

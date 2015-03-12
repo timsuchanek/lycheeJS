@@ -2,8 +2,6 @@
 lychee.define('lychee.net.Server').tags({
 	platform: 'html'
 }).requires([
-	'lychee.data.BENCODE',
-	'lychee.data.BitON',
 	'lychee.data.JSON',
 	'lychee.net.Remote'
 ]).includes([
