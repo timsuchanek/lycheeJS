@@ -193,8 +193,23 @@ console.log('TODO: build chain for ' + project.identifier);
 
 			var settings = this.settings.server || null;
 			if (settings !== null) {
+
 				this.server = new sorbet.net.Server(settings, this);
-				this.server.connect();
+
+				var result = this.server.connect();
+				if (result === true) {
+
+					var port  = this.server.port;
+					var hosts = Object.keys(this.hosts).map(function(host) {
+						return 'http://' + host + ':' + port;
+					});
+
+					console.log('\n\n');
+					console.log('Open your web browser and surf to ' + hosts.join(' or '));
+					console.log('\n\n');
+
+				}
+
 			}
 
 		}, this, true);
