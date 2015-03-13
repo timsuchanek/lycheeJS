@@ -11,7 +11,6 @@ back into master, tagged and published.
 
 
 - sorbet.plugin.Fertilizer should auto-build environments for all projects
-- sorbet.plugin.Package should auto-update the lychee.pkg files in projects based on file tree
 - API: lychee.Renderer
 - API: lychee.Storage
 - API: lychee.data Stack

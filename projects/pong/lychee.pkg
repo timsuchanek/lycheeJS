@@ -53,7 +53,8 @@
 			"entity": {
 				"Background": [ "js", "json", "png" ],
 				"Ball":       [ "js", "json", "png" ],
-				"Paddle":     [ "js", "json", "enemy.png", "player.png" ]
+				"Paddle":     [ "js", "json", "enemy.png", "player.png" ],
+				"lycheeJS":   [ "js", "png" ]
 			},
 
 			"state": {
