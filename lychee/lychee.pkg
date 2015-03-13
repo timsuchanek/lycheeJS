@@ -65,6 +65,8 @@
 
 				"html": {
 
+					"bootstrap": [ "js" ],
+
 					"net": {
 						"Client": [ "js" ],
 						"Remote": [ "js" ],
@@ -90,6 +92,8 @@
 
 				"nodejs": {
 
+					"bootstrap": [ "js" ],
+
 					"net": {
 						"Client":   [ "js" ],
 						"Remote":   [ "js" ],
@@ -106,6 +110,7 @@
 			},
 
 			"core": {
+				"lychee":      [ "js" ],
 				"Asset":       [ "js" ],
 				"Debugger":    [ "js" ],
 				"Definition":  [ "js" ],

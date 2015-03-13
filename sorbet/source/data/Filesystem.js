@@ -35,31 +35,23 @@ lychee.define('sorbet.data.Filesystem').includes([
 
 
 			var resolved = _path.normalize(this.root + path);
-			if (resolved !== null) {
+			if (callback !== null) {
 
-				if (callback !== null) {
+				_fs.readdirSync(resolved, function(err, data) {
 
-					_fs.readdirSync(resolved, function(err, data) {
+					if (err) {
+						callback.call(scope, null);
+					} else {
+						callback.call(scope, data);
+					}
 
-						if (err) {
-							callback.call(scope, null);
-						} else {
-							callback.call(scope, data);
-						}
-
-					});
-
-				} else {
-
-					return _fs.readdirSync(resolved);
-
-				}
+				});
 
 			} else {
 
-				if (callback !== null) {
-					callback.call(scope, null);
-				} else {
+				try {
+					return _fs.readdirSync(resolved);
+				} catch(e) {
 					return null;
 				}
 
@@ -74,32 +66,74 @@ lychee.define('sorbet.data.Filesystem').includes([
 
 
 			var resolved = _path.normalize(this.root + path);
-			if (resolved !== null) {
+			if (callback !== null) {
+
+				_fs.readFile(resolved, function(err, data) {
+
+					if (err) {
+						callback.call(scope, null);
+					} else {
+						callback.call(scope, data);
+					}
+
+				});
+
+			} else {
+
+				try {
+					return _fs.readFileSync(resolved);
+				} catch(e) {
+					return null;
+				}
+
+			}
+
+		},
+
+		write: function(path, data, callback, scope) {
+
+			callback = callback instanceof Function ? callback : null;
+			scope    = scope !== undefined          ? scope    : this;
+
+
+			var encoding = 'binary';
+
+			if (typeof data === 'string') {
+				encoding = 'utf8';
+			} else {
+				encoding = 'binary';
+			}
+
+
+			var info     = this.info(_path.dirname(path));
+			var resolved = _path.normalize(this.root + path);
+
+			if (info !== null && info.type === 'directory') {
 
 				if (callback !== null) {
 
-					_fs.readFile(resolved, function(err, data) {
+					_fs.writeFile(resolved, data, encoding, function(err) {
 
 						if (err) {
-							callback.call(scope, null);
+							callback.call(scope, false);
 						} else {
-							callback.call(scope, data);
+							callback.call(scope, true);
 						}
 
 					});
 
 				} else {
 
-					return _fs.readFileSync(resolved);
+					return _fs.writeFileSync(resolved, data, encoding);
 
 				}
 
 			} else {
 
 				if (callback !== null) {
-					callback.call(scope, null);
+					callback.call(scope, false);
 				} else {
-					return null;
+					return false;
 				}
 
 			}

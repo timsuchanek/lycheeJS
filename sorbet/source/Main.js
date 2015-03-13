@@ -17,19 +17,6 @@ lychee.define('sorbet.Main').requires([
 	 * HELPERS
 	 */
 
-	var _MOD   = [
-//		sorbet.mod.Fertilizer,
-		sorbet.mod.Package,
-//		sorbet.mod.Server
-	];
-
-	var _SERVE = [
-		sorbet.serve.API,
-		sorbet.serve.File,
-		sorbet.serve.Redirect
-	];
-
-
 	var _process_build = function(project) {
 
 console.log('TODO: build chain for ' + project.identifier);
@@ -75,12 +62,20 @@ console.log('TODO: build chain for ' + project.identifier);
 			}
 
 
-			for (var s = 0; s < _SERVE.length; s++) {
+			if (sorbet.serve.API.can(host, url) === true) {
 
-				if (_SERVE[s].can(host, url) === true) {
-					_SERVE[s].process(host, url, data, ready);
-					return true;
-				}
+				sorbet.serve.API.process(host, url, data, ready);
+				return true;
+
+			} else if (sorbet.serve.File.can(host, url) === true) {
+
+				sorbet.serve.File.process(host, url, data, ready);
+				return true;
+
+			} else if (sorbet.serve.Redirect.can(host, url) === true) {
+
+				sorbet.serve.Redirect.process(host, url, data, ready);
+				return true;
 
 			}
 
@@ -96,7 +91,7 @@ console.log('TODO: build chain for ' + project.identifier);
 
 
 	/*
-	 * IMPLEMENTATION
+	 * FEATURE DETECTION
 	 */
 
 	var _defaults = {
@@ -136,6 +131,11 @@ console.log('TODO: build chain for ' + project.identifier);
 
 	})(new sorbet.data.Filesystem(__dirname + '/../../'), _project_cache);
 
+
+
+	/*
+	 * IMPLEMENTATION
+	 */
 
 	var Class = function(settings) {
 
@@ -243,6 +243,10 @@ console.log('TODO: build chain for ' + project.identifier);
 				var project = _project_cache[id];
 				if (sorbet.mod.Server.can(project) === true) {
 					sorbet.mod.Server.process(project);
+				}
+
+				if (sorbet.mod.Package.can(project) === true) {
+					sorbet.mod.Package.process(project);
 				}
 
 			}

@@ -28,7 +28,7 @@ lychee.define('sorbet.data.Project').requires([
 
 		this.identifier = identifier;
 		this.filesystem = new sorbet.data.Filesystem(root);
-		this.package    = new sorbet.data.Package(this.filesystem.root + '/lychee.pkg');
+		this.package    = new sorbet.data.Package(this.filesystem.read('/lychee.pkg'));
 		this.server     = null;
 
 

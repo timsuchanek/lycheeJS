@@ -36,7 +36,7 @@ lychee.define('sorbet.mod.Server').requires([
 
 		},
 
-		process: function(project, ready) {
+		process: function(project) {
 
 			if (project.server === null) {
 
@@ -59,7 +59,7 @@ lychee.define('sorbet.mod.Server').requires([
 
 
 						if (lychee.debug === true) {
-							console.info('sorbet.mod.Server: Launched Server for "' + project.identifier + '" (' + server_process.pid + ' / ' + server_host + ':' + server_port + ')');
+							console.log('sorbet.mod.Server: Launched Server for "' + project.identifier + '" (' + server_process.pid + ' / ' + server_host + ':' + server_port + ')');
 						}
 
 
