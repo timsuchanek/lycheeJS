@@ -182,96 +182,99 @@ lychee.define('sorbet.mod.Package').requires([
 				var files_c = project.package.build;
 				var files_d = [];
 
+				if (json instanceof Object && json.source instanceof Object) {
 
-				_walk_directory.call(project.filesystem, files_b, '/source');
-				files_b = files_b.map(function(value) {
-					return value.substr('/source'.length);
-				});
-
-				_walk_directory.call(project.filesystem, files_d, '/build');
-				files_d = files_d.map(function(value) {
-					return value.substr('/source'.length);
-				});
-
-
-
-				if (files_b.length > files_a.length) {
-
-					diff.push({
-						json:  json.source.files,
-						mode:  'insert',
-						files: files_b.filter(function(value) {
-							return files_a.indexOf(value) === -1;
-						})
+					_walk_directory.call(project.filesystem, files_b, '/source');
+					files_b = files_b.map(function(value) {
+						return value.substr('/source'.length);
 					});
 
-				} else if (files_a.length > files_b.length) {
-
-					diff.push({
-						json:  json.source.files,
-						mode:  'delete',
-						files: files_a.filter(function(value) {
-							return files_b.indexOf(value) === -1;
-						})
-					});
-
-				}
-
-
-				if (files_d.length > files_c.length) {
-
-					diff.push({
-						json:  json.source.files,
-						mode:  'insert',
-						files: files_d.filter(function(value) {
-							return files_c.indexOf(value) === -1;
-						})
-					});
-
-				} else if (files_c.length > files_d.length) {
-
-					diff.push({
-						json:  json.source.files,
-						mode:  'delete',
-						files: files_c.filter(function(value) {
-							return files_d.indexOf(value) === -1;
-						})
-					});
-
-				}
-
-
-				if (diff.length > 0) {
-
-					diff.forEach(function(entry) {
-
-						var mode = entry.mode;
-						if (mode === 'insert') {
-
-							entry.files.forEach(function(file) {
-								_insert(entry.json, file);
-							});
-
-						} else if (mode === 'delete') {
-
-							entry.files.forEach(function(file) {
-								_delete(entry.json, file);
-							});
-
-						}
-
+					_walk_directory.call(project.filesystem, files_d, '/build');
+					files_d = files_d.map(function(value) {
+						return value.substr('/source'.length);
 					});
 
 
-					var data = null;
 
-					try {
-						data = JSON.stringify(json, null, '\t');
-					} catch(e) {
+					if (files_b.length > files_a.length) {
+
+						diff.push({
+							json:  json.source.files,
+							mode:  'insert',
+							files: files_b.filter(function(value) {
+								return files_a.indexOf(value) === -1;
+							})
+						});
+
+					} else if (files_a.length > files_b.length) {
+
+						diff.push({
+							json:  json.source.files,
+							mode:  'delete',
+							files: files_a.filter(function(value) {
+								return files_b.indexOf(value) === -1;
+							})
+						});
+
 					}
 
-					if (data !== null) {
-						project.filesystem.write('/lychee.pkg', data);
+
+					if (files_d.length > files_c.length) {
+
+						diff.push({
+							json:  json.source.files,
+							mode:  'insert',
+							files: files_d.filter(function(value) {
+								return files_c.indexOf(value) === -1;
+							})
+						});
+
+					} else if (files_c.length > files_d.length) {
+
+						diff.push({
+							json:  json.source.files,
+							mode:  'delete',
+							files: files_c.filter(function(value) {
+								return files_d.indexOf(value) === -1;
+							})
+						});
+
+					}
+
+
+					if (diff.length > 0) {
+
+						diff.forEach(function(entry) {
+
+							var mode = entry.mode;
+							if (mode === 'insert') {
+
+								entry.files.forEach(function(file) {
+									_insert(entry.json, file);
+								});
+
+							} else if (mode === 'delete') {
+
+								entry.files.forEach(function(file) {
+									_delete(entry.json, file);
+								});
+
+							}
+
+						});
+
+
+						var data = null;
+
+						try {
+							data = JSON.stringify(json, null, '\t');
+						} catch(e) {
+						}
+
+						if (data !== null) {
+							project.filesystem.write('/lychee.pkg', data);
+						}
+
 					}
 
 				}
