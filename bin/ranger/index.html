@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+<head>
+	<title>lycheeJS Ranger</title>
+	<link rel="stylesheet" href="./css/design.css">
+</head>
+<body>
+<menu>
+	<li class="ico-status active" onclick="app.setView('status');">Status</li>
+	<li class="ico-console" onclick="app.setView('console');">Console</li>
+	<li class="ico-settings" onclick="app.setView('settings');">Settings</li>
+	<li class="ico-help" onclick="app.setView('help');">Help</li>
+</menu>
+<aside>
+	<button class="ico-refresh ico-only" onclick="window.location.href='./index.html'"></button>
+	<button class="ico-exit ico-only"></button>
+</aside>
+<div id="main">
+	<section id="status" class="active">
+
+<!--
+		<div class="center">
+			<h3>Select a profile</h3>
+			<p>
+				<ul class="select">
+					<li><input name="profile" type="radio" value="development" checked><span>development</span></li>
+					<li><input name="profile" type="radio" value="lycheejs.org"><span>lycheejs.org</span></li>
+				</ul>
+			</p>
+			<p>
+				<button class="ico-start">Start lycheeJS</button>
+			</p>
+		</div>
+-->
+		<table>
+			<tr>
+				<th>Host</th>
+				<th>Status</th>
+				<th>Projects</th>
+				<th>Action</th>
+			</tr>
+			<tr>
+				<td>localhost</td>
+				<td><label class="ico-online">Online</label></td>
+				<td>lychee, boilerplate, mode7</td>
+				<td><button class="ico-browser ico-only" title="Browser"></button></td>
+			</tr>
+			<tr class="div"></tr>
+			<tr>
+				<th>Project</th>
+				<th>Status</th>
+				<th>Hosts</th>
+				<th>Action</th>
+			</tr>
+			<tr>
+				<td>sorbet</td>
+				<td><label class="ico-online">Online</label></td>
+				<td>localhost, lycheejs.org</td>
+				<td>
+					<button class="ico-stop ico-only" title="Stop"></button>
+					<button class="ico-browser ico-only" title="Browser"></button>
+					<button class="ico-folder ico-only" title="File Manager"></button>
+				</td>
+			</tr>
+			<tr>
+				<td>boilerplate</td>
+				<td><label class="ico-offline">Offline</label></td>
+				<td>localhost, 192.168.0.1</td>
+				<td>
+					<button class="ico-start ico-only" title="Start"></button>
+					<button class="ico-browser ico-only" title="Browser"></button>
+					<button class="ico-folder ico-only" title="File Manager"></button>
+				</td>
+			</tr>
+		</table>
+	</section>
+	<section id="console">
+		<pre>This is a test<br></pre>
+	</section>
+	<section id="help">
+		Help Page
+	</section>
+	<section id="settings">
+		Settings Page
+	</section>
+</div>
+<script src="./js/app.js"></script>
+<script src="./js/status.js"></script>
+</body>
+</html>

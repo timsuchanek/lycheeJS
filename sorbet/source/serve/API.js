@@ -5,6 +5,11 @@ lychee.define('sorbet.serve.API').requires([
 
 	var _JSON = lychee.data.JSON;
 
+	var _API  = {
+		'Project': sorbet.serve.api.Project,
+		'Server':  sorbet.serve.api.Server
+	};
+
 
 	var Module = {
 
@@ -87,12 +92,33 @@ lychee.define('sorbet.serve.API').requires([
 					} else {
 
 
-// TODO: All projects (overview)
+						var projects = host.projects.map(function(project) {
 
-ready(null);
+							var server_host = null;
+							var server_port = null;
+
+							if (project.server !== null) {
+								server_host = project.server.host;
+								server_port = project.server.port;
+							}
+
+
+							return {
+								identifier: project.identifier,
+								host:       server_host,
+								port:       server_port
+							};
+
+						});
+
+
+						ready({
+							status:  200,
+							headers: { 'Content-Type': 'application/json' },
+							payload: _JSON.encode(projects)
+						});
 
 					}
-
 
 				}
 
