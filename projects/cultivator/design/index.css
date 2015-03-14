@@ -1,0 +1,469 @@
+
+@font-face {
+	font-family: 'icon';
+	src: url('./icon.woff') format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'museo-sans-300';
+	src: url('./museo-sans-300.woff') format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+    font-family: 'museo-sans-500';
+	src: url('./museo-sans-500.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+menu li:before,
+button:before,
+label:before {
+	margin: 0px 8px 0px 0px;
+	font-family: 'icon';
+	font-weight: normal;
+	font-variant: normal;
+	text-align: left;
+	text-transform: none;
+	vertical-align: top;
+	speak: none;
+	-webkit-font-smoothing: antialiased;
+}
+
+.ico-only:before     { margin: 0px; }
+
+.ico-browser:before  { content: "\e037"; }
+.ico-console:before  { content: "\e011"; }
+.ico-editor:before   { content: "\e00c"; }
+.ico-error:before    { content: "\e082"; }
+.ico-exit:before     { content: "\e097"; }
+.ico-folder:before   { content: "\e039"; }
+.ico-help:before     { content: "\e08b"; }
+.ico-intro:before    { content: "\e020"; }
+.ico-message:before  { content: "\e086"; }
+.ico-offline:before  { content: "\e082"; }
+.ico-okay:before     { content: "\e080"; }
+.ico-online:before   { content: "\e071"; }
+.ico-projects:before { content: "\e034"; }
+.ico-refresh:before  { content: "\e098"; }
+.ico-settings:before { content: "\e09a"; }
+.ico-status:before   { content: "\e06a"; }
+.ico-start:before    { content: "\e071"; }
+.ico-stop:before     { content: "\e072"; }
+.ico-tools:before    { content: "\e059"; }
+
+
+
+body {
+	color: #e6e6e6;
+	background: #404948;
+	margin: 0;
+	padding: 0;
+	font-family: 'museo-sans-300';
+}
+
+menu {
+	margin: 16px 0px 0px 32px;
+	padding: 0px;
+	width: auto;
+	height: 64px;
+	font-family: 'museo-sans-300';
+}
+
+menu li {
+	display: inline-block;
+	width: auto;
+	height: 24px;
+	line-height: 24px;
+	margin: 16px;
+	padding: 0px;
+	text-align: center;
+	font-weight: normal;
+	font-size: 18px;
+	text-transform: uppercase;
+	list-style: none;
+	cursor: pointer;
+	transition: all 250ms ease-out;
+}
+
+menu li:hover {
+	text-shadow: #eeeeee 0 0 10px;
+}
+
+menu li.active {
+	color: #32afe5;
+	text-shadow: #32afe5 0 0 20px;
+}
+
+aside {
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	margin: 16px;
+	z-index: 100;
+}
+
+aside > * {
+	display: inline-block;
+	margin: 16px 0px 0px 8px;
+}
+
+section {
+	display: block;
+	padding: 0px 32px 32px 32px;
+	position: absolute;
+	top: 96px;
+	right: 0px;
+	bottom: 0px;
+	left: 0px;
+	transform: translate(-100%, 0%);
+	transition: all 250ms ease-out;
+	overflow-x: hidden;
+	overflow-y: auto;
+	z-index: 10;
+	opacity: 0;
+}
+
+section.active {
+	transform: translate(0%, 0%);
+	transition: all 250ms ease-out;
+	opacity: 1;
+}
+
+
+
+/*
+ * LAYOUT
+ */
+
+div.wizard {
+	display: -moz-box;
+	display: -webkit-box;
+	display: -webkit-flexbox;
+	display: flex;
+	width: 100%;
+	max-width: 1280px;
+	margin: 0px auto;
+	-webkit-flex-flow: row wrap;
+	justify-content: space-around;
+}
+
+
+div.wizard article {
+	margin: 16px;
+	padding: 0px;
+	min-width: 256px;
+	max-width: 256px;
+	-webkit-box-flex: 1;
+	-webkit-flex: 1;
+	flex-grow: 1;
+}
+
+div.wizard article img {
+	width: 128px;
+	height: 128px;
+	border: 1px solid #2f3736;
+	background: #2f3736;
+}
+
+article {
+	font-family: 'museo-sans-300';
+	background: #363f3e;
+}
+
+article h3 {
+	display: block;
+	height: 32px;
+	line-height: 32px;
+	margin: 0px;
+	padding: 16px;
+	background: #2f3736;
+	font-family: 'museo-sans-300';
+	font-weight: normal;
+	border-bottom: 2px solid #404948;
+}
+
+article h3 b {
+	margin: 0px 16px 0px 0px;
+	font-family: 'museo-sans-500';
+	font-weight: bold;
+}
+
+article div {
+	margin: 16px;
+}
+
+article h3 ~ div {
+	min-height: 96px;
+}
+
+
+/*
+ * UI
+ */
+
+a {
+	color: #5fa2f8;
+	font-weight: bold;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+p {
+	margin: 1em 0px;
+}
+
+div.center,
+p.center {
+	text-align: center;
+}
+
+
+ul.select {
+	width: 128px;
+	margin: 0px auto;
+	padding: 0px;
+}
+
+ul.select li {
+	margin: 0px;
+	padding: 0px;
+	height: 32px;
+	line-height: 32px;
+	list-style: none;
+	text-align: left;
+}
+
+ul.select li span {
+	display: inline-block;
+	width: 96px;
+	line-height: 20px;
+	font-family: 'museo-sans-300';
+	font-size: 14px;
+	text-align: left;
+	vertical-align: middle;
+}
+
+ul.select input {
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	line-height: 28px;
+	margin: 0px 8px 0px 0px;
+	padding: 0px;
+	vertical-align: middle;
+}
+
+
+
+button {
+	width: auto;
+	height: 32px;
+	line-height: 32px;
+	padding: 0px 8px;
+	font-size: 14px;
+	color: #f2f2f2;
+	background: #545857;
+	border: 1px solid #5d6161;
+	border-radius: 2px;
+	font-family: 'museo-sans-300';
+	font-weight: normal;
+	text-align: center;
+	text-transform: uppercase;
+	outline: none;
+	cursor: pointer;
+	transition: all 250ms ease-out;
+	-webkit-appearance: none;
+}
+
+button:not(.ico-only) {
+	min-width: 128px;
+}
+
+button:hover,
+button:focus {
+	text-shadow: #eeeeee 0 0 10px;
+	border: 1px solid #eeeeee;
+	box-shadow: #eeeeee 0 0 10px;
+}
+
+button[disabled],
+button[disabled]:hover,
+button[disabled]:focus {
+	color: #545857;
+	background: #2f3736;
+	border: 1px solid #5d6161;
+	text-shadow: none;
+	box-shadow: none;
+	cursor: not-allowed;
+}
+
+
+
+input[type="text"] {
+	margin: 0px;
+	padding: 0px 8px;
+	height: 30px;
+	color: #545857;
+	background: transparent;
+	border: 1px solid #5d6161;
+	border-radius: 2px;
+	outline: none;
+	cursor: text;
+	transition: all 250ms ease-out;
+	-webkit-appearance: none;
+}
+
+input[type="text"]:hover,
+input[type="text"]:focus {
+	color: #f2f2f2;
+	border: 1px solid #eeeeee;
+	box-shadow: #eeeeee 0 0 10px;
+}
+
+
+
+input[type="radio"] {
+	background: transparent;
+	outline: none;
+	cursor: pointer;
+	transition: all 250ms ease-out;
+	-webkit-appearance: none;
+}
+ 
+input[type="radio"]:before {
+	display: inline-block;
+	width: 18px;
+	height: 18px;
+	content: " ";
+	line-height: 20px;
+	color: transparent;
+	background: transparent;
+	border: 1px solid #f0f0f0;
+	border-radius: 20px;
+	font-family: 'icon';
+	font-size: 20px;
+	font-weight: normal;
+	font-variant: normal;
+	text-align: left;
+	text-transform: none;
+	vertical-align: top;
+	outline: none;
+	cursor: pointer;
+	speak: none;
+	transition: color 250ms ease-out;
+	-webkit-appearance: none;
+	-webkit-font-smoothing: antialiased;
+}
+
+input[type="radio"]:checked:before {
+	width: 20px;
+	height: 20px;
+	content: "\e082";
+	color: #32afe5;
+	border: 0px solid transparent;
+	box-shadow: #32afe5 0 0 20px;
+}
+
+
+
+label {
+	text-transform: uppercase;
+}
+
+
+
+select {
+	color: #ffffff;
+	background: #3f4646;
+	width: auto;
+	height: 28px;
+	padding: 4px 36px 4px 8px;
+	font-size: 16px;
+	border: 1px solid #1b2021;
+	/* gradient to #2f3333 */
+	border-radius: 4px;
+	background:
+		url('./css/ui-select.png') center right no-repeat,
+		linear-gradient(to bottom, #404848 0%, #2f3333 100%);
+	-webkit-appearance: none;
+	outline: none;
+	cursor: pointer;
+}
+
+select:hover {
+	border: 1px solid #616868;
+	background: url('./css/ui-select.png') center right no-repeat #414848;
+	text-shadow: #eeeeee 0 0 10px;
+}
+
+select option {
+	background: #3f4646;
+	-webkit-appearance: none;
+}
+
+
+
+table {
+	width: 100%;
+	margin: 0px auto;
+	border-spacing: 0;
+}
+
+table th {
+	margin: 0px;
+	padding: 16px;
+	background: #2f3736;
+	font-size: 14px;
+	text-align: left;
+	font-family: 'museo-sans-300';
+	text-transform: uppercase;
+	font-weight: normal;
+}
+
+table tr {
+	margin: 2px 0px;
+}
+
+table tr.div {
+	height: 32px;
+}
+
+table td {
+	margin: 0px;
+	padding: 16px;
+	background: #363f3e;
+	font-family: 'museo-sans-300';
+	font-weight: normal;
+	text-align: left;
+	border-top: 1px solid #404948;
+}
+
+table td:first-child {
+	font-family: 'museo-sans-500';
+}
+
+table td button {
+	margin: 0px 8px 0px 0px;
+}
+
+footer {
+	display: block;
+	position: fixed;
+	margin: 0px;
+	padding: 8px;
+	top: auto;
+	right: 0px;
+	bottom: 0px;
+	left: 0px;
+	color: #e6e6e6;
+	background: #2f3736;
+	font-family: 'museo-sans-300';
+	text-align: center;
+}
+

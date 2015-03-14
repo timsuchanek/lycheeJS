@@ -1,5 +1,10 @@
 
-lychee.define('sorbet.serve.api.Server').exports(function(lychee, sorbet, global, attachments) {
+lychee.define('sorbet.serve.api.Server').requires([
+	'lychee.data.JSON'
+]).exports(function(lychee, sorbet, global, attachments) {
+
+	var _JSON = lychee.data.JSON;
+
 
 	var Module = {
 
