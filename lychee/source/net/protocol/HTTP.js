@@ -7,6 +7,26 @@ lychee.define('lychee.net.protocol.HTTP').exports(function(lychee, global, attac
 	 * HELPERS
 	 */
 
+	var _STATUS = {
+		100: '100 Continue',
+		200: '200 OK',
+		206: '206 Partial Content',
+		301: '301 Moved Permanently',
+		302: '302 Found',
+		304: '304 Not Modified',
+		400: '400 Bad Request',
+		401: '401 Unauthorized',
+		403: '403 Forbidden',
+		404: '404 Not Found',
+		405: '405 Method Not Allowed',
+		500: '500 Internal Server Error',
+		501: '501 Not Implemented',
+		502: '502 Bad Gateway',
+		503: '503 Service Unavailable',
+		504: '504 Gateway Timeout',
+		505: '505 HTTP Version Not Supported'
+	};
+
 	var _encode_buffer = function(status, headers, data, binary) {
 
 // TODO: Integrate binary support
@@ -31,10 +51,10 @@ lychee.define('lychee.net.protocol.HTTP').exports(function(lychee, global, attac
 // TODO: Integrate headers.status via map for protocol data. status is a number here.
 
 			if (typeof headers['Location'] === 'string') {
-				status_data   = new Buffer('HTTP/1.1 301 Moved Permanently', 'utf8');
+				status_data   = new Buffer('HTTP/1.1 ' + _STATUS[301], 'utf8');
 				status_length = status_data.length;
 			} else {
-				status_data   = new Buffer('HTTP/1.1 200 OK', 'utf8');
+				status_data   = new Buffer('HTTP/1.1 ' + (_STATUS[status] || _STATUS[500]), 'utf8');
 				status_length = status_data.length;
 			}
 

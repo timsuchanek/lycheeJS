@@ -57,7 +57,9 @@ lychee.define('sorbet.serve.File').requires([
 			}, this);
 
 		} else {
+
 			ready(null, mime.type);
+
 		}
 
 	};

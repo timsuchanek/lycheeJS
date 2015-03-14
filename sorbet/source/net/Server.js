@@ -52,7 +52,7 @@ lychee.define('sorbet.net.Server').tags({
 
 
 		return {
-			status:  500,
+			status:  404,
 			headers: { 'Content-Type': content },
 			payload: payload
 		};
