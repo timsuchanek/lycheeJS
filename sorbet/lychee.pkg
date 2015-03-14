@@ -44,6 +44,12 @@
 			},
 
 			"serve": {
+
+				"api": {
+					"Project": [ "js" ],
+					"Server":  [ "js" ]
+				},
+
 				"API":      [ "js" ],
 				"File":     [ "js" ],
 				"Redirect": [ "js" ]

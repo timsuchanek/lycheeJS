@@ -11,6 +11,7 @@ back into master, tagged and published.
 
 
 - sorbet.plugin.Fertilizer should auto-build environments for all projects
+- sorbet.serve.api.Project for details of each project (Ranger API)
 - API: lychee.Renderer
 - API: lychee.Storage
 - API: lychee.data Stack
