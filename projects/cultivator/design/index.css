@@ -157,6 +157,12 @@ section.active {
 
 div.main {
 	display: flex;
+	display: -moz-flex;
+	display: -ms-flex;
+	display: -webkit-flex;
+	-moz-flex-flow: row nowrap;
+	-ms-flex-flow: row nowrap;
+	-webkit-flex-flow: row nowrap;
 	flex-flow: row nowrap;
 }
 
@@ -168,6 +174,9 @@ div.main > article:nth-child(1) {
 
 div.main > article:nth-child(2) {
 	margin: 0px 0px 0px 16px;
+	-moz-flex-grow: 1;
+	-ms-flex-grow: 1;
+	-webkit-flex-grow: 1;
 	flex-grow: 1;
 }
 
@@ -184,6 +193,9 @@ div.wizard {
 	width: 100%;
 	max-width: 1280px;
 	margin: 0px auto;
+	-moz-flex-flow: row wrap;
+	-ms-flex-flow: row wrap;
+	-webkit-flex-flow: row wrap;
 	flex-flow: row wrap;
 	justify-content: center;
 }
@@ -191,6 +203,9 @@ div.wizard {
 div.wizard article {
 	min-width: 256px;
 	max-width: 256px;
+	-moz-flex-grow: 1;
+	-ms-flex-grow: 1;
+	-webkit-flex-grow: 1;
 	flex-grow: 1;
 }
 
