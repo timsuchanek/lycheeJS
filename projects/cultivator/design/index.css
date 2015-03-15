@@ -156,10 +156,10 @@ section.active {
  */
 
 div.main {
-	display: flex;
 	display: -moz-flex;
 	display: -ms-flex;
-	display: -webkit-flex;
+	display: -webkit-box;
+	display: flex;
 	-moz-flex-flow: row nowrap;
 	-ms-flex-flow: row nowrap;
 	-webkit-flex-flow: row nowrap;
