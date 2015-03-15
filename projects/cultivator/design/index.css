@@ -156,14 +156,17 @@ section.active {
  */
 
 div.main {
-	display: flex;
+	display: -webkit-box;
 	display: -moz-flex;
 	display: -ms-flex;
-	display: -webkit-box;
+	display: -webkit-flex;
+	display: flex;
+
 	-moz-flex-flow: row nowrap;
 	-ms-flex-flow: row nowrap;
 	-webkit-flex-flow: row nowrap;
 	flex-flow: row nowrap;
+
 }
 
 div.main > article:nth-child(1) {
@@ -174,10 +177,6 @@ div.main > article:nth-child(1) {
 
 div.main > article:nth-child(2) {
 	margin: 0px 0px 0px 16px;
-	-moz-flex: 1;
-	-ms-flex: 1;
-	-webkit-flex: 1;
-	flex: 1;
 }
 
 div.main > article:nth-child(2) figure {
@@ -189,25 +188,24 @@ div.main > article:nth-child(2) figure {
 
 
 div.wizard {
-	display: flex;
-	display: -moz-box;
-	display: -ms-flex;
 	display: -webkit-box;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+
 	width: 100%;
 	max-width: 100%;
 	margin: 0px auto;
+
 	-moz-flex-flow: row wrap;
 	-ms-flex-flow: row wrap;
 	-webkit-flex-flow: row wrap;
 	flex-flow: row wrap;
-	-moz-box-align: stretch;
-	-webkit-box-align: stretch;
-	-ms-flex-align: stretch;
-	-webkit-align-items: stretch;
-	align-items: stretch;
+
+	-webkit-box-pack: center;
 	-moz-box-pack: center;
 	-ms-flex-pack: center;
-	-webkit-box-pack: center;
 	-webkit-justify-content: center;
 	justify-content: center;
 }
@@ -215,9 +213,9 @@ div.wizard {
 div.wizard article {
 	min-width: 256px;
 	max-width: 256px;
-	-moz-box: 1;
-	-webkit-box: 1;
-	-moz-flex: 1;
+
+	-moz-box-flex: 1;
+	-webkit-box-flex: 1;
 	-ms-flex: 1;
 	-webkit-flex: 1;
 	flex: 1;
