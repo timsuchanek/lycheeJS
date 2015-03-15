@@ -26,12 +26,13 @@ console.log('TODO: build chain for ' + project.identifier);
 	var _process_serve = function(data, ready) {
 
 		var host = this.hosts[data.headers['Host'].split(':')[0]] || null;
-		if (host !== null) {
+		var url  = data.headers.url || null;
+		if (host !== null && url !== null) {
 
 			var parameters = {};
 
-			var url = data.headers.url.split('?')[0];
-			var tmp = data.headers.url.split('?')[1] || '';
+			var url = url.split('?')[0];
+			var tmp = url.split('?')[1] || '';
 			if (tmp.length > 0) {
 
 				tmp.split('&').forEach(function(value) {
