@@ -90,6 +90,9 @@ menu li {
 	text-transform: uppercase;
 	list-style: none;
 	cursor: pointer;
+	-moz-transition: all 250ms ease-out;
+	-ms-transition: all 250ms ease-out;
+	-webkit-transition: all 250ms ease-out;
 	transition: all 250ms ease-out;
 }
 
@@ -120,7 +123,13 @@ section {
 	right: 0px;
 	bottom: 0px;
 	left: 0px;
+	-moz-transform: translate(-100%, 0%);
+	-ms-transform: translate(-100%, 0%);
+	-webkit-transform: translate(-100%, 0%);
 	transform: translate(-100%, 0%);
+	-moz-transition: all 250ms ease-out;
+	-ms-transition: all 250ms ease-out;
+	-webkit-transition: all 250ms ease-out;
 	transition: all 250ms ease-out;
 	overflow-x: hidden;
 	overflow-y: auto;
@@ -129,7 +138,13 @@ section {
 }
 
 section.active {
+	-moz-transform: translate(0%, 0%);
+	-ms-transform: translate(0%, 0%);
+	-webkit-transform: translate(0%, 0%);
 	transform: translate(0%, 0%);
+	-moz-transition: all 250ms ease-out;
+	-ms-transition: all 250ms ease-out;
+	-webkit-transition: all 250ms ease-out;
 	transition: all 250ms ease-out;
 	opacity: 1;
 }
@@ -374,6 +389,9 @@ button {
 	text-transform: uppercase;
 	outline: none;
 	cursor: pointer;
+	-moz-transition: all 250ms ease-out;
+	-ms-transition: all 250ms ease-out;
+	-webkit-transition: all 250ms ease-out;
 	transition: all 250ms ease-out;
 	-webkit-appearance: none;
 }
@@ -412,6 +430,9 @@ input[type="radio"] {
 	cursor: pointer;
 	border: 1px solid #5d6161;
 	border-radius: 32px;
+	-moz-transition: all 250ms ease-out;
+	-ms-transition: all 250ms ease-out;
+	-webkit-transition: all 250ms ease-out;
 	transition: all 250ms ease-out;
 	-webkit-appearance: none;
 }
@@ -437,6 +458,9 @@ input[type="range"] {
 	border: 1px solid #5d6161;
 	border-radius: 2px;
 	background: transparent;
+	-moz-transition: all 250ms ease-out;
+	-ms-transition: all 250ms ease-out;
+	-webkit-transition: all 250ms ease-out;
 	transition: all 250ms ease-out;
 	outline: none;
 	-webkit-appearance: none;
@@ -479,6 +503,9 @@ input[type="range"]::-moz-range-thumb {
 	border-left: 1px solid #5d6161;
 	border-right: 1px solid #5d6161;
 	border-radius: 0px;
+	-moz-transition: all 250ms ease-out;
+	-ms-transition: all 250ms ease-out;
+	-webkit-transition: all 250ms ease-out;
 	transition: all 250ms ease-out;
 	cursor: move;
 	-moz-appearance: none;
@@ -492,6 +519,9 @@ input[type="range"]::-webkit-slider-thumb {
 	border-left: 1px solid #5d6161;
 	border-right: 1px solid #5d6161;
 	border-radius: 0px;
+	-moz-transition: all 250ms ease-out;
+	-ms-transition: all 250ms ease-out;
+	-webkit-transition: all 250ms ease-out;
 	transition: all 250ms ease-out;
 	cursor: move;
 	-webkit-appearance: none;
@@ -524,6 +554,9 @@ input[type="text"] {
 	border-radius: 2px;
 	outline: none;
 	cursor: text;
+	-moz-transition: all 250ms ease-out;
+	-ms-transition: all 250ms ease-out;
+	-webkit-transition: all 250ms ease-out;
 	transition: all 250ms ease-out;
 	-webkit-appearance: none;
 }
