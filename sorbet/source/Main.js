@@ -25,7 +25,7 @@ console.log('TODO: build chain for ' + project.identifier);
 
 	var _process_serve = function(data, ready) {
 
-		var host = this.hosts[data.headers['Host'].split(':')[0]] || null;
+		var host = this.hosts[(data.headers['Host'] || '').split(':')[0]] || null;
 		var url  = data.headers.url || null;
 		if (host !== null && url !== null) {
 
