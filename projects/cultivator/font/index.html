@@ -72,11 +72,11 @@
 				</table>
 			</form>
 			<p class="center">
-				<button id="preview-download">Download Font.fnt</button>
+				<button id="preview-download" class="ico-download">Download Font</button>
 			</p>
 		</article>
 
-		<article class="flex">
+		<article>
 			<h3>Preview</h3>
 			<div>
 				<figure class="center">
@@ -90,84 +90,98 @@
 </section>
 
 <section id="help">
-	This is the Help Section
-</section>
 
-<!--
+	<div class="wizard">
 
-	<article>
-		<h2>3. Usage</h2>
-		<p>
-			You can attach the Font file as an attachment to a specific
-			Definition by modifying the <em>lychee.pkg</em> file.
-		</p>
-		<p>
-			In this example, we have two different files, the Definition
-			<em>source/Example.js</em> and the Font <em>source/Example.fnt</em>.
-		</p>
-		<pre class="json" title="/projects/example/lychee.pkg">
-{
-	"source": {
-		"files": {
-			"Example": [ "js", "fnt" ]
-		}
-	}
-}
-		</pre>
-		<br>
-		<pre class="javascript" title="/projects/example/source/Example.js">
-lychee.define('game.Example').exports(function(lychee, game, global, attachments) {
+		<article class="wide">
+			<h3><b>1</b>Simple Usage</h3>
+			<div>
+				Given you have an Entity named <q>source/entity/Foo.js</q>
+				already in place, rename the Font to <q>source/entity/Foo.fnt</q>.
+			</div>
+			<p>
+				After that you can access the Font in the code:
+			</p>
+			<pre class="javascript">
+lychee.define('game.entity.Foo').exports(function(lychee, game, global, attachments) {
 
-	var font = attachments['fnt'];
-	if (font instanceof Font) {
-		console.log('Yay, font available!');
-	}
-
-
-	return {}; // This is a stub Module
+  var font = attachments['fnt'];
+  if (font instanceof Font) {
+    console.log('Yay, font available!', font);
+  }
 
 });
-		</pre>
-	</article>
+			</pre>
+		</article>
 
-	<footer>lycheeJS is (c) 2014 by LazerUnicorns Ltd. and released under MIT license.</footer>
+		<article class="wide">
+			<h3><b>2</b>Advanced Usage</h3>
+			<div>
+				Given you have an Entity named <q>source/entity/Foo.js</q>
+				already in place, you can rename the Fonts to
+				<q>source/entity/Foo.label.fnt</q> and <q>source/entity/Foo.small.fnt</q>.
+			</div>
+			<p>
+				After that you can access the Fonts in the code:
+			</p>
+			<pre class="javascript">
+lychee.define('game.entity.Foo').exports(function(lychee, game, global, attachments) {
 
-	<script>
-	/*
-	 * INITIALIZATION
-	 */
+  var fonts = {
+    label: attachments['label.fnt'],
+    small: attachments['small.fnt']
+  };
 
-	(function(lychee, global) {
+  if (fonts.label instanceof Font) {
+    console.log('Yay, label font available!', fonts.label);
+  }
 
-		var environment = new lychee.Environment({
-			id:      'font',
-			debug:   false,
-			sandbox: false,
-			build:   'tool.Main',
-			packages: [
-				new lychee.Package('tool', './lychee.pkg')
-			],
-			tags:     {
-				platform: [ 'html' ]
-			}
-		});
+  if (fonts.small instanceof Font) {
+    console.log('Yay, small font available!', fonts.small);
+  }
+
+});
+			</pre>
+		</article>
+
+	</div>
+
+</section>
+
+<footer>
+	lycheeJS is (c) 2012-2015 by LazerUnicorns Ltd. and released under MIT license.
+</footer>
+
+<script>
+(function(lychee, global) {
+
+	var environment = new lychee.Environment({
+		id:      'font',
+		debug:   false,
+		sandbox: false,
+		build:   'tool.Main',
+		packages: [
+			new lychee.Package('tool', './lychee.pkg')
+		],
+		tags:     {
+			platform: [ 'html' ]
+		}
+	});
 
 
-		lychee.setEnvironment(environment);
+	lychee.setEnvironment(environment);
 
-		lychee.init(function(sandbox) {
+	lychee.init(function(sandbox) {
 
-			var lychee = sandbox.lychee;
-			var tool   = sandbox.tool;
+		var lychee = sandbox.lychee;
+		var tool   = sandbox.tool;
 
-			sandbox.MAIN = new tool.Main();
-			sandbox.MAIN.init();
+		sandbox.MAIN = new tool.Main();
+		sandbox.MAIN.init();
 
-		});
+	});
 
-	})(lychee, typeof global !== 'undefined' ? global : this);
-	</script>
-
--->
+})(lychee, typeof global !== 'undefined' ? global : this);
+</script>
 </body>
 </html>    

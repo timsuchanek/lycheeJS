@@ -38,7 +38,12 @@ lychee.define('sorbet.net.Server').tags({
 		var payload = 'File not found.';
 
 
-		var ext = data.headers.url.split('?')[0].split('.').pop();
+		var ext = '';
+		if (data.headers instanceof Object && typeof data.headers.url === 'string') {
+			ext = data.headers.url.split('?')[0].split('.').pop();
+		}
+
+
 		if (ext === 'js') {
 			content = 'application/javascript';
 			payload = '"File not found.";';

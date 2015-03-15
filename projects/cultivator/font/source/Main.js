@@ -91,7 +91,6 @@ lychee.define('tool.Main').requires([
 				var filename = settings.family + '_' + settings.size + 'x' + settings.outline + '.fnt';
 				var buffer   = new Buffer(blob, 'utf8');
 
-				button.innerHTML = 'Download ' + filename;
 				button.onclick = function() {
 					_download(filename, buffer);
 				};

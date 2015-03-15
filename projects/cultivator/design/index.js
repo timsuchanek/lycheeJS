@@ -2,8 +2,49 @@
 ui = (function(global) {
 
 	/*
-	 * POLYFILLS
+	 * HELPERS
 	 */
+
+	var _set_active = function(element) {
+
+		var classnames = element.className.split(' ');
+		if (classnames.indexOf('active') === -1) {
+			classnames.push('active');
+		}
+
+		element.className = classnames.join(' ');
+
+	};
+
+	var _set_inactive = function(element) {
+
+		var classnames = element.className.split(' ');
+		var classindex = classnames.indexOf('active');
+		if (classindex !== -1) {
+			classnames.splice(classindex, 1);
+		}
+
+		element.className = classnames.join(' ');
+
+	};
+
+	var _convert_value = function(value) {
+
+		if (typeof value === 'string') {
+
+			var num = parseInt(value, 10);
+			if (!isNaN(num)) {
+				return num;
+			} else {
+				return value;
+			}
+
+		}
+
+
+		return null;
+
+	};
 
 	var _set_value = function(key, value) {
 
@@ -105,6 +146,11 @@ ui = (function(global) {
 
 	};
 
+
+
+	/*
+	 * POLYFILLS
+	 */
 
 	document.addEventListener('DOMContentLoaded', function() {
 
@@ -227,55 +273,54 @@ ui = (function(global) {
 
 		}
 
+
+		var menu = [].slice.call(document.querySelectorAll('menu li'));
+		if (menu.length > 0) {
+
+			var _active = 0;
+
+			menu.forEach(function(item, index) {
+
+				if (item.className === 'active') {
+					_active = index;
+				}
+
+			});
+
+			_set_active(menu[_active]);
+
+
+			menu.forEach(function(item) {
+
+				item.addEventListener('mouseenter', function() {
+
+					menu.forEach(function(other) { _set_inactive(other); });
+					_set_active(this);
+
+				});
+
+				item.addEventListener('mouseleave', function() {
+
+					menu.forEach(function(other) { _set_inactive(other); });
+					_set_active(menu[_active]);
+
+				});
+
+				item.addEventListener('mouseup', function() {
+					_active = menu.indexOf(this);
+				});
+
+			});
+
+		}
+
 	}, true);
 
 
 
 	/*
-	 * IMPLEMENTATIONS
+	 * IMPLEMENTATION
 	 */
-
-	var _set_active = function(element) {
-
-		var classnames = element.className.split(' ');
-		if (classnames.indexOf('active') === -1) {
-			classnames.push('active');
-		}
-
-		element.className = classnames.join(' ');
-
-	};
-
-	var _set_inactive = function(element) {
-
-		var classnames = element.className.split(' ');
-		var classindex = classnames.indexOf('active');
-		if (classindex !== -1) {
-			classnames.splice(classindex, 1);
-		}
-
-		element.className = classnames.join(' ');
-
-	};
-
-	var _convert_value = function(value) {
-
-		if (typeof value === 'string') {
-
-			var num = parseInt(value, 10);
-			if (!isNaN(num)) {
-				return num;
-			} else {
-				return value;
-			}
-
-		}
-
-
-		return null;
-
-	};
-
 
 	return {
 

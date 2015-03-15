@@ -39,6 +39,7 @@ label:before {
 
 .ico-browser:before  { content: "\e037"; }
 .ico-console:before  { content: "\e011"; }
+.ico-download:before { content: "\e083"; }
 .ico-editor:before   { content: "\e00c"; }
 .ico-error:before    { content: "\e082"; }
 .ico-exit:before     { content: "\e097"; }
@@ -56,6 +57,7 @@ label:before {
 .ico-start:before    { content: "\e071"; }
 .ico-stop:before     { content: "\e072"; }
 .ico-tools:before    { content: "\e059"; }
+.ico-upload:before   { content: "\e084"; }
 
 
 
@@ -91,10 +93,7 @@ menu li {
 	transition: all 250ms ease-out;
 }
 
-menu li:hover {
-	text-shadow: #eeeeee 0 0 10px;
-}
-
+menu li:hover,
 menu li.active {
 	color: #32afe5;
 	text-shadow: #32afe5 0 0 10px, #32afe5 0 0 20px, #32afe5 0 0 40px;
@@ -157,6 +156,12 @@ div.main > article:nth-child(2) {
 	flex-grow: 1;
 }
 
+div.main > article:nth-child(2) figure {
+	display: block;
+	min-height: 512px;
+	overflow: auto;
+}
+
 
 
 div.wizard {
@@ -172,6 +177,11 @@ div.wizard article {
 	min-width: 256px;
 	max-width: 256px;
 	flex-grow: 1;
+}
+
+div.wizard article.wide {
+	min-width: 386px;
+	max-width: 512px;
 }
 
 div.wizard article img {
@@ -220,13 +230,27 @@ article h3 b {
 	font-weight: bold;
 }
 
-article div {
+article > div,
+article > p {
 	margin: 16px;
 }
 
 article h3 ~ div {
 	min-height: 96px;
 }
+
+article q {
+	padding: 0px 4px;
+	background: #1f2726;
+}
+
+article pre {
+	margin: 16px;
+	padding: 8px;
+	background: #1f2726;
+	overflow: auto;
+}
+
 
 
 /*
