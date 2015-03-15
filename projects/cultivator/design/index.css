@@ -97,7 +97,7 @@ menu li:hover {
 
 menu li.active {
 	color: #32afe5;
-	text-shadow: #32afe5 0 0 20px;
+	text-shadow: #32afe5 0 0 10px, #32afe5 0 0 20px, #32afe5 0 0 40px;
 }
 
 aside {
@@ -233,6 +233,24 @@ article h3 ~ div {
  * UI
  */
 
+@-moz-keyframes textpulse {
+	0%   { text-shadow: #32afe5 0 0 10px;     }
+	50%  { text-shadow: transparent 0 0 10px; }
+	100% { text-shadow: #32afe5 0 0 10px;     }
+}
+
+@-webkit-keyframes textpulse {
+	0%   { text-shadow: #32afe5 0 0 10px;     }
+	50%  { text-shadow: transparent 0 0 10px; }
+	100% { text-shadow: #32afe5 0 0 10px;     }
+}
+
+@keyframes textpulse {
+	0%   { text-shadow: #32afe5 0 0 10px;     }
+	50%  { text-shadow: transparent 0 0 10px; }
+	100% { text-shadow: #32afe5 0 0 10px;     }
+}
+
 @-moz-keyframes pulse {
 	0%   { border: 1px solid #545857; box-shadow: transparent 0 0 20px; }
 	50%  { border: 1px solid #32afe5; box-shadow: #32afe5 0 0 20px;     }
@@ -245,25 +263,27 @@ article h3 ~ div {
 	100% { border: 1px solid #545857; box-shadow: transparent 0 0 20px; }
 }
 
-@-moz-keyframes textpulse {
-	0%   { box-shadow: #32afe5 0 0 20px;     }
-	50%  { box-shadow: transparent 0 0 20px; }
-	100% { box-shadow: #32afe5 0 0 20px;     }
-}
-
-@-webkit-keyframes textpulse {
-	0%   { box-shadow: #32afe5 0 0 20px;     }
-	50%  { box-shadow: transparent 0 0 20px; }
-	100% { box-shadow: #32afe5 0 0 20px;     }
+@keyframes pulse {
+	0%   { border: 1px solid #545857; box-shadow: transparent 0 0 20px; }
+	50%  { border: 1px solid #32afe5; box-shadow: #32afe5 0 0 20px;     }
+	100% { border: 1px solid #545857; box-shadow: transparent 0 0 20px; }
 }
 
 
 
 a {
-	color: #5fa2f8;
+	color: #32afe5;
 	font-weight: bold;
 	text-decoration: none;
 	cursor: pointer;
+}
+
+a:hover,
+a:focus {
+	text-shadow: #32afe5 0 0 10px;
+	-moz-animation: textpulse 3000ms infinite;
+	-webkit-animation: textpulse 3000ms infinite;
+	animation: textpulse 3000ms infinite;
 }
 
 p {
@@ -340,9 +360,11 @@ button:not(.ico-only) {
 
 button:hover,
 button:focus {
+	background: #32afe5;
+	text-shadow: #eeeeee 0 0 10px;
 	-moz-animation: pulse 3000ms infinite;
 	-webkit-animation: pulse 3000ms infinite;
-	text-shadow: #eeeeee 0 0 10px;
+	animation: pulse 3000ms infinite;
 }
 
 button[disabled],
@@ -354,6 +376,8 @@ button[disabled]:focus {
 	text-shadow: none;
 	box-shadow: none;
 	cursor: not-allowed;
+	-moz-animation: none;
+	-webkit-animation: none;
 }
 
 
@@ -374,7 +398,9 @@ input[type="radio"]:checked {
 
 input[type="radio"]:hover {
 	background: #32afe5;
+	-moz-animation: pulse 3000ms infinite;
 	-webkit-animation: pulse 3000ms infinite;
+	animation: pulse 3000ms infinite;
 }
 
 
@@ -416,6 +442,7 @@ input[type="range"]:hover,
 input[type="range"]:focus {
 	-moz-animation: pulse 3000ms infinite;
 	-webkit-animation: pulse 3000ms infinite;
+	animation: pulse 3000ms infinite;
 }
 
 
@@ -486,6 +513,7 @@ input[type="text"]:focus {
 	color: #32afe5;
 	-moz-animation: pulse 3000ms infinite;
 	-webkit-animation: pulse 3000ms infinite;
+	animation: pulse 3000ms infinite;
 }
 
 

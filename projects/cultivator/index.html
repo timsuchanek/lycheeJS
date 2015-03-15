@@ -16,6 +16,9 @@
 	<li class="ico-tools" onclick="ui.setView('tools');">Tools</li>
 	<li class="ico-help" onclick="ui.setView('help');">Help</li>
 </menu>
+<aside>
+	<button class="ico-refresh" onclick="window.location.href='./index.html'">Refresh</button>
+</aside>
 
 <section id="intro" class="active">
 
@@ -70,11 +73,11 @@
 				Use the editor to modify its contents.
 			</div>
 			<div>
-				<div style="height:64px"></div>
+				<div style="height:32px"></div>
 				<p class="center">
-					<input name="intro-cultivate" type="text" placeholder="my-project"><br>
-					<label for="intro-cultivate">&nbsp;</label>
+					<input name="intro-cultivate" type="text" placeholder="my-project">
 				</p>
+				<div style="height:32px"></div>
 			</div>
 			<p class="center">
 				<button disabled class="ico-editor" onclick="var id = ui.getValue('#intro-plant input'); if (id !== null) window.open('./editor/index.html?identifier=' + id);">Create Project</button>
