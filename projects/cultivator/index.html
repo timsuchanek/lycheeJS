@@ -38,11 +38,10 @@
 					<li><input tabindex="3" name="intro-play" type="radio" value="pong"><span>pong</span></li>
 					<li><input tabindex="4" name="intro-play" type="radio" value="tictactoe"><span>tictactoe</span></li>
 				</ul>
-
-				<div class="center">
-					<button tabindex="5" class="ico-browser" onclick="var id = ui.getValue('#intro-play input'); if (id !== null) window.open('../../projects/' + id);">Open in Browser</button>
-				</div>
 			</div>
+			<p class="center">
+				<button tabindex="5" class="ico-browser" onclick="var id = ui.getValue('#intro-play input'); if (id !== null) window.open('../../projects/' + id);">Open in Browser</button>
+			</p>
 		</article>
 
 		<article id="intro-learn">
@@ -58,11 +57,10 @@
 					<li><input tabindex="8" name="intro-learn" type="radio" value="pong"><span>pong</span></li>
 					<li><input tabindex="9" name="intro-learn" type="radio" value="tictactoe"><span>tictactoe</span></li>
 				</ul>
-
-				<div class="center">
-					<button tabindex="10" class="ico-editor" onclick="var id = ui.getValue('#intro-learn input'); if (id !== null) window.open('./editor/index.html?identifier=' + id);">Open in Editor</button>
-				</div>
 			</div>
+			<p class="center">
+				<button tabindex="10" class="ico-editor" onclick="var id = ui.getValue('#intro-learn input'); if (id !== null) window.open('./editor/index.html?identifier=' + id);">Open in Editor</button>
+			</p>
 		</article>
 
 		<article id="intro-cultivate">
@@ -77,10 +75,10 @@
 					<input name="intro-cultivate" type="text" placeholder="my-project"><br>
 					<label for="intro-cultivate">&nbsp;</label>
 				</p>
-				<div class="center">
-					<button disabled class="ico-editor" onclick="var id = ui.getValue('#intro-plant input'); if (id !== null) window.open('./editor/index.html?identifier=' + id);">Create Project</button>
-				</div>
 			</div>
+			<p class="center">
+				<button disabled class="ico-editor" onclick="var id = ui.getValue('#intro-plant input'); if (id !== null) window.open('./editor/index.html?identifier=' + id);">Create Project</button>
+			</p>
 		</article>
 
 	</div>
@@ -233,9 +231,9 @@
 				We recommend to read the Tutorials on
 				<a href="http://lycheejs.org/tutorials/index.html">lycheejs.org</a>.
 			</div>
-			<div class="center">
+			<p class="center">
 				<button class="ico-browser" onclick="window.open('http://lycheejs.org/tutorials/index.html')">Open in Browser</button>
-			</div>
+			</p>
 		</article>
 
 		<article id="help-youtube">
@@ -244,9 +242,9 @@
 				If you are not into reading, you can watch the Tutorials
 				playlist on YouTube.
 			</div>
-			<div class="center">
+			<p class="center">
 				<button class="ico-browser" onclick="window.open('http://youtube.com/lycheeJS')">Open in Browser</button>
-			</div>
+			</p>
 		</article>
 
 		<article id="help-tutorials">
