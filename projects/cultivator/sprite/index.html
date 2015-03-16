@@ -6,196 +6,178 @@
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-
-	<link rel="stylesheet" href="../_design/index.css">
-	<script src="../_design/index.js"></script>
+	<link rel="stylesheet" href="../design/index.css">
+	<script src="../design/index.js"></script>
 
 	<!-- BOOTSTRAP -->
 	<script src="/lychee/build/html/core.js"></script>
 
+	<style>
+	div.main > article:nth-child(2) {
+		min-width: 512px;
+	}
+	#tool article figure {
+		position: relative;
+	}
+	#tool article figure img {
+		min-width: 64px;
+		min-height: 64px;
+		outline: none;
+		background: url('./grid.png') repeat repeat;
+	}
+	#tool article figure img {
+		position: absolute;
+		top: 0px;
+		left: 0px;
+	}
+	</style>
 </head>
 <body>
+<menu>
+	<li class="ico-tools active" onclick="ui.setView('tool');">Tool</li>
+	<li class="ico-help" onclick="ui.setView('help');">Help</li>
+</menu>
+<aside>
+	<button class="ico-refresh" onclick="window.location.href='./index.html'">Refresh</button>
+</aside>
+ 
+<section id="tool" class="active">
 
-	<menu id="title">
-		<h1>Sprite Tool</h1>
-	</menu>
+	<div class="main">
 
-	<article>
-		<h2>1. Images</h2>
-		<p class="center">
-			Upload all required frames or animations for the lychee.game.Sprite.
-		</p>
-		<p class="center">
-			Animated states are triggered if the filenames are containing an underscore.<br>
-			Examples: default.png, another-state.png, fancy_01.png, fancy_02.png
-		</p>
-		<div class="center">
-			<div id="dropzone"></div>
-		</div>
-	</article>
+		<article>
+			<h3>Settings</h3>
+			<div>
+				Modify the settings for the generated Sprite.
+				Click on Download if it fits your needs.
+			</div>
 
-	<article>
-		<h2>2. Settings</h2>
-		<p class="center">
-			Modify the settings for the new Sprite here.<br>
-			The preview will be automatically refreshed.
-		</p>
-		<form id="settings" enctype="application/json" action="MAIN" method="javascript">
-			<table>
-				<tr>
-					<th>Texture Size</th>
-					<td>
-						<select name="texturesize">
-							<option value="128">128 x 128</option>
-							<option value="256">256 x 256</option>
-							<option value="512" selected>512 x 512</option>
-							<option value="1024">1024 x 1024</option>
-							<option value="2048">2048 x 2048</option>
-							<option value="4096">4096 x 4096</option>
-							<option value="8192">8192 x 8192</option>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<th>Frame Size</th>
-					<td>
-						<select name="framesize">
-							<option value="image" selected>use image size</option>
-							<option value="32">32 x 32</option>
-							<option value="64">64 x 64</option>
-							<option value="128">128 x 128</option>
-							<option value="256">256 x 256</option>
-							<option value="512">512 x 512</option>
-							<option value="1024">1024 x 1024</option>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<th>Frame Alignment</th>
-					<td>
-						<select name="framealignment">
-							<option value="center-center" selected>center center</option>
-							<option value="top-left">top left</option>
-							<option value="top-center">top center</option>
-							<option value="top-right">top right</option>
-							<option value="center-right">center right</option>
-							<option value="bottom-right">bottom right</option>
-							<option value="bottom-center">bottom center</option>
-							<option value="bottom-left">bottom left</option>
-							<option value="center-left">center left</option>
-						</select>
-					</td>
-				</tr>
-			</table>
-			<table>
-				<tr>
-					<th>Static Bounding Box</th>
-					<td>
-						<input type="number" name="width" value="" placeholder="width">
-						<input type="number" name="height" value="" placeholder="height"><br>
-						<input type="number" name="depth" value="" placeholder="depth">
-						<input type="number" name="radius" value="" placeholder="radius">
-					</td>
-				</tr>
-				<tr>
-					<th>Dynamic Bounding Box</th>
-					<td>
-						<select name="boundingbox">
-							<option value="frame" selected>use frame size</option>
-							<option value="none">no bounding box</option>
-						</select>
-					</td>
-				</tr>
-			</table>
-			<table>
-				<tr>
-					<th>State Map</th>
-					<td>
-						<select name="statemap">
-							<option value="image" selected>use image name</option>
-							<option value="none">no state map</option>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<th>State Animation</th>
-					<td>
-						<select name="stateanimation">
-							<option value="image" selected>use image name</option>
-							<option value="none">no state animations</option>
-						</select>
-					</td>
-				</tr>
-			</table>
-		</form>
-	</article>
+			<form id="settings" enctype="application/json" action="MAIN" method="javascript">
+				<table class="vertical">
+					<tr>
+						<th>Files</th>
+						<td><label class="file ico-upload"><input type="file" name="files" accept=".png" multiple>Upload</label></td>
+					</tr>
+					<tr>
+						<th>Texture Size</th>
+						<td><input type="range" name="size" min="1" max="8" value="4"></td>
+					</tr>
+					<tr>
+						<th>Frame Size</th>
+						<td>
+							<ul class="select">
+								<li><input type="radio" name="frame" value="original"><span>original</span></li>
+								<li><input type="radio" name="frame" value="power-of-two" checked><span><abbr title="power of two">2<sup>^n</sup></abbr></span></li>
+							</ul>
+						</td>
+					</tr>
+					<tr>
+						<th>Bounding Box</th>
+						<td>
+							<ul class="select">
+								<li><input type="radio" name="boundingbox" value="none"><span>none</span></li>
+								<li><input type="radio" name="boundingbox" value="auto" checked><span>auto</span></li>
+							</ul>
+						</td>
+					</tr>
+					<tr>
+						<th>Entity Dimensions</th>
+						<td>
+							<input type="number" name="width" value="" min="0" placeholder="width"><br>
+							<input type="number" name="height" value="" min="0" placeholder="height"><br>
+							<input type="number" name="depth" value="" min="0" placeholder="depth"><br>
+							<input type="number" name="radius" value="" min="0" placeholder="radius">
+						</td>
+					</tr>
+					<tr>
+						<th>Entity States</th>
+						<td>
+							<ul class="select">
+								<li><input type="radio" name="states" value="none"><span>none</span></li>
+								<li><input type="radio" name="states" value="auto" checked><span>auto</span></li>
+							</ul>
+						</td>
+					</tr>
+				</table>
+			</form>
+			<p class="center">
+				<button id="preview-download" class="ico-download">Download Entity</button>
+			</p>
+		</article>
 
-	<article>
-		<h2>3. Preview &amp; Export</h2>
-		<div class="center">
-			<figure class="texture">
-				<img id="preview-texture" src="data:image/png;base64,">
-			</figure>
-		</div>
-		<p class="center">
-			<button id="preview-download-definition">Download Entity.js</button>
-			<button id="preview-download-config">Download Entity.json</button>
-			<button id="preview-download-texture">Download Entity.png</button>
-		</p>
-	</article>
+		<article>
+			<h3>Preview</h3>
+			<div>
+				<figure class="center">
+					<img id="preview-texture" src="data:image/png;base64,">
+				</figure>
+			</div>
+		</article>
 
-	<article>
-		<h2>4. Usage</h2>
-		<p class="center">
-			The generated Entity.js is an implementation that you can use directly.<br>
-			Make sure to rename the files and make them available in the <em>lychee.pkg</em> file.
-		</p>
-	</article>
+	</div>
 
-	<footer>lycheeJS is (c) 2014 by LazerUnicorns Ltd. and released under MIT license.</footer>
+</section>
 
-	<script>
-	/*
-	 * INITIALIZATION
-	 */
+<section id="help">
 
-	(function(lychee, global) {
+	<div class="wizard">
 
-		var environment = new lychee.Environment({
-			id:      'sprite',
-			debug:   false,
-			sandbox: false,
-			build:   'tool.Main',
-			packages: [
-				new lychee.Package('tool', './lychee.pkg')
-			],
-			tags:     {
-				platform: [ 'html' ]
+		<article class="wide">
+			<h3><b>1</b>Usage</h3>
+			<div>
+				Upload all required frame images using the Upload button.
+				The rest is done automagically.
+				<br><br>
+				Animations are triggered if the filenames contain an underscore.<br>
+				Examples: default.png, not-animated.png, animated_01.png, animated_02.png
+			</div>
+		</article>
+
+	</div>
+
+</section>
+
+<footer>
+	lycheeJS is (c) 2012-2015 by LazerUnicorns Ltd. and released under MIT license.
+</footer>
+
+<script>
+(function(lychee, global) {
+
+	var environment = new lychee.Environment({
+		id:      'sprite',
+		debug:   false,
+		sandbox: false,
+		build:   'tool.Main',
+		packages: [
+			new lychee.Package('tool', './lychee.pkg')
+		],
+		tags:     {
+			platform: [ 'html' ]
+		}
+	});
+
+
+	lychee.setEnvironment(environment);
+
+	lychee.init(function(sandbox) {
+
+		var lychee = sandbox.lychee;
+		var tool   = sandbox.tool;
+
+		sandbox.MAIN = new tool.Main({
+			dropzone: {
+				element:    document.querySelector('#dropzone'),
+				extensions: {
+					png: true
+				}
 			}
 		});
+		sandbox.MAIN.init();
 
+	});
 
-		lychee.setEnvironment(environment);
-
-		lychee.init(function(sandbox) {
-
-			var lychee = sandbox.lychee;
-			var tool   = sandbox.tool;
-
-			sandbox.MAIN = new tool.Main({
-				dropzone: {
-					element:    document.querySelector('#dropzone'),
-					extensions: {
-						png: true
-					}
-				}
-			});
-			sandbox.MAIN.init();
-
-		});
-
-	})(lychee, typeof global !== 'undefined' ? global : this);
-	</script>
-
+})(lychee, typeof global !== 'undefined' ? global : this);
+</script>
 </body>
 </html>    

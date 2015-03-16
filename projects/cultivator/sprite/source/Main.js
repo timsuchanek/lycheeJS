@@ -134,6 +134,17 @@ lychee.define('tool.Main').requires([
 	 * IMPLEMENTATION
 	 */
 
+	var _SIZES = {
+		1: 64,
+		2: 128,
+		3: 256,
+		4: 512,
+		5: 1024,
+		6: 2048,
+		7: 4096,
+		8: 8192
+	};
+
 	var Class = function(data) {
 
 		var settings = lychee.extend({
@@ -201,6 +212,8 @@ lychee.define('tool.Main').requires([
 					this.locked = true;
 
 					this.loop.setTimeout(100, function() {
+
+						settings.texture = _SIZES[settings.size];
 
 						var sprite = _SPRITE.encode(settings);
 						if (sprite !== null) {
