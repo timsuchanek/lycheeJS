@@ -11,9 +11,60 @@ lychee.define('sorbet.mod.Server').requires([
 	var _net           = require('net');
 	var _port          = _MIN_PORT;
 
-	var _get_port = function() {
-		// TODO: Use dynamic port check, if port is used use another one
-		return _port++;
+	var _scan_port = function(callback, scope) {
+
+		callback = callback instanceof Function ? callback : null;
+		scope    = scope !== undefined          ? scope    : this;
+
+
+		if (callback !== null) {
+
+			var socket = new _net.Socket();
+			var status = null;
+			var port   = _port++;
+
+
+			socket.setTimeout(100);
+
+			socket.on('connect', function() {
+				status = 'used';
+				socket.destroy();
+			});
+
+			socket.on('timeout', function(err) {
+				status = 'free';
+				socket.destroy();
+			});
+
+			socket.on('error', function(err) {
+
+				if (err.code === 'ECONNREFUSED') {
+					status = 'free';
+				} else {
+					status = 'used';
+				}
+
+				socket.destroy();
+
+			});
+
+			socket.on('close', function(err) {
+
+				if (status === 'free') {
+					callback.call(scope, port);
+				} else if (status === 'used') {
+					_get_port(callback, scope);
+				} else {
+					callback.call(scope, null);
+				}
+
+			});
+
+
+			socket.connect(port, '127.0.0.1');
+
+		}
+
 	};
 
 
@@ -49,48 +100,52 @@ lychee.define('sorbet.mod.Server').requires([
 				var info = project.filesystem.info('/sorbet.js');
 				if (info !== null && info.type === 'file') {
 
-					var server_host = null;
-					var server_port = _get_port();
+					_scan_port(function(port) {
 
-					if (server_port >= _MIN_PORT && server_port <= _MAX_PORT) {
+						var server_host = null;
+						var server_port = port;
 
-						var program_bin  = project.filesystem.root + '/sorbet.js';
-						var program_args = [ _root, server_port, server_host ];
-						var program_cwd  = project.filesystem.root;
+						if (server_port !== null && server_port >= _MIN_PORT && server_port <= _MAX_PORT) {
 
-
-						var server_process = _child_process.fork(program_bin, program_args, {
-							cwd: program_cwd
-						});
+							var program_bin  = project.filesystem.root + '/sorbet.js';
+							var program_args = [ _root, server_port, server_host ];
+							var program_cwd  = project.filesystem.root;
 
 
-						if (lychee.debug === true) {
-							console.log('sorbet.mod.Server: Launched Server for "' + project.identifier + '" (' + server_process.pid + ' / ' + server_host + ':' + server_port + ')');
-						}
+							var server_process = _child_process.fork(program_bin, program_args, {
+								cwd: program_cwd
+							});
 
-
-						server_process.on('SIGTERM', function() { this.exit(1); });
-						server_process.on('error',   function() { this.exit(1); });
-						server_process.on('exit',    function() {});
-
-						server_process.destroy = function() {
 
 							if (lychee.debug === true) {
-								console.warn('sorbet.mod.Server: Destroyed Server for "' + project.identifier + '"');
+								console.log('sorbet.mod.Server: Launched Server for "' + project.identifier + '" (' + server_process.pid + ' / ' + server_host + ':' + server_port + ')');
 							}
 
-							this.kill('SIGTERM');
 
-						};
+							server_process.on('SIGTERM', function() { this.exit(1); });
+							server_process.on('error',   function() { this.exit(1); });
+							server_process.on('exit',    function() {});
+
+							server_process.destroy = function() {
+
+								if (lychee.debug === true) {
+									console.warn('sorbet.mod.Server: Destroyed Server for "' + project.identifier + '"');
+								}
+
+								this.kill('SIGTERM');
+
+							};
 
 
-						project.setServer(new sorbet.data.Server({
-							process: server_process,
-							host:    server_host,
-							port:    server_port
-						}));
+							project.setServer(new sorbet.data.Server({
+								process: server_process,
+								host:    server_host,
+								port:    server_port
+							}));
 
-					}
+						}
+
+					}, this);
 
 				}
 

@@ -15,6 +15,7 @@ back into master, tagged and published.
 - API: lychee.Renderer
 - API: lychee.Storage
 - API: lychee.data Stack
+- API: lychee.event.Queue
 - Fertilizer: html-nwjs for Linux, Mac OSX and Windows
 - Website: Overhauling and game.Main Architecture Diagram
 - Website: Refactor tool/configure.js script to generate API docs properly
@@ -23,11 +24,9 @@ back into master, tagged and published.
 ## v0.8.6
 
 - /lychee/dist build via configure script for CDNJS and standalone deployment
-- Sorbet Log File serialization (sorbet.data.LOG encode/decode that runs every 5 minutes)
-- lychee.net.(client||remote).DHT as described in Bittorrent's DHT protocol [1] which extends lychee.net.(client||remote).KRPC for its codec behaviours
-- Project Tool (inspects and verifies integrity of lychee.pkg files)
 - Mode7 Game finalization (lane switch), required assets: racing car, box sprite, explosion sprite
-- LethalMaze Game finalization (multiplayer)
+- Sorbet Log File serialization to be inspectable and remote-debuggable via ranger
+- lychee.net.(client||remote).DHT as described in Bittorrent's DHT protocol [1] which extends lychee.data.BENCODE for its logical behaviours
 - API + Implementation: lychee.net.Hybrid
 - API: lychee.game Stack
 - API: lychee.ui Stack
@@ -40,19 +39,18 @@ back into master, tagged and published.
 - API + Implementation: lychee.game.Logic
 - API + Implementation: lychee.game.Physic
 - API + Major Refactor: lychee.verlet Stack
-- Fertilizer: html-webgl Refactor (webgl2d refactor)
-- Fertilizer: html-cordova for Android, iOS and Blackberry
 
 ## v0.8.8
 
-- Sorbet needs major support for Content-Security-Policy
-- sorbet.module.Blacklist integration with Content-Security-Policy
+- LethalMaze Game finalization (auto-join and auto-matchmaking multiplayer)
+- Fertilizer: html-cordova for Android, iOS and Blackberry
 
 ## Backlog
 
 - Blitzkrieg Game finalization (auto-connect 4 players and let them play against each other)
 - API + Implementation: lychee.data.BSON
 - API + Implementation: lychee.data.MSGPACK
+- Fertilizer: html-webgl Refactor (webgl2d refactor)
 
 
 ## References (Articles and Sources)
