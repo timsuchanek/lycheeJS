@@ -20,7 +20,7 @@ lychee.define('lychee.game.Main').requires([
 
 	var _load_api = function(url, callback, scope) {
 
-		url = typeof url === 'string' ? url : 'http://lycheejs.org/api/Server?identifier=boilerplate';
+		url = typeof url === 'string' ? url : '/api/Server?identifier=boilerplate';
 
 
 		var config = new Config(url);
