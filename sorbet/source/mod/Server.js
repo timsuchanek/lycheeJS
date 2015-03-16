@@ -8,7 +8,13 @@ lychee.define('sorbet.mod.Server').requires([
 	var _MAX_PORT      = 65534;
 
 	var _child_process = require('child_process');
+	var _net           = require('net');
 	var _port          = _MIN_PORT;
+
+	var _get_port = function() {
+		// TODO: Use dynamic port check, if port is used use another one
+		return _port++;
+	};
 
 
 
@@ -44,7 +50,7 @@ lychee.define('sorbet.mod.Server').requires([
 				if (info !== null && info.type === 'file') {
 
 					var server_host = null;
-					var server_port = _port++;
+					var server_port = _get_port();
 
 					if (server_port >= _MIN_PORT && server_port <= _MAX_PORT) {
 
