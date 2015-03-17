@@ -30,12 +30,6 @@
 
 			},
 
-			"ui": {
-
-				"Dropzone": [ "js", "css" ]
-
-			},
-
 			"Main": [ "js", "Entity.tpl" ]
 
 		}

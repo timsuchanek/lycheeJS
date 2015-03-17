@@ -1,8 +1,7 @@
 
 lychee.define('tool.Main').requires([
 	'lychee.data.JSON',
-	'tool.data.SPRITE',
-	'tool.ui.Dropzone'
+	'tool.data.SPRITE'
 ]).includes([
 	'lychee.game.Main'
 ]).tags({
@@ -155,13 +154,6 @@ lychee.define('tool.Main').requires([
 			renderer: null,
 			server:   null,
 
-			dropzone: {
-				element:    null,
-				extensions: {
-					'png': true
-				}
-			},
-
 			viewport: {
 				fullscreen: false
 			}
@@ -169,7 +161,9 @@ lychee.define('tool.Main').requires([
 		}, data);
 
 
-		this.locked = false;
+		this.locked  = false;
+
+		this.__files = [];
 
 
 		lychee.game.Main.call(this, settings);
@@ -182,30 +176,17 @@ lychee.define('tool.Main').requires([
 
 		this.bind('init', function() {
 
-			var settings = this.settings;
-			if (settings.dropzone !== null) {
-
-				this.dropzone = new tool.ui.Dropzone(settings.dropzone);
-				this.dropzone.bind('change', function() {
-
-					var onsubmit = document.querySelector('form').onsubmit;
-					if (onsubmit instanceof Function) {
-						onsubmit();
-					}
-
-				}, this);
-
-			}
-
 		}, this, true);
 
+		this.bind('upload', function(instance) {
+
+			this.__files.push(instance);
+
+		}, this);
 
 		this.bind('submit', function(id, settings) {
 
 			if (id === 'settings') {
-
-				settings.files = this.dropzone.files;
-
 
 				if (this.locked === false) {
 
@@ -213,7 +194,9 @@ lychee.define('tool.Main').requires([
 
 					this.loop.setTimeout(100, function() {
 
+						settings.files   = [].slice.call(this.__files);
 						settings.texture = _SIZES[settings.size];
+
 
 						var sprite = _SPRITE.encode(settings);
 						if (sprite !== null) {

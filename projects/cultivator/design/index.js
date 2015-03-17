@@ -165,6 +165,7 @@ ui = (function(global) {
 
 						var data   = _encode_form(form.getAttribute('enctype'), [].slice.call(form.querySelectorAll('input')));
 						var target = _resolve_target.call(global, form.getAttribute('action'));
+
 						if (target !== null) {
 
 							if (target instanceof Function) {
@@ -205,13 +206,23 @@ ui = (function(global) {
 
 						elements.forEach(function(element) {
 
-							element.onchange = function(a) {
+							if (element.type === 'radio') {
 
-								if (this.checkValidity() === true) {
+								element.onclick = function() {
 									form.onsubmit();
-								}
+								};
 
-							};
+							} else {
+
+								element.onchange = function() {
+
+									if (this.checkValidity() === true) {
+										form.onsubmit();
+									}
+
+								};
+
+							}
 
 						});
 
@@ -318,6 +329,154 @@ ui = (function(global) {
 
 
 
+	var _upload = function(file, mime) {
+
+		var construct = mime['constructor'];
+		var instance  = null;
+
+
+		var index, data;
+
+		switch (construct) {
+
+			case 'Config':
+
+				instance = lychee.deserialize({
+					'constructor': construct,
+					'arguments':   [ file.buffer ],
+					'blob':        {
+						buffer: file.buffer
+					}
+				});
+
+			break;
+
+			case 'Font':
+
+				index = file.buffer.indexOf('base64,');
+
+				if (index !== -1) {
+
+					file.buffer = 'data:application/json;base64,' + file.buffer.substr(index + 7);
+
+					instance = lychee.deserialize({
+						'constructor': construct,
+						'arguments':   [ file.buffer ],
+						'blob':        {
+							buffer: file.buffer
+						}
+					});
+
+				}
+
+			break;
+
+			case 'Texture':
+
+				instance = lychee.deserialize({
+					'constructor': construct,
+					'arguments':   [ file.buffer ],
+					'blob':        {
+						buffer: file.buffer
+					}
+				});
+
+			break;
+
+		}
+
+
+		if (instance !== null) {
+
+			var MAIN = global.MAIN || null;
+			if (MAIN !== null) {
+
+				MAIN.trigger('upload', [{
+					name: file.name,
+					data: instance
+				}]);
+
+			}
+
+		}
+
+	};
+
+
+
+	var _MIME = {
+		'fnt':   { type: 'application/json',       constructor: 'Font'    },
+		'js':    { type: 'application/javascript', constructor: 'Buffer'  },
+		'json':  { type: 'application/json',       constructor: 'Config'  },
+		'png':   { type: 'image/png',              constructor: 'Texture' },
+		'pkg':   { type: 'application/json',       constructor: 'lychee.Package' },
+		'store': { type: 'application/json',       constructor: 'lychee.Storage' }
+	};
+
+
+	document.addEventListener('dragenter', function(event) {
+
+		event.stopPropagation();
+		event.preventDefault();
+
+	}, false);
+
+	document.addEventListener('dragover', function(event) {
+
+		event.stopPropagation();
+		event.preventDefault();
+
+	}, false);
+
+	document.addEventListener('drop', function(event) {
+
+		event.stopPropagation();
+		event.preventDefault();
+
+
+		if (event.dataTransfer instanceof Object) {
+
+			var files = [].slice.call(event.dataTransfer.files);
+			if (files.length > 0) {
+
+				files.forEach(function(file) {
+
+					var name = file.name.split('/').pop();
+					var ext  = [].slice.call(name.split('.'), 1).join('.');
+					var mime = _MIME[ext] || null;
+
+					if (mime !== null) {
+
+						if (mime.type === file.type) {
+
+							var reader = new FileReader();
+
+							reader.onload = function(event) {
+
+								_upload({
+									name:   file.name,
+									buffer: event.target.result
+								}, mime);
+
+							};
+
+							reader.readAsDataURL(file);
+
+						}
+
+					}
+
+				});
+
+			}
+
+		}
+
+
+	}, false);
+
+
+
 	/*
 	 * IMPLEMENTATION
 	 */
@@ -402,5 +561,5 @@ ui = (function(global) {
 
 	};
 
-})();
+})(this);
 
