@@ -2,6 +2,21 @@
 ui = (function(global) {
 
 	/*
+	 * STRUCTS
+	 */
+
+	var _MIME = {
+		'fnt':   { type: 'application/json',       constructor: 'Font'    },
+		'js':    { type: 'application/javascript', constructor: 'Buffer'  },
+		'json':  { type: 'application/json',       constructor: 'Config'  },
+		'png':   { type: 'image/png',              constructor: 'Texture' },
+		'pkg':   { type: 'application/json',       constructor: 'lychee.Package' },
+		'store': { type: 'application/json',       constructor: 'lychee.Storage' }
+	};
+
+
+
+	/*
 	 * HELPERS
 	 */
 
@@ -75,6 +90,75 @@ ui = (function(global) {
 
 	};
 
+	var _encode_file = function(name, buffer, mime) {
+
+		var construct = mime['constructor'];
+		var instance  = null;
+
+
+		switch(construct) {
+
+			case 'Config':
+
+				instance = lychee.deserialize({
+					'constructor': construct,
+					'arguments':   [ buffer ],
+					'blob':        {
+						buffer: buffer
+					}
+				});
+
+			break;
+
+			case 'Font':
+
+				var index = buffer.indexOf('base64,');
+
+				if (index !== -1) {
+
+					buffer = 'data:application/json;base64,' + buffer.substr(index + 7);
+
+					instance = lychee.deserialize({
+						'constructor': construct,
+						'arguments':   [ buffer ],
+						'blob':        {
+							buffer: buffer
+						}
+					});
+
+				}
+
+			break;
+
+			case 'Texture':
+
+				instance = lychee.deserialize({
+					'constructor': construct,
+					'arguments':   [ buffer ],
+					'blob':        {
+						buffer: buffer
+					}
+				});
+
+			break;
+
+		}
+
+
+		if (instance !== null) {
+
+			return {
+				name: name,
+				data: instance
+			};
+
+		}
+
+
+		return null;
+
+	};
+
 	var _encode_form = function(type, elements) {
 
 		var data = null;
@@ -108,6 +192,13 @@ ui = (function(global) {
 							_set_value.call(data, element.name, tmp2);
 						} else {
 							_set_value.call(data, element.name, element.value);
+						}
+
+					} else if (type === 'file' && element.files.length > 0) {
+
+						var tmp3 = element.__files || [];
+						if (tmp3.length > 0) {
+							_set_value.call(data, element.name, [].slice.call(tmp3));
 						}
 
 					}
@@ -210,6 +301,47 @@ ui = (function(global) {
 
 								element.onclick = function() {
 									form.onsubmit();
+								};
+
+							} else if (element.type === 'file') {
+
+								element.onchange = function() {
+
+									this.__files = [];
+
+
+									[].slice.call(this.files).forEach(function(file) {
+
+										var name = file.name.split('/').pop();
+										var ext  = [].slice.call(name.split('.'), 1).join('.');
+										var mime = _MIME[ext] || null;
+
+										if (mime !== null) {
+
+											if (mime.type === file.type) {
+
+												var reader = new FileReader();
+
+												reader.onload = function(event) {
+
+													this.__files.push(_encode_file(
+														file.name,
+														event.target.result,
+														mime
+													));
+
+												}.bind(this);
+
+												reader.readAsDataURL(file);
+
+											}
+
+										}
+
+									}.bind(this));
+
+//									form.onsubmit();
+
 								};
 
 							} else {
@@ -329,151 +461,61 @@ ui = (function(global) {
 
 
 
-	var _upload = function(file, mime) {
+	var _download = function(filename, buffer) {
 
-		var construct = mime['constructor'];
-		var instance  = null;
-
-
-		var index, data;
-
-		switch (construct) {
-
-			case 'Config':
-
-				instance = lychee.deserialize({
-					'constructor': construct,
-					'arguments':   [ file.buffer ],
-					'blob':        {
-						buffer: file.buffer
-					}
-				});
-
-			break;
-
-			case 'Font':
-
-				index = file.buffer.indexOf('base64,');
-
-				if (index !== -1) {
-
-					file.buffer = 'data:application/json;base64,' + file.buffer.substr(index + 7);
-
-					instance = lychee.deserialize({
-						'constructor': construct,
-						'arguments':   [ file.buffer ],
-						'blob':        {
-							buffer: file.buffer
-						}
-					});
-
-				}
-
-			break;
-
-			case 'Texture':
-
-				instance = lychee.deserialize({
-					'constructor': construct,
-					'arguments':   [ file.buffer ],
-					'blob':        {
-						buffer: file.buffer
-					}
-				});
-
-			break;
-
-		}
+		filename = typeof filename === 'string' ? filename : null;
+		buffer   = buffer instanceof Buffer     ? buffer   : null;
 
 
-		if (instance !== null) {
+		if (filename !== null && buffer !== null) {
 
-			var MAIN = global.MAIN || null;
-			if (MAIN !== null) {
-
-				MAIN.trigger('upload', [{
-					name: file.name,
-					data: instance
-				}]);
-
+			var ext  = filename.split('.').pop();
+			var type = 'plain/text';
+			if (ext.match(/fnt|json/)) {
+				type = 'application/json';
+			} else if (ext.match(/png/)) {
+				type = 'image/png';
+			} else if (ext.match(/js/)) {
+				type = 'text/javascript';
 			}
 
-		}
-
-	};
-
-
-
-	var _MIME = {
-		'fnt':   { type: 'application/json',       constructor: 'Font'    },
-		'js':    { type: 'application/javascript', constructor: 'Buffer'  },
-		'json':  { type: 'application/json',       constructor: 'Config'  },
-		'png':   { type: 'image/png',              constructor: 'Texture' },
-		'pkg':   { type: 'application/json',       constructor: 'lychee.Package' },
-		'store': { type: 'application/json',       constructor: 'lychee.Storage' }
-	};
+			var url     = 'data:' + type + ';base64,' + buffer.toString('base64');
+			var event   = document.createEvent('MouseEvents');
+			var element = document.createElement('a');
 
 
-	document.addEventListener('dragenter', function(event) {
+			element.download = filename;
+			element.href     = url;
 
-		event.stopPropagation();
-		event.preventDefault();
+			event.initMouseEvent(
+				'click',
+				true,
+				false,
+				window,
+				0,
+				0,
+				0,
+				0,
+				0,
+				false,
+				false,
+				false,
+				false,
+				0,
+				null
+			);
 
-	}, false);
-
-	document.addEventListener('dragover', function(event) {
-
-		event.stopPropagation();
-		event.preventDefault();
-
-	}, false);
-
-	document.addEventListener('drop', function(event) {
-
-		event.stopPropagation();
-		event.preventDefault();
+			element.dispatchEvent(event);
 
 
-		if (event.dataTransfer instanceof Object) {
-
-			var files = [].slice.call(event.dataTransfer.files);
-			if (files.length > 0) {
-
-				files.forEach(function(file) {
-
-					var name = file.name.split('/').pop();
-					var ext  = [].slice.call(name.split('.'), 1).join('.');
-					var mime = _MIME[ext] || null;
-
-					if (mime !== null) {
-
-						if (mime.type === file.type) {
-
-							var reader = new FileReader();
-
-							reader.onload = function(event) {
-
-								_upload({
-									name:   file.name,
-									buffer: event.target.result
-								}, mime);
-
-							};
-
-							reader.readAsDataURL(file);
-
-						}
-
-					}
-
-				});
-
-			}
+			return true;
 
 		}
 
 
-	}, false);
+		return false;
+
+	};
 
 
 
@@ -482,6 +524,8 @@ ui = (function(global) {
 	 */
 
 	return {
+
+		download: _download,
 
 		getValue: function(query) {
 

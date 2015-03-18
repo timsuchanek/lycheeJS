@@ -17,60 +17,6 @@ lychee.define('tool.Main').requires([
 	 * HELPERS
 	 */
 
-	var _download = function(filename, buffer) {
-
-		filename = typeof filename === 'string' ? filename : null;
-		buffer   = buffer instanceof Buffer     ? buffer   : null;
-
-
-		if (filename !== null && buffer !== null) {
-
-			var ext  = filename.split('.').pop();
-			var type = 'plain/text';
-			if (ext.match(/fnt|json/)) {
-				type = 'application/json';
-			} else if (ext.match(/png/)) {
-				type = 'image/png';
-			}
-
-			var url     = 'data:' + type + ';base64,' + buffer.toString('base64');
-			var event   = document.createEvent('MouseEvents');
-			var element = document.createElement('a');
-
-
-			element.download = filename;
-			element.href     = url;
-
-			event.initMouseEvent(
-				'click',
-				true,
-				false,
-				window,
-				0,
-				0,
-				0,
-				0,
-				0,
-				false,
-				false,
-				false,
-				false,
-				0,
-				null
-			);
-
-			element.dispatchEvent(event);
-
-
-			return true;
-
-		}
-
-
-		return false;
-
-	};
-
 	var _update_preview = function(blob, settings) {
 
 		var data = _JSON.decode(blob);
@@ -92,7 +38,7 @@ lychee.define('tool.Main').requires([
 				var buffer   = new Buffer(blob, 'utf8');
 
 				button.onclick = function() {
-					_download(filename, buffer);
+					ui.download(filename, buffer);
 				};
 
 			}
