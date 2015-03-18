@@ -520,7 +520,9 @@ button[disabled]:focus {
 	-webkit-animation: none;
 }
 
-
+*[onclick] {
+	cursor: pointer;
+}
 
 /* label will disallow browser-based appearance of input */
 label.file {
