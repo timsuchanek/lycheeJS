@@ -28,6 +28,7 @@ lychee.define('tool.data.SPRITE').requires([
 		defaults.depth       = null;
 		defaults.radius      = null;
 		defaults.states      = 'auto';
+		defaults.files        = [];
 
 	})(_defaults);
 
@@ -162,7 +163,6 @@ lychee.define('tool.data.SPRITE').requires([
 			var frame_height = 0;
 			var size_x       = 0;
 			var size_y       = 0;
-
 
 			if (settings.frame === 'original') {
 
