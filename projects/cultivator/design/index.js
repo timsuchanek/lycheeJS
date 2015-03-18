@@ -174,7 +174,7 @@ ui = (function(global) {
 				if (element.tagName === 'INPUT') {
 
 					var type = element.type;
-					if (type === 'text' || type === 'hidden') {
+					if (type === 'text' || type === 'hidden' || type === 'color') {
 
 						_set_value.call(data, element.name, '' + element.value);
 
@@ -310,6 +310,7 @@ ui = (function(global) {
 									this.__files = [];
 
 
+
 									[].slice.call(this.files).forEach(function(file) {
 
 										var name = file.name.split('/').pop();
@@ -416,6 +417,7 @@ ui = (function(global) {
 
 		}
 
+		var menuElement = document.querySelector('menu');
 
 		var menu = [].slice.call(document.querySelectorAll('menu li'));
 		if (menu.length > 0) {
@@ -451,10 +453,21 @@ ui = (function(global) {
 
 				item.addEventListener('mouseup', function() {
 					_active = menu.indexOf(this);
+					menuElement.classList.contains('active') ?
+					menuElement.classList.remove('active')
+					: null;
 				});
 
 			});
 
+		}
+
+		var menuIcon = document.getElementById('menuicon');
+
+		if (menuIcon) {
+			menuIcon.addEventListener('click', function() {
+				menuElement.classList.toggle('active');
+			});
 		}
 
 	}, true);
