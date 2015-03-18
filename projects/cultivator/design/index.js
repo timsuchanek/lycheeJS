@@ -174,7 +174,7 @@ ui = (function(global) {
 				if (element.tagName === 'INPUT') {
 
 					var type = element.type;
-					if (type === 'text' || type === 'hidden') {
+					if (type === 'text' || type === 'hidden' || type === 'color') {
 
 						_set_value.call(data, element.name, '' + element.value);
 
@@ -308,6 +308,7 @@ ui = (function(global) {
 								element.onchange = function() {
 
 									this.__files = [];
+
 
 
 									[].slice.call(this.files).forEach(function(file) {

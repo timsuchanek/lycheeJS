@@ -311,9 +311,11 @@ div.wizard article figure {
 article {
 	margin: 16px;
 	padding: 0px;
-	font-family: 'museo-sans-300';
+	font-family: 'museo-sans-500';
 	background: #363f3e;
 	-webkit-font-smoothing: antialiased;
+	line-height: 1.5;
+	letter-spacing: 0.02em;
 }
 
 article h3 {
@@ -340,7 +342,7 @@ article h3 b {
 
 article > div,
 article > p {
-	margin: 16px;
+	margin: 32px;
 }
 
 article h3 ~ div {
@@ -454,7 +456,7 @@ ul.select li span {
 	width: auto;
 	line-height: 20px;
 	font-family: 'museo-sans-300';
-	font-size: 14px;
+	font-size: 18px;
 	text-align: left;
 	vertical-align: middle;
 }
@@ -622,6 +624,24 @@ input[type="number"]::-ms-input-placeholder {
 	text-align: left;
 }
 
+.input-group input {
+	font-size: 18px;
+	padding: 8px 16px;
+	border-radius: none;
+	border: none;
+	border-bottom: 1px solid #474f4f;
+	display: block;
+}
+
+.input-group input:last-child {
+	border-bottom: none;
+}
+
+.input-group {
+	display: inline-block;
+	border: 1px solid #808080;
+	border-radius: 3px;
+}
 
 
 input[type="radio"] {
@@ -666,9 +686,9 @@ input[type="range"] {
 	padding: 0px;
 	width: 126px;
 	height: 2px;
-	border: 1px solid #5d6161;
-	border-radius: 2px;
-	background: transparent;
+	border: 1px solid #b3b3b3;
+	border-radius: 4px;
+	background: #b3b3b3;
 	-moz-transition: all 250ms ease-out;
 	-ms-transition: all 250ms ease-out;
 	-webkit-transition: all 250ms ease-out;
@@ -691,17 +711,17 @@ input[type="range"]:after {
 }
 
 input[type="range"]:before {
-	margin: -16px 0px 0px 0px;
+	margin: -7px 0px 0px -48px;
 	padding: 0px 0px 0px 4px;
 	content: attr(min);
-	text-align: left;
+	text-align: right;
 }
 
 input[type="range"]:after {
-	margin: -16px 0px 0px -32px;
+	margin: -7px 0px 0px 16px;
 	padding: 0px 4px 0px 0px;
 	content: attr(max);
-	text-align: right;
+	text-align: left;
 }
 
 input[type="range"]:hover,
@@ -717,7 +737,7 @@ input[type="range"]::-moz-range-thumb {
 	margin: 0px;
 	padding: 0px;
 	background: #363f3e;
-	border: 1px solid #efefef;
+	border: 3px solid #efefef;
 	border-radius: 32px;
 	-moz-transition: all 250ms ease-out;
 	transition: all 250ms ease-out;
@@ -732,13 +752,14 @@ input[type="range"]::-webkit-slider-thumb {
 	margin: 0px;
 	padding: 0px;
 	background: #363f3e;
-	border: 1px solid #efefef;
+	border: 3px solid #b3b3b3;
 	border-radius: 32px;
 	-webkit-transition: all 250ms ease-out;
 	transition: all 250ms ease-out;
 	outline: none;
 	cursor: move;
 	-webkit-appearance: none;
+	box-shadow: 0 0 0 3px #363f3e;
 }
 
 input[type="range"]:hover::-moz-range-thumb,
@@ -757,9 +778,9 @@ input[type="range"]:focus::-ms-thumb {
 
 input[type="range"]:hover::-webkit-slider-thumb,
 input[type="range"]:focus::-webkit-slider-thumb {
-	background: #32afe5;
-	border: 1px solid #32afe5;
-	box-shadow: #32afe5 0 0 20px;
+	/*background: #32afe5;*/
+	border: 3px solid #32afe5;
+	box-shadow: #32afe5 0 0 20px, 0 0 0 3px #363f3e;
 }
 
 
@@ -817,9 +838,8 @@ table {
 
 table th {
 	margin: 0px;
-	padding: 16px;
-	background: #2f3736;
-	font-size: 12px;
+	padding: 32px;
+	font-size: 14px;
 	text-align: left;
 	font-family: 'museo-sans-300';
 	text-transform: uppercase;
@@ -841,7 +861,6 @@ table td {
 	font-family: 'museo-sans-300';
 	font-weight: normal;
 	text-align: left;
-	border-top: 1px solid #404948;
 }
 
 table tr:last-child td {
@@ -860,13 +879,19 @@ table.vertical th {
 	width: 96px;
 	vertical-align: top;
 	text-align: left;
-	border-top: 1px solid #404948;
+
 }
 
 table.vertical td {
 	width: 224px;
 	text-align: center;
 }
+
+table.vertical tr:first-child th,
+table.vertical tr:first-child td {
+	border-bottom: 1px solid #404948;
+}
+
 
 table.vertical tr:last-child th,
 table.vertical tr:last-child td {
