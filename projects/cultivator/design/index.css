@@ -314,6 +314,7 @@ article {
 	font-family: 'museo-sans-500';
 	background: #363f3e;
 	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 	line-height: 1.5;
 	letter-spacing: 0.02em;
 }
@@ -327,6 +328,7 @@ article h3 {
 	background: #2f3736;
 	font-family: 'museo-sans-300';
 	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 	font-size: 16px;
 	font-weight: normal;
 	text-transform: uppercase;
@@ -337,6 +339,7 @@ article h3 b {
 	margin: 0px 16px 0px 0px;
 	font-family: 'museo-sans-500';
 	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 	font-weight: bold;
 }
 
@@ -910,6 +913,8 @@ footer {
 	color: #e6e6e6;
 	background: #2f3736;
 	font-family: 'museo-sans-300';
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 	text-align: center;
 	z-index: 200;
 }
