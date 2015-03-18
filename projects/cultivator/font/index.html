@@ -93,13 +93,26 @@
 	<div class="wizard">
 
 		<article class="wide">
-			<h3><b>1</b>Simple Usage</h3>
+			<h3><b>1</b>Tool Usage</h3>
 			<div>
-				Given you have an Entity named <q>source/entity/Foo.js</q>
-				already in place, rename the Font to <q>source/entity/Foo.fnt</q>.
+				Install a Font on your System in order to use it with this Tool.
+				Modify the settings to tweak the Font, the rest is done automatically.
+			</div>
+		</article>
+
+		<article class="wide">
+			<h3><b>2</b>Engine Usage</h3>
+			<div>
+				The exported files include the Font (.fnt).
+				<br><br>
+				If you want to use the Font inside your Project, you have to rename
+				the files accordingly after copying them into the <q>source/entity</q> folder.
+				<br><br>
+				Example: If you have an Entity named <q>source/entity/Foo.js</q>,
+				you have to rename the downloaded Font to <q>source/entity/Foo.fnt</q>.
 			</div>
 			<p>
-				After that you can access the Font in the code:
+				Then you can access the Font via the attachments parameter:
 			</p>
 			<pre class="javascript">
 lychee.define('game.entity.Foo').exports(function(lychee, game, global, attachments) {
@@ -107,36 +120,6 @@ lychee.define('game.entity.Foo').exports(function(lychee, game, global, attachme
   var font = attachments['fnt'];
   if (font instanceof Font) {
     console.log('Yay, font available!', font);
-  }
-
-});
-			</pre>
-		</article>
-
-		<article class="wide">
-			<h3><b>2</b>Advanced Usage</h3>
-			<div>
-				Given you have an Entity named <q>source/entity/Foo.js</q>
-				already in place, you can rename the Fonts to
-				<q>source/entity/Foo.label.fnt</q> and <q>source/entity/Foo.small.fnt</q>.
-			</div>
-			<p>
-				After that you can access the Fonts in the code:
-			</p>
-			<pre class="javascript">
-lychee.define('game.entity.Foo').exports(function(lychee, game, global, attachments) {
-
-  var fonts = {
-    label: attachments['label.fnt'],
-    small: attachments['small.fnt']
-  };
-
-  if (fonts.label instanceof Font) {
-    console.log('Yay, label font available!', fonts.label);
-  }
-
-  if (fonts.small instanceof Font) {
-    console.log('Yay, small font available!', fonts.small);
   }
 
 });

@@ -56,7 +56,7 @@
 				<table class="vertical">
 					<tr>
 						<th>Files</th>
-						<td><label class="file ico-upload"><input type="file" name="files" accept=".png" multiple>Upload</label></td>
+						<td><label class="file ico-upload"><input type="file" name="files" accept=".png" multiple>Select</label></td>
 					</tr>
 					<tr>
 						<th>Texture Size</th>
@@ -123,14 +123,30 @@
 	<div class="wizard">
 
 		<article class="wide">
-			<h3><b>1</b>Usage</h3>
+			<h3><b>1</b>Tool Usage</h3>
 			<div>
-				Upload all required frame images using the Upload button.
-				The rest is done automagically.
+				Select all frame images using the Select button.
+				Modify the settings to tweak the Sprite, the rest is done automatically.
 				<br><br>
-				Animations are triggered if the filenames contain an underscore.<br>
-				Examples: default.png, not-animated.png, animated_01.png, animated_02.png
+				Animations are triggered if the filenames contain an underscore.
+				<br><br>
+				Examples: <q>default.png</q>, <q>not-animated.png</q>, <q>animated_01.png</q>, <q>animated_02.png</q>.
 			</div>
+		</article>
+
+		<article class="wide">
+			<h3><b>2</b>Engine Usage</h3>
+			<div>
+				The exported files include the Definition (.js), the Texture (.png)
+				and the Config (.json) for the Entity.
+				<br><br>
+				If you want to use the Entity inside your Project, you have to rename
+				the files accordingly after copying them into the <q>source/entity/</q> folder.
+			</div>
+			<p>
+				Don't forget to modify the <q>lychee.define('game.entity.Entity')</q> line in the .js
+				file accordingly!
+			</p>
 		</article>
 
 	</div>
