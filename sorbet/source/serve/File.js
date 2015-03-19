@@ -191,7 +191,7 @@ lychee.define('sorbet.serve.File').requires([
 					var timestamp = data.headers['If-Modified-Since'] || null;
 					if (timestamp !== null) {
 
-						var diff = new Date(timestamp) > new Date(info.time);
+						var diff = new Date(info.time) > new Date(timestamp);
 						if (diff === false) {
 
 							ready({
