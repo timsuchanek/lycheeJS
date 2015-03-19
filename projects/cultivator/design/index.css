@@ -349,7 +349,7 @@ article > p {
 }
 
 article h3 ~ div {
-	min-height: 96px;
+	min-height: 144px;
 }
 
 article q {

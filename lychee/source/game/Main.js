@@ -321,11 +321,11 @@ lychee.define('lychee.game.Main').requires([
 
 			if (typeof client_api === 'string') {
 
-				promise.then(function(result) {
+				promise.then(null, function(data, oncomplete) {
 
 					_load_api(client_api, function(settings) {
 						this.settings.client = lychee.extend({}, settings);
-						result(settings !== null);
+						oncomplete(null);
 					}, this);
 
 				}, this);
@@ -334,11 +334,11 @@ lychee.define('lychee.game.Main').requires([
 
 			if (typeof server_api === 'string') {
 
-				promise.then(function(result) {
+				promise.then(null, function(data, result) {
 
 					_load_api(server_api, function(settings) {
 						this.settings.server = lychee.extend({}, settings);
-						result(settings !== null);
+						oncomplete(null);
 					}, this);
 
 				}, this);
@@ -346,7 +346,7 @@ lychee.define('lychee.game.Main').requires([
 			}
 
 
-			promise.bind('ready', function() {
+			promise.bind('complete', function() {
 				_initialize.call(this);
 			}, this, true);
 
