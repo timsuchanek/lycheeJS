@@ -597,7 +597,8 @@ ui = (function(global) {
 
 				menu.forEach(function(item) {
 
-					if (item.innerText.toLowerCase() === identifier) {
+					var id = (item.innerText || item.innerHTML).toLowerCase();
+					if (id === identifier) {
 						_set_active(item);
 					} else {
 						_set_inactive(item);
