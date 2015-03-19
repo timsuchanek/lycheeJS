@@ -16,7 +16,9 @@ lychee.define('lychee.event.Queue').includes([
 
 			this.trigger('update', [ data, function(result) {
 
-				if (result === true) {
+				if (result instanceof Object) {
+					_process_stack.call(that);
+				} else if (result === true) {
 					_process_stack.call(that);
 				} else {
 					that.trigger('error');
@@ -26,7 +28,7 @@ lychee.define('lychee.event.Queue').includes([
 
 		} else {
 
-			this.trigger('ready');
+			this.trigger('complete');
 
 		}
 

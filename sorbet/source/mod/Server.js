@@ -53,7 +53,7 @@ lychee.define('sorbet.mod.Server').requires([
 				if (status === 'free') {
 					callback.call(scope, port);
 				} else if (status === 'used') {
-					_get_port(callback, scope);
+					_scan_port(callback, scope);
 				} else {
 					callback.call(scope, null);
 				}

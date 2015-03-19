@@ -341,7 +341,10 @@ ui = (function(global) {
 
 									}.bind(this));
 
-//									form.onsubmit();
+
+									setTimeout(function() {
+										form.onsubmit();
+									}, 200);
 
 								};
 
