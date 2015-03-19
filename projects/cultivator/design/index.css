@@ -34,48 +34,6 @@
     font-style: normal;
 }
 
-@font-face {
-	font-family: 'barsicon';
-	src:url('barsicon/barsicon.eot?-14n9r4');
-	src:url('barsicon/barsicon.eot?#iefix-14n9r4') format('embedded-opentype'),
-		url('barsicon/barsicon.woff?-14n9r4') format('woff'),
-		url('barsicon/barsicon.ttf?-14n9r4') format('truetype'),
-		url('barsicon/barsicon.svg?-14n9r4#icomoon') format('svg');
-	font-weight: normal;
-	font-style: normal;
-}
-
-.icon-three-bars {
-	font-family: 'barsicon';
-	speak: none;
-	font-style: normal;
-	font-weight: normal;
-	font-variant: normal;
-	text-transform: none;
-	line-height: 1;
-	cursor: pointer;
-	margin-top: 20px;
-	font-size: 16px;
-	width: 50px;
-
-	/* Better Font Rendering =========== */
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-
-	/* Only display with width <= 670px */
-	display: none;
-
-	-moz-transition: all 500ms ease-out;
-	-ms-transition: all 500ms ease-out;
-	-webkit-transition: all 500ms ease-out;
-	transition: all 500ms ease-out;
-}
-
-.icon-three-bars:before {
-	content: "\e600";
-}
-
-
 
 menu li:before,
 button:before,
@@ -107,7 +65,7 @@ label:before {
 .ico-offline:before  { content: "\e082"; }
 .ico-okay:before     { content: "\e080"; }
 .ico-online:before   { content: "\e071"; }
-.ico-projects:before { content: "\e034"; }
+.ico-projects:before { content: "\e04b"; }
 .ico-refresh:before  { content: "\e098"; }
 .ico-settings:before { content: "\e09a"; }
 .ico-status:before   { content: "\e06a"; }
@@ -116,6 +74,26 @@ label:before {
 .ico-tools:before    { content: "\e059"; }
 .ico-upload:before   { content: "\e084"; }
 
+#menu-toggle {
+	display: none;
+	width: 24px;
+	height: 24px;
+	line-height: 24px;
+	margin: 16px;
+	font-family: 'icon';
+	font-weight: normal;
+	font-variant: normal;
+	text-align: left;
+	vertical-align: top;
+}
+
+#menu-toggle.active {
+	display: inline-block;
+}
+
+#menu-toggle:before {
+	content: "\e034";
+}
 
 
 body {
@@ -157,10 +135,6 @@ menu li:hover,
 menu li.active {
 	color: #32afe5;
 	text-shadow: #32afe5 0 0 10px, #32afe5 0 0 20px, #32afe5 0 0 40px;
-}
-
-menu img.small-logo {
-	display: none;
 }
 
 aside {
@@ -927,70 +901,63 @@ footer {
 	z-index: 200;
 }
 
+
+
 /* Media Queries */
 @media (max-width: 678px) {
 
 	menu {
-		z-index: 200;
-		display: flex;
-		-moz-transition: all 500ms ease-out;
-		-ms-transition: all 500ms ease-out;
-		-webkit-transition: all 500ms ease-out;
-		transition: all 500ms ease-out;
+		position: fixed;
+		top: 0px;
+		right: 0px;
+		bottom: auto;
+		left: 0px;
+		margin: 0px;
+		background: #2f3736;
+		z-index: 100;
+	}
+
+	aside {
+		margin: 0px 16px 0px 0px;
+	}
+
+	section {
+		top: 64px;
 	}
 
 	menu li {
 		display: none;
 	}
 
-
-	menu.active {
-		display: block;
-		height: 100%;
-		position: absolute;
-		background: #2f3736;
-		margin-left: 0;
-		margin-top: 0;
-		padding-top: 15px;
-		text-align: right;
-		width: 256px;
-	}
-
-
 	menu.active li {
 		display: block;
-		margin-top: 25px;
+		margin: 0px;
+		padding: 16px;
+		background: #2f3736;
 	}
 
-	menu.active .icon-three-bars {
-		-ms-transform: rotate(90deg); /* IE 9 */
-	  -webkit-transform: rotate(90deg); /* Chrome, Safari, Opera */
-	  transform: rotate(90deg);
-	}
-
-	.icon-three-bars {
+	#menu-toggle {
 		display: inline-block;
-		margin-right: 10px;
-		margin-bottom: 20px;
+		position: fixed;
+		top: 0px;
+		left: 0px;
+		-moz-transition: all 250ms ease-out;
+		-ms-transition: all 250ms ease-out;
+		-webkit-transition: all 250ms ease-out;
+		transition: all 250ms ease-out;
 	}
 
-	menu img.small-logo {
-		display: inline-block;
-		height: 20px;
-		margin-top: 20px;
-		margin-left: -10px;
+	menu.active #menu-toggle {
+		-moz-transform: rotate(90deg);
+		-ms-transform: rotate(90deg);
+		-webkit-transform: rotate(90deg);
+		transform: rotate(90deg);
 	}
 
-	menu.active img.small-logo {
-		position: absolute;
-		height: 26px;
-		top: 22px;
-		left: 31px;
-
-	}
 }
 
 @media (max-width: 640px) {
+
 	div.wizard article {
 		max-width: 512px;
 	}
@@ -1003,10 +970,6 @@ footer {
 		margin-bottom: 52px;
 	}
 
-	img.logo {
-		width: 100%;
-	}
-
 	button:not(.ico-only) {
 		min-width: 90px;
 	}
@@ -1014,4 +977,5 @@ footer {
 	button:before {
 		display: none;
 	}
+
 }

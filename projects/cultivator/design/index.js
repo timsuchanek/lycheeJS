@@ -420,14 +420,14 @@ ui = (function(global) {
 
 		}
 
-		var menuElement = document.querySelector('menu');
+		var menu  = document.querySelector('menu');
+		var items = [].slice.call(document.querySelectorAll('menu li'));
 
-		var menu = [].slice.call(document.querySelectorAll('menu li'));
-		if (menu.length > 0) {
+		if (items.length > 0) {
 
 			var _active = 0;
 
-			menu.forEach(function(item, index) {
+			items.forEach(function(item, index) {
 
 				if (item.className === 'active') {
 					_active = index;
@@ -435,42 +435,47 @@ ui = (function(global) {
 
 			});
 
-			_set_active(menu[_active]);
+			_set_active(items[_active]);
 
 
-			menu.forEach(function(item) {
+			items.forEach(function(item) {
 
 				item.addEventListener('mouseenter', function() {
 
-					menu.forEach(function(other) { _set_inactive(other); });
+					items.forEach(function(other) { _set_inactive(other); });
 					_set_active(this);
 
 				});
 
 				item.addEventListener('mouseleave', function() {
 
-					menu.forEach(function(other) { _set_inactive(other); });
-					_set_active(menu[_active]);
+					items.forEach(function(other) { _set_inactive(other); });
+					_set_active(items[_active]);
 
 				});
 
 				item.addEventListener('mouseup', function() {
-					_active = menu.indexOf(this);
-					menuElement.classList.contains('active') ?
-					menuElement.classList.remove('active')
-					: null;
+					_active = items.indexOf(this);
+					_set_inactive(menu);
 				});
 
 			});
 
 		}
 
-		var menuIcon = document.getElementById('menuicon');
+		var toggle = document.querySelector('#menu-toggle');
+		if (toggle !== null) {
 
-		if (menuIcon) {
-			menuIcon.addEventListener('click', function() {
-				menuElement.classList.toggle('active');
-			});
+			toggle.onclick = function() {
+
+				if (menu.className.match('active')) {
+					_set_inactive(menu);
+				} else {
+					_set_active(menu);
+				}
+
+			};
+
 		}
 
 	}, true);
