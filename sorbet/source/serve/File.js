@@ -194,7 +194,14 @@ lychee.define('sorbet.serve.File').requires([
 						var diff = new Date(timestamp) > new Date(info.time);
 						if (diff === false) {
 
-							ready({ status: 304 });
+							ready({
+								status: 304,
+								headers: {
+									'Last-Modified': new Date(info.time).toUTCString()
+								},
+								payload: ''
+							});
+
 							return;
 
 						}
