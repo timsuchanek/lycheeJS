@@ -621,6 +621,18 @@ ui = (function(global) {
 
 				});
 
+
+				var target = _resolve_target.call(global, 'MAIN');
+				if (target !== null) {
+
+					if (target instanceof Function) {
+						target(identifier);
+					} else if (target instanceof Object && typeof target.trigger === 'function') {
+						target.trigger('view', [ identifier ]);
+					}
+
+				}
+
 			}
 
 		}

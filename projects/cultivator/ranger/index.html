@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-	<title>lycheeJS Font Tool</title>
+	<title>lycheeJS Ranger</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -11,82 +11,78 @@
 
 	<!-- BOOTSTRAP -->
 	<script src="/lychee/build/html/core.js"></script>
+
+	<style>
+	#status table label.ico-online {
+		color: #32afe5;
+		text-shadow: #32afe5 0 0 10px, #32afe5 0 0 20px, #32afe5 0 0 40px;
+	}
+	</style>
 </head>
 <body>
 <menu>
 	<b id="menu-toggle"></b>
-	<li class="ico-tools active" onclick="ui.setView('tool');">Tool</li>
+	<li class="ico-status active" onclick="ui.setView('status');">Status</li>
+	<li class="ico-console" onclick="ui.setView('console');">Console</li>
+	<li class="ico-settings" onclick="ui.setView('settings');">Settings</li>
 	<li class="ico-help" onclick="ui.setView('help');">Help</li>
 </menu>
 <aside>
 	<button class="ico-refresh" onclick="window.location.href='./index.html'">Refresh</button>
 </aside>
 
-<section id="tool" class="active">
+<section id="status" class="active">
 
-	<div class="main">
+	<table>
+		<tr>
+			<th>Host</th>
+			<th>Status</th>
+			<th>Projects</th>
+			<th>Action</th>
+		</tr>
+		<tr>
+			<td>localhost</td>
+			<td><label class="ico-online">Online</label></td>
+			<td>lychee, boilerplate, mode7</td>
+			<td><button class="ico-browser ico-only" title="Browser"></button></td>
+		</tr>
+		<tr class="div"></tr>
+		<tr>
+			<th>Project</th>
+			<th>Status</th>
+			<th>Hosts</th>
+			<th>Action</th>
+		</tr>
+		<tr>
+			<td>sorbet</td>
+			<td><label class="ico-online">Online</label></td>
+			<td>localhost, lycheejs.org</td>
+			<td>
+				<button class="ico-stop ico-only" title="Stop"></button>
+				<button class="ico-browser ico-only" title="Browser"></button>
+				<button class="ico-folder ico-only" title="File Manager"></button>
+			</td>
+		</tr>
+		<tr>
+			<td>boilerplate</td>
+			<td><label class="ico-offline">Offline</label></td>
+			<td>localhost, 192.168.0.1</td>
+			<td>
+				<button class="ico-start ico-only" title="Start"></button>
+				<button class="ico-browser ico-only" title="Browser"></button>
+				<button class="ico-folder ico-only" title="File Manager"></button>
+			</td>
+		</tr>
+	</table>
 
-		<article>
-			<h3>Settings</h3>
-			<div>
-				Modify the settings for the generated Font.
-				Download the Font if it fits your needs.
-			</div>
+</section>
 
-			<form id="settings" enctype="application/json" action="MAIN" method="javascript">
-				<table class="vertical">
-					<tr>
-						<th>Family</th>
-						<td><input type="text" name="family" value="Ubuntu Mono"></td>
-					</tr>
-					<tr>
-						<th>Style</th>
-						<td>
-							<ul class="select">
-								<li><input type="radio" name="style" value="normal" checked><span>normal</span></li>
-								<li><input type="radio" name="style" value="bold"><span>bold</span></li>
-								<li><input type="radio" name="style" value="italic"><span>italic</span></li>
-							</ul>
-						</td>
-					</tr>
-					<tr>
-						<th>Size</th>
-						<td><input type="range" name="size" min="8" max="128" value="64"></td>
-					</tr>
-					<tr>
-						<th>Spacing</th>
-						<td><input type="range" name="spacing" min="0" max="64" value="0"></td>
-					</tr>
-					<tr>
-						<th>Color</th>
-						<td><input type="color" name="color" value="#ffffff"></td>
-					</tr>
-					<tr>
-						<th>Outline</th>
-						<td><input type="range" name="outline" min="0" max="32" value="4"></td>
-					</tr>
-					<tr>
-						<th>Outline Color</th>
-						<td><input type="color" name="outlinecolor" value="#000000"></td>
-					</tr>
-				</table>
-			</form>
-			<p class="center">
-				<button id="preview-download" class="ico-download">Download Font</button>
-			</p>
-		</article>
+<section id="console">
+	Console View
+</section>
 
-		<article>
-			<h3>Preview</h3>
-			<div>
-				<figure class="center">
-					<img id="preview-texture" src="data:image/png;base64,">
-				</figure>
-			</div>
-		</article>
-
-	</div>
-
+<section id="settings">
+	Settings View
 </section>
 
 <section id="help">

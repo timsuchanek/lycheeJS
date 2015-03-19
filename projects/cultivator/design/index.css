@@ -76,15 +76,17 @@ label:before {
 
 #menu-toggle {
 	display: none;
-	width: 24px;
-	height: 24px;
-	line-height: 24px;
+	width: 32px;
+	height: 32px;
+	line-height: 32px;
 	margin: 16px;
 	font-family: 'icon';
+	font-size: 32px;
 	font-weight: normal;
 	font-variant: normal;
 	text-align: left;
 	vertical-align: top;
+	cursor: pointer;
 }
 
 #menu-toggle.active {
