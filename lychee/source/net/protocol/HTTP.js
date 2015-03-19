@@ -239,6 +239,10 @@ lychee.define('lychee.net.protocol.HTTP').exports(function(lychee, global, attac
 	};
 
 
+	// Class.FRAMESIZE = 32768; // 32kB
+	Class.FRAMESIZE = 0x800000; // 8MiB
+
+
 	Class.STATUS = {
 		normal_closure:  200,
 		redirect:        302,

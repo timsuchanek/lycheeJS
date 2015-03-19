@@ -1,0 +1,27 @@
+{
+
+	"main": "./index.html",
+
+	"name": "lycheeJS Ranger",
+	"description": "lycheeJS Ranger (Graphical User Interface)",
+	"version":     "0.1",
+
+	"window": {
+		"title":   "lycheeJS Ranger",
+		"icon":    "./icon.png",
+		"toolbar": true,
+		"frame":   true,
+		"width":   768,
+		"height":  512,
+		"position": "mouse",
+		"min_width": 768,
+		"max_width": 768,
+		"min_height": 512,
+		"max_height": 512
+	},
+
+	"webkit": {
+		"plugin": true
+	}
+
+}
