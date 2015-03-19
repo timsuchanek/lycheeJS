@@ -15,8 +15,6 @@ back into master, tagged and published.
 - API: lychee.Renderer
 - API: lychee.Storage
 - API: lychee.data Stack
-- API: lychee.event.Queue
-- Fertilizer: html-nwjs for Linux, Mac OSX and Windows
 - Website: Overhauling and game.Main Architecture Diagram
 - Website: Refactor tool/configure.js script to generate API docs properly
 - Website: Refactor tool/configure.js script to generate Tutorials properly
@@ -24,6 +22,7 @@ back into master, tagged and published.
 ## v0.8.6
 
 - /lychee/dist build via configure script for CDNJS and standalone deployment
+- Fertilizer: html-nwjs integration for Linux, Mac OSX and Windows
 - Mode7 Game finalization (lane switch), required assets: racing car, box sprite, explosion sprite
 - Sorbet Log File serialization to be inspectable and remote-debuggable via ranger
 - lychee.net.(client||remote).DHT as described in Bittorrent's DHT protocol [1] which extends lychee.data.BENCODE for its logical behaviours
