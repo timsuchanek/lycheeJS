@@ -7,16 +7,26 @@ lychee.define('lychee.event.Promise').includes([
 	 * HELPERS
 	 */
 
-	var _process_stack = function() {
+	var _process_stack = function(data) {
+
+		data = data instanceof Object ? data : null;
+
 
 		var entry = this.___stack.shift() || null;
 		if (entry !== null) {
 
+			if (data === null) {
+				data = entry.data || null;
+			}
+
+
 			var that = this;
 
-			entry.callback.call(entry.scope, function(result) {
+			entry.callback.call(entry.scope, data, function(result) {
 
-				if (result === true) {
+				if (result instanceof Object) {
+					_process_stack.call(that, result);
+				} else if (result === true) {
 					_process_stack.call(that);
 				} else {
 					that.trigger('error');
@@ -26,7 +36,7 @@ lychee.define('lychee.event.Promise').includes([
 
 		} else {
 
-			this.trigger('ready');
+			this.trigger('complete');
 
 		}
 
@@ -73,6 +83,7 @@ lychee.define('lychee.event.Promise').includes([
 					var entry = this.___stack[s];
 
 					blob.stack.push({
+						data:     lychee.serialize(entry.data),
 						callback: lychee.serialize(entry.callback),
 						// scope:    lychee.serialize(entry.scope)
 						scope:    null
@@ -96,8 +107,9 @@ lychee.define('lychee.event.Promise').includes([
 		 * CUSTOM API
 		 */
 
-		then: function(callback, scope) {
+		then: function(data, callback, scope) {
 
+			data     = data instanceof Object       ? data     : null;
 			callback = callback instanceof Function ? callback : null;
 			scope    = scope !== undefined          ? scope    : this;
 
@@ -106,7 +118,8 @@ lychee.define('lychee.event.Promise').includes([
 
 				this.___stack.push({
 					callback: callback,
-					scope:    scope
+					scope:    scope,
+					data:     data
 				});
 
 				return true;
