@@ -14,9 +14,7 @@
 !/projects/p2pdemo
 
 /lychee/build/*
-/lychee/dist/*
 /lychee/doc/*
-/lychee/docs/*
 /lychee.store
 
 /fertilizers/*

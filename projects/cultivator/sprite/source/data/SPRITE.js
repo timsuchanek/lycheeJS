@@ -17,10 +17,7 @@ lychee.define('tool.data.SPRITE').requires([
 
 	(function(defaults) {
 
-// TODO: This shit
-
-		defaults.texturesize = 512;
-
+		defaults.texture     = 512;
 		defaults.frame       = 'power-of-two';
 		defaults.boundingbox = 'auto';
 		defaults.width       = null;
