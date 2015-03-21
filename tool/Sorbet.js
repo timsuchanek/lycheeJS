@@ -213,17 +213,17 @@ var _profile  = null;
 			var sorbet = sandbox.sorbet;
 
 
-			var main = new sorbet.Main(profile);
+			// This allows using #MAIN in JSON files
+			sandbox.MAIN = new sorbet.Main(profile);
+			sandbox.MAIN.init();
 
-			main.init();
 
-
-			process.on('SIGHUP',  function() { main.destroy(); this.exit(1); });
-			process.on('SIGINT',  function() { main.destroy(); this.exit(1); });
-			process.on('SIGQUIT', function() { main.destroy(); this.exit(1); });
-			process.on('SIGABRT', function() { main.destroy(); this.exit(1); });
-			process.on('SIGTERM', function() { main.destroy(); this.exit(1); });
-			process.on('error',   function() { main.destroy(); this.exit(1); });
+			process.on('SIGHUP',  function() { sandbox.MAIN.destroy(); this.exit(1); });
+			process.on('SIGINT',  function() { sandbox.MAIN.destroy(); this.exit(1); });
+			process.on('SIGQUIT', function() { sandbox.MAIN.destroy(); this.exit(1); });
+			process.on('SIGABRT', function() { sandbox.MAIN.destroy(); this.exit(1); });
+			process.on('SIGTERM', function() { sandbox.MAIN.destroy(); this.exit(1); });
+			process.on('error',   function() { sandbox.MAIN.destroy(); this.exit(1); });
 			process.on('exit',    function() {});
 
 
@@ -234,7 +234,7 @@ var _profile  = null;
 
 				console.warn('sorbet.Main: [ESC] pressed, exiting Sorbet ...');
 
-				main.destroy();
+				sandbox.MAIN.destroy();
 				process.exit(0);
 
 			}, this);
