@@ -13,19 +13,31 @@
 	<script src="/lychee/build/html/core.js"></script>
 
 	<style>
+	#status article.hidden {
+		display: none;
+	}
 	#status table label.ico-online {
 		color: #32afe5;
 		text-shadow: #32afe5 0 0 10px, #32afe5 0 0 20px, #32afe5 0 0 40px;
+	}
+	#status div.wizard ul.select {
+		width: auto;
+		margin: 0px 16px;
+	}
+	#status div.wizard article label {
+		color: #32afe5;
+		text-shadow: #32afe5 0 0 10px, #32afe5 0 0 20px, #32afe5 0 0 40px;
+		-webkit-animation: textpulse 2000ms infinite;
 	}
 	</style>
 </head>
 <body>
 <menu>
 	<b id="menu-toggle"></b>
-	<li class="ico-status active" onclick="ui.setView('status');">Status</li>
-	<li class="ico-console" onclick="ui.setView('console');">Console</li>
-	<li class="ico-settings" onclick="ui.setView('settings');">Settings</li>
-	<li class="ico-help" onclick="ui.setView('help');">Help</li>
+	<li class="ico-status active" onclick="ui.changeState('status');">Status</li>
+	<li class="ico-console" onclick="ui.changeState('console');">Console</li>
+	<li class="ico-settings" onclick="ui.changeState('settings');">Settings</li>
+	<li class="ico-help" onclick="ui.changeState('help');">Help</li>
 </menu>
 <aside>
 	<button class="ico-refresh" onclick="window.location.href='./index.html'">Refresh</button>
@@ -33,47 +45,34 @@
 
 <section id="status" class="active">
 
-	<table>
-		<tr>
-			<th>Host</th>
-			<th>Status</th>
-			<th>Projects</th>
-			<th>Action</th>
-		</tr>
-		<tr>
-			<td>localhost</td>
-			<td><label class="ico-online">Online</label></td>
-			<td>lychee, boilerplate, mode7</td>
-			<td><button class="ico-browser ico-only" title="Browser"></button></td>
-		</tr>
-		<tr class="div"></tr>
-		<tr>
-			<th>Project</th>
-			<th>Status</th>
-			<th>Hosts</th>
-			<th>Action</th>
-		</tr>
-		<tr>
-			<td>sorbet</td>
-			<td><label class="ico-online">Online</label></td>
-			<td>localhost, lycheejs.org</td>
-			<td>
-				<button class="ico-stop ico-only" title="Stop"></button>
-				<button class="ico-browser ico-only" title="Browser"></button>
-				<button class="ico-folder ico-only" title="File Manager"></button>
-			</td>
-		</tr>
-		<tr>
-			<td>boilerplate</td>
-			<td><label class="ico-offline">Offline</label></td>
-			<td>localhost, 192.168.0.1</td>
-			<td>
-				<button class="ico-start ico-only" title="Start"></button>
-				<button class="ico-browser ico-only" title="Browser"></button>
-				<button class="ico-folder ico-only" title="File Manager"></button>
-			</td>
-		</tr>
-	</table>
+	<div class="wizard">
+
+		<article id="status-connect" class="hidden">
+			<div>
+				<label class="ico-refresh">Connecting ...</label>
+			</div>
+		</article>
+
+		<article id="status-bootup" class="hidden">
+			<h3>Boot lycheeJS</h3>
+			<p>
+				Select a Profile to boot lycheeJS sorbet.<br>
+				<br>
+				If you have no clue, select <q>development</q>.
+			</p>
+			<div>
+				<ul class="select">
+					<li><input tabindex="1" name="status-profile" type="radio" value="development" checked><span>development</span></li>
+					<li><input tabindex="1" name="status-profile" type="radio" value="production"><span>production</span></li>
+					<li><input tabindex="1" name="status-profile" type="radio" value="lycheejs.org"><span>lycheejs.org</span></li>
+				</ul>
+			</div>
+			<p class="center">
+				<button tabindex="1" class="ico-boot" href="boot()">Boot Sorbet</button>
+			</p>
+		</article>
+
+	</div>
 
 </section>
 
@@ -155,8 +154,49 @@ lychee.define('game.entity.Foo').exports(function(lychee, game, global, attachme
 		var lychee = sandbox.lychee;
 		var tool   = sandbox.tool;
 
-		sandbox.MAIN = new tool.Main();
-		sandbox.MAIN.init();
+
+		var bootup  = document.querySelector('#status-bootup');
+		var connect = document.querySelector('#status-connect');
+
+		if (bootup !== null && connect !== null) {
+			bootup.className  = 'hidden';
+			connect.className = '';
+		}
+
+
+		var config = new Config('http://localhost:4848/api/Project');
+
+		config.onload = function(result) {
+
+			if (result === true) {
+
+				bootup.className  = 'hidden';
+				connect.className = 'hidden';
+
+				sandbox.MAIN = new tool.Main();
+				sandbox.MAIN.init();
+
+			} else {
+
+				connect.className = 'hidden';
+				bootup.className    = '';
+
+			}
+
+		};
+
+
+		config.load();
+
+
+		global.boot = function() {
+
+			var profile = ui.getValue('#status input');
+			if (profile !== null) {
+				window.open('lycheejs://boot=' + profile);
+			}
+
+		};
 
 	});
 

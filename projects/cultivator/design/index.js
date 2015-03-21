@@ -593,12 +593,13 @@ ui = (function(global) {
 
 		},
 
-		setView: function(identifier) {
+		changeState: function(identifier) {
 
-			var menu  = [].slice.call(document.querySelectorAll('menu li'));
-			var views = [].slice.call(document.querySelectorAll('section[id]'));
+			var menu   = [].slice.call(document.querySelectorAll('menu li'));
+			var states = [].slice.call(document.querySelectorAll('section[id]'));
 
-			if (menu.length === views.length) {
+
+			if (menu.length === states.length) {
 
 				menu.forEach(function(item) {
 
@@ -611,12 +612,12 @@ ui = (function(global) {
 
 				});
 
-				views.forEach(function(view) {
+				states.forEach(function(state) {
 
-					if (view.id === identifier) {
-						view.className = 'active';
+					if (state.id === identifier) {
+						state.className = 'active';
 					} else {
-						view.className = '';
+						state.className = '';
 					}
 
 				});
@@ -627,12 +628,21 @@ ui = (function(global) {
 
 					if (target instanceof Function) {
 						target(identifier);
-					} else if (target instanceof Object && typeof target.trigger === 'function') {
-						target.trigger('view', [ identifier ]);
+					} else if (target instanceof Object && typeof target.changeState === 'function') {
+						target.changeState(identifier);
 					}
 
 				}
 
+			}
+
+		},
+
+		render: function(code) {
+
+			var state = document.querySelector('section[id].active');
+			if (state !== null) {
+				state.innerHTML = code;
 			}
 
 		}

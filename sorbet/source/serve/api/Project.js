@@ -31,11 +31,22 @@ lychee.define('sorbet.serve.api.Project').requires([
 
 		if (Object.keys(main.hosts).length > 0) {
 
-			Object.keys(main.hosts).forEach(function(id) {
+			Object.keys(main.hosts).forEach(function(identifier) {
 
-				details[id] = main.hosts[id].projects.map(function(project) {
-					return project.identifier;
-				});
+				if (identifier === 'admin') return;
+
+				var projects = main.hosts[identifier].projects;
+				if (projects.length === 2) {
+
+					details[identifier] = projects.map(function(project) {
+						return project.identifier;
+					});
+
+				} else {
+
+					details[identifier] = null;
+
+				}
 
 			});
 
@@ -109,7 +120,8 @@ lychee.define('sorbet.serve.api.Project').requires([
 				ready({
 					status:  200,
 					headers: {
-						'Access-Control-Allow-Origin':  data.headers['Host'],
+						'Access-Control-Allow-Headers': 'Content-Type',
+						'Access-Control-Allow-Origin':  data.headers['Origin'],
 						'Access-Control-Allow-Methods': 'GET',
 						'Access-Control-Max-Age':       60 * 60
 					},
@@ -137,8 +149,12 @@ lychee.define('sorbet.serve.api.Project').requires([
 						ready({
 							status:  200,
 							headers: {
-								'Content-Control': 'no-transform',
-								'Content-Type':    'application/json'
+								'Access-Control-Allow-Headers': 'Content-Type',
+								'Access-Control-Allow-Origin':  data.headers['Origin'],
+								'Access-Control-Allow-Methods': 'GET',
+								'Access-Control-Max-Age':       60 * 60,
+								'Content-Control':              'no-transform',
+								'Content-Type':                 'application/json'
 							},
 							payload: _JSON.encode(_serialize(project))
 						});
@@ -165,7 +181,14 @@ lychee.define('sorbet.serve.api.Project').requires([
 
 					ready({
 						status:  200,
-						headers: { 'Content-Type': 'application/json' },
+						headers: {
+							'Access-Control-Allow-Headers': 'Content-Type',
+							'Access-Control-Allow-Origin':  data.headers['Origin'],
+							'Access-Control-Allow-Methods': 'GET',
+							'Access-Control-Max-Age':       60 * 60,
+							'Content-Control':              'no-transform',
+							'Content-Type':                 'application/json'
+						},
 						payload: _JSON.encode(projects)
 					});
 

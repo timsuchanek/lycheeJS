@@ -1,6 +1,7 @@
 
 lychee.define('tool.Main').requires([
-	'lychee.data.JSON'
+	'lychee.data.JSON',
+	'tool.state.Status'
 ]).includes([
 	'lychee.game.Main'
 ]).tags({
@@ -25,6 +26,11 @@ lychee.define('tool.Main').requires([
 			renderer: null,
 			server:   null,
 
+			loop: {
+				update: 1/10,
+				render: 0
+			},
+
 			viewport: {
 				fullscreen: false
 			}
@@ -46,6 +52,13 @@ lychee.define('tool.Main').requires([
 
 		this.bind('init', function() {
 
+			this.setState('status',   new tool.state.Status(this));
+			// this.setState('console',  new tool.state.Console(this));
+			// this.setState('settings', new tool.state.Settings(this));
+			// this.setState('help',     new tool.state.Help(this));
+
+			this.changeState('status');
+
 		}, this, true);
 
 
@@ -56,12 +69,6 @@ lychee.define('tool.Main').requires([
 console.log('Settings Update', id, settings);
 
 			}
-
-		}, this);
-
-		this.bind('view', function(identifier) {
-
-console.log('MAIN view event', identifier);
 
 		}, this);
 

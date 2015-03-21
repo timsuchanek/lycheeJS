@@ -17,18 +17,72 @@ lychee.define('sorbet.Main').requires([
 	 * HELPERS
 	 */
 
-	var _process_build = function(project) {
+	var _process_admin = function(data, ready) {
 
-console.log('TODO: build chain for ' + project.identifier);
+		var host = this.hosts['admin'] || null;
+		var url  = data.headers.url    || null;
+
+		if (host !== null && url !== null) {
+
+			var parameters = {};
+
+			var url = data.headers.url.split('?')[0];
+			var tmp = data.headers.url.split('?')[1] || '';
+
+			if (tmp.length > 0) {
+
+				tmp.split('&').forEach(function(value) {
+
+					var key = value.split('=')[0];
+					var val = value.split('=')[1];
+
+
+					if (!isNaN(parseInt(val, 10))) {
+						parameters[key] = parseInt(val, 10);
+					} else if (val === 'true') {
+						parameters[key] = true;
+					} else if (val === 'false') {
+						parameters[key] = false;
+					} else if (val === 'null') {
+						parameters[key] = null;
+					} else {
+						parameters[key] = val;
+					}
+
+				});
+
+			}
+
+
+			if (Object.keys(parameters).length > 0) {
+				data.headers.parameters = parameters;
+			}
+
+
+			if (sorbet.serve.API.can(host, url) === true) {
+
+				sorbet.serve.API.process(host, url, data, ready);
+				return true;
+
+			}
+
+		}
+
+
+		ready(null);
+
+		return false;
 
 	};
 
-	var _process_serve = function(data, ready) {
+	var _process_server = function(data, ready) {
 
-		var host = this.hosts[(data.headers['Host'] || '').split(':')[0]] || null;
-		var url  = data.headers.url || null;
+		var identifier = (data.headers['Host'] || '').split(':')[0];
+		var host       = this.hosts[identifier] || null;
+		var url        = data.headers.url || null;
 
-		if (host !== null && url !== null) {
+
+		if (identifier !== 'admin' && host !== null && url !== null) {
 
 			var parameters = {};
 
@@ -178,6 +232,9 @@ console.log('TODO: build chain for ' + project.identifier);
 		}
 
 
+		this.setHost('admin', null);
+
+
 		lychee.event.Emitter.call(this);
 
 
@@ -197,46 +254,36 @@ console.log('TODO: build chain for ' + project.identifier);
 			var settings = this.settings.server || null;
 			if (settings !== null) {
 
-				this.server = new sorbet.net.Server(settings, this);
+				this.admin  = new sorbet.net.Server({ port: 4848 });
+				this.server = new sorbet.net.Server(settings);
 
-				var result = this.server.connect();
-				if (result === true) {
+				this.admin.bind('serve', function(data, ready) {
+					_process_admin.call(this, data, ready);
+				}, this);
 
-					var port  = this.server.port;
-					var hosts = Object.keys(this.hosts).map(function(host) {
-						return 'http://' + host + ':' + port;
-					});
+				this.server.bind('serve', function(data, ready) {
+					_process_server.call(this, data, ready);
+				}, this);
 
-					console.log('\n\n');
-					console.log('Open your web browser and surf to ' + hosts.join(' or '));
-					console.log('\n\n');
 
-				}
+				this.admin.connect();
+				this.server.connect();
+
+
+				var port  = this.server.port;
+				var hosts = Object.keys(this.hosts).filter(function(host) {
+					return host !== 'admin';
+				}).map(function(host) {
+					return 'http://' + host + ':' + port;
+				});
+
+				console.log('\n\n');
+				console.log('Open your web browser and surf to ' + hosts.join(' or '));
+				console.log('\n\n');
 
 			}
 
 		}, this, true);
-
-		this.bind('build', _process_build, this);
-		this.bind('serve', _process_serve, this);
-
-
-// TODO: This is only the build chain
-
-//		var _check_projects = function() {
-//
-//			for (var id in _project_cache) {
-//
-//				var project = _project_cache[id];
-//				if (sorbet.mod.Package.can(project) === true) {
-//					this.trigger('mod', [ project ]);
-//				}
-//
-//			}
-//
-//		}.bind(this);
-//
-//		setTimeout(_check_projects, 5000);
 
 
 		setTimeout(function() {
