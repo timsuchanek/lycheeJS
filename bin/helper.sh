@@ -10,15 +10,13 @@ KERNEL=`uname -r`;
 MACH=`uname -m`;
 
 WEBBROWSER="";
-FILEBROWSER="";
 
-LYCHEEJS_ROOT="";
+LYCHEEJS_ROOT=$(cd "$(dirname "$0")/../"; pwd);
 
 
 if [ "$OS" == "darwin" ]; then
 
 	OS="osx";
-	LYCHEEJS_ROOT="/Applications/lycheejs";
 
 	if [ -e "/Applications/Google\ Chrome.app" ]; then
 		WEBBROWSER="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome";
@@ -29,7 +27,6 @@ if [ "$OS" == "darwin" ]; then
 elif [ "$OS" == "linux" ]; then
 
 	OS="linux";
-	LYCHEEJS_ROOT="/opt/lycheejs";
 
 	NODEJS=`which nodejs`;
 
@@ -82,15 +79,9 @@ _handle_url() {
 				boot)
 
 					cd $LYCHEEJS_ROOT;
-#					$NODEJS ./tool/Sorbet.js stop --pid="*";
-					$NODEJS ./tool/Sorbet.js start --profile="$resource";
+					./bin/sorbet.sh stop;
+					./bin/sorbet.sh start "$resource";
 
-				;;
-
-				start)
-				;;
-
-				stop)
 				;;
 
 				file)
@@ -108,7 +99,7 @@ _handle_url() {
 				web)
 
 					if [ "$OS" == "linux" ]; then
-						$WEBBROWSER "$resource" 2>&1;
+						xdg-open "$resource" 2>&1;
 						exit 0;
 					elif [ "$OS" == "osx" ]; then
 						$WEBBROWSER "$resource" 2>&1;

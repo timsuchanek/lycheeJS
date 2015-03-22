@@ -12,13 +12,6 @@ fi;
 
 case "$1" in
 
-	help)
-
-		cd $LYCHEEJS_ROOT;
-		$NODEJS ./bin/sorbet.js;
-
-	;;
-
 	start)
 
 		cd $LYCHEEJS_ROOT;
@@ -62,6 +55,13 @@ case "$1" in
 		cd $LYCHEEJS_ROOT;
 		$NODEJS ./bin/sorbet.js stop;
 		$NODEJS ./bin/sorbet.js start "$2";
+
+	;;
+
+	*)
+
+		cd $LYCHEEJS_ROOT;
+		$NODEJS ./bin/sorbet.js help;
 
 	;;
 
