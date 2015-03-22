@@ -4,6 +4,10 @@
 LYCHEEJS_ROOT=$(cd "$(dirname "$0")/../"; pwd);
 NODEJS=`which nodejs`;
 SORBET_PID="$LYCHEEJS_ROOT/sorbet/.pid";
+SORBET_LOG="/var/log/sorbet.log";
+SORBET_ERR="/var/log/sorbet.err";
+SORBET_USER=`whoami`;
+
 
 if [ "$NODEJS" == "" ]; then
 	NODEJS=`which node`;
@@ -15,7 +19,12 @@ case "$1" in
 	start)
 
 		cd $LYCHEEJS_ROOT;
-		$NODEJS ./bin/sorbet.js start "$2";
+
+		if [ "$SORBET_USER" == "root" ]; then 
+			$NODEJS ./bin/sorbet.js start "$2" >> $SORBET_LOG 2>> $SORBET_ERR &
+		else
+			$NODEJS ./bin/sorbet.js start "$2";
+		fi;
 
 	;;
 
@@ -54,7 +63,12 @@ case "$1" in
 
 		cd $LYCHEEJS_ROOT;
 		$NODEJS ./bin/sorbet.js stop;
-		$NODEJS ./bin/sorbet.js start "$2";
+
+		if [ "$SORBET_USER" == "root" ]; then 
+			$NODEJS ./bin/sorbet.js start "$2" >> $SORBET_LOG 2>> $SORBET_ERR &
+		else
+			$NODEJS ./bin/sorbet.js start "$2";
+		fi;
 
 	;;
 

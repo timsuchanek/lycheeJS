@@ -15,7 +15,6 @@
 ### END INIT INFO
 
 PATH=/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/bin;
-PID_FILE="/var/run/sorbet.pid";
 THIS_FILE=$0;
 SELF_FILE=`basename $THIS_FILE`;
 [ -h $THIS_FILE ] && SELF_FILE=`basename $(readlink $THIS_FILE)`;
@@ -27,10 +26,11 @@ LYCHEEJS_ROOT="{{lycheejs_root}}";
 SORBET_USER="{{sorbet_user}}";
 SORBET_GROUP="{{sorbet_group}}";
 SORBET_PROFILE="{{sorbet_profile}}";
+SORBET_PID="/var/run/sorbet.pid";
 
 
 if [[ "$LYCHEEJS_ROOT" =~ ^[\{]{2}(.*)[\}]{2}$ ]]; then
-	LYCHEEJS_ROOT="/usr/lib/node_modules/lycheejs";
+	LYCHEEJS_ROOT="/opt/lycheejs";
 fi;
 
 if [[ "$SORBET_USER" =~ ^[\{]{2}(.*)[\}]{2}$ ]]; then
@@ -42,14 +42,14 @@ if [[ "$SORBET_GROUP" =~ ^[\{]{2}(.*)[\}]{2}$ ]]; then
 fi;
 
 if [[ "$SORBET_PROFILE" =~ ^[\{]{2}(.*)[\}]{2}$ ]]; then
-	SORBET_PROFILE="localhost.json";
+	SORBET_PROFILE="development";
 fi;
  
 
 NODEJS_EXEC=`which nodejs`;
 
 SORBET_ROOT="$LYCHEEJS_ROOT";
-SORBET_EXEC="$NODEJS_EXEC ./tool/Sorbet.js start --profile=\"/etc/sorbet/$SORBET_PROFILE\"";
+SORBET_EXEC="$LYCHEEJS_ROOT/bin/sorbet.sh start \"$SORBET_PROFILE\"";
 
 LOG_LABEL=${SELF_FILE%.*};
 LOG_OUT="/var/log/sorbet.log";
@@ -63,11 +63,11 @@ fi;
 
 
 get_pid() {
-	cat "$PID_FILE";
+	cat "$SORBET_PID";
 }
 
 is_running() {
-	[ -f "$PID_FILE" ] && ps `get_pid` > /dev/null 2>&1
+	[ -f "$SORBET_PID" ] && ps `get_pid` > /dev/null 2>&1
 }
 
 
@@ -95,8 +95,8 @@ case "$1" in
 		else
 
 			cd "$SORBET_ROOT";
-			sudo -u "$SORBET_USER" -g "$SORBET_GROUP" -- $SORBET_EXEC >> "$LOG_OUT" 2>> "$LOG_ERR" &
-			echo $! > "$PID_FILE";
+			sudo -u "$SORBET_USER" -g "$SORBET_GROUP" -- $SORBET_EXEC;
+			echo $! > "$SORBET_PID";
 
 			if ! is_running; then
 				[ "$VERBOSE" != no ] && log_daemon_msg "Unable to start daemon, see $LOG_OUT and $LOG_ERR" "$LOG_LABEL";
@@ -177,9 +177,9 @@ case "$1" in
 
 		else
 
-			if [ -f "$PID_FILE" ]; then
+			if [ -f "$SORBET_PID" ]; then
 
-				log_success_msg "$LOG_LABEL (launched by $SORBET_USER) is not running, phantom pidfile $PID_FILE";
+				log_success_msg "$LOG_LABEL (launched by $SORBET_USER) is not running, phantom pidfile $SORBET_PID";
 				exit 1;
 
 			else
