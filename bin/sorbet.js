@@ -15,7 +15,7 @@ var _settings = (function() {
 	};
 
 
-	var args = [ process.argv[2], process.argv[3] ];
+	var args = [ process.argv[2] || '', process.argv[3] || '' ];
 	if (args[0].match(/start|stop/)) {
 
 		settings.command = args[0];
@@ -24,15 +24,19 @@ var _settings = (function() {
 	}
 
 
-	try {
+	if (settings.profile !== null) {
 
-		if (fs.existsSync(root + '/sorbet/profile/' + settings.profile + '.json')) {
-			settings.profile = JSON.parse(fs.readFileSync(root + '/sorbet/profile/' + settings.profile + '.json', 'utf8'));
-		} else {
-			settings.profile = null;
+		try {
+
+			if (fs.existsSync(root + '/sorbet/profile/' + settings.profile + '.json')) {
+				settings.profile = JSON.parse(fs.readFileSync(root + '/sorbet/profile/' + settings.profile + '.json', 'utf8'));
+			} else {
+				settings.profile = null;
+			}
+
+		} catch(e) {
 		}
 
-	} catch(e) {
 	}
 
 
@@ -193,6 +197,36 @@ var _settings = (function() {
 			process.exit(1);
 
 		}
+
+	} else {
+
+		console.info('lycheeJS ' + lychee.VERSION + ' Sorbet');
+
+		var profiles      = fs.readdirSync(root + '/sorbet/profile').map(function(value) {
+			return '"' + value.substr(0, value.indexOf('.json')) + '"';
+		});
+		var profiles_info = (profiles.join(', ') + '                                                      ').substr(0, 50);
+
+
+		console.log('                                                      ');
+		console.log('Usage: sorbet [Command] [Profile]                     ');
+		console.log('                                                      ');
+		console.log('                                                      ');
+		console.log('Commands:                                             ');
+		console.log('                                                      ');
+		console.log('    start                    Starts a Sorbet Instance.');
+		console.log('    stop                     Stops a Sorbet Instance. ');
+		console.log('                                                      ');
+		console.log('Available Profiles:                                   ');
+		console.log('    ' + profiles_info);
+		console.log('                                                      ');
+		console.log('Examples:                                             ');
+		console.log('                                                      ');
+		console.log('    sorbet start development                          ');
+		console.log('                                                      ');
+
+
+		process.exit(0);
 
 	}
 
