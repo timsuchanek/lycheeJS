@@ -5,7 +5,6 @@
 	"hosts": {
 		"lycheejs.org":            "lycheeJS-website",
 		"www.lycheejs.org":        "lycheeJS-website",
-		"lethalmaze.lycheejs.org": "lethalmaze",
 		"cultivator.lycheejs.org": null
 	}
 

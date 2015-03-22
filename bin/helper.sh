@@ -12,11 +12,13 @@ MACH=`uname -m`;
 WEBBROWSER="";
 FILEBROWSER="";
 
+LYCHEEJS_ROOT="";
 
 
-if [ "{$OS}" == "darwin" ]; then
+if [ "$OS" == "darwin" ]; then
 
 	OS="osx";
+	LYCHEEJS_ROOT="/Applications/lycheejs";
 
 	if [ -e "/Applications/Google\ Chrome.app" ]; then
 		WEBBROWSER="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome";
@@ -24,9 +26,12 @@ if [ "{$OS}" == "darwin" ]; then
 		WEBBROWSER="/Applications/Firefox.app/Contents/MacOS/firefox";
 	fi;
 
-elif [ "{$OS}" == "linux" ]; then
+elif [ "$OS" == "linux" ]; then
 
 	OS="linux";
+	LYCHEEJS_ROOT="/opt/lycheejs";
+
+	NODEJS=`which nodejs`;
 
 	if [ "`which chrome`" != "" ]; then
 		WEBBROWSER=`which chrome`;
@@ -47,11 +52,17 @@ _handle_url() {
 
 	if [ "$protocol" == "lycheejs" ]; then
 
+		tmp0=${url:11:4};
 		tmp1=${url:11:4};
 		tmp2=${url:11:3};
 
 		application="";
 		resource="";
+
+		if [ "$tmp0" == "boot" ]; then
+			application="boot";
+			resource=${url#*=};
+		fi;
 
 		if [ "$tmp1" == "file" ]; then
 			application="file";
@@ -67,6 +78,20 @@ _handle_url() {
 		if [ "$application" != "" -a "$resource" != "" ]; then
 
 			case "$application" in
+
+				boot)
+
+					cd $LYCHEEJS_ROOT;
+#					$NODEJS ./tool/Sorbet.js stop --pid="*";
+					$NODEJS ./tool/Sorbet.js start --profile="$resource";
+
+				;;
+
+				start)
+				;;
+
+				stop)
+				;;
 
 				file)
 

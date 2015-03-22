@@ -3,7 +3,7 @@
 	"homepage":    "http://lycheejs.org",
 	"license":     "MIT",
 	"version":     "0.8.4",
-	"description": "Free HTML5 + native OpenGL Game Engine for Embedded, Console, Mobile, Server and Desktop",
+	"description": "Next-Gen isomorphic peer-to-peer Application Engine for Embedded, Console, Mobile, Server and Desktop",
 
 	"keywords": [
 		"lycheejs",
@@ -28,17 +28,18 @@
 
 		"postinstall":  "./tool/configure.js",
 
-		"start":        "./tool/Sorbet.js start --profile=\"./sorbet/profile/localhost.json\"",
-		"stop":         "./tool/Sorbet.js stop --pid=\"*\"",
+		"start":        "./bin/sorbet.js start development",
+		"stop":         "./bin/sorbet.js stop",
 
-		"localhost":    "nohup nodejs ./tool/Sorbet.js start --profile=\"./sorbet/profile/localhost.json\" >> ./sorbet.log &",
-		"lycheejs.org": "nohup nodejs ./tool/Sorbet.js start --profile=\"./sorbet/profile/lycheejs.org.json\" >> ./sorbet.log &"
+		"development":  "./bin/sorbet.js start development",
+		"production":   "./bin/sorbet.js start production"
 
 	},
 
 	"bin": {
-		"fertilizer": "./tool/Fertilizer.js",
-		"sorbet":     "./tool/Sorbet.js"
+
+		"sorbet": "./bin/sorbet.js"
+
 	},
 
 	"author": {
