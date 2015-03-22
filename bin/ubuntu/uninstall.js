@@ -2,6 +2,19 @@
 
 (function() {
 
+	/*
+	 * START OF CUSTOM SETTINGS
+	 */
+
+	var _sorbet_user  = 'lycheejs-sorbet';
+	var _sorbet_group = 'lycheejs-sorbet';
+
+	/*
+	 * END OF CUSTOM SETTINGS
+	 */
+
+
+
 	var _fs   = require('fs');
 	var _path = require('path');
 	var _user = process.env.USER;
@@ -168,9 +181,9 @@
 
 		var user_result = false;
 
-		if (_exec_sync('getent passwd lycheejs') !== null) {
+		if (_exec_sync('getent passwd ' + _sorbet_user) !== null) {
 
-			if (_exec_sync('userdel lycheejs') !== null) {
+			if (_exec_sync('userdel ' + _sorbet_user) !== null) {
 				user_result = true;
 			}
 
@@ -179,9 +192,9 @@
 		}
 
 		if (user_result === true) {
-			console.log('\tlycheejs user: OKAY');
+			console.log('\tprocess user: OKAY');
 		} else {
-			console.log('\tlycheejs user: SKIP');
+			console.log('\tprocess user: SKIP');
 		}
 
 

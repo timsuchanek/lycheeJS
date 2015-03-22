@@ -10,11 +10,11 @@ KERNEL=`uname -r`;
 MACH=`uname -m`;
 
 WEBBROWSER="";
-FILEBROWSER="";
+
+LYCHEEJS_ROOT=$(cd "$(dirname "$0")/../"; pwd);
 
 
-
-if [ "{$OS}" == "darwin" ]; then
+if [ "$OS" == "darwin" ]; then
 
 	OS="osx";
 
@@ -24,9 +24,11 @@ if [ "{$OS}" == "darwin" ]; then
 		WEBBROWSER="/Applications/Firefox.app/Contents/MacOS/firefox";
 	fi;
 
-elif [ "{$OS}" == "linux" ]; then
+elif [ "$OS" == "linux" ]; then
 
 	OS="linux";
+
+	NODEJS=`which nodejs`;
 
 	if [ "`which chrome`" != "" ]; then
 		WEBBROWSER=`which chrome`;
@@ -47,11 +49,17 @@ _handle_url() {
 
 	if [ "$protocol" == "lycheejs" ]; then
 
+		tmp0=${url:11:4};
 		tmp1=${url:11:4};
 		tmp2=${url:11:3};
 
 		application="";
 		resource="";
+
+		if [ "$tmp0" == "boot" ]; then
+			application="boot";
+			resource=${url#*=};
+		fi;
 
 		if [ "$tmp1" == "file" ]; then
 			application="file";
@@ -68,6 +76,14 @@ _handle_url() {
 
 			case "$application" in
 
+				boot)
+
+					cd $LYCHEEJS_ROOT;
+					./bin/sorbet.sh stop;
+					./bin/sorbet.sh start "$resource";
+
+				;;
+
 				file)
 
 					if [ "$OS" == "linux" ]; then
@@ -83,7 +99,7 @@ _handle_url() {
 				web)
 
 					if [ "$OS" == "linux" ]; then
-						$WEBBROWSER "$resource" 2>&1;
+						xdg-open "$resource" 2>&1;
 						exit 0;
 					elif [ "$OS" == "osx" ]; then
 						$WEBBROWSER "$resource" 2>&1;

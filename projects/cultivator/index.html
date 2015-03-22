@@ -12,10 +12,10 @@
 <body>
 <menu>
 	<b id="menu-toggle"></b>
-	<li class="ico-intro active" onclick="ui.setView('intro');">Intro</li>
-	<li class="ico-projects" onclick="ui.setView('projects');">Projects</li>
-	<li class="ico-tools" onclick="ui.setView('tools');">Tools</li>
-	<li class="ico-help" onclick="ui.setView('help');">Help</li>
+	<li class="ico-intro active" onclick="ui.changeState('intro');">Intro</li>
+	<li class="ico-projects" onclick="ui.changeState('projects');">Projects</li>
+	<li class="ico-tools" onclick="ui.changeState('tools');">Tools</li>
+	<li class="ico-help" onclick="ui.changeState('help');">Help</li>
 </menu>
 <aside>
 	<button class="ico-refresh" onclick="window.location.href='./index.html'">Refresh</button>
@@ -157,38 +157,8 @@
 
 	<div class="wizard">
 
-		<article id="tools-debugger">
-			<h3>Debugger (coming soon)</h3>
-			<p>
-				The Debugger allows to live-debug Projects.
-			</p>
-			<div class="center">
-				<p>
-					<img src="/projects/cultivator/debugger/icon.png">
-				</p>
-				<div class="center">
-					<button class="ico-browser ico-only" onclick="window.open('./debugger/index.html');" title="Open in Browser"></button>
-				</div>
-			</div>
-		</article>
-
-		<article id="tools-editor">
-			<h3>Editor (coming soon)</h3>
-			<p>
-				The Editor allows the easy creation of Projects.
-			</p>
-			<div class="center">
-				<p>
-					<img src="/projects/cultivator/editor/icon.png">
-				</p>
-				<div class="center">
-					<button class="ico-browser ico-only" onclick="window.open('./editor/index.html');" title="Open in Browser"></button>
-				</div>
-			</div>
-		</article>
-
 		<article id="tools-ranger">
-			<h3>Ranger (coming soon)</h3>
+			<h3>Ranger</h3>
 			<p>
 				The Ranger allows to maintain the server infrastructure.
 			</p>

@@ -70,12 +70,11 @@ lychee.define('sorbet.net.Server').tags({
 	 * IMPLEMENTATION
 	 */
 
-	var Class = function(data, main) {
+	var Class = function(data) {
 
 		var settings = lychee.extend({}, data);
 
 
-		this.main = main || null;
 		this.host = null;
 		this.port = 8080;
 
@@ -150,20 +149,15 @@ lychee.define('sorbet.net.Server').tags({
 
 					remote.bind('receive', function(blob) {
 
-						var main = this.main || null;
-						if (main !== null) {
+						this.trigger('serve', [ blob, function(data) {
 
-							main.trigger('serve', [ blob, function(data) {
+							if (data !== null) {
+								remote.send(data);
+							} else {
+								remote.send(_generate_error(blob));
+							}
 
-								if (data !== null) {
-									remote.send(data);
-								} else {
-									remote.send(_generate_error(blob));
-								}
-
-							}]);
-
-						}
+						}]);
 
 					}, that);
 

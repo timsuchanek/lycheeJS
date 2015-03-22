@@ -35,7 +35,9 @@
 }
 
 
+
 menu li:before,
+a.button:before,
 button:before,
 label:before {
 	margin: 0px 8px 0px 0px;
@@ -50,8 +52,16 @@ label:before {
 	-moz-osx-font-smoothing: grayscale;
 }
 
-.ico-only:before     { margin: 0px; }
+menu li.ico-only:before,
+a.button.ico-only:before,
+button.ico-only:before,
+label.ico-only:before {
+	margin: 0px;
+}
 
+
+
+.ico-boot:before     { content: "\e05c"; }
 .ico-browser:before  { content: "\e037"; }
 .ico-console:before  { content: "\e011"; }
 .ico-download:before { content: "\e083"; }
@@ -457,7 +467,9 @@ ul.select input {
 
 
 
+a.button,
 button {
+	display: inline-block;
 	width: auto;
 	height: 32px;
 	line-height: 32px;
@@ -483,10 +495,13 @@ button {
 	appearance: none;
 }
 
+a.button:not(.ico-only),
 button:not(.ico-only) {
 	min-width: 110px;
 }
 
+a.button:hover,
+a.button:focus,
 button:hover,
 button:focus {
 	background: #32afe5;
@@ -496,6 +511,9 @@ button:focus {
 	animation: pulse 3000ms infinite;
 }
 
+a.button:not([href]),
+a.button:not([href]):hover,
+a.button:not([href]):focus,
 button[disabled],
 button[disabled]:hover,
 button[disabled]:focus {
@@ -813,17 +831,21 @@ label {
 	text-transform: uppercase;
 }
 
+label[disabled] {
+	color: #545857;
+}
+
 
 
 table {
 	width: 100%;
 	margin: 0px auto;
-	border-spacing: 0;
+	border-spacing: 0px 2px;
 }
 
 table th {
 	margin: 0px;
-	padding: 32px;
+	padding: 16px;
 	font-size: 14px;
 	text-align: left;
 	font-family: 'museo-sans-300';
@@ -832,7 +854,7 @@ table th {
 }
 
 table tr {
-	margin: 2px 0px;
+	margin: 0px;
 }
 
 table tr.div {
@@ -841,30 +863,27 @@ table tr.div {
 
 table td {
 	margin: 0px;
-	padding: 8px;
+	padding: 8px 16px;
 	background: #363f3e;
 	font-family: 'museo-sans-300';
 	font-weight: normal;
 	text-align: left;
 }
 
-table tr:last-child td {
-	border-bottom: 1px solid #404948;
-}
-
 table td:first-child {
 	font-family: 'museo-sans-500';
 }
 
+table td a.button,
 table td button {
 	margin: 0px 8px 0px 0px;
 }
 
 table.vertical th {
 	width: 96px;
+	padding: 32px;
 	vertical-align: top;
 	text-align: left;
-
 }
 
 table.vertical td {
@@ -972,12 +991,10 @@ footer {
 		margin-bottom: 52px;
 	}
 
-	button:not(.ico-only) {
-		min-width: 90px;
-	}
-
-	button:before {
+	a.button:before:not(.ico-only),
+	button:before:not(.ico-only) {
 		display: none;
 	}
 
 }
+

@@ -6,9 +6,9 @@
 	 * START OF CUSTOM SETTINGS
 	 */
 
-	var _sorbet_profile = 'localhost.json';
-	var _sorbet_user    = 'lycheejs';
-	var _sorbet_group   = 'lycheejs';
+	var _sorbet_profile = 'production';
+	var _sorbet_user    = 'lycheejs-sorbet';
+	var _sorbet_group   = 'lycheejs-sorbet';
 
 	(function(args) {
 
@@ -374,7 +374,7 @@
 
 			var buffer = null;
 			try {
-				buffer = _fs.readFileSync(_path.resolve(__dirname, './_etc_init_d_sorbet.sh'), 'utf8');
+				buffer = _fs.readFileSync(_path.resolve(__dirname, './etc/init.d/sorbet.sh'), 'utf8');
 				buffer = buffer.toString();
 			} catch(e) {
 				buffer = null;
@@ -472,7 +472,7 @@
 
 			var buffer = null;
 			try {
-				buffer = _fs.readFileSync(_path.resolve(__dirname, './_etc_cron_daily_sorbet.sh'), 'utf8');
+				buffer = _fs.readFileSync(_path.resolve(__dirname, './etc/cron.daily/sorbet.sh'), 'utf8');
 				buffer = buffer.toString();
 			} catch(e) {
 				buffer = null;
