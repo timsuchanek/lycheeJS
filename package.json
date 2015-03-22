@@ -7,7 +7,7 @@
 
 	"keywords": [
 		"lycheejs",
-		"game",
+		"application",
 		"engine",
 		"nodejs",
 		"webgl",
@@ -26,19 +26,20 @@
 
 	"scripts": {
 
-		"postinstall":  "./tool/configure.js",
+		"postinstall": "./tool/configure.js",
 
-		"start":        "./bin/sorbet.js start development",
-		"stop":         "./bin/sorbet.js stop",
+		"start":       "./bin/sorbet.js start development",
+		"stop":        "./bin/sorbet.js stop",
 
-		"development":  "./bin/sorbet.js start development",
-		"production":   "./bin/sorbet.js start production"
+		"development": "./bin/sorbet.js start development",
+		"production":  "./bin/sorbet.js start production"
 
 	},
 
 	"bin": {
 
-		"sorbet": "./bin/sorbet.js"
+		"fertilizer": "./bin/fertilizer.js",
+		"sorbet":     "./bin/sorbet.js"
 
 	},
 
