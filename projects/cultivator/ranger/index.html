@@ -11,6 +11,7 @@
 
 	<!-- BOOTSTRAP -->
 	<script src="/lychee/build/html/core.js"></script>
+	<script src="./source/helper.js"></script>
 
 	<style>
 	#status article.hidden {
@@ -68,7 +69,7 @@
 				</ul>
 			</div>
 			<p class="center">
-				<button tabindex="1" class="ico-boot" href="boot()">Boot Sorbet</button>
+				<button tabindex="1" class="ico-boot" href="helper.boot(ui.getValue('#status input'));">Boot Sorbet</button>
 			</p>
 		</article>
 
@@ -187,16 +188,6 @@ lychee.define('game.entity.Foo').exports(function(lychee, game, global, attachme
 
 
 		config.load();
-
-
-		global.boot = function() {
-
-			var profile = ui.getValue('#status input');
-			if (profile !== null) {
-				window.open('lycheejs://boot=' + profile);
-			}
-
-		};
 
 	});
 

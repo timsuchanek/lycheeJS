@@ -11,7 +11,7 @@ lychee.define('tool.state.Status').includes([
 
 	var _ui_update = function() {
 
-		var config = new Config('/api/Project');
+		var config = new Config('/api/Project?timestamp=' + Date.now());
 		var that   = this;
 
 		config.onload = function(result) {
@@ -133,21 +133,21 @@ lychee.define('tool.state.Status').includes([
 						if (project.server === null) {
 
 							if (project.sorbet === true) {
-								project_actions.push('<a class="button ico-start ico-only" href="lycheejs://start=' + project.identifier + '"></a>');
+								project_actions.push('<button class="ico-start ico-only" onclick="helper.start(\'' + project.identifier + '\')"></button>');
 								project_status = '<label class="ico-offline">Offline</label>';
 							} else {
-								project_actions.push('<a class="button ico-start ico-only" disabled></a>');
+								project_actions.push('<button class="ico-start ico-only" disabled></button>');
 								project_status = '<label class="ico-offline" disabled>Offline</label>';
 							}
 
 						} else {
-							project_actions.push('<a class="button ico-stop ico-only" href="lycheejs://stop=' + project.identifier + '"></a>');
+							project_actions.push('<button class="ico-stop ico-only" onclick="helper.stop(\'' + project.identifier + '\')"></button>');
 							project_status = '<label class="ico-online">Online</label>';
 						}
 
 
 						if (project.filesystem !== null) {
-							project_actions.push('<a class="button ico-folder ico-only" href="lycheejs://file=' + project.filesystem + '"></a>');
+							project_actions.push('<button class="ico-folder ico-only" onclick="helper.file(\'' + project.filesystem + '\')"></button>');
 						}
 
 
@@ -156,9 +156,9 @@ lychee.define('tool.state.Status').includes([
 							project_hosts.forEach(function(host) {
 
 								if (sorbet !== null && sorbet.details[host] === null) {
-									project_actions.push('<a class="button ico-browser ico-only" href="lycheejs://web=http://' + host + ':' + port + '/projects/' + project.identifier + '"></a>');
+									project_actions.push('<button class="ico-browser ico-only" onclick="helper.web(\'' + host + ':' + port + '/projects/' + project.identifier + '\')"></button>');
 								} else {
-									project_actions.push('<a class="button ico-browser ico-only" href="lycheejs://web=http://' + host + ':' + port + '"></a>');
+									project_actions.push('<button class="ico-browser ico-only" onclick="helper.web(\'' + host + ':' + port + '\')"></button>');
 								}
 
 							});

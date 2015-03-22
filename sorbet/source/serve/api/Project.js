@@ -11,6 +11,23 @@ lychee.define('sorbet.serve.api.Project').requires([
 	 * HELPERS
 	 */
 
+	var _to_header = function(status, data) {
+
+		var origin = data.headers['Origin'] || '*';
+
+
+		return {
+			'Access-Control-Allow-Headers': 'Content-Type',
+			'Access-Control-Allow-Origin':  origin,
+			'Access-Control-Allow-Methods': 'GET, PUT, POST',
+			'Access-Control-Max-Age':       60 * 60,
+			'Content-Control':              'no-transform',
+			'Content-Type':                 'application/json'
+		}
+
+	};
+
+
 	var _get_sorbet = function() {
 
 		var details = {};
@@ -57,10 +74,8 @@ lychee.define('sorbet.serve.api.Project').requires([
 			identifier: 'sorbet',
 			details:    details,
 			filesystem: null,
-			server:     {
-				host: host,
-				port: port
-			}
+			server:     { host: host, port: port },
+			sorbet:     false
 		};
 
 	};
@@ -92,7 +107,8 @@ lychee.define('sorbet.serve.api.Project').requires([
 			identifier: project.identifier,
 			details:    project.details || null,
 			filesystem: filesystem,
-			server:     server
+			server:     server,
+			sorbet:     project.sorbet
 		};
 
 	};
@@ -107,14 +123,23 @@ lychee.define('sorbet.serve.api.Project').requires([
 
 		process: function(host, url, data, ready) {
 
-			var identifier = null;
+			var method     = data.headers.method;
 			var parameters = data.headers.parameters;
+			var identifier = null;
+			var action     = null;
+
+
 			if (parameters instanceof Object) {
+				action     = parameters.action     || null;
 				identifier = parameters.identifier || null;
 			}
 
 
-			var method = data.headers.method;
+
+			/*
+			 * 1: OPTIONS
+			 */
+
 			if (method === 'OPTIONS') {
 
 				ready({
@@ -122,11 +147,17 @@ lychee.define('sorbet.serve.api.Project').requires([
 					headers: {
 						'Access-Control-Allow-Headers': 'Content-Type',
 						'Access-Control-Allow-Origin':  data.headers['Origin'],
-						'Access-Control-Allow-Methods': 'GET',
+						'Access-Control-Allow-Methods': 'GET, PUT, POST',
 						'Access-Control-Max-Age':       60 * 60
 					},
 					payload: ''
 				});
+
+
+
+			/*
+			 * 2: GET
+			 */
 
 			} else if (method === 'GET') {
 
@@ -148,14 +179,7 @@ lychee.define('sorbet.serve.api.Project').requires([
 
 						ready({
 							status:  200,
-							headers: {
-								'Access-Control-Allow-Headers': 'Content-Type',
-								'Access-Control-Allow-Origin':  data.headers['Origin'],
-								'Access-Control-Allow-Methods': 'GET',
-								'Access-Control-Max-Age':       60 * 60,
-								'Content-Control':              'no-transform',
-								'Content-Type':                 'application/json'
-							},
+							headers: _to_header(200, data),
 							payload: _JSON.encode(_serialize(project))
 						});
 
@@ -181,18 +205,99 @@ lychee.define('sorbet.serve.api.Project').requires([
 
 					ready({
 						status:  200,
-						headers: {
-							'Access-Control-Allow-Headers': 'Content-Type',
-							'Access-Control-Allow-Origin':  data.headers['Origin'],
-							'Access-Control-Allow-Methods': 'GET',
-							'Access-Control-Max-Age':       60 * 60,
-							'Content-Control':              'no-transform',
-							'Content-Type':                 'application/json'
-						},
+						headers: _to_header(200, data),
 						payload: _JSON.encode(projects)
 					});
 
 				}
+
+
+
+			/*
+			 * 3: PUT
+			 */
+
+			} else if (method === 'PUT') {
+
+				if (identifier === 'sorbet') {
+
+					ready({
+						status:  501,
+						headers: { 'Content-Type': 'application/json' },
+						payload: _JSON.encode({
+							error: 'Action not implemented.'
+						})
+					});
+
+				} else if (identifier !== null) {
+
+					var project = host.getProject(identifier);
+					if (project !== null) {
+
+						var server = project.server;
+						if (server === null && action === 'start') {
+
+							sorbet.mod.Server.process(project);
+
+							ready({
+								status:  200,
+								headers: _to_header(200, data),
+								payload: ''
+							});
+
+						} else if (server !== null && action === 'stop') {
+
+							project.server.destroy();
+							project.server = null;
+
+							ready({
+								status:  200,
+								headers: _to_header(200, data),
+								payload: ''
+							});
+
+						} else {
+
+							ready({
+								status:  405,
+								headers: { 'Content-Type': 'application/json' },
+								payload: _JSON.encode({
+									error: 'Action not allowed.'
+								})
+							});
+
+						}
+
+					} else {
+
+						ready({
+							status:  404,
+							headers: { 'Content-Type': 'application/json' },
+							payload: _JSON.encode({
+								error: 'Project not found.'
+							})
+						});
+
+					}
+
+
+				} else {
+
+					ready({
+						status:  501,
+						headers: { 'Content-Type': 'application/json' },
+						payload: _JSON.encode({
+							error: 'Action not implemented.'
+						})
+					});
+
+				}
+
+
+
+			/*
+			 * X: OTHER
+			 */
 
 			} else {
 

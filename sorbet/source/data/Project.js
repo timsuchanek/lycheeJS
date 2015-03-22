@@ -30,7 +30,7 @@ lychee.define('sorbet.data.Project').requires([
 		this.filesystem = new sorbet.data.Filesystem(root);
 		this.package    = new sorbet.data.Package(this.filesystem.read('/lychee.pkg'));
 		this.server     = null;
-
+		this.sorbet     = this.filesystem.info('/sorbet.js') !== null;
 
 
 		lychee.event.Emitter.call(this);
