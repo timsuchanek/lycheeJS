@@ -1048,9 +1048,35 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 					cache.active  = true;
 
 
-					var onbuildend = function() {
+					var onbuildtimeout = function() {
 
-						cache.end = Date.now();
+						if (this.debug === true) {
+
+							this.global.console.error('lychee-Environment (' + this.id + '): BUILD TIMEOUT (' + (cache.end - cache.start) + 'ms)');
+							this.global.console.error('lychee-Environment (' + this.id + '): Invalid Dependencies ' + cache.load.map(function(value, index) {
+								return '"' + value + '" (required by ' + cache.track[index] + ')';
+							}).join(', '));
+
+						}
+
+
+						if (this.debug === true) {
+
+							try {
+								callback.call(this.global, null);
+							} catch(err) {
+								lychee.Debugger.report(this, err, null);
+							}
+
+						} else {
+
+							callback.call(this.global, null);
+
+						}
+
+					};
+
+					var onbuildsuccess = function() {
 
 						if (this.debug === true) {
 							this.global.console.log('lychee-Environment (' + this.id + '): BUILD END (' + (cache.end - cache.start) + 'ms)');
@@ -1065,22 +1091,14 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 						if (this.debug === true) {
 
 							try {
-
-								callback.call(
-									this.global,
-									this.global
-								);
-
+								callback.call(this.global, this.global);
 							} catch(err) {
 								lychee.Debugger.report(this, err, null);
 							}
 
 						} else {
 
-							callback.call(
-								this.global,
-								this.global
-							);
+							callback.call(this.global, this.global);
 
 						}
 
@@ -1101,19 +1119,14 @@ lychee.Environment = typeof lychee.Environment !== 'undefined' ? lychee.Environm
 								intervalId = null;
 							}
 
-							if (Date.now() > cache.timeout) {
 
-								if (that.debug === true) {
+							cache.end = Date.now();
 
-									that.global.console.error('lychee-Environment (' + that.id + '): BUILD TIMEOUT (' + (Date.now() - cache.start) + 'ms)');
-									that.global.console.error('lychee-Environment (' + that.id + '): Invalid Dependencies ' + cache.load.map(function(value, index) {
-										return '"' + value + '" (required by ' + cache.track[index] + ')';
-									}).join(', '));
 
-								}
-
+							if (cache.end > cache.timeout) {
+								onbuildtimeout.call(that);
 							} else {
-								onbuildend.call(that);
+								onbuildsuccess.call(that);
 							}
 
 						}

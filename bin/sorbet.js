@@ -221,9 +221,16 @@ var _settings = (function() {
 				var sorbet = sandbox.sorbet;
 
 
+				// Show more debug messages
+				lychee.debug = true;
+
+
 				// This allows using #MAIN in JSON files
 				sandbox.MAIN = new sorbet.Main(profile);
 				sandbox.MAIN.init();
+				sandbox.MAIN.bind('destroy', function() {
+					process.exit(0);
+				});
 				_write_pid();
 
 
@@ -241,11 +248,10 @@ var _settings = (function() {
 					keymodifier: true
 				}).bind('escape', function() {
 
-					console.warn('sorbet.Main: [ESC] pressed, exiting Sorbet ...');
+					console.warn('sorbet: [ESC] pressed, exiting ...');
 
 					sandbox.MAIN.destroy();
 					_clear_pid();
-					process.exit(0);
 
 				}, this);
 

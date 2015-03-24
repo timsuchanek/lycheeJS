@@ -49,8 +49,7 @@ var _pretty_lines = function(str) {
 
 var _print_help = function() {
 
-	var fertilizers  = _pretty_lines(fs.readdirSync(root + '/fertilizers').join(', '));
-	var projects     = _pretty_lines(fs.readdirSync(root + '/projects').filter(function(value) {
+	var projects = _pretty_lines(fs.readdirSync(root + '/projects').filter(function(value) {
 		return fs.existsSync(root + '/projects/' + value + '/lychee.pkg');
 	}).join(', '));
 
@@ -63,7 +62,7 @@ var _print_help = function() {
 	console.log('                                                      ');
 	console.log('Available Fertilizers:                                ');
 	console.log('                                                      ');
-	fertilizers.forEach(function(line) { console.log('    ' + line);   });
+	console.log('   html, nodejs                                       ');
 	console.log('                                                      ');
 	console.log('Available Projects:                                   ');
 	console.log('                                                      ');
@@ -127,13 +126,72 @@ var _settings = (function() {
 
 (function(project, identifier, settings) {
 
+	/*
+	 * IMPLEMENTATION
+	 */
+
 	if (project !== null && identifier !== null && settings !== null) {
 
+		console.info('Starting Instance (' + process.pid + ') ... ');
 
-console.log(project, identifier, settings);
+		lychee.setEnvironment(new lychee.Environment({
+			id:      'fertilizer',
+			debug:   true,
+			sandbox: false,
+			build:   'fertilizer.Main',
+			timeout: 1000,
+			packages: [
+				new lychee.Package('lychee', '/lychee/lychee.pkg'),
+				new lychee.Package('fertilizer', '/fertilizer/lychee.pkg')
+			],
+			tags:     {
+				platform: [ 'nodejs' ]
+			}
+		}));
 
-		process.exit(0);
 
+		lychee.init(function(sandbox) {
+
+			var lychee     = sandbox.lychee;
+			var fertilizer = sandbox.fertilizer;
+
+
+			// Show more debug messages
+			lychee.debug = true;
+
+
+			// This allows using #MAIN in JSON files
+			sandbox.MAIN = new fertilizer.Main({
+				project:    project,
+				identifier: identifier,
+				settings:   settings
+			});
+			sandbox.MAIN.init();
+			sandbox.MAIN.bind('destroy', function() {
+				process.exit(0);
+			});
+
+
+			process.on('SIGHUP',  function() { sandbox.MAIN.destroy(); this.exit(1); });
+			process.on('SIGINT',  function() { sandbox.MAIN.destroy(); this.exit(1); });
+			process.on('SIGQUIT', function() { sandbox.MAIN.destroy(); this.exit(1); });
+			process.on('SIGABRT', function() { sandbox.MAIN.destroy(); this.exit(1); });
+			process.on('SIGTERM', function() { sandbox.MAIN.destroy(); this.exit(1); });
+			process.on('error',   function() { sandbox.MAIN.destroy(); this.exit(1); });
+			process.on('exit',    function() {});
+
+
+			new lychee.Input({
+				key:         true,
+				keymodifier: true
+			}).bind('escape', function() {
+
+				console.warn('fertilizer: [ESC] pressed, exiting ...');
+				sandbox.MAIN.destroy();
+
+			}, this);
+
+		});
 
 	} else {
 

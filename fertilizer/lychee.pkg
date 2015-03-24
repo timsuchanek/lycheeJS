@@ -1,0 +1,52 @@
+{
+
+	"build": {
+
+		"environments": {
+
+		},
+
+		"files": {
+
+		}
+
+	},
+
+	"source": {
+
+		"environments": {
+
+		},
+
+		"tags": {
+
+		},
+
+		"files": {
+
+			"data": {
+				"Filesystem": [ "js" ]
+			},
+
+			"template": {
+
+				"html": {
+					"Application": [ "js", "tpl" ],
+					"Library":     [ "js", "tpl" ]
+				},
+
+				"nodejs": {
+					"Application": [ "js", "tpl" ],
+					"Library":     [ "js", "tpl" ]
+				}
+
+			},
+
+			"Main":     [ "js" ],
+			"Template": [ "js" ]
+
+		}
+
+	}
+
+}
