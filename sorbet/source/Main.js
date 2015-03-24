@@ -248,9 +248,6 @@ lychee.define('sorbet.Main').requires([
 
 		this.bind('init', function() {
 
-			// Activate debugging output
-			lychee.debug = true;
-
 			var settings = this.settings.server || null;
 			if (settings !== null) {
 
@@ -338,6 +335,9 @@ lychee.define('sorbet.Main').requires([
 				this.server.disconnect();
 				this.server = null;
 			}
+
+
+			this.trigger('destroy', []);
 
 		},
 
