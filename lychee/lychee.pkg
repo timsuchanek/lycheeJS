@@ -8,26 +8,18 @@
 				"build":    "lychee.game.Main",
 				"debug":    false,
 				"sandbox":  false,
-				"type":     "library",
-				"packages": [
-					[ "lychee", "./lychee.pkg" ]
-				],
-				"tags":     {
-					"platform": [ "html" ]
-				}
+				"packages": [ [ "lychee", "./lychee.pkg" ] ],
+				"tags":     { "platform": [ "html" ] },
+				"variant":  "library"
 			},
 
 			"nodejs/main": {
 				"build":    "lychee.game.Main",
 				"debug":    false,
 				"sandbox":  false,
-				"type":     "library",
-				"packages": [
-					[ "lychee", "./lychee.pkg" ]
-				],
-				"tags":     {
-					"platform": [ "nodejs" ]
-				}
+				"packages": [ [ "lychee", "./lychee.pkg" ] ],
+				"tags":     { "platform": [ "nodejs" ] },
+				"variant":  "library"
 			}
 
 		},

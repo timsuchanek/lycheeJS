@@ -4,6 +4,15 @@
 
 		"environments": {
 
+			"nodejs/main": {
+				"build":    "sorbet.Main",
+				"debug":    false,
+				"sandbox":  false,
+				"packages": [ [ "sorbet", "./lychee.pkg" ] ],
+				"tags":     { "platform": [ "nodejs" ] },
+				"variant":  "application"
+			}
+
 		},
 
 		"files": {
