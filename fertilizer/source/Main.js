@@ -1,7 +1,11 @@
 
 lychee.define('fertilizer.Main').requires([
 	'lychee.Input',
-	'lychee.data.JSON'
+	'lychee.data.JSON',
+//	'fertilizer.template.html.Application',
+//	'fertilizer.template.html.Library',
+	'fertilizer.template.nodejs.Application',
+	'fertilizer.template.nodejs.Library'
 ]).includes([
 	'lychee.event.Emitter'
 ]).exports(function(lychee, sorbet, global, attachments) {
@@ -52,10 +56,11 @@ lychee.define('fertilizer.Main').requires([
 
 		this.bind('load', function() {
 
-			var project = this.settings.project || null;
-			var data    = this.settings.settings || null;
+			var identifier = this.settings.identifier || null;
+			var project    = this.settings.project    || null;
+			var data       = this.settings.settings   || null;
 
-			if (project !== null && data !== null) {
+			if (identifier !== null && project !== null && data !== null) {
 
 				var platform = data.tags.platform[0] || null;
 				var variant  = data.variant || null;
@@ -96,7 +101,8 @@ lychee.define('fertilizer.Main').requires([
 
 							_lychee.setEnvironment(null);
 
-							that.trigger('init', [ project, variant, environment ]);
+
+							that.trigger('init', [ project, identifier, platform, variant, environment ]);
 
 						} else {
 
@@ -120,9 +126,30 @@ lychee.define('fertilizer.Main').requires([
 
 		}, this, true);
 
-		this.bind('init', function(project, variant, environment) {
+		this.bind('init', function(project, identifier, platform, variant, environment) {
 
-console.log(environment);
+			if (typeof fertilizer.template[platform] === 'object') {
+
+				var construct = fertilizer.template[platform][variant.charAt(0).toUpperCase() + variant.substr(1).toLowerCase()] || null;
+				if (construct !== null) {
+
+					var template = new construct({
+						sandbox: _root + '/projects/' + project + '/build/' + identifier
+					});
+
+console.log('Building ', project, platform, variant);
+
+
+					return true;
+
+				}
+
+			}
+
+
+			this.destroy();
+
+			return false;
 
 		}, this, true);
 

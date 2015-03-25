@@ -10,6 +10,9 @@ lychee.define('fertilizer.Template').requires([
 		var settings = lychee.extend({}, data);
 
 
+console.log(settings);
+
+
 		this.environment = null;
 		this.filesystem  = null;
 
@@ -22,7 +25,7 @@ lychee.define('fertilizer.Template').requires([
 	Class.prototype = {
 
 		getInfo: function() {
-			return '';
+			return '/* INFO STUFF */';
 		}
 
 	};

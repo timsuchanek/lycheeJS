@@ -152,44 +152,52 @@ var _settings = (function() {
 
 		lychee.init(function(sandbox) {
 
-			var lychee     = sandbox.lychee;
-			var fertilizer = sandbox.fertilizer;
+			if (sandbox !== null) {
+
+				var lychee     = sandbox.lychee;
+				var fertilizer = sandbox.fertilizer;
 
 
-			// Show more debug messages
-			lychee.debug = true;
+				// Show more debug messages
+				lychee.debug = true;
 
 
-			// This allows using #MAIN in JSON files
-			sandbox.MAIN = new fertilizer.Main({
-				project:    project,
-				identifier: identifier,
-				settings:   settings
-			});
-			sandbox.MAIN.init();
-			sandbox.MAIN.bind('destroy', function() {
-				process.exit(0);
-			});
+				// This allows using #MAIN in JSON files
+				sandbox.MAIN = new fertilizer.Main({
+					project:    project,
+					identifier: identifier,
+					settings:   settings
+				});
+				sandbox.MAIN.init();
+				sandbox.MAIN.bind('destroy', function() {
+					process.exit(0);
+				});
 
 
-			process.on('SIGHUP',  function() { sandbox.MAIN.destroy(); this.exit(1); });
-			process.on('SIGINT',  function() { sandbox.MAIN.destroy(); this.exit(1); });
-			process.on('SIGQUIT', function() { sandbox.MAIN.destroy(); this.exit(1); });
-			process.on('SIGABRT', function() { sandbox.MAIN.destroy(); this.exit(1); });
-			process.on('SIGTERM', function() { sandbox.MAIN.destroy(); this.exit(1); });
-			process.on('error',   function() { sandbox.MAIN.destroy(); this.exit(1); });
-			process.on('exit',    function() {});
+				process.on('SIGHUP',  function() { sandbox.MAIN.destroy(); this.exit(1); });
+				process.on('SIGINT',  function() { sandbox.MAIN.destroy(); this.exit(1); });
+				process.on('SIGQUIT', function() { sandbox.MAIN.destroy(); this.exit(1); });
+				process.on('SIGABRT', function() { sandbox.MAIN.destroy(); this.exit(1); });
+				process.on('SIGTERM', function() { sandbox.MAIN.destroy(); this.exit(1); });
+				process.on('error',   function() { sandbox.MAIN.destroy(); this.exit(1); });
+				process.on('exit',    function() {});
 
 
-			new lychee.Input({
-				key:         true,
-				keymodifier: true
-			}).bind('escape', function() {
+				new lychee.Input({
+					key:         true,
+					keymodifier: true
+				}).bind('escape', function() {
 
-				console.warn('fertilizer: [ESC] pressed, exiting ...');
-				sandbox.MAIN.destroy();
+					console.warn('fertilizer: [ESC] pressed, exiting ...');
+					sandbox.MAIN.destroy();
 
-			}, this);
+				}, this);
+
+			} else {
+
+				process.exit(1);
+
+			}
 
 		});
 
