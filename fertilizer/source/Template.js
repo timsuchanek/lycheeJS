@@ -5,16 +5,10 @@ lychee.define('fertilizer.Template').requires([
 	'lychee.event.Emitter'
 ]).exports(function(lychee, fertilizer, global, attachments) {
 
-	var Class = function(data) {
+	var Class = function(environment, filesystem) {
 
-		var settings = lychee.extend({}, data);
-
-
-console.log(settings);
-
-
-		this.environment = null;
-		this.filesystem  = null;
+		this.environment = lychee.interfaceof(lychee.Environment,         environment) ? environment : null;
+		this.filesystem  = lychee.interfaceof(fertilizer.data.Filesystem, filesystem)  ? filesystem  : null;
 
 
 		lychee.event.Emitter.call(this);

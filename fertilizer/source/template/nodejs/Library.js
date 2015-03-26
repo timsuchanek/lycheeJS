@@ -11,9 +11,9 @@ lychee.define('fertilizer.template.nodejs.Library').includes([
 	 * IMPLEMENTATION
 	 */
 
-	var Class = function(settings) {
+	var Class = function(env, fs) {
 
-		fertilizer.Template.call(this, settings);
+		fertilizer.Template.call(this, env, fs);
 
 
 

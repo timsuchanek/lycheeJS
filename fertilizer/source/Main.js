@@ -2,6 +2,7 @@
 lychee.define('fertilizer.Main').requires([
 	'lychee.Input',
 	'lychee.data.JSON',
+	'fertilizer.data.Filesystem',
 //	'fertilizer.template.html.Application',
 //	'fertilizer.template.html.Library',
 	'fertilizer.template.nodejs.Application',
@@ -133,11 +134,39 @@ lychee.define('fertilizer.Main').requires([
 				var construct = fertilizer.template[platform][variant.charAt(0).toUpperCase() + variant.substr(1).toLowerCase()] || null;
 				if (construct !== null) {
 
-					var template = new construct({
-						sandbox: _root + '/projects/' + project + '/build/' + identifier
-					});
+					var template = new construct(environment, new fertilizer.data.Filesystem('/projects/' + project + '/build/' + identifier));
 
-console.log('Building ', project, platform, variant);
+this.destroy();
+return;
+
+					template.trigger('configure', [function(result) {
+
+						if (result === true) {
+
+							template.trigger('build', [function(result) {
+
+								if (result === true) {
+
+									console.info('Build success');
+									this.destroy();
+
+								} else {
+
+									console.error('Build failed');
+									this.destroy();
+
+								}
+
+							}], this);
+
+						} else {
+
+							console.error('Configuration failed');
+							this.destroy();
+
+						}
+
+					}], this);
 
 
 					return true;
