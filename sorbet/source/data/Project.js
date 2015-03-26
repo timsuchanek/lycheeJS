@@ -7,23 +7,16 @@ lychee.define('sorbet.data.Project').requires([
 	'lychee.event.Emitter'
 ]).exports(function(lychee, sorbet, global, attachments) {
 
-	/*
-	 * HELPERS
-	 */
-
 
 
 	/*
 	 * IMPLEMENTATION
 	 */
 
-	var _root = require('path').resolve(__dirname, '../../../projects/');
-
-
 	var Class = function(identifier, root) {
 
 		identifier = typeof identifier === 'string' ? identifier : null;
-		root       = typeof root === 'string'       ? root       : (_root + '/' + identifier);
+		root       = typeof root === 'string'       ? root       : ('/project/' + identifier);
 
 
 		this.identifier = identifier;
