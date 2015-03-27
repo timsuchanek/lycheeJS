@@ -4,7 +4,7 @@
 
 		"environments": {
 
-			"html-nw/main": {
+			"html-nwjs/main": {
 				"build":    "game.Main",
 				"debug":    false,
 				"sandbox":  false,
