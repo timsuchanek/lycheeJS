@@ -1,11 +1,19 @@
 
 lychee.define('fertilizer.Template').requires([
+	'lychee.data.JSON',
 	'fertilizer.data.Filesystem'
 ]).includes([
 	'lychee.event.Emitter'
 ]).exports(function(lychee, fertilizer, global, attachments) {
 
+	var _JSON      = lychee.data.JSON;
 	var _lychee_fs = new fertilizer.data.Filesystem('/lychee/build');
+
+
+
+	/*
+	 * IMPLEMENTATION
+	 */
 
 	var Class = function(environment, filesystem) {
 
@@ -79,8 +87,59 @@ lychee.define('fertilizer.Template').requires([
 
 		},
 
-		getInfo: function() {
-			return '/* INFO STUFF */';
+		getInfo: function(full) {
+
+			full = full === true;
+
+
+			var year  = new Date().getFullYear();
+			var lines = [];
+
+
+			lines.push('/*');
+			lines.push(' * lycheeJS v' + lychee.VERSION);
+			lines.push(' * http://lycheejs.org');
+			lines.push(' * ');
+			lines.push(' * (c) 2012-' + year + ' LazerUnicorns');
+			lines.push(' * MIT License');
+			lines.push(' * ');
+
+			var env = this.environment;
+			if (env !== null && full === true) {
+
+				lines.push(' * ');
+				lines.push(' * Build:');
+				lines.push(' * \t' + env.build);
+				lines.push(' * ');
+				lines.push(' * Tags:');
+				lines.push(' * \t' + _JSON.encode(env.tags));
+				lines.push(' * ');
+				lines.push(' * Definitions:');
+
+				var definitions = Object.keys(env.definitions);
+				if (definitions.length > 0) {
+
+					definitions.sort(function(a, b) {
+						if (a < b) return -1;
+						if (a > b) return  1;
+						return 0;
+					});
+
+					definitions.forEach(function(id) {
+						lines.push(' * \t' + id);
+					});
+
+				}
+
+				lines.push(' * ');
+
+			}
+
+
+			lines.push(' */');
+
+			return lines.join('\n');
+
 		}
 
 	};

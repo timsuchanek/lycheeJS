@@ -29,21 +29,19 @@ lychee.define('fertilizer.template.html.Library').includes([
 
 		this.bind('build', function(oncomplete) {
 
-			var env  = this.environment;
-			var fs   = this.filesystem;
-			var data = {
-				blob: JSON.stringify(env),
-				info: this.info,
-				id:   env.arguments[0].id || ''
-			};
+			var env = this.environment;
+			var fs  = this.filesystem;
+
+			if (env !== null && fs !== null) {
+
+				var blob  = _JSON.encode(env.serialize());
+				var info  = this.getInfo(true);
+				var index = _template.toString();
 
 
-			var index = _template.toString();
-			if (index !== null) {
-
-				index = this.replace(index, '{{blob}}', data.blob);
-				index = this.replace(index, '{{id}}',   data.id);
-				index = this.replace(index, '{{info}}', data.info);
+				index = this.replace(index, '{{blob}}', blob);
+				index = this.replace(index, '{{id}}',   env.id);
+				index = this.replace(index, '{{info}}', info);
 
 				fs.write('/index.js', index);
 

@@ -1,8 +1,11 @@
 
-lychee.define('fertilizer.template.nodejs.Application').includes([
+lychee.define('fertilizer.template.nodejs.Application').requires([
+	'lychee.data.JSON'
+]).includes([
 	'fertilizer.Template'
 ]).exports(function(lychee, fertilizer, global, attachments) {
 
+	var _JSON     = lychee.data.JSON;
 	var _template = attachments['tpl'].buffer;
 
 
@@ -29,31 +32,33 @@ lychee.define('fertilizer.template.nodejs.Application').includes([
 
 		this.bind('build', function(oncomplete) {
 
-			var env  = this.environment.serialize();
-			var info = this.getInfo();
-			var fs   = this.filesystem;
+			var env = this.environment;
+			var fs  = this.filesystem;
 
-			var data = {
-				id:    env.arguments[0].id || '',
-				blob:  JSON.stringify(env),
-				info:  info,
-				build: env.arguments[0].build || 'game.Main'
-			};
+			if (env !== null && fs !== null) {
 
-			var core  = this.getCore('nodejs');
-			var index = _template.toString();
+				var blob  = _JSON.encode(env.serialize());
+				var core  = this.getCore('nodejs');
+				var info  = this.getInfo(true);
+				var index = _template.toString();
 
-			if (core !== null && index !== null) {
+				if (core !== null && index !== null) {
 
-				index = this.replace(index, '{{core}}',  core);
-				index = this.replace(index, '{{blob}}',  data.blob);
-				index = this.replace(index, '{{id}}',    data.id);
-				index = this.replace(index, '{{info}}',  data.info);
-				index = this.replace(index, '{{build}}', data.build);
+					index = this.replace(index, '{{core}}',  core);
+					index = this.replace(index, '{{blob}}',  blob);
+					index = this.replace(index, '{{id}}',    env.id);
+					index = this.replace(index, '{{info}}',  info);
+					index = this.replace(index, '{{build}}', env.build);
 
-				fs.write('/index.js', index);
+					fs.write('/index.js', index);
 
-				oncomplete(true);
+					oncomplete(true);
+
+				} else {
+
+					oncomplete(false);
+
+				}
 
 			} else {
 
