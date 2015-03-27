@@ -602,5 +602,5 @@ lychee = typeof lychee !== 'undefined' ? lychee : (function(global) {
 
 	return Module.extend(lychee, Module);
 
-})(typeof global !== 'undefined' ? global : this);
+})(typeof window !== 'undefined' ? window : (typeof global !== 'undefined' ? global : this));
 

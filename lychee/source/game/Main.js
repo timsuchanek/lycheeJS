@@ -18,12 +18,26 @@ lychee.define('lychee.game.Main').requires([
 	 * HELPERS
 	 */
 
+	var _api_origin = '';
+
+	(function(location) {
+
+		var origin = location.origin || null;
+		if (origin === 'file://') {
+			_api_origin = 'http://lycheejs.org';
+		} else if (origin !== null) {
+			_api_origin = location.origin;
+		}
+
+	})(global.location || {});
+
+
 	var _load_api = function(url, callback, scope) {
 
 		url = typeof url === 'string' ? url : '/api/Server?identifier=boilerplate';
 
 
-		var config = new Config(url);
+		var config = new Config(_api_origin + url);
 
 		config.onload = function(result) {
 			callback.call(scope, result === true ? this.buffer : null);
