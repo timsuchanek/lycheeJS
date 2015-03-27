@@ -39,13 +39,13 @@
 
 			"template": {
 
-				"html-nw": {
+				"html-nwjs": {
 					"Application": [ "js", "tpl" ],
 					"Library":     [ "js", "tpl" ]
 				},
 
 				"html": {
-					"Application": [ "js", "tpl" ],
+					"Application": [ "js", "index.tpl", "main.tpl" ],
 					"Library":     [ "js", "tpl" ]
 				},
 

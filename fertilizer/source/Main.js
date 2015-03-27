@@ -3,8 +3,10 @@ lychee.define('fertilizer.Main').requires([
 	'lychee.Input',
 	'lychee.data.JSON',
 	'fertilizer.data.Filesystem',
-//	'fertilizer.template.html.Application',
-//	'fertilizer.template.html.Library',
+//	'fertilizer.template.html-nwjs.Application',
+//	'fertilizer.template.html-nwjs.Library',
+	'fertilizer.template.html.Application',
+	'fertilizer.template.html.Library',
 	'fertilizer.template.nodejs.Application',
 	'fertilizer.template.nodejs.Library'
 ]).includes([

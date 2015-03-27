@@ -5,6 +5,8 @@ lychee.define('fertilizer.Template').requires([
 	'lychee.event.Emitter'
 ]).exports(function(lychee, fertilizer, global, attachments) {
 
+	var _lychee_fs = new fertilizer.data.Filesystem('/lychee/build');
+
 	var Class = function(environment, filesystem) {
 
 		this.environment = lychee.interfaceof(lychee.Environment,         environment) ? environment : null;
@@ -55,6 +57,25 @@ lychee.define('fertilizer.Template').requires([
 
 
 			return str;
+
+		},
+
+		getCore: function(variant) {
+
+			variant = typeof variant === 'string' ? variant : null;
+
+
+			if (variant !== null ){
+
+				var core = _lychee_fs.read('/' + variant + '/core.js');
+				if (core !== null) {
+					return core.toString();
+				}
+
+			}
+
+
+			return null;
 
 		},
 

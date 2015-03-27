@@ -1,9 +1,12 @@
 
-lychee.define('fertilizer.template.nodejs.Application').includes([
+lychee.define('fertilizer.template.html.Application').includes([
 	'fertilizer.Template'
 ]).exports(function(lychee, fertilizer, global, attachments) {
 
-	var _template = attachments['tpl'].buffer;
+	var _templates = {
+		main:  attachments['main.tpl'].buffer,
+		index: attachments['index.tpl'].buffer
+	};
 
 
 
@@ -40,18 +43,23 @@ lychee.define('fertilizer.template.nodejs.Application').includes([
 				build: env.arguments[0].build || 'game.Main'
 			};
 
-			var core  = this.getCore('nodejs');
-			var index = _template.toString();
 
-			if (core !== null && index !== null) {
+			var core  = this.getCore('html');
+			var index = _templates['index'].toString();
+			var main  = _templates['main'].toString();
 
-				index = this.replace(index, '{{core}}',  core);
+			if (main !== null && index !== null) {
+
 				index = this.replace(index, '{{blob}}',  data.blob);
 				index = this.replace(index, '{{id}}',    data.id);
 				index = this.replace(index, '{{info}}',  data.info);
 				index = this.replace(index, '{{build}}', data.build);
 
-				fs.write('/index.js', index);
+				main  = this.replace(main,  '{{id}}',    data.id);
+
+				fs.write('/core.js',    core);
+				fs.write('/index.js',   index);
+				fs.write('/index.html', main);
 
 				oncomplete(true);
 
