@@ -136,7 +136,7 @@ var _settings = (function() {
 
 		lychee.setEnvironment(new lychee.Environment({
 			id:      'fertilizer',
-			debug:   true,
+			debug:   false,
 			sandbox: false,
 			build:   'fertilizer.Main',
 			timeout: 1000,
@@ -158,7 +158,7 @@ var _settings = (function() {
 				var fertilizer = sandbox.fertilizer;
 
 
-				// Show more debug messages
+				// Show less debug messages
 				lychee.debug = true;
 
 

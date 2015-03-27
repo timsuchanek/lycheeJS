@@ -44,12 +44,12 @@ lychee.define('fertilizer.template.nodejs.Application').includes([
 			var index = _template.toString();
 			if (index !== null) {
 
-				index = index.replacetemplate('{{id}}',    data.id);
-				index = index.replacetemplate('{{blob}}',  data.blob);
-				index = index.replacetemplate('{{info}}',  data.info);
-				index = index.replacetemplate('{{build}}', data.build);
+				index = this.replace(index, '{{id}}',    data.id);
+				index = this.replace(index, '{{blob}}',  data.blob);
+				index = this.replace(index, '{{info}}',  data.info);
+				index = this.replace(index, '{{build}}', data.build);
 
-				fs.write('index.js', index);
+				fs.write('/index.js', index);
 
 				oncomplete(true);
 

@@ -55,6 +55,9 @@ lychee.define('fertilizer.Main').requires([
 		 * INITIALIZATION
 		 */
 
+		var that = this;
+
+
 		this.bind('load', function() {
 
 			var identifier = this.settings.identifier || null;
@@ -66,7 +69,7 @@ lychee.define('fertilizer.Main').requires([
 				var platform = data.tags.platform[0] || null;
 				var variant  = data.variant || null;
 				var settings = _JSON.decode(_JSON.encode(lychee.extend({}, data, {
-					debug:   true,
+					debug:   false,
 					sandbox: true,
 					type:    'export'
 				})));
@@ -136,8 +139,6 @@ lychee.define('fertilizer.Main').requires([
 
 					var template = new construct(environment, new fertilizer.data.Filesystem('/projects/' + project + '/build/' + identifier));
 
-this.destroy();
-return;
 
 					template.trigger('configure', [function(result) {
 
@@ -147,26 +148,41 @@ return;
 
 								if (result === true) {
 
-									console.info('Build success');
+									if (lychee.debug === true) {
+										console.log('\n\n');
+										console.log('fertilizer: BUILD SUCCESS ("' + project + '/' + identifier + '")');
+										console.log('\n\n');
+									}
+
 									this.destroy();
 
 								} else {
 
-									console.error('Build failed');
+									if (lychee.debug === true) {
+										console.log('\n\n');
+										console.log('fertilizer: BUILD FAILURE ("' + project + '/' + identifier + '")');
+										console.log('\n\n');
+									}
+
 									this.destroy();
 
 								}
 
-							}], this);
+							}.bind(that)]);
 
 						} else {
 
-							console.error('Configuration failed');
+							if (lychee.debug === true) {
+								console.log('\n\n');
+								console.error('fertilizer: CONFIGURATION FAILURE ("' + project + '/' + identifier + '")');
+								console.log('\n\n');
+							}
+
 							this.destroy();
 
 						}
 
-					}], this);
+					}.bind(that)]);
 
 
 					return true;

@@ -18,6 +18,46 @@ lychee.define('fertilizer.Template').requires([
 
 	Class.prototype = {
 
+		replace: function(str, key, value) {
+
+			str   = typeof str === 'string'   ? str   : '';
+			key   = typeof key === 'string'   ? key   : null;
+			value = typeof value === 'string' ? value : '';
+
+
+			if (str !== '' && key !== null) {
+
+				var indexes = [];
+				var index   = str.indexOf(key);
+
+				while (index !== -1) {
+					indexes.push(index);
+					index = str.indexOf(key, index + 1);
+				}
+
+
+				var keyo   = 0;
+				var keyl   = key.length;
+				var vall   = value.length;
+				var buffer = '' + str;
+
+				indexes.forEach(function(keyi) {
+
+					buffer  = buffer.substr(0, keyi + keyo) + value + buffer.substr(keyi + keyo + keyl);
+					keyo   += (vall - keyl);
+
+				});
+
+
+				return buffer;
+
+			}
+
+
+			return str;
+
+		},
+
 		getInfo: function() {
 			return '/* INFO STUFF */';
 		}

@@ -20,25 +20,18 @@ lychee.define('fertilizer.data.Filesystem').includes([
 		}
 
 
-		var is_directory = false;
-
 		try {
 
-			is_directory = _fs.lstatSync(path).isDirectory();
+			_fs.lstatSync(path).isDirectory();
 
 		} catch(err) {
 
 			if (err.code === 'ENOENT') {
 
-				if (_create_directory(_path.dirname(path), mode) === true) {
-					_fs.mkdirSync(path, mode);
-				}
+				_create_directory(_path.dirname(path), mode);
+				_fs.mkdirSync(path, mode);
 
 			}
-
-		} finally {
-
-			return is_directory;
 
 		}
 
@@ -143,7 +136,7 @@ lychee.define('fertilizer.data.Filesystem').includes([
 			}
 
 
-			_create_directory(_path.dirname(path));
+			_create_directory(this.root + _path.dirname(path));
 
 
 			var info     = this.info(_path.dirname(path));
