@@ -55,6 +55,7 @@ lychee.define('fertilizer.template.html.Application').requires([
 				core  = this.getInfo(false) + '\n\n' + core;
 				main  = this.replace(main,  '{{id}}',    env.id);
 
+
 				fs.write('/core.js',    core);
 				fs.write('/index.js',   index);
 				fs.write('/index.html', main);

@@ -3,8 +3,8 @@ lychee.define('fertilizer.Main').requires([
 	'lychee.Input',
 	'lychee.data.JSON',
 	'fertilizer.data.Filesystem',
-//	'fertilizer.template.html-nwjs.Application',
-//	'fertilizer.template.html-nwjs.Library',
+	'fertilizer.template.html-nwjs.Application',
+	'fertilizer.template.html-nwjs.Library',
 	'fertilizer.template.html.Application',
 	'fertilizer.template.html.Library',
 	'fertilizer.template.nodejs.Application',
@@ -112,6 +112,12 @@ lychee.define('fertilizer.Main').requires([
 
 						} else {
 
+							if (lychee.debug === true) {
+								console.log('\n\n');
+								console.log('fertilizer: BUILD FAILURE ("' + project + '/' + identifier + '")');
+								console.log('\n\n');
+							}
+
 							that.destroy();
 
 						}
@@ -126,7 +132,12 @@ lychee.define('fertilizer.Main').requires([
 			}
 
 
+			console.log('\n\n');
+			console.log('fertilizer: BUILD FAILURE ("' + project + '/' + identifier + '")');
+			console.log('\n\n');
+
 			this.destroy();
+
 
 			return false;
 

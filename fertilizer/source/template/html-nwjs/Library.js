@@ -1,5 +1,5 @@
 
-lychee.define('fertilizer.template.html.Library').includes([
+lychee.define('fertilizer.template.html-nwjs.Library').includes([
 	'fertilizer.Template'
 ]).exports(function(lychee, fertilizer, global, attachments) {
 

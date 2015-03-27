@@ -4,33 +4,6 @@
 
 		"environments": {
 
-			"html-nwjs/main": {
-				"build":    "game.Main",
-				"debug":    false,
-				"sandbox":  false,
-				"packages": [ [ "game", "./lychee.pkg" ] ],
-				"tags":     { "platform": [ "html-nw", "html" ] },
-				"variant":  "application"
-			},
-
-			"html/main": {
-				"build":    "game.Main",
-				"debug":    false,
-				"sandbox":  false,
-				"packages": [ [ "game", "./lychee.pkg" ] ],
-				"tags":     { "platform": [ "html" ] },
-				"variant":  "application"
-			},
-
-			"nodejs/server": {
-				"build":    "game.net.Server",
-				"debug":    false,
-				"sandbox":  false,
-				"packages": [ [ "game", "./lychee.pkg" ] ],
-				"tags":     { "platform": [ "nodejs" ] },
-				"variant":  "application"
-			}
-
 		},
 
 		"files": {

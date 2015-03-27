@@ -9,7 +9,7 @@
 				"debug":    false,
 				"sandbox":  false,
 				"packages": [ [ "game", "./lychee.pkg" ] ],
-				"tags":     { "platform": [ "html-nw", "html" ] },
+				"tags":     { "platform": [ "html-nwjs", "html" ] },
 				"variant":  "application"
 			},
 

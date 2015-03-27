@@ -62,7 +62,7 @@ var _print_help = function() {
 	console.log('                                                      ');
 	console.log('Available Fertilizers:                                ');
 	console.log('                                                      ');
-	console.log('   html, nodejs                                       ');
+	console.log('   html, html-nwjs, nodejs                            ');
 	console.log('                                                      ');
 	console.log('Available Projects:                                   ');
 	console.log('                                                      ');

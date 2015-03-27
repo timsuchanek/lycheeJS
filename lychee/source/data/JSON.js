@@ -11,7 +11,8 @@ lychee.define('lychee.data.JSON').exports(function(lychee, global) {
 
 		san = san.replace(/\\/g, '\\\\');
 		san = san.replace(/\n/g, '\\n');
-		san = san.replace('"', '\\"');
+		san = san.replace(/\t/g, '\\t');
+		san = san.replace(/"/g,  '\\"');
 
 		return san;
 
@@ -280,10 +281,19 @@ lychee.define('lychee.data.JSON').exports(function(lychee, global) {
 
 					value[value.length - 1] = check;
 
-					if (stream.seekRAW(1) === 'n') {
+					var special = stream.seekRAW(1);
+					if (special === 'n') {
+
 						stream.readRAW(1);
 						value += '\n';
+
+					} else if (special === 't') {
+
+						stream.readRAW(1);
+						value += '\t';
+
 					}
+
 
 					size   = stream.seek([ '\\', '"' ]);
 					value += stream.readRAW(size);

@@ -46,6 +46,7 @@ lychee.define('fertilizer.template.nodejs.Library').requires([
 				index = this.replace(index, '{{id}}',   env.id);
 				index = this.replace(index, '{{info}}', info);
 
+
 				fs.write('/index.js', index);
 
 				oncomplete(true);
