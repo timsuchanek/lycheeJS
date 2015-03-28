@@ -1,9 +1,10 @@
 
 lychee.define('fertilizer.Template').requires([
 	'lychee.data.JSON',
-	'fertilizer.data.Filesystem'
+	'fertilizer.data.Filesystem',
+	'fertilizer.data.Shell'
 ]).includes([
-	'lychee.event.Emitter'
+	'lychee.event.Flow'
 ]).exports(function(lychee, fertilizer, global, attachments) {
 
 	var _JSON      = lychee.data.JSON;
@@ -15,13 +16,14 @@ lychee.define('fertilizer.Template').requires([
 	 * IMPLEMENTATION
 	 */
 
-	var Class = function(environment, filesystem) {
+	var Class = function(environment, filesystem, shell) {
 
 		this.environment = lychee.interfaceof(lychee.Environment,         environment) ? environment : null;
 		this.filesystem  = lychee.interfaceof(fertilizer.data.Filesystem, filesystem)  ? filesystem  : null;
+		this.shell       = lychee.interfaceof(fertilizer.data.Shell,      shell)       ? shell       : null;
 
 
-		lychee.event.Emitter.call(this);
+		lychee.event.Flow.call(this);
 
 	};
 

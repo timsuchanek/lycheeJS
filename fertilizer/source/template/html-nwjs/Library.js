@@ -11,9 +11,9 @@ lychee.define('fertilizer.template.html-nwjs.Library').includes([
 	 * IMPLEMENTATION
 	 */
 
-	var Class = function(env, fs) {
+	var Class = function(env, fs, sh) {
 
-		fertilizer.Template.call(this, env, fs);
+		fertilizer.Template.call(this, env, fs, sh);
 
 
 
@@ -22,9 +22,7 @@ lychee.define('fertilizer.template.html-nwjs.Library').includes([
 		 */
 
 		this.bind('configure', function(oncomplete) {
-
 			oncomplete(true);
-
 		}, this);
 
 		this.bind('build', function(oncomplete) {
@@ -54,6 +52,10 @@ lychee.define('fertilizer.template.html-nwjs.Library').includes([
 
 			}
 
+		}, this);
+
+		this.bind('package', function(oncomplete) {
+			oncomplete(true);
 		}, this);
 
 	};

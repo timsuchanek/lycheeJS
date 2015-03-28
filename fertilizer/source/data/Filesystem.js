@@ -1,7 +1,5 @@
 
-lychee.define('fertilizer.data.Filesystem').includes([
-	'lychee.event.Emitter'
-]).exports(function(lychee, sorbet, global, attachments) {
+lychee.define('fertilizer.data.Filesystem').exports(function(lychee, fertilizer, global, attachments) {
 
 	var _fs   = require('fs');
 	var _path = require('path');
@@ -46,9 +44,6 @@ lychee.define('fertilizer.data.Filesystem').includes([
 	var Class = function(root) {
 
 		this.root = _root + _path.normalize(root);
-
-
-		lychee.event.Emitter.call(this);
 
 	};
 

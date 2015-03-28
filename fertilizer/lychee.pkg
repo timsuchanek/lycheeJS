@@ -34,7 +34,8 @@
 		"files": {
 
 			"data": {
-				"Filesystem": [ "js" ]
+				"Filesystem": [ "js" ],
+				"Shell":      [ "js" ]
 			},
 
 			"template": {

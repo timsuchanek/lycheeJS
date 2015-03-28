@@ -129,6 +129,7 @@
 
 			"event": {
 				"Emitter": [ "js" ],
+				"Flow":    [ "js" ],
 				"Promise": [ "js" ],
 				"Queue":   [ "js" ]
 			},

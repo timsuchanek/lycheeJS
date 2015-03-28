@@ -1,7 +1,5 @@
 
-lychee.define('sorbet.data.Filesystem').includes([
-	'lychee.event.Emitter'
-]).exports(function(lychee, sorbet, global, attachments) {
+lychee.define('sorbet.data.Filesystem').exports(function(lychee, sorbet, global, attachments) {
 
 	var _fs   = require('fs');
 	var _path = require('path');
@@ -53,9 +51,6 @@ lychee.define('sorbet.data.Filesystem').includes([
 	var Class = function(root) {
 
 		this.root = _path.normalize(_root + _path.normalize(root));
-
-
-		lychee.event.Emitter.call(this);
 
 	};
 

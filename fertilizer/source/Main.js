@@ -3,6 +3,7 @@ lychee.define('fertilizer.Main').requires([
 	'lychee.Input',
 	'lychee.data.JSON',
 	'fertilizer.data.Filesystem',
+	'fertilizer.data.Shell',
 	'fertilizer.template.html-nwjs.Application',
 	'fertilizer.template.html-nwjs.Library',
 	'fertilizer.template.html.Application',
@@ -150,52 +151,41 @@ lychee.define('fertilizer.Main').requires([
 				var construct = fertilizer.template[platform][variant.charAt(0).toUpperCase() + variant.substr(1).toLowerCase()] || null;
 				if (construct !== null) {
 
-					var template = new construct(environment, new fertilizer.data.Filesystem('/projects/' + project + '/build/' + identifier));
+					var template = new construct(
+						environment,
+						new fertilizer.data.Filesystem('/projects/' + project + '/build/' + identifier),
+						new fertilizer.data.Shell('/projects/' + project + '/build/' + identifier)
+					);
 
+					template.then('configure');
+					template.then('build');
+					template.then('package');
 
-					template.trigger('configure', [function(result) {
+					template.bind('complete', function() {
 
-						if (result === true) {
-
-							template.trigger('build', [function(result) {
-
-								if (result === true) {
-
-									if (lychee.debug === true) {
-										console.log('\n\n');
-										console.log('fertilizer: BUILD SUCCESS ("' + project + '/' + identifier + '")');
-										console.log('\n\n');
-									}
-
-									this.destroy();
-
-								} else {
-
-									if (lychee.debug === true) {
-										console.log('\n\n');
-										console.log('fertilizer: BUILD FAILURE ("' + project + '/' + identifier + '")');
-										console.log('\n\n');
-									}
-
-									this.destroy();
-
-								}
-
-							}.bind(that)]);
-
-						} else {
-
-							if (lychee.debug === true) {
-								console.log('\n\n');
-								console.error('fertilizer: CONFIGURATION FAILURE ("' + project + '/' + identifier + '")');
-								console.log('\n\n');
-							}
-
-							this.destroy();
-
+						if (lychee.debug === true) {
+							console.log('\n\n');
+							console.log('fertilizer: SUCCESS ("' + project + '/' + identifier + '")');
+							console.log('\n\n');
 						}
 
-					}.bind(that)]);
+						this.destroy();
+
+					}, this);
+
+					template.bind('error', function(event) {
+
+						if (lychee.debug === true) {
+							console.log('\n\n');
+							console.log('fertilizer: FAILURE ("' + project + '/' + identifier + '") at "' + event + '" event');
+							console.log('\n\n');
+						}
+
+						this.destroy();
+
+					}, this);
+
+					template.init();
 
 
 					return true;

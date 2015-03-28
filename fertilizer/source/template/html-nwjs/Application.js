@@ -1,6 +1,7 @@
 
 lychee.define('fertilizer.template.html-nwjs.Application').requires([
-	'lychee.data.JSON'
+	'lychee.data.JSON',
+	'fertilizer.data.Filesystem'
 ]).includes([
 	'fertilizer.Template'
 ]).exports(function(lychee, fertilizer, global, attachments) {
@@ -15,12 +16,67 @@ lychee.define('fertilizer.template.html-nwjs.Application').requires([
 
 
 	/*
+	 * HELPERS
+	 */
+
+	var _package_linux = function() {
+
+		var runtime_sh = new fertilizer.data.Shell('/bin/runtime/html-nwjs/linux');
+		var project_fs = this.filesystem;
+
+		if (project_fs !== null) {
+
+			var result = runtime_sh.exec('/package.sh ' + project_fs.root);
+
+console.log('package.sh result:', result);
+
+			if (result === true) {
+				return true;
+			}
+
+		}
+
+
+		return false;
+
+	};
+
+	var _package_osx = function() {
+
+		// TODO: Package OSX
+
+		return true;
+
+	};
+
+	var _package_windows = function() {
+
+		var runtime_sh = new fertilizer.data.Shell('/bin/runtime/html-nwjs/windows');
+		var project_fs = this.filesystem;
+
+		if (project_fs !== null) {
+
+			var result = runtime_sh.exec('/package.sh ' + project_fs.root);
+			if (result === true) {
+				return true;
+			}
+
+		}
+
+
+		return false;
+
+	};
+
+
+
+	/*
 	 * IMPLEMENTATION
 	 */
 
-	var Class = function(env, fs) {
+	var Class = function(env, fs, sh) {
 
-		fertilizer.Template.call(this, env, fs);
+		fertilizer.Template.call(this, env, fs, sh);
 
 
 
@@ -75,6 +131,18 @@ lychee.define('fertilizer.template.html-nwjs.Application').requires([
 				oncomplete(false);
 
 			}
+
+		}, this);
+
+		this.bind('package', function(oncomplete) {
+
+			var result = true;
+
+			if (_package_linux.call(this) === false)   result = false;
+			if (_package_osx.call(this) === false)     result = false;
+			if (_package_windows.call(this) === false) result = false;
+
+			oncomplete(result);
 
 		}, this);
 
