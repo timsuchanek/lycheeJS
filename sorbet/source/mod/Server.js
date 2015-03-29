@@ -10,6 +10,13 @@ lychee.define('sorbet.mod.Server').requires([
 	var _child_process = require('child_process');
 	var _net           = require('net');
 	var _port          = _MIN_PORT;
+	var _root          = new sorbet.data.Filesystem('/').root.slice(0, -1);
+
+
+
+	/*
+	 * HELPERS
+	 */
 
 	var _scan_port = function(callback, scope) {
 
@@ -72,8 +79,6 @@ lychee.define('sorbet.mod.Server').requires([
 	/*
 	 * IMPLEMENTATION
 	 */
-
-	var _root = new sorbet.data.Filesystem(__dirname + '/../../../').root.slice(0, -1);
 
 	var Module = {
 

@@ -197,5 +197,5 @@ lychee.Debugger = typeof lychee.Debugger !== 'undefined' ? lychee.Debugger : (fu
 
 	return Module;
 
-})(typeof global !== 'undefined' ? global : this);
+})(typeof window !== 'undefined' ? window : (typeof global !== 'undefined' ? global : this));
 

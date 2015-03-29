@@ -1,10 +1,46 @@
 
-lychee.define('sorbet.data.Filesystem').includes([
-	'lychee.event.Emitter'
-]).exports(function(lychee, sorbet, global, attachments) {
+lychee.define('sorbet.data.Filesystem').exports(function(lychee, sorbet, global, attachments) {
 
 	var _fs   = require('fs');
 	var _path = require('path');
+	var _root = _path.resolve(__dirname + '/../../../');
+
+
+
+	/*
+	 * HELPERS
+	 */
+
+	var _create_directory = function(path, mode) {
+
+		if (mode === undefined) {
+			mode = 0777 & (~process.umask());
+		}
+
+
+		var is_directory = false;
+
+		try {
+
+			is_directory = _fs.lstatSync(path).isDirectory();
+
+		} catch(err) {
+
+			if (err.code === 'ENOENT') {
+
+				if (_create_directory(_path.dirname(path), mode) === true) {
+					_fs.mkdirSync(path, mode);
+				}
+
+			}
+
+		} finally {
+
+			return is_directory;
+
+		}
+
+	};
 
 
 
@@ -14,10 +50,7 @@ lychee.define('sorbet.data.Filesystem').includes([
 
 	var Class = function(root) {
 
-		this.root = _path.normalize(root);
-
-
-		lychee.event.Emitter.call(this);
+		this.root = _path.normalize(_root + _path.normalize(root));
 
 	};
 
@@ -105,6 +138,9 @@ lychee.define('sorbet.data.Filesystem').includes([
 			}
 
 
+			_create_directory(_path.dirname(path));
+
+
 			var info     = this.info(_path.dirname(path));
 			var resolved = _path.normalize(this.root + path);
 
@@ -145,22 +181,21 @@ lychee.define('sorbet.data.Filesystem').includes([
 			var resolved = _path.normalize(this.root + path);
 			if (resolved !== null) {
 
-				var raw = null;
+				var stat = null;
 
 				try {
-
-					raw = _fs.statSync(resolved);
-
+					stat = _fs.lstatSync(resolved);
 				} catch(e) {
+					stat = null;
 				}
 
 
-				if (raw !== null) {
+				if (stat !== null) {
 
 					return {
-						type:   raw.isFile() ? 'file' : 'directory',
-						length: raw.size,
-						time:   raw.mtime
+						type:   stat.isFile() ? 'file' : 'directory',
+						length: stat.size,
+						time:   stat.mtime
 					};
 
 				}

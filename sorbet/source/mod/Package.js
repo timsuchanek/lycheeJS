@@ -21,6 +21,7 @@ lychee.define('sorbet.mod.Package').requires([
 				pointer = pointer[name];
 			} else {
 				pointer[name] = path.length > 0 ? {} : [];
+				pointer = pointer[name];
 			}
 
 		}
@@ -155,7 +156,7 @@ lychee.define('sorbet.mod.Package').requires([
 
 				_walk_directory.call(project.filesystem, files_d, '/build');
 				files_d = files_d.map(function(value) {
-					return value.substr('/source'.length);
+					return value.substr('/build'.length);
 				});
 
 
@@ -191,7 +192,7 @@ lychee.define('sorbet.mod.Package').requires([
 
 					_walk_directory.call(project.filesystem, files_d, '/build');
 					files_d = files_d.map(function(value) {
-						return value.substr('/source'.length);
+						return value.substr('/build'.length);
 					});
 
 
@@ -222,7 +223,7 @@ lychee.define('sorbet.mod.Package').requires([
 					if (files_d.length > files_c.length) {
 
 						diff.push({
-							json:  json.source.files,
+							json:  json.build.files,
 							mode:  'insert',
 							files: files_d.filter(function(value) {
 								return files_c.indexOf(value) === -1;
@@ -232,7 +233,7 @@ lychee.define('sorbet.mod.Package').requires([
 					} else if (files_c.length > files_d.length) {
 
 						diff.push({
-							json:  json.source.files,
+							json:  json.build.files,
 							mode:  'delete',
 							files: files_c.filter(function(value) {
 								return files_d.indexOf(value) === -1;

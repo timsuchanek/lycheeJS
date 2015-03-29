@@ -4,6 +4,15 @@
 
 		"environments": {
 
+			"nodejs/main": {
+				"build":    "fertilizer.Main",
+				"debug":    false,
+				"sandbox":  false,
+				"packages": [ [ "fertilizer", "./lychee.pkg" ] ],
+				"tags":     { "platform": [ "nodejs" ] },
+				"variant":  "application"
+			}
+
 		},
 
 		"files": {
@@ -25,13 +34,19 @@
 		"files": {
 
 			"data": {
-				"Filesystem": [ "js" ]
+				"Filesystem": [ "js" ],
+				"Shell":      [ "js" ]
 			},
 
 			"template": {
 
+				"html-nwjs": {
+					"Application": [ "js", "config.tpl", "index.tpl", "main.tpl" ],
+					"Library":     [ "js", "tpl" ]
+				},
+
 				"html": {
-					"Application": [ "js", "tpl" ],
+					"Application": [ "js", "index.tpl", "main.tpl" ],
 					"Library":     [ "js", "tpl" ]
 				},
 

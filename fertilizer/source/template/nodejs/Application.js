@@ -1,8 +1,11 @@
 
-lychee.define('fertilizer.template.nodejs.Application').includes([
+lychee.define('fertilizer.template.nodejs.Application').requires([
+	'lychee.data.JSON'
+]).includes([
 	'fertilizer.Template'
 ]).exports(function(lychee, fertilizer, global, attachments) {
 
+	var _JSON     = lychee.data.JSON;
 	var _template = attachments['tpl'].buffer;
 
 
@@ -11,9 +14,10 @@ lychee.define('fertilizer.template.nodejs.Application').includes([
 	 * IMPLEMENTATION
 	 */
 
-	var Class = function(settings) {
+	var Class = function(env, fs) {
 
-		fertilizer.Template.call(this, settings);
+		fertilizer.Template.call(this, env, fs);
+
 
 
 		/*
@@ -21,36 +25,39 @@ lychee.define('fertilizer.template.nodejs.Application').includes([
 		 */
 
 		this.bind('configure', function(oncomplete) {
-
 			oncomplete(true);
-
 		}, this);
 
 		this.bind('build', function(oncomplete) {
 
-			var env  = this.environment.serialize();
-			var info = this.getInfo();
-			var fs   = this.filesystem;
+			var env = this.environment;
+			var fs  = this.filesystem;
 
-			var data = {
-				id:    env.arguments[0].id || '',
-				blob:  JSON.stringify(env),
-				info:  info,
-				build: env.arguments[0].build || 'game.Main'
-			};
+			if (env !== null && fs !== null) {
+
+				var blob  = _JSON.encode(env.serialize());
+				var core  = this.getCore('nodejs');
+				var info  = this.getInfo(true);
+				var index = _template.toString();
+
+				if (core !== null && index !== null) {
+
+					index = this.replace(index, '{{core}}',  core);
+					index = this.replace(index, '{{blob}}',  blob);
+					index = this.replace(index, '{{id}}',    env.id);
+					index = this.replace(index, '{{info}}',  info);
+					index = this.replace(index, '{{build}}', env.build);
 
 
-			var index = _template.toString();
-			if (index !== null) {
+					fs.write('/index.js', index);
 
-				index = index.replacetemplate('{{id}}',    data.id);
-				index = index.replacetemplate('{{blob}}',  data.blob);
-				index = index.replacetemplate('{{info}}',  data.info);
-				index = index.replacetemplate('{{build}}', data.build);
+					oncomplete(true);
 
-				fs.write('index.js', index);
+				} else {
 
-				oncomplete(true);
+					oncomplete(false);
+
+				}
 
 			} else {
 
@@ -58,6 +65,10 @@ lychee.define('fertilizer.template.nodejs.Application').includes([
 
 			}
 
+		}, this);
+
+		this.bind('package', function(oncomplete) {
+			oncomplete(true);
 		}, this);
 
 	};

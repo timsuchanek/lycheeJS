@@ -204,56 +204,54 @@ var _settings = (function() {
 			}));
 
 
-			setTimeout(function() {
-
-				var main = lychee.environment.global.MAIN;
-				if (main === undefined || main.server === null) {
-					_clear_pid();
-					process.exit(1);
-				}
-
-			}, 1500);
-
-
 			lychee.init(function(sandbox) {
 
-				var lychee = sandbox.lychee;
-				var sorbet = sandbox.sorbet;
+				if (sandbox !== null) {
+
+					var lychee = sandbox.lychee;
+					var sorbet = sandbox.sorbet;
 
 
-				// Show more debug messages
-				lychee.debug = true;
+					// Show more debug messages
+					lychee.debug = true;
 
 
-				// This allows using #MAIN in JSON files
-				sandbox.MAIN = new sorbet.Main(profile);
-				sandbox.MAIN.init();
-				sandbox.MAIN.bind('destroy', function() {
-					process.exit(0);
-				});
-				_write_pid();
+					// This allows using #MAIN in JSON files
+					sandbox.MAIN = new sorbet.Main(profile);
+					sandbox.MAIN.init();
+					sandbox.MAIN.bind('destroy', function() {
+						process.exit(0);
+					});
+					_write_pid();
 
 
-				process.on('SIGHUP',  function() { sandbox.MAIN.destroy(); _clear_pid(); this.exit(1); });
-				process.on('SIGINT',  function() { sandbox.MAIN.destroy(); _clear_pid(); this.exit(1); });
-				process.on('SIGQUIT', function() { sandbox.MAIN.destroy(); _clear_pid(); this.exit(1); });
-				process.on('SIGABRT', function() { sandbox.MAIN.destroy(); _clear_pid(); this.exit(1); });
-				process.on('SIGTERM', function() { sandbox.MAIN.destroy(); _clear_pid(); this.exit(1); });
-				process.on('error',   function() { sandbox.MAIN.destroy(); _clear_pid(); this.exit(1); });
-				process.on('exit',    function() {});
+					process.on('SIGHUP',  function() { sandbox.MAIN.destroy(); _clear_pid(); this.exit(1); });
+					process.on('SIGINT',  function() { sandbox.MAIN.destroy(); _clear_pid(); this.exit(1); });
+					process.on('SIGQUIT', function() { sandbox.MAIN.destroy(); _clear_pid(); this.exit(1); });
+					process.on('SIGABRT', function() { sandbox.MAIN.destroy(); _clear_pid(); this.exit(1); });
+					process.on('SIGTERM', function() { sandbox.MAIN.destroy(); _clear_pid(); this.exit(1); });
+					process.on('error',   function() { sandbox.MAIN.destroy(); _clear_pid(); this.exit(1); });
+					process.on('exit',    function() {});
 
 
-				new lychee.Input({
-					key:         true,
-					keymodifier: true
-				}).bind('escape', function() {
+					new lychee.Input({
+						key:         true,
+						keymodifier: true
+					}).bind('escape', function() {
 
-					console.warn('sorbet: [ESC] pressed, exiting ...');
+						console.warn('sorbet: [ESC] pressed, exiting ...');
 
-					sandbox.MAIN.destroy();
+						sandbox.MAIN.destroy();
+						_clear_pid();
+
+					}, this);
+
+				} else {
+
 					_clear_pid();
+					process.exit(1);
 
-				}, this);
+				}
 
 			});
 
@@ -266,12 +264,25 @@ var _settings = (function() {
 
 			console.info('Stopping Instance (' + pid + ') ... ');
 
+			var killed = false;
+
 			try {
+
 				process.kill(pid, 'SIGTERM');
-			} catch(e) {
+				killed = true;
 
-				console.error('Invalid user rights (try with sudo?)');
+			} catch(err) {
 
+				if (err.code === 'ESRCH') {
+					killed = true;
+				} else {
+					console.error('Invalid process rights (try with sudo?)');
+				}
+
+			}
+
+			if (killed === true) {
+				_clear_pid();
 			}
 
 			process.exit(0);

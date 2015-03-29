@@ -1,11 +1,8 @@
 
-lychee.define('fertilizer.template.nodejs.Library').requires([
-	'lychee.data.JSON'
-]).includes([
+lychee.define('fertilizer.template.html-nwjs.Library').includes([
 	'fertilizer.Template'
 ]).exports(function(lychee, fertilizer, global, attachments) {
 
-	var _JSON     = lychee.data.JSON;
 	var _template = attachments['tpl'].buffer;
 
 
@@ -14,9 +11,9 @@ lychee.define('fertilizer.template.nodejs.Library').requires([
 	 * IMPLEMENTATION
 	 */
 
-	var Class = function(env, fs) {
+	var Class = function(env, fs, sh) {
 
-		fertilizer.Template.call(this, env, fs);
+		fertilizer.Template.call(this, env, fs, sh);
 
 
 

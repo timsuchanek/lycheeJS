@@ -79,6 +79,38 @@ lychee.define('game.Main').requires([
 
 	Class.prototype = {
 
+		/*
+		 * ENTITY API
+		 */
+
+		// deserialize: function(blob) {},
+
+		serialize: function() {
+
+			var data = lychee.game.Main.prototype.serialize.call(this);
+			data['constructor'] = 'game.Main';
+
+			var settings = data['arguments'][0] || {};
+			var blob     = data['blob'] || {};
+
+
+			if (this.defaults.client !== null) { settings.client = this.defaults.client; }
+
+
+			data['arguments'][0] = settings;
+			data['blob']         = Object.keys(blob).length > 0 ? blob : null;
+
+
+			return data;
+
+		},
+
+
+
+		/*
+		 * CUSTOM API
+		 */
+
 		reshape: function(orientation, rotation) {
 
 			game.DeviceSpecificHacks.call(this);

@@ -14,12 +14,7 @@
 !/projects/p2pdemo
 
 /lychee/build/*
-/lychee/doc/*
 /lychee.store
-
-/fertilizers/*
-!/fertilizers/html
-!/fertilizers/nodejs
 
 /sorbet/lychee.store
 /sorbet/.pid

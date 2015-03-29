@@ -7,7 +7,7 @@ lychee.define('sorbet.serve.File').requires([
 	 * HELPERS
 	 */
 
-	var _public_filesystem = new sorbet.data.Filesystem(__dirname + '/../../public');
+	var _public_filesystem = new sorbet.data.Filesystem('/sorbet/public');
 
 
 	var _get_response = function(info, mime) {

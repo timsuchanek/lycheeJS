@@ -166,27 +166,31 @@ lychee.define('sorbet.Main').requires([
 
 	var _project_cache = {};
 
-	(function(fs, projects) {
+	(function(projects) {
 
-		projects['lychee'] = new sorbet.data.Project('lychee', fs.root + '/lychee');
+		projects['lychee'] = new sorbet.data.Project('lychee', '/lychee');
 
 
-		var identifiers = fs.dir('/projects');
-		if (identifiers.length > 0) {
+		var root_fs = new sorbet.data.Filesystem('/');
+		var ids     = root_fs.dir('/projects').filter(function(value) {
+			return value !== 'README.md';
+		});
 
-			identifiers.forEach(function(identifier) {
+		if (ids.length > 0) {
 
-				var info1 = fs.info('/projects/' + identifier + '/index.html');
-				var info2 = fs.info('/projects/' + identifier + '/lychee.pkg');
+			ids.forEach(function(id) {
+
+				var info1 = root_fs.info('/projects/' + id + '/index.html');
+				var info2 = root_fs.info('/projects/' + id + '/lychee.pkg');
 				if ((info1 !== null && info1.type === 'file') || (info2 !== null && info2.type === 'file')) {
-					projects[identifier] = new sorbet.data.Project(identifier, fs.root + '/projects/' + identifier);
+					projects[id] = new sorbet.data.Project(id, '/projects/' + id);
 				}
 
 			});
 
 		}
 
-	})(new sorbet.data.Filesystem(__dirname + '/../../'), _project_cache);
+	})(_project_cache);
 
 
 

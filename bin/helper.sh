@@ -1,126 +1,131 @@
 #!/bin/bash
 
-
-lowercase(){
+lowercase() {
 	echo "$1" | sed "y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/";
 }
 
 OS=`lowercase \`uname\``;
-KERNEL=`uname -r`;
-MACH=`uname -m`;
 
-WEBBROWSER="";
-
+LYCHEEJS_IOJS="";
 LYCHEEJS_ROOT=$(cd "$(dirname "$0")/../"; pwd);
+LYCHEEJS_SORBET="$LYCHEEJS_ROOT/bin/sorbet.sh";
 
 
 if [ "$OS" == "darwin" ]; then
 
 	OS="osx";
-
-	if [ -e "/Applications/Google\ Chrome.app" ]; then
-		WEBBROWSER="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome";
-	elif [ -e "/Applications/Firefox.app" ]; then
-		WEBBROWSER="/Applications/Firefox.app/Contents/MacOS/firefox";
-	fi;
+	LYCHEEJS_IOJS="$LYCHEEJS_ROOT/bin/runtime/iojs/osx/iojs";
 
 elif [ "$OS" == "linux" ]; then
 
 	OS="linux";
+	LYCHEEJS_IOJS="$LYCHEEJS_ROOT/bin/runtime/iojs/linux/iojs";
 
-	NODEJS=`which nodejs`;
+elif [ "$OS" == "windowsnt" ]; then
 
-	if [ "`which chrome`" != "" ]; then
-		WEBBROWSER=`which chrome`;
-	elif [ "`which google-chrome`" != "" ]; then
-		WEBBROWSER=`which google-chrome`;
-	elif [ "`which firefox`" != "" ]; then
-		WEBBROWSER=`which firefox`;
-	fi;
+	OS="windows";
+	LYCHEEJS_IOJS="$LYCHEEJS_ROOT/bin/runtime/iojs/windows/iojs.exe";
 
 fi;
 
 
 
-_handle_url() {
+url=$1;
+protocol=${url:0:8};
 
-	url=$1;
-	protocol=${url:0:8};
+if [ "$protocol" == "lycheejs" ]; then
 
-	if [ "$protocol" == "lycheejs" ]; then
+	tmp0=${url:11:4};
+	tmp1=${url:11:4};
+	tmp2=${url:11:3};
 
-		tmp0=${url:11:4};
-		tmp1=${url:11:4};
-		tmp2=${url:11:3};
+	application="";
+	resource="";
 
-		application="";
-		resource="";
+	if [ "$tmp0" == "boot" ]; then
+		application="boot";
+		resource=${url#*=};
+	fi;
 
-		if [ "$tmp0" == "boot" ]; then
-			application="boot";
-			resource=${url#*=};
-		fi;
+	if [ "$tmp1" == "file" ]; then
+		application="file";
+		resource=${url#*=};
+	fi;
 
-		if [ "$tmp1" == "file" ]; then
-			application="file";
-			resource=${url#*=};
-		fi;
-
-		if [ "$tmp2" == "web" ]; then
-			application="web";
-			resource=${url#*=};
-		fi;
+	if [ "$tmp2" == "web" ]; then
+		application="web";
+		resource=${url#*=};
+	fi;
 
 
-		if [ "$application" != "" -a "$resource" != "" ]; then
+	if [ "$application" != "" -a "$resource" != "" ]; then
 
-			case "$application" in
+		case "$application" in
 
-				boot)
+			boot)
 
-					cd $LYCHEEJS_ROOT;
-					./bin/sorbet.sh stop;
-					./bin/sorbet.sh start "$resource";
+				cd $LYCHEEJS_ROOT;
+				$LYCHEEJS_SORBET stop;
+				$LYCHEEJS_SORBET start "$resource";
 
-				;;
+			;;
 
-				file)
+			file)
 
-					if [ "$OS" == "linux" ]; then
-						xdg-open "file://$resource" 2>&1;
-						exit 0;
-					elif [ "$OS" == "osx" ]; then
-						open "file://$resource" 2>&1;
-						exit 0;
+				if [ "$OS" == "linux" ]; then
+					xdg-open "file://$resource" 2>&1;
+					exit 0;
+				elif [ "$OS" == "osx" ]; then
+					open "file://$resource" 2>&1;
+					exit 0;
+				elif [ "$OS" == "windows" ]; then
+					explorer "file://c:$resource";
+					exit 0;
+				fi;
+
+			;;
+
+			web)
+
+				if [ "$OS" == "linux" ]; then
+
+					xdg-open "$resource" 2>&1;
+					exit 0;
+
+				elif [ "$OS" == "osx" ]; then
+
+					if [ -e "/Applications/Google\ Chrome.app" ]; then
+						browser="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome";
+					elif [ -e "/Applications/Firefox.app" ]; then
+						browser="/Applications/Firefox.app/Contents/MacOS/firefox";
 					fi;
 
-				;;
-
-				web)
-
-					if [ "$OS" == "linux" ]; then
-						xdg-open "$resource" 2>&1;
+					if [ "$browser" != "" ]; then
+						$browser "$resource" 2>&1;
 						exit 0;
-					elif [ "$OS" == "osx" ]; then
-						$WEBBROWSER "$resource" 2>&1;
-						exit 0;
+					else
+						exit 1;
 					fi;
 
-				;;
+				elif [ "$OS" == "windows" ]; then
 
-			esac;
+					# TODO: Figure out how to spawn correct Browser from Powershell
+					exit 1;
 
-		fi;
+				fi;
+
+			;;
+
+		esac;
 
 	fi;
 
-}
 
+	exit 0;
 
+else
 
-_handle_url "$1";
+	exit 1;
 
-
-
-exit 1;
+fi;
 

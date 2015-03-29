@@ -1,17 +1,36 @@
 #!/bin/bash
 
+lowercase() {
+	echo "$1" | sed "y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/";
+}
 
+OS=`lowercase \`uname\``;
+
+LYCHEEJS_IOJS="";
 LYCHEEJS_ROOT=$(cd "$(dirname "$0")/../"; pwd);
-NODEJS=`which nodejs`;
 SORBET_PID="$LYCHEEJS_ROOT/sorbet/.pid";
 SORBET_LOG="/var/log/sorbet.log";
 SORBET_ERR="/var/log/sorbet.err";
 SORBET_USER=`whoami`;
 
 
-if [ "$NODEJS" == "" ]; then
-	NODEJS=`which node`;
+if [ "$OS" == "darwin" ]; then
+
+	OS="osx";
+	LYCHEEJS_IOJS="$LYCHEEJS_ROOT/bin/runtime/iojs/osx/iojs";
+
+elif [ "$OS" == "linux" ]; then
+
+	OS="linux";
+	LYCHEEJS_IOJS="$LYCHEEJS_ROOT/bin/runtime/iojs/linux/iojs";
+
+elif [ "$OS" == "windowsnt" ]; then
+
+	OS="windows";
+	LYCHEEJS_IOJS="$LYCHEEJS_ROOT/bin/runtime/iojs/windows/iojs.exe";
+
 fi;
+
 
 
 case "$1" in
@@ -20,10 +39,10 @@ case "$1" in
 
 		cd $LYCHEEJS_ROOT;
 
-		if [ "$SORBET_USER" == "root" ]; then 
-			$NODEJS ./bin/sorbet.js start "$2" >> $SORBET_LOG 2>> $SORBET_ERR &
+		if [ "$SORBET_USER" == "root" ] || [ "$SORBET_USER" == "lycheejs-sorbet" ]; then 
+			$LYCHEEJS_IOJS ./bin/sorbet.js start "$2" >> $SORBET_LOG 2>> $SORBET_ERR &
 		else
-			$NODEJS ./bin/sorbet.js start "$2";
+			$LYCHEEJS_IOJS ./bin/sorbet.js start "$2";
 		fi;
 
 	;;
@@ -55,19 +74,19 @@ case "$1" in
 	stop)
 
 		cd $LYCHEEJS_ROOT;
-		$NODEJS ./bin/sorbet.js stop;
+		$LYCHEEJS_IOJS ./bin/sorbet.js stop;
 
 	;;
 
 	restart)
 
 		cd $LYCHEEJS_ROOT;
-		$NODEJS ./bin/sorbet.js stop;
+		$LYCHEEJS_IOJS ./bin/sorbet.js stop;
 
-		if [ "$SORBET_USER" == "root" ]; then 
-			$NODEJS ./bin/sorbet.js start "$2" >> $SORBET_LOG 2>> $SORBET_ERR &
+		if [ "$SORBET_USER" == "root" ] || [ "$SORBET_USER" == "lycheejs-sorbet" ]; then 
+			$LYCHEEJS_IOJS ./bin/sorbet.js start "$2" >> $SORBET_LOG 2>> $SORBET_ERR &
 		else
-			$NODEJS ./bin/sorbet.js start "$2";
+			$LYCHEEJS_IOJS ./bin/sorbet.js start "$2";
 		fi;
 
 	;;
@@ -75,7 +94,7 @@ case "$1" in
 	*)
 
 		cd $LYCHEEJS_ROOT;
-		$NODEJS ./bin/sorbet.js help;
+		$LYCHEEJS_IOJS ./bin/sorbet.js help;
 
 	;;
 

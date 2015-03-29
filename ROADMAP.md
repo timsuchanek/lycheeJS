@@ -9,30 +9,19 @@ back into master, tagged and published.
 
 ## v0.8.5
 
-
 - sorbet.plugin.Fertilizer should auto-build environments for all projects
-- API: lychee.Renderer
-- API: lychee.Storage
-- API: lychee.data Stack
-- Website: Overhauling and game.Main Architecture Diagram
-- Website: Refactor tool/configure.js script to generate API docs properly
-- Website: Refactor tool/configure.js script to generate Tutorials properly
+- Fertilizer: html-nwjs integration for Linux, Mac OSX and Windows
 
 ## v0.8.6
 
 - /lychee/dist build via configure script for CDNJS and standalone deployment
-- Fertilizer: html-nwjs integration for Linux, Mac OSX and Windows
-- Mode7 Game finalization (lane switch), required assets: racing car, box sprite, explosion sprite
 - Sorbet Log File serialization to be inspectable and remote-debuggable via ranger
 - lychee.net.(client||remote).DHT as described in Bittorrent's DHT protocol [1] which extends lychee.data.BENCODE for its logical behaviours
 - API + Implementation: lychee.net.Hybrid
-- API: lychee.game Stack
-- API: lychee.ui Stack
 
 ## v0.8.7
 
-- Inspector Tool: Timeline State (that shows bind/trigger/unbind calls)
-- Dispenser CLI Tool (creates Templates and validates API Docs of a Definition)
+- Debugger Tool: Timeline Analysis of Snapshots (live-edit and live-modification)
 - lychee.net.remote.Controller and lychee.net.client.Controller
 - API + Implementation: lychee.game.Logic
 - API + Implementation: lychee.game.Physic
@@ -46,9 +35,18 @@ back into master, tagged and published.
 ## Backlog
 
 - Blitzkrieg Game finalization (auto-connect 4 players and let them play against each other)
+- Mode7 Game finalization (lane switch), required assets: racing car, box sprite, explosion sprite
+- API: lychee.Renderer
+- API: lychee.Storage
+- API: lychee.data Stack
+- API: lychee.game Stack
+- API: lychee.ui Stack
 - API + Implementation: lychee.data.BSON
 - API + Implementation: lychee.data.MSGPACK
 - Fertilizer: html-webgl Refactor (webgl2d refactor)
+- Website: Overhauling and game.Main Architecture Diagram
+- Website: Refactor tool/configure.js script to generate API docs properly
+- Website: Refactor tool/configure.js script to generate Tutorials properly
 
 
 ## References (Articles and Sources)

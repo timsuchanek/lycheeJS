@@ -1,7 +1,6 @@
 
 {{info}}
 
-{{core}}
 
 (function(lychee, global) {
 

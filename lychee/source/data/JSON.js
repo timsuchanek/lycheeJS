@@ -5,6 +5,19 @@ lychee.define('lychee.data.JSON').exports(function(lychee, global) {
 	 * HELPERS
 	 */
 
+	var _sanitize_string = function(str) {
+
+		var san = str;
+
+		san = san.replace(/\\/g, '\\\\');
+		san = san.replace(/\n/g, '\\n');
+		san = san.replace(/\t/g, '\\t');
+		san = san.replace(/"/g,  '\\"');
+
+		return san;
+
+	};
+
 	var _Stream = function(buffer, mode) {
 
 		this.__buffer = typeof buffer === 'string' ? buffer : '';
@@ -138,7 +151,7 @@ lychee.define('lychee.data.JSON').exports(function(lychee, global) {
 
 			stream.writeRAW('"');
 
-			stream.writeRAW(data.replace(/\\/g, '\\\\').replace('"', '\\"'));
+			stream.writeRAW(_sanitize_string(data));
 
 			stream.writeRAW('"');
 
@@ -267,6 +280,20 @@ lychee.define('lychee.data.JSON').exports(function(lychee, global) {
 				while (check === '\\') {
 
 					value[value.length - 1] = check;
+
+					var special = stream.seekRAW(1);
+					if (special === 'n') {
+
+						stream.readRAW(1);
+						value += '\n';
+
+					} else if (special === 't') {
+
+						stream.readRAW(1);
+						value += '\t';
+
+					}
+
 
 					size   = stream.seek([ '\\', '"' ]);
 					value += stream.readRAW(size);
