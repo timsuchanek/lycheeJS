@@ -7,7 +7,7 @@ var path   = require('path');
 
 
 if (fs.existsSync(root + '/lychee/build/nodejs/core.js') === false) {
-	require(root + '/tool/configure.js');
+	require(root + '/lychee/configure.js');
 }
 
 
