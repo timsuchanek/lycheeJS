@@ -264,12 +264,25 @@ var _settings = (function() {
 
 			console.info('Stopping Instance (' + pid + ') ... ');
 
+			var killed = false;
+
 			try {
+
 				process.kill(pid, 'SIGTERM');
-			} catch(e) {
+				killed = true;
 
-				console.error('Invalid user rights (try with sudo?)');
+			} catch(err) {
 
+				if (err.code === 'ESRCH') {
+					killed = true;
+				} else {
+					console.error('Invalid process rights (try with sudo?)');
+				}
+
+			}
+
+			if (killed === true) {
+				_clear_pid();
 			}
 
 			process.exit(0);
