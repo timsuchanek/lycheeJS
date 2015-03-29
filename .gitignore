@@ -1,4 +1,6 @@
 
+/bin/runtime
+
 /projects/*
 /projects/*/build
 /projects/*/lychee.store

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=lycheeJS Ranger
+Exec=/opt/lycheejs/bin/ranger.sh
+Icon=/opt/lycheejs/bin/ranger.png
+Type=Application
+NoDisplay=false
+Categories=Development;System;
+MimeType=x-scheme-handler/lycheejs;
+

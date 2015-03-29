@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #
-# Author: LazerUnicorns Ltd. <support@lazerunicorns.com>
+# Author: LazerUnicorns <support@lazerunicorns.com>
 #
 
 ### BEGIN INIT INFO
@@ -11,7 +11,7 @@
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
 # Short-Description: Sorbet daemon for lycheeJS
-# Description:       Enable Sorbet HTTP1.1 / CDN / WS13 service
+# Description:       Enable Sorbet HTTP 1.1 / WS 13 service
 ### END INIT INFO
 
 PATH=/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/bin;
@@ -21,7 +21,7 @@ SELF_FILE=`basename $THIS_FILE`;
 
 
 
-# This will be automatically replaced by the ./tool/ubuntu/install.js
+# This will be automatically replaced by the ./tool/linux/install.js
 LYCHEEJS_ROOT="{{lycheejs_root}}";
 SORBET_USER="{{sorbet_user}}";
 SORBET_GROUP="{{sorbet_group}}";

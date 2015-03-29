@@ -8,7 +8,6 @@ OS=`lowercase \`uname\``;
 
 LYCHEEJS_IOJS="";
 LYCHEEJS_ROOT=$(cd "$(dirname "$0")/../"; pwd);
-LYCHEEJS_SORBET="$LYCHEEJS_ROOT/bin/sorbet.sh";
 
 
 if [ "$OS" == "darwin" ]; then
@@ -65,22 +64,29 @@ if [ "$protocol" == "lycheejs" ]; then
 			boot)
 
 				cd $LYCHEEJS_ROOT;
-				$LYCHEEJS_SORBET stop;
-				$LYCHEEJS_SORBET start "$resource";
+
+				$LYCHEEJS_IOJS ./bin/sorbet.js stop;
+				$LYCHEEJS_IOJS ./bin/sorbet.js start "$resource";
 
 			;;
 
 			file)
 
 				if [ "$OS" == "linux" ]; then
+
 					xdg-open "file://$resource" 2>&1;
 					exit 0;
+
 				elif [ "$OS" == "osx" ]; then
+
 					open "file://$resource" 2>&1;
 					exit 0;
+
 				elif [ "$OS" == "windows" ]; then
+
 					explorer "file://c:$resource";
 					exit 0;
+
 				fi;
 
 			;;
@@ -94,18 +100,8 @@ if [ "$protocol" == "lycheejs" ]; then
 
 				elif [ "$OS" == "osx" ]; then
 
-					if [ -e "/Applications/Google\ Chrome.app" ]; then
-						browser="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome";
-					elif [ -e "/Applications/Firefox.app" ]; then
-						browser="/Applications/Firefox.app/Contents/MacOS/firefox";
-					fi;
-
-					if [ "$browser" != "" ]; then
-						$browser "$resource" 2>&1;
-						exit 0;
-					else
-						exit 1;
-					fi;
+					open "$resource" 2>&1;
+					exit 0;
 
 				elif [ "$OS" == "windows" ]; then
 

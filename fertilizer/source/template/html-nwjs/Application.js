@@ -7,65 +7,11 @@ lychee.define('fertilizer.template.html-nwjs.Application').requires([
 ]).exports(function(lychee, fertilizer, global, attachments) {
 
 	var _JSON      = lychee.data.JSON;
+	var _icon      = attachments['png'];
 	var _templates = {
 		config: attachments['config.tpl'].buffer,
 		index:  attachments['index.tpl'].buffer,
 		main:   attachments['main.tpl'].buffer
-	};
-
-
-
-	/*
-	 * HELPERS
-	 */
-
-	var _package_linux = function() {
-
-		var runtime_sh = new fertilizer.data.Shell('/bin/runtime/html-nwjs/linux');
-		var project_fs = this.filesystem;
-
-		if (project_fs !== null) {
-
-			var result = runtime_sh.exec('/package.sh ' + project_fs.root);
-
-console.log('package.sh result:', result);
-
-			if (result === true) {
-				return true;
-			}
-
-		}
-
-
-		return false;
-
-	};
-
-	var _package_osx = function() {
-
-		// TODO: Package OSX
-
-		return true;
-
-	};
-
-	var _package_windows = function() {
-
-		var runtime_sh = new fertilizer.data.Shell('/bin/runtime/html-nwjs/windows');
-		var project_fs = this.filesystem;
-
-		if (project_fs !== null) {
-
-			var result = runtime_sh.exec('/package.sh ' + project_fs.root);
-			if (result === true) {
-				return true;
-			}
-
-		}
-
-
-		return false;
-
 	};
 
 
@@ -101,6 +47,7 @@ console.log('package.sh result:', result);
 				var core    = this.getCore('html');
 				var info    = this.getInfo(true);
 				var version = ('' + lychee.VERSION).replace(/\./g, '').split('').join('.');
+				var icon    = _icon.buffer;
 				var config  = _templates['config'].toString();
 				var index   = _templates['index'].toString();
 				var main    = _templates['main'].toString();
@@ -119,6 +66,7 @@ console.log('package.sh result:', result);
 				main   = this.replace(main, '{{id}}', env.id);
 
 
+				fs.write('/icon.png',     icon);
 				fs.write('/package.json', config);
 				fs.write('/core.js',      core);
 				fs.write('/index.js',     index);
@@ -136,13 +84,33 @@ console.log('package.sh result:', result);
 
 		this.bind('package', function(oncomplete) {
 
-			var result = true;
+			var runtime_fs = new fertilizer.data.Filesystem('/bin/runtime/html-nwjs');
+			var runtime_sh = new fertilizer.data.Shell('/bin/runtime/html-nwjs');
+			var project_fs = this.filesystem;
+			var project_id = this.environment.id;
 
-			if (_package_linux.call(this) === false)   result = false;
-			if (_package_osx.call(this) === false)     result = false;
-			if (_package_windows.call(this) === false) result = false;
+			if (project_fs !== null) {
 
-			oncomplete(result);
+				if (runtime_fs.info('/package.sh') !== null) {
+
+					var result = runtime_sh.exec('/package.sh ' + project_fs.root + ' ' + project_id);
+					if (result === true) {
+						oncomplete(true);
+					} else {
+						oncomplete(false);
+					}
+
+				} else {
+
+					oncomplete(false);
+
+				}
+
+			} else {
+
+				oncomplete(false);
+
+			}
 
 		}, this);
 

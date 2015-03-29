@@ -26,7 +26,7 @@
 
 	"scripts": {
 
-		"postinstall": "./tool/configure.js",
+		"postinstall": "./lychee/configure.js",
 
 		"start":       "./bin/sorbet.js start development",
 		"stop":        "./bin/sorbet.js stop",

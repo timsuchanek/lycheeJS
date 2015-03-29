@@ -41,7 +41,7 @@
 			"template": {
 
 				"html-nwjs": {
-					"Application": [ "js", "config.tpl", "index.tpl", "main.tpl" ],
+					"Application": [ "js", "png", "config.tpl", "index.tpl", "main.tpl" ],
 					"Library":     [ "js", "tpl" ]
 				},
 
