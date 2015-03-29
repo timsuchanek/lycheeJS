@@ -10,3 +10,5 @@ osacompile -o ./helper.app ./helper/osx/helper.applescript;
 cp ./helper/osx/Info.plist ./helper.app/Contents;
 cp ./helper/osx/applet.icns ./helper.app/Contents/Resources/applet.icns;
 
+open ./helper.app;
+
