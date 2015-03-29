@@ -34,15 +34,20 @@ protocol=${url:0:8};
 
 if [ "$protocol" == "lycheejs" ]; then
 
-	tmp0=${url:11:4};
+	tmp0=${url:11:5};
 	tmp1=${url:11:4};
 	tmp2=${url:11:3};
 
 	application="";
 	resource="";
 
-	if [ "$tmp0" == "boot" ]; then
-		application="boot";
+	if [ "$tmp0" == "start" ]; then
+		application="start";
+		resource=${url#*=};
+	fi;
+
+	if [ "$tmp1" == "stop" ]; then
+		application="stop";
 		resource=${url#*=};
 	fi;
 
@@ -61,12 +66,20 @@ if [ "$protocol" == "lycheejs" ]; then
 
 		case "$application" in
 
-			boot)
+			start)
 
 				cd $LYCHEEJS_ROOT;
 
 				$LYCHEEJS_IOJS ./bin/sorbet.js stop;
 				$LYCHEEJS_IOJS ./bin/sorbet.js start "$resource";
+
+			;;
+
+			stop)
+
+				cd $LYCHEEJS_ROOT;
+
+				$LYCHEEJS_IOJS ./bin/sorbet.js stop;
 
 			;;
 
