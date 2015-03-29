@@ -70,6 +70,7 @@ var _print_help = function() {
 	console.log('                                                      ');
 	console.log('Examples:                                             ');
 	console.log('                                                      ');
+	console.log('    fertilizer boilerplate "html-nwjs/main"           ');
 	console.log('    fertilizer boilerplate "nodejs/server"            ');
 	console.log('                                                      ');
 
