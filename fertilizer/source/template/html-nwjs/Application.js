@@ -87,12 +87,13 @@ lychee.define('fertilizer.template.html-nwjs.Application').requires([
 			var runtime_fs = new fertilizer.data.Filesystem('/bin/runtime/html-nwjs');
 			var runtime_sh = new fertilizer.data.Shell('/bin/runtime/html-nwjs');
 			var project_fs = this.filesystem;
+			var project_id = this.environment.id;
 
 			if (project_fs !== null) {
 
 				if (runtime_fs.info('/package.sh') !== null) {
 
-					var result = runtime_sh.exec('/package.sh ' + project_fs.root);
+					var result = runtime_sh.exec('/package.sh ' + project_fs.root + ' ' + project_id);
 					if (result === true) {
 						oncomplete(true);
 					} else {
