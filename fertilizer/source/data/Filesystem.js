@@ -43,7 +43,7 @@ lychee.define('fertilizer.data.Filesystem').exports(function(lychee, fertilizer,
 
 	var Class = function(root) {
 
-		this.root = _root + _path.normalize(root);
+		this.root = _path.normalize(root);
 
 	};
 
@@ -60,7 +60,7 @@ lychee.define('fertilizer.data.Filesystem').exports(function(lychee, fertilizer,
 			scope    = scope !== undefined          ? scope    : this;
 
 
-			var resolved = _path.normalize(this.root + path);
+			var resolved = _root + _path.normalize(this.root + path);
 			if (callback !== null) {
 
 				_fs.readdirSync(resolved, function(err, data) {
@@ -91,7 +91,7 @@ lychee.define('fertilizer.data.Filesystem').exports(function(lychee, fertilizer,
 			scope    = scope !== undefined          ? scope    : this;
 
 
-			var resolved = _path.normalize(this.root + path);
+			var resolved = _root + _path.normalize(this.root + path);
 			if (callback !== null) {
 
 				_fs.readFile(resolved, function(err, data) {
@@ -131,11 +131,11 @@ lychee.define('fertilizer.data.Filesystem').exports(function(lychee, fertilizer,
 			}
 
 
-			_create_directory(this.root + _path.dirname(path));
+			_create_directory(_root + this.root + _path.dirname(path));
 
 
 			var info     = this.info(_path.dirname(path));
-			var resolved = _path.normalize(this.root + path);
+			var resolved = _root + _path.normalize(this.root + path);
 
 			if (info !== null && info.type === 'directory') {
 
@@ -171,7 +171,7 @@ lychee.define('fertilizer.data.Filesystem').exports(function(lychee, fertilizer,
 
 		info: function(path) {
 
-			var resolved = _path.normalize(this.root + path);
+			var resolved = _root + _path.normalize(this.root + path);
 			if (resolved !== null) {
 
 				var stat = null;

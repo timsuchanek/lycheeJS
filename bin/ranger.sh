@@ -31,3 +31,69 @@ elif [ "$OS" == "windowsnt" ]; then
 
 fi;
 
+
+cd $LYCHEEJS_ROOT;
+
+if [ ! -d "./bin/ranger" ]; then
+
+	if [ -d "./projects/cultivator/ranger/build" ]; then
+		rm -rf ./projects/cultivator/ranger/build;
+	fi;
+
+	./bin/fertilizer.sh cultivator/ranger "html-nwjs/main";
+
+
+	# 1. Remove previously packaged builds
+
+	rm -rf ./projects/cultivator/ranger/build/html-nwjs/main-linux;
+	rm -rf ./projects/cultivator/ranger/build/html-nwjs/main-osx;
+	rm -rf ./projects/cultivator/ranger/build/html-nwjs/main-windows;
+
+
+	# 2. Inject design from cultivator project
+
+	cp -R ./projects/cultivator/design ./projects/cultivator/ranger/build/html-nwjs/main/design;
+	sed -i.bak 's/\/projects\/cultivator\/design/.\/design/g' ./projects/cultivator/ranger/build/html-nwjs/main/index.html;
+	rm ./projects/cultivator/ranger/build/html-nwjs/main/index.html.bak;
+
+
+	# 3. Re-package builds
+
+	cd ./bin/runtime/html-nwjs;
+	./package.sh /projects/cultivator/ranger/build/html-nwjs/main ranger;
+
+
+	# 4. Cache binaries for fast bootup
+
+	cd $LYCHEEJS_ROOT;
+	mkdir ./bin/ranger;
+	mv ./projects/cultivator/ranger/build/html-nwjs/main-linux ./bin/ranger/linux;
+	mv ./projects/cultivator/ranger/build/html-nwjs/main-osx ./bin/ranger/osx;
+	mv ./projects/cultivator/ranger/build/html-nwjs/main-windows ./bin/ranger/windows;
+
+	rm -rf ./projects/cultivator/ranger/build;
+
+fi;
+
+
+if [ -d "./bin/ranger" ]; then
+
+	if [ "$OS" == "linux" ]; then
+
+		./bin/ranger/linux/ranger;
+		exit 0;
+
+	elif [ "$OS" == "osx" ]; then
+
+		open ./bin/ranger/osx/ranger.app;
+		exit 0;
+
+	elif [ "$OS" == "windows" ]; then
+
+		./bin/ranger/windows/ranger.exe;
+		exit 0;
+
+	fi;
+
+fi;
+

@@ -2,74 +2,59 @@
 (function(lychee, global) {
 
 	/*
-	 * FEATURE DETECTION
-	 */
-
-	var _protocol = (function(location) {
-
-		if (location instanceof Object) {
-
-			if (typeof location.protocol === 'string') {
-				return location.protocol.split(':')[0];
-			}
-
-		}
-
-		return null;
-
-	})(global.location);
-
-
-
-	/*
 	 * HELPERS
 	 */
 
 	var _load_asset = function(settings, callback, scope) {
 
-		var xhr = new XMLHttpRequest();
+		var proto = settings.url.split(':')[0];
+		if (proto === 'file') {
 
-		xhr.open('GET', settings.url, true);
-
-
-		if (settings.headers instanceof Object) {
-
-			for (var header in settings.headers) {
-				xhr.setRequestHeader(header, settings.headers[header]);
-			}
-
-		}
-
-
-		xhr.onload = function() {
-
-			try {
-				callback.call(scope, xhr.responseText || xhr.responseXML);
-			} catch(err) {
-				lychee.Debugger.report(lychee.environment, err, null);
-			} finally {
-				xhr = null;
-			}
-
-		};
-
-		xhr.onerror = xhr.ontimeout = function() {
-
-			try {
-				callback.call(scope, null);
-			} catch(err) {
-				lychee.Debugger.report(lychee.environment, err, null);
-			} finally {
-				xhr = null;
-			}
-
-		};
-
-
-		if (_protocol !== 'file') {
-			xhr.send(null);
-		} else {
 			callback.call(scope, null);
+
+		} else {
+
+			var xhr = new XMLHttpRequest();
+
+			xhr.open('GET', settings.url, true);
+
+
+			if (settings.headers instanceof Object) {
+
+				for (var header in settings.headers) {
+					xhr.setRequestHeader(header, settings.headers[header]);
+				}
+
+			}
+
+
+			xhr.onload = function() {
+
+				try {
+					callback.call(scope, xhr.responseText || xhr.responseXML);
+				} catch(err) {
+					lychee.Debugger.report(lychee.environment, err, null);
+				} finally {
+					xhr = null;
+				}
+
+			};
+
+			xhr.onerror = xhr.ontimeout = function() {
+
+				try {
+					callback.call(scope, null);
+				} catch(err) {
+					lychee.Debugger.report(lychee.environment, err, null);
+				} finally {
+					xhr = null;
+				}
+
+			};
+
+
+			xhr.send(null);
+
 		}
 
 	};

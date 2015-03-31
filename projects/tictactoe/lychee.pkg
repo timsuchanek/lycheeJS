@@ -1,68 +1,100 @@
 {
-
 	"build": {
-
 		"environments": {
-
 			"html-nwjs/main": {
-				"build":    "game.Main",
-				"debug":    false,
-				"sandbox":  false,
-				"packages": [ [ "game", "./lychee.pkg" ] ],
-				"tags":     { "platform": [ "html-nwjs", "html" ] },
-				"variant":  "application"
+				"build": "game.Main",
+				"debug": false,
+				"sandbox": false,
+				"packages": [
+					[
+						"game",
+						"./lychee.pkg"
+					]
+				],
+				"tags": {
+					"platform": [
+						"html-nwjs",
+						"html"
+					]
+				},
+				"variant": "application"
 			},
-
 			"html/main": {
-				"build":    "game.Main",
-				"debug":    false,
-				"sandbox":  false,
-				"packages": [ [ "game", "./lychee.pkg" ] ],
-				"tags":     { "platform": [ "html" ] },
-				"variant":  "application"
+				"build": "game.Main",
+				"debug": false,
+				"sandbox": false,
+				"packages": [
+					[
+						"game",
+						"./lychee.pkg"
+					]
+				],
+				"tags": {
+					"platform": [
+						"html"
+					]
+				},
+				"variant": "application"
 			}
-
 		},
-
-		"files": {
-
-		}
-
+		"files": {}
 	},
-
 	"source": {
-
-		"environments": {
-
-		},
-
-		"tags": {
-
-		},
-
+		"environments": {},
+		"tags": {},
 		"files": {
-
 			"entity": {
-				"Board":    [ "js", "json", "png" ],
-				"Tile":     [ "js", "json", "png" ],
-				"lycheeJS": [ "js", "png" ]
+				"Board": [
+					"js",
+					"json",
+					"png"
+				],
+				"Tile": [
+					"js",
+					"json",
+					"png"
+				],
+				"lycheeJS": [
+					"js",
+					"png"
+				]
 			},
-
 			"state": {
-				"Game": [ "js", "json", "msc", "snd" ],
-				"Menu": [ "js", "json" ]
+				"Game": [
+					"js",
+					"json",
+					"msc",
+					"snd"
+				],
+				"Menu": [
+					"js",
+					"json"
+				]
 			},
-
 			"ui": {
-				"Button": [ "js", "json", "png", "fnt" ],
-				"Layer":  [ "js", "json", "png", "fnt" ],
-				"Label":  [ "js", "fnt" ]
+				"Button": [
+					"js",
+					"json",
+					"png",
+					"fnt"
+				],
+				"Layer": [
+					"js",
+					"json",
+					"png",
+					"fnt"
+				],
+				"Label": [
+					"js",
+					"fnt"
+				]
 			},
-
-			"Main": [ "js" ]
-
+			"Main": [
+				"js"
+			],
+			"index": [
+				"js"
+			]
 		}
-
 	}
-
 }

@@ -6,8 +6,10 @@
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<link rel="stylesheet" href="../design/index.css">
-	<script src="../design/index.js"></script>
+
+	<!-- DESIGN -->
+	<link rel="stylesheet" href="/projects/cultivator/design/index.css">
+	<script src="/projects/cultivator/design/index.js"></script>
 
 	<!-- BOOTSTRAP -->
 	<script src="/lychee/build/html/core.js"></script>
@@ -69,7 +71,7 @@
 				</ul>
 			</div>
 			<p class="center">
-				<button tabindex="1" class="ico-boot" onclick="location.href='lycheejs://boot=' + ui.getValue('#status input');">Boot Sorbet</button>
+				<button tabindex="1" class="ico-boot" onclick="setTimeout(function() { MAIN.init(); }, 1000); location.href='lycheejs://boot=' + ui.getValue('#status input');">Boot Sorbet</button>
 			</p>
 		</article>
 
@@ -134,110 +136,6 @@ lychee.define('game.entity.Foo').exports(function(lychee, game, global, attachme
 <footer>
 	lycheeJS is (c) 2012-2015 by LazerUnicorns and released under MIT license.
 </footer>
-
-<script>
-(function(lychee, global) {
-
-	var environment = new lychee.Environment({
-		id:      'font',
-		debug:   false,
-		sandbox: false,
-		build:   'tool.Main',
-		packages: [
-			new lychee.Package('tool', './lychee.pkg')
-		],
-		tags:     {
-			platform: [ 'html' ]
-		}
-	});
-
-
-	lychee.setEnvironment(environment);
-
-	lychee.init(function(sandbox) {
-
-		var lychee = sandbox.lychee;
-		var tool   = sandbox.tool;
-
-
-		var bootup  = document.querySelector('#status-bootup');
-		var connect = document.querySelector('#status-connect');
-
-		if (bootup !== null && connect !== null) {
-			bootup.className  = 'hidden';
-			connect.className = '';
-		}
-
-
-		var config = new Config('http://localhost:4848/api/Project');
-
-		config.onload = function(result) {
-
-			if (result === true) {
-
-				bootup.className  = 'hidden';
-				connect.className = 'hidden';
-
-				sandbox.MAIN = new tool.Main();
-				sandbox.MAIN.init();
-
-			} else {
-
-				connect.className = 'hidden';
-				bootup.className    = '';
-
-			}
-
-		};
-
-
-		config.load();
-
-
-
-		/*
-		 * XXX: This is a Hack, but inavoidable
-		 */
-
-		(function(gui) {
-
-			if (gui !== null) {
-
-				var win = gui.Window.get();
-				if (win !== null) {
-
-					win.on('close', function() {
-
-						var unboot = window.confirm('Do you want to shutdown lycheeJS?\nClick Cancel to let lycheeJS still serve your projects.');
-						if (unboot === true) {
-							location.href = 'lycheejs://unboot';
-						}
-
-						this.close(true);
-
-					});
-
-				}
-
-			}
-
-		})((function() {
-
-			var gui = null;
-
-			try {
-				gui = require('nw.gui');
-			} catch(err) {
-				gui = null;
-			}
-
-			return gui;
-		
-		})());
-
-	});
-
-})(lychee, typeof global !== 'undefined' ? global : this);
-</script>
+<script src="./index.js"></script>
 </body>
 </html>    

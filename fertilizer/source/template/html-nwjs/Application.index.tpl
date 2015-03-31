@@ -12,8 +12,12 @@
 
 		lychee.init(function(sandbox) {
 
+console.log('INIT fired!');
+
 			var lychee = sandbox.lychee;
+			var app    = sandbox.app;
 			var game   = sandbox.game;
+			var tool   = sandbox.tool;
 
 			// This allows using #MAIN in JSON files
 			sandbox.MAIN = new {{build}}();

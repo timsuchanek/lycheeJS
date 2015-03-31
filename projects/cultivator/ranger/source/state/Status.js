@@ -11,7 +11,7 @@ lychee.define('tool.state.Status').includes([
 
 	var _ui_update = function() {
 
-		var config = new Config('/api/Project?timestamp=' + Date.now());
+		var config = new Config('http://localhost:4848/api/Project?timestamp=' + Date.now());
 		var that   = this;
 
 		config.onload = function(result) {

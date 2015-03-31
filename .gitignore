@@ -1,8 +1,10 @@
 
+/bin/ranger
 /bin/runtime
 
 /projects/*
 /projects/*/build
+/projects/cultivator/ranger/build
 /projects/*/lychee.store
 !/projects/README.md
 !/projects/boilerplate

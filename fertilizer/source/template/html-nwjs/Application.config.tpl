@@ -6,7 +6,7 @@
 	"window": {
 		"title":     "{{id}} (powered by lycheeJS)",
 		"icon":      "./icon.png",
-		"toolbar":   false,
+		"toolbar":   {{debug}},
 		"frame":     true,
 		"position":  "mouse",
 		"min_width":  1024,

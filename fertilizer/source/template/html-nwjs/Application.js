@@ -24,6 +24,10 @@ lychee.define('fertilizer.template.html-nwjs.Application').requires([
 
 		fertilizer.Template.call(this, env, fs, sh);
 
+		this.__config = _templates['config'].toString();
+		this.__index  = _templates['index'].toString();
+		this.__main   = _templates['main'].toString();
+
 
 
 		/*
@@ -31,6 +35,28 @@ lychee.define('fertilizer.template.html-nwjs.Application').requires([
 		 */
 
 		this.bind('configure', function(oncomplete) {
+
+			var fs = this.filesystem;
+			if (fs !== null) {
+
+				var tmp        = new fertilizer.data.Filesystem(fs.root + '/../../../source');
+				var has_config = tmp.info('/package.json');
+				var has_main   = tmp.info('/index.html');
+
+				if (has_config !== null) {
+
+					this.__config = tmp.read('/package.json').toString();
+
+				}
+
+				if (has_main !== null)   {
+
+					this.__main = tmp.read('/index.html').toString();
+					this.__main = this.replace(this.__main, '/lychee/build/html/core.js', './core.js');
+
+				}
+
+			}
 
 			oncomplete(true);
 
@@ -43,22 +69,24 @@ lychee.define('fertilizer.template.html-nwjs.Application').requires([
 
 			if (env !== null && fs !== null) {
 
+				var id      = env.id.split('/').pop(); id = id.charAt(0).toUpperCase() + id.substr(1);
 				var blob    = _JSON.encode(env.serialize());
 				var core    = this.getCore('html');
 				var info    = this.getInfo(true);
 				var version = ('' + lychee.VERSION).replace(/\./g, '').split('').join('.');
 				var icon    = _icon.buffer;
-				var config  = _templates['config'].toString();
-				var index   = _templates['index'].toString();
-				var main    = _templates['main'].toString();
+				var config  = this.__config;
+				var index   = this.__index;
+				var main    = this.__main;
 
 
 				index  = this.replace(index, '{{blob}}',  blob);
-				index  = this.replace(index, '{{id}}',    env.id);
+				index  = this.replace(index, '{{id}}',    id);
 				index  = this.replace(index, '{{info}}',  info);
 				index  = this.replace(index, '{{build}}', env.build);
 
-				config = this.replace(config, '{{id}}',      env.id);
+				config = this.replace(config, '{{id}}',      id);
+				config = this.replace(config, '{{debug}}',   env.debug === true ? 'true' : 'false');
 				config = this.replace(config, '{{version}}', version);
 
 				core   = this.getInfo(false) + '\n\n' + core;
@@ -87,7 +115,7 @@ lychee.define('fertilizer.template.html-nwjs.Application').requires([
 			var runtime_fs = new fertilizer.data.Filesystem('/bin/runtime/html-nwjs');
 			var runtime_sh = new fertilizer.data.Shell('/bin/runtime/html-nwjs');
 			var project_fs = this.filesystem;
-			var project_id = this.environment.id;
+			var project_id = this.environment.id.split('/').pop();
 
 			if (project_fs !== null) {
 

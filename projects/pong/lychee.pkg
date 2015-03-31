@@ -1,66 +1,95 @@
 {
-
 	"build": {
-
 		"environments": {
-
 			"html-nwjs/main": {
-				"build":    "game.Main",
-				"debug":    false,
-				"sandbox":  false,
-				"packages": [ [ "game", "./lychee.pkg" ] ],
-				"tags":     { "platform": [ "html-nwjs", "html" ] },
-				"variant":  "application"
+				"build": "game.Main",
+				"debug": false,
+				"sandbox": false,
+				"packages": [
+					[
+						"game",
+						"./lychee.pkg"
+					]
+				],
+				"tags": {
+					"platform": [
+						"html-nwjs",
+						"html"
+					]
+				},
+				"variant": "application"
 			},
-
 			"html/main": {
-				"build":    "game.Main",
-				"debug":    false,
-				"sandbox":  false,
-				"packages": [ [ "game", "./lychee.pkg" ] ],
-				"tags":     { "platform": [ "html" ] },
-				"variant":  "application"
+				"build": "game.Main",
+				"debug": false,
+				"sandbox": false,
+				"packages": [
+					[
+						"game",
+						"./lychee.pkg"
+					]
+				],
+				"tags": {
+					"platform": [
+						"html"
+					]
+				},
+				"variant": "application"
 			}
-
 		},
-
-		"files": {
-
-		}
-
+		"files": {}
 	},
-
 	"source": {
-
-		"environments": {
-
-		},
-
-		"tags": {
-
-		},
-
+		"environments": {},
+		"tags": {},
 		"files": {
-
 			"entity": {
-				"Background": [ "js", "json", "png" ],
-				"Ball":       [ "js", "json", "png" ],
-				"Paddle":     [ "js", "json", "enemy.png", "player.png" ],
-				"lycheeJS":   [ "js", "png" ]
+				"Background": [
+					"js",
+					"json",
+					"png"
+				],
+				"Ball": [
+					"js",
+					"json",
+					"png"
+				],
+				"Paddle": [
+					"js",
+					"json",
+					"enemy.png",
+					"player.png"
+				],
+				"lycheeJS": [
+					"js",
+					"png"
+				]
 			},
-
 			"state": {
-				"Game": [ "js", "json", "boo.snd", "cheer.snd", "music.msc", "ping.snd", "pong.snd", "headline.fnt", "normal.fnt" ]
+				"Game": [
+					"js",
+					"json",
+					"boo.snd",
+					"cheer.snd",
+					"music.msc",
+					"ping.snd",
+					"pong.snd",
+					"headline.fnt",
+					"normal.fnt"
+				]
 			},
-
 			"ui": {
-				"Welcome": [ "js", "png" ]
+				"Welcome": [
+					"js",
+					"png"
+				]
 			},
-
-			"Main": [ "js" ]
-
+			"Main": [
+				"js"
+			],
+			"index": [
+				"js"
+			]
 		}
-
 	}
-
 }
