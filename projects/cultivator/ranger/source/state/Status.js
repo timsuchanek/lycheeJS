@@ -90,7 +90,7 @@ lychee.define('tool.state.Status').includes([
 						code += '<td>' + identifier + '</td>';
 						code += '<td><label class="ico-online">Online</label></td>';
 						code += '<td>' + host_projects.join(', ') + '</td>';
-						code += '<td><button class="ico-browser ico-only" onclick="window.open(\'http://' + identifier + ':' + port + '\')"></button></td>';
+						code += '<td><a class="button ico-browser ico-only" href="lycheejs://web=http://' + identifier + ':' + port + '"></a></td>';
 						code += '</tr>';
 
 					});
@@ -133,7 +133,7 @@ lychee.define('tool.state.Status').includes([
 						if (project.server === null) {
 
 							if (project.sorbet === true) {
-								project_actions.push('<button class="ico-start ico-only" onclick="helper.start(\'' + project.identifier + '\')"></button>');
+								project_actions.push('<a class="button ico-start ico-only" href="lycheejs://start=' + project.identifier + '"></a>');
 								project_status = '<label class="ico-offline">Offline</label>';
 							} else {
 								project_actions.push('<button class="ico-start ico-only" disabled></button>');
@@ -141,13 +141,13 @@ lychee.define('tool.state.Status').includes([
 							}
 
 						} else {
-							project_actions.push('<button class="ico-stop ico-only" onclick="helper.stop(\'' + project.identifier + '\')"></button>');
+							project_actions.push('<a class="button ico-stop ico-only" href="lycheejs://stop=' + project.identifier + '"></a>');
 							project_status = '<label class="ico-online">Online</label>';
 						}
 
 
 						if (project.filesystem !== null) {
-							project_actions.push('<button class="ico-folder ico-only" onclick="helper.file(\'' + project.filesystem + '\')"></button>');
+							project_actions.push('<a class="button ico-folder ico-only" href="lycheejs://file=' + project.filesystem + '"></a>');
 						}
 
 
@@ -156,9 +156,9 @@ lychee.define('tool.state.Status').includes([
 							project_hosts.forEach(function(host) {
 
 								if (sorbet !== null && sorbet.details[host] === null) {
-									project_actions.push('<button class="ico-browser ico-only" onclick="helper.web(\'' + host + ':' + port + '/projects/' + project.identifier + '\')"></button>');
+									project_actions.push('<a class="button ico-browser ico-only" href="lycheejs://web=' + host + ':' + port + '/projects/' + project.identifier + '"></a>');
 								} else {
-									project_actions.push('<button class="ico-browser ico-only" onclick="helper.web(\'' + host + ':' + port + '\')"></button>');
+									project_actions.push('<a class="button ico-browser ico-only" href="lycheejs://web=' + host + ':' + port + '"></a>');
 								}
 
 							});
@@ -183,10 +183,6 @@ lychee.define('tool.state.Status').includes([
 				ui.render(code);
 
 			}
-
-		} else {
-
-console.log('render reload icon');
 
 		}
 

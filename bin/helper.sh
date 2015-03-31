@@ -29,44 +29,62 @@ fi;
 
 
 
+_put_API_Projects () {
+
+	action="$1";
+	identifier="$2";
+	apiurl="http://localhost:4848/api/Project?identifier=$identifier&action=$action";
+
+	curl -i -X PUT $apiurl 2>&1;
+
+}
+
+
+
 url=$1;
 protocol=${url:0:8};
 
 if [ "$protocol" == "lycheejs" ]; then
 
-	tmp0=${url:11:5};
-	tmp1=${url:11:4};
-	tmp2=${url:11:3};
-
-	application="";
+	action="";
 	resource="";
 
-	if [ "$tmp0" == "start" ]; then
-		application="start";
+	if [ "${url:11:4}" == "boot" ]; then
+		action="boot";
 		resource=${url#*=};
 	fi;
 
-	if [ "$tmp1" == "stop" ]; then
-		application="stop";
+	if [ "${url:11:6}" == "unboot" ]; then
+		action="unboot";
+		resource="...";
+	fi;
+
+	if [ "${url:11:5}" == "start" ]; then
+		action="start";
 		resource=${url#*=};
 	fi;
 
-	if [ "$tmp1" == "file" ]; then
-		application="file";
+	if [ "${url:11:4}" == "stop" ]; then
+		action="stop";
 		resource=${url#*=};
 	fi;
 
-	if [ "$tmp2" == "web" ]; then
-		application="web";
+	if [ "${url:11:4}" == "file" ]; then
+		action="file";
+		resource=${url#*=};
+	fi;
+
+	if [ "${url:11:3}" == "web" ]; then
+		action="web";
 		resource=${url#*=};
 	fi;
 
 
-	if [ "$application" != "" -a "$resource" != "" ]; then
+	if [ "$action" != "" -a "$resource" != "" ]; then
 
-		case "$application" in
+		case "$action" in
 
-			start)
+			boot)
 
 				cd $LYCHEEJS_ROOT;
 
@@ -75,11 +93,23 @@ if [ "$protocol" == "lycheejs" ]; then
 
 			;;
 
-			stop)
+			unboot)
 
 				cd $LYCHEEJS_ROOT;
 
 				$LYCHEEJS_IOJS ./bin/sorbet.js stop;
+
+			;;
+
+			start)
+
+				_put_API_Projects "start" "$resource";
+
+			;;
+
+			stop)
+
+				_put_API_Projects "stop" "$resource";
 
 			;;
 
@@ -118,8 +148,8 @@ if [ "$protocol" == "lycheejs" ]; then
 
 				elif [ "$OS" == "windows" ]; then
 
-					# TODO: Figure out how to spawn correct Browser from Powershell
-					exit 1;
+					start "$resource" 2>&1;
+					exit 0;
 
 				fi;
 

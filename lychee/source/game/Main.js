@@ -328,47 +328,57 @@ lychee.define('lychee.game.Main').requires([
 
 		init: function() {
 
-			var promise    = new lychee.event.Promise();
 			var client_api = this.settings.client;
 			var server_api = this.settings.server;
 
 
-			if (typeof client_api === 'string') {
+			if (typeof client_api === 'string' || typeof server_api === 'string') {
 
-				promise.then(null, function(data, oncomplete) {
+				var promise = new lychee.event.Promise();
 
-					_load_api(client_api, function(settings) {
-						this.settings.client = lychee.extend({}, settings);
-						oncomplete(null);
+
+				if (typeof client_api === 'string') {
+
+					promise.then(null, function(data, oncomplete) {
+
+						_load_api(client_api, function(settings) {
+							this.settings.client = lychee.extend({}, settings);
+							oncomplete(null);
+						}, this);
+
 					}, this);
 
-				}, this);
+				}
 
-			}
+				if (typeof server_api === 'string') {
 
-			if (typeof server_api === 'string') {
+					promise.then(null, function(data, result) {
 
-				promise.then(null, function(data, result) {
+						_load_api(server_api, function(settings) {
+							this.settings.server = lychee.extend({}, settings);
+							oncomplete(null);
+						}, this);
 
-					_load_api(server_api, function(settings) {
-						this.settings.server = lychee.extend({}, settings);
-						oncomplete(null);
 					}, this);
 
-				}, this);
+				}
+
+
+				promise.bind('complete', function() {
+					_initialize.call(this);
+				}, this, true);
+
+				promise.bind('error', function() {
+					_initialize.call(this);
+				}, this, true);
+
+				promise.init();
+
+			} else {
+
+				_initialize.call(this);
 
 			}
-
-
-			promise.bind('complete', function() {
-				_initialize.call(this);
-			}, this, true);
-
-			promise.bind('error', function() {
-				_initialize.call(this);
-			}, this, true);
-
-			promise.init();
 
 		},
 

@@ -61,28 +61,29 @@ label.ico-only:before {
 
 
 
-.ico-boot:before     { content: "\e05c"; }
-.ico-browser:before  { content: "\e037"; }
-.ico-console:before  { content: "\e011"; }
-.ico-download:before { content: "\e083"; }
-.ico-editor:before   { content: "\e00c"; }
-.ico-error:before    { content: "\e082"; }
-.ico-exit:before     { content: "\e097"; }
-.ico-folder:before   { content: "\e039"; }
-.ico-help:before     { content: "\e08b"; }
-.ico-intro:before    { content: "\e020"; }
-.ico-message:before  { content: "\e086"; }
-.ico-offline:before  { content: "\e082"; }
-.ico-okay:before     { content: "\e080"; }
-.ico-online:before   { content: "\e071"; }
-.ico-projects:before { content: "\e04b"; }
-.ico-refresh:before  { content: "\e098"; }
-.ico-settings:before { content: "\e09a"; }
-.ico-status:before   { content: "\e06a"; }
-.ico-start:before    { content: "\e071"; }
-.ico-stop:before     { content: "\e072"; }
-.ico-tools:before    { content: "\e059"; }
-.ico-upload:before   { content: "\e084"; }
+.ico-boot:before        { content: "\e05c"; }
+.ico-browser:before     { content: "\e037"; }
+.ico-connections:before { content: "\e059"; }
+.ico-console:before     { content: "\e011"; }
+.ico-download:before    { content: "\e083"; }
+.ico-editor:before      { content: "\e00c"; }
+.ico-error:before       { content: "\e082"; }
+.ico-exit:before        { content: "\e097"; }
+.ico-folder:before      { content: "\e039"; }
+.ico-help:before        { content: "\e08b"; }
+.ico-intro:before       { content: "\e020"; }
+.ico-message:before     { content: "\e086"; }
+.ico-offline:before     { content: "\e082"; }
+.ico-okay:before        { content: "\e080"; }
+.ico-online:before      { content: "\e071"; }
+.ico-projects:before    { content: "\e04b"; }
+.ico-refresh:before     { content: "\e098"; }
+.ico-settings:before    { content: "\e09a"; }
+.ico-status:before      { content: "\e06a"; }
+.ico-start:before       { content: "\e071"; }
+.ico-stop:before        { content: "\e072"; }
+.ico-tools:before       { content: "\e059"; }
+.ico-upload:before      { content: "\e084"; }
 
 #menu-toggle {
 	display: none;
