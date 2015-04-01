@@ -1,14 +1,19 @@
 
 lychee.define('sorbet.serve.API').requires([
 	'lychee.data.JSON',
+	'sorbet.serve.api.Profile',
 	'sorbet.serve.api.Project',
 	'sorbet.serve.api.Server'
 ]).exports(function(lychee, sorbet, global, attachments) {
 
 	var _JSON = lychee.data.JSON;
 
-	var _API  = {
-		'Project': sorbet.serve.api.Project,
+	var _ADMIN  = {
+		'Profile': sorbet.serve.api.Profile,
+		'Project': sorbet.serve.api.Project
+	};
+
+	var _PUBLIC = {
 		'Server':  sorbet.serve.api.Server
 	};
 
@@ -28,10 +33,16 @@ lychee.define('sorbet.serve.API').requires([
 
 		process: function(host, url, data, ready) {
 
-			var api = url.split('/').pop().split('?')[0];
-			if (_API[api] !== undefined) {
+			var api  = url.split('/').pop().split('?')[0];
+			var name = (data.headers['Host'] || '');
 
-				_API[api].process(host, url, data, ready);
+			if (name === 'localhost:4848' && _ADMIN[api] !== undefined) {
+
+				_ADMIN[api].process(host, url, data, ready);
+
+			} else if (_PUBLIC[api] !== undefined) {
+
+				_PUBLIC[api].process(host, url, data, ready);
 
 			} else {
 

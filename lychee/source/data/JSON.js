@@ -274,6 +274,7 @@ lychee.define('lychee.data.JSON').exports(function(lychee, global) {
 					value = '';
 				}
 
+
 				check = stream.readRAW(1);
 
 
@@ -340,12 +341,18 @@ lychee.define('lychee.data.JSON').exports(function(lychee, global) {
 				while (errors === 0) {
 
 					var object_key = _decode(stream);
-					stream.readRAW(1);
+					check = stream.readRAW(1);
+
+					if (check !== ':') {
+						errors++;
+					}
 
 					var object_value = _decode(stream);
 					check = stream.seekRAW(1);
 
+
 					value[object_key] = object_value;
+
 
 					if (check === ',') {
 						stream.readRAW(1);
@@ -372,6 +379,13 @@ lychee.define('lychee.data.JSON').exports(function(lychee, global) {
 				if (check !== '%') {
 					value = undefined;
 				}
+
+			} else {
+
+				// Invalid seek, assume it's a space character
+
+				stream.readRAW(1);
+				return _decode(stream);
 
 			}
 

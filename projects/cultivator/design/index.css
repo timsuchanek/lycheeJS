@@ -532,6 +532,61 @@ button[disabled]:focus {
 	cursor: pointer;
 }
 
+
+
+fieldset {
+	display: inline-block;
+	margin: 0px;
+	padding: 0px;
+	border: 1px solid #545857;
+	border-radius: 3px;
+}
+ 
+fieldset input[type="text"],
+fieldset input[type="number"] {
+	display: block;
+	padding: 8px 16px;
+	font-size: 18px;
+	border: none;
+	border-bottom: 1px solid #5d6161;
+	border-radius: none;
+}
+
+fieldset input:last-child {
+	border-bottom: none;
+}
+
+
+
+input[type="color"] {
+	padding: 0px;
+	border: 1px solid #efefef;
+	background: transparent;
+	outline: none;
+	cursor: pointer;
+	-moz-appearance: none;
+	-ms-appearance: none;
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+input[type="color"]:hover,
+input[type="color"]:focus {
+	-moz-animation: pulse 3000ms infinite;
+	-webkit-animation: pulse 3000ms infinite;
+	animation: pulse 3000ms infinite;
+}
+
+input[type="color"]::-webkit-color-swatch-wrapper {
+	padding: 0px;
+}
+
+input[type="color"]::-webkit-color-swatch {
+	border: 0px solid transparent;
+}
+
+
+
 /* label will disallow browser-based appearance of input */
 label.file {
 	display: inline-block;
@@ -630,24 +685,6 @@ input[type="number"]::-ms-input-placeholder {
 	text-align: left;
 }
 
-.input-group input {
-	font-size: 18px;
-	padding: 8px 16px;
-	border-radius: none;
-	border: none;
-	border-bottom: 1px solid #474f4f;
-	display: block;
-}
-
-.input-group input:last-child {
-	border-bottom: none;
-}
-
-.input-group {
-	display: inline-block;
-	border: 1px solid #808080;
-	border-radius: 3px;
-}
 
 
 input[type="radio"] {
@@ -690,11 +727,9 @@ input[type="radio"]:hover {
 input[type="range"] {
 	margin: 14px 0px;
 	padding: 0px;
-	width: 126px;
-	height: 2px;
-	border: 1px solid #b3b3b3;
-	border-radius: 4px;
-	background: #b3b3b3;
+	width: 128px;
+	height: 1px;
+	background: #efefef;
 	-moz-transition: all 250ms ease-out;
 	-ms-transition: all 250ms ease-out;
 	-webkit-transition: all 250ms ease-out;
@@ -732,6 +767,7 @@ input[type="range"]:after {
 
 input[type="range"]:hover,
 input[type="range"]:focus {
+	background: #32afe5;
 	-moz-animation: pulse 3000ms infinite;
 	-webkit-animation: pulse 3000ms infinite;
 	animation: pulse 3000ms infinite;
@@ -743,14 +779,26 @@ input[type="range"]::-moz-range-thumb {
 	margin: 0px;
 	padding: 0px;
 	background: #363f3e;
-	border: 3px solid #b3b3b3;
+	border: 1px solid #efefef;
 	border-radius: 32px;
 	-moz-transition: all 250ms ease-out;
-	transition: all 250ms ease-out;
+	-moz-appearance: none;
 	outline: none;
 	cursor: move;
-	-moz-appearance: none;
-	box-shadow: 0 0 0 3px #363f3e;
+}
+
+input[type="range"]::-ms-thumb {
+	width: 20px;
+	height: 20px;
+	margin: 0px;
+	padding: 0px;
+	background: #363f3e;
+	border: 1px solid #efefef;
+	border-radius: 32px;
+	-ms-transition: all 250ms ease-out;
+	-ms-appearance: none;
+	outline: none;
+	cursor: move;
 }
 
 input[type="range"]::-webkit-slider-thumb {
@@ -759,32 +807,33 @@ input[type="range"]::-webkit-slider-thumb {
 	margin: 0px;
 	padding: 0px;
 	background: #363f3e;
-	border: 3px solid #b3b3b3;
+	border: 1px solid #efefef;
 	border-radius: 32px;
 	-webkit-transition: all 250ms ease-out;
-	transition: all 250ms ease-out;
+	-webkit-appearance: none;
 	outline: none;
 	cursor: move;
-	-webkit-appearance: none;
-	box-shadow: 0 0 0 3px #363f3e;
 }
 
 input[type="range"]:hover::-moz-range-thumb,
 input[type="range"]:focus::-moz-range-thumb {
-	border: 3px solid #32afe5;
-	box-shadow: #32afe5 0 0 20px, 0 0 0 3px #363f3e;
+	border: 1px solid #32afe5;
+	background: #32afe5;
+	box-shadow: #32afe5 0 0 20px;
 }
 
 input[type="range"]:hover::-ms-thumb,
 input[type="range"]:focus::-ms-thumb {
-	border: 3px solid #32afe5;
-	box-shadow: #32afe5 0 0 20px, 0 0 0 3px #363f3e;
+	border: 1px solid #32afe5;
+	background: #32afe5;
+	box-shadow: #32afe5 0 0 20px;
 }
 
 input[type="range"]:hover::-webkit-slider-thumb,
 input[type="range"]:focus::-webkit-slider-thumb {
-	border: 3px solid #32afe5;
-	box-shadow: #32afe5 0 0 20px, 0 0 0 3px #363f3e;
+	border: 1px solid #32afe5;
+	background: #32afe5;
+	box-shadow: #32afe5 0 0 20px;
 }
 
 
@@ -892,15 +941,9 @@ table.vertical td {
 	text-align: center;
 }
 
-table.vertical tr:first-child th,
-table.vertical tr:first-child td {
-	border-bottom: 1px solid #404948;
-}
-
-
 table.vertical tr:last-child th,
 table.vertical tr:last-child td {
-	border-bottom: 1px solid #404948;
+	border-bottom: 2px solid #404948;
 }
 
 

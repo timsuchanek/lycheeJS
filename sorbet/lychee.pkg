@@ -55,6 +55,7 @@
 			"serve": {
 
 				"api": {
+					"Profile": [ "js" ],
 					"Project": [ "js" ],
 					"Server":  [ "js" ]
 				},

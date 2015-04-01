@@ -73,6 +73,8 @@ if [ ! -d "./bin/ranger" ]; then
 
 	cd $LYCHEEJS_ROOT;
 	mkdir ./bin/ranger;
+	cp ./asset/logo_desktop.png ./bin/ranger/icon.png;
+
 	mv ./projects/cultivator/ranger/build/html-nwjs/main-linux ./bin/ranger/linux;
 	mv ./projects/cultivator/ranger/build/html-nwjs/main-osx ./bin/ranger/osx;
 	mv ./projects/cultivator/ranger/build/html-nwjs/main-windows ./bin/ranger/windows;
