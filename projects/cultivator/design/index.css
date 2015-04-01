@@ -61,6 +61,7 @@ label.ico-only:before {
 
 
 
+.ico-add:before         { content: "\e095"; }
 .ico-boot:before        { content: "\e05c"; }
 .ico-browser:before     { content: "\e037"; }
 .ico-connections:before { content: "\e059"; }
@@ -69,6 +70,7 @@ label.ico-only:before {
 .ico-editor:before      { content: "\e00c"; }
 .ico-error:before       { content: "\e082"; }
 .ico-exit:before        { content: "\e097"; }
+.ico-fail:before        { content: "\e082"; }
 .ico-folder:before      { content: "\e039"; }
 .ico-help:before        { content: "\e08b"; }
 .ico-intro:before       { content: "\e020"; }
@@ -78,6 +80,7 @@ label.ico-only:before {
 .ico-online:before      { content: "\e071"; }
 .ico-projects:before    { content: "\e04b"; }
 .ico-refresh:before     { content: "\e098"; }
+.ico-remove:before      { content: "\e07c"; }
 .ico-settings:before    { content: "\e09a"; }
 .ico-status:before      { content: "\e06a"; }
 .ico-start:before       { content: "\e071"; }
@@ -472,15 +475,17 @@ a.button,
 button {
 	display: inline-block;
 	width: auto;
-	height: 32px;
-	line-height: 32px;
-	padding: 0px 8px;
+	height: 30px;
+	box-sizing: content-box;
+	line-height: 30px;
+	padding: 0px 7px;
 	font-size: 14px;
 	color: #f2f2f2;
 	background: #545857;
 	border: 1px solid #5d6161;
 	border-radius: 2px;
 	font-family: 'museo-sans-300';
+	font-size: 16px;
 	font-weight: normal;
 	text-align: center;
 	text-transform: uppercase;
@@ -498,7 +503,7 @@ button {
 
 a.button:not(.ico-only),
 button:not(.ico-only) {
-	min-width: 110px;
+	min-width: 112px;
 }
 
 a.button:hover,
@@ -877,6 +882,19 @@ input[type="text"]:focus {
 
 
 
+input[disabled],
+input[disabled]:hover,
+input[disabled]:focus {
+	color: #5d6161;
+	border: 1px solid #5d6161;
+	-moz-animation: none;
+	-ms-animation: none;
+	-webkit-animation: none;
+	cursor: not-allowed;
+}
+
+
+
 label {
 	text-transform: uppercase;
 }
@@ -909,6 +927,13 @@ table tr {
 
 table tr.div {
 	height: 32px;
+}
+
+table tr.menu th,
+table tr.menu td {
+	border-top: 2px solid #404948;
+	border-bottom: 2px solid #404948;
+	background: #2f3736;
 }
 
 table td {

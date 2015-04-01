@@ -35,7 +35,8 @@
 
 			"state": {
 
-				"Status": [ "js" ]
+				"Profiles": [ "js" ],
+				"Status":   [ "js" ]
 
 			},
 

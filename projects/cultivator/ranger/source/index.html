@@ -31,15 +31,24 @@
 		text-shadow: #32afe5 0 0 10px, #32afe5 0 0 20px, #32afe5 0 0 40px;
 		-webkit-animation: textpulse 2000ms infinite;
 	}
+	#profiles div.wizard ul.select {
+		width: auto;
+		margin: 0px 16px;
+	}
+	#profiles article.superwide {
+		min-width: 768px;
+	}
+	#profiles table label.ico-okay {
+		color: #32afe5;
+		text-shadow: #32afe5 0 0 10px, #32afe5 0 0 20px, #32afe5 0 0 40px;
+	}
 	</style>
 </head>
 <body>
 <menu>
 	<b id="menu-toggle"></b>
 	<li class="ico-status active" onclick="ui.changeState('status');">Status</li>
-	<li class="ico-connections" onclick="ui.changeState('connections');">Connections</li>
-	<li class="ico-console" onclick="ui.changeState('console');">Console</li>
-	<li class="ico-settings" onclick="ui.changeState('settings');">Settings</li>
+	<li class="ico-settings" onclick="ui.changeState('profiles');">Profiles</li>
 	<li class="ico-help" onclick="ui.changeState('help');">Help</li>
 </menu>
 <aside>
@@ -59,8 +68,7 @@
 		<article id="status-bootup" class="hidden">
 			<h3>Boot lycheeJS</h3>
 			<p>
-				Select a Profile to boot lycheeJS sorbet.<br>
-				<br>
+				Select a Profile to boot lycheeJS Sorbet.<br>
 				If you have no clue, select <q>development</q>.
 			</p>
 			<div>
@@ -79,16 +87,76 @@
 
 </section>
 
-<section id="connections">
-	Connections View (coming soon...)
-</section>
+<section id="profiles">
 
-<section id="console">
-	Console View (coming soon...)
-</section>
+	<div class="wizard">
 
-<section id="settings">
-	Settings View (coming soon...)
+		<article id="profiles-select">
+			<h3><b>1</b>Select Profile</h3>
+			<p>
+				Select a Profile to modify.
+				Reboot when you are done.
+			</p>
+			<div>
+				<ul class="select">
+					<li><input tabindex="1" name="profiles-profile" type="radio" value="development" checked><span>development</span></li>
+					<li><input tabindex="1" name="profiles-profile" type="radio" value="production"><span>production</span></li>
+					<li><input tabindex="1" name="profiles-profile" type="radio" value="lycheejs.org"><span>lycheejs.org</span></li>
+				</ul>
+			</div>
+			<br>
+			<p class="center">
+				<button tabindex="1" class="ico-boot" onclick="setTimeout(function() { MAIN.init(); }, 1000); location.href='lycheejs://boot=' + ui.getValue('#profiles-select input');">Reboot Sorbet</button>
+			</p>
+		</article>
+
+		<article class="superwide">
+			<h3><b>2</b>Modify Profile</h3>
+			<div>
+				<table>
+					<tr>
+						<th>Admin Port</th>
+						<th>Server Port</th>
+						<td colspan="2"></td>
+					</tr>
+					<tr>
+						<td><input type="number" value="4848" disabled></td>
+						<td><input type="number" value="8080"></td>
+						<td colspan="2"></td>
+					</tr>
+
+					<tr>
+						<th>Host</th>
+						<th>Project</th>
+						<th>Status</th>
+						<th>Actions</th>
+					</tr>
+					<tr>
+						<td><input type="text" value="lycheejs.org"></td>
+						<td><input type="text" value="lycheeJS-website"></td>
+						<td><label class="ico-fail" disabled>Fail</label></td>
+						<td><button class="ico-remove ico-only"></button></td>
+					</tr>
+					<tr>
+						<td><input type="text" value="localhost"></td>
+						<td><input type="text" value="*"></td>
+						<td><label class="ico-okay" disabled>Okay</label></td>
+						<td><button class="ico-remove ico-only"></button></td>
+					</tr>
+					<tr class="div"></tr>
+					<tr class="div"></tr>
+					<tr class="menu">
+						<td><input type="text" value="" placeholder="Hostname"></td>
+						<td><input type="text" value="" placeholder="Project"></td>
+						<td></td>
+						<td><button class="ico-add ico-only"></button></td>
+					</tr>
+				</table>
+			</div>
+		</article>
+
+	</div>
+
 </section>
 
 <section id="help">

@@ -1,6 +1,7 @@
 
 lychee.define('tool.Main').requires([
 	'lychee.data.JSON',
+	'tool.state.Profiles',
 	'tool.state.Status'
 ]).includes([
 	'lychee.game.Main'
@@ -92,10 +93,8 @@ lychee.define('tool.Main').requires([
 
 		this.bind('init', function() {
 
+			this.setState('profiles', new tool.state.Profiles(this));
 			this.setState('status',   new tool.state.Status(this));
-			// this.setState('console',  new tool.state.Console(this));
-			// this.setState('settings', new tool.state.Settings(this));
-			// this.setState('help',     new tool.state.Help(this));
 
 			this.changeState('status');
 
