@@ -78,10 +78,6 @@ lychee.define('tool.Main').requires([
 		 * INITIALIZATION
 		 */
 
-		this.bind('load', function() {
-
-		}, this, true);
-
 		this.bind('init', function() {
 
 			var onsubmit = document.querySelector('form').onsubmit;
@@ -90,7 +86,6 @@ lychee.define('tool.Main').requires([
 			}
 
 		}, this, true);
-
 
 		this.bind('submit', function(id, settings) {
 

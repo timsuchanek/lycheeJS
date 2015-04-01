@@ -50,10 +50,12 @@ lychee.define('game.Main').requires([
 		 * INITIALIZATION
 		 */
 
-		this.bind('load', function() {
+		this.bind('load', function(oncomplete) {
 
 			this.settings.gameclient = this.settings.client;
 			this.settings.client     = null;
+
+			oncomplete(true);
 
 		}, this, true);
 

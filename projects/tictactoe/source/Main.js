@@ -48,8 +48,8 @@ lychee.define('game.Main').requires([
 		 * INITIALIZATION
 		 */
 
-		this.bind('load', function() {
-
+		this.bind('load', function(oncomplete) {
+			oncomplete(true);
 		}, this, true);
 
 		this.bind('init', function() {

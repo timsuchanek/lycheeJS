@@ -98,10 +98,6 @@ lychee.define('tool.Main').requires([
 		 * INITIALIZATION
 		 */
 
-		this.bind('init', function() {
-
-		}, this, true);
-
 		this.bind('submit', function(id, settings) {
 
 			if (id === 'settings') {

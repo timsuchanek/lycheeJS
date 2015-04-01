@@ -4,7 +4,7 @@ lychee.define('lychee.game.Main').requires([
 	'lychee.Renderer',
 	'lychee.Storage',
 	'lychee.Viewport',
-	'lychee.event.Promise',
+	'lychee.event.Flow',
 	'lychee.game.Jukebox',
 	'lychee.game.Loop',
 	'lychee.game.State',
@@ -48,9 +48,6 @@ lychee.define('lychee.game.Main').requires([
 	};
 
 	var _initialize = function() {
-
-		this.trigger('load', []);
-
 
 		var settings = this.settings;
 
@@ -98,9 +95,6 @@ lychee.define('lychee.game.Main').requires([
 			this.viewport.setFullscreen(settings.viewport.fullscreen);
 
 		}
-
-
-		this.trigger('init', []);
 
 
 		if (this.loop !== null && this.viewport !== null) {
@@ -328,57 +322,82 @@ lychee.define('lychee.game.Main').requires([
 
 		init: function() {
 
+			var flow       = new lychee.event.Flow();
 			var client_api = this.settings.client;
 			var server_api = this.settings.server;
 
 
-			if (typeof client_api === 'string' || typeof server_api === 'string') {
+			flow.then('load-api');
+			flow.then('load');
+			flow.then('init');
 
-				var promise = new lychee.event.Promise();
+
+			flow.bind('load-api', function(oncomplete) {
+
+				var c = typeof client_api === 'string';
+				var s = typeof server_api === 'string';
 
 
-				if (typeof client_api === 'string') {
+				if (c === true && s === true) {
 
-					promise.then(null, function(data, oncomplete) {
+					_load_api(client_api, function(settings) {
 
-						_load_api(client_api, function(settings) {
-							this.settings.client = lychee.extend({}, settings);
-							oncomplete(null);
-						}, this);
-
-					}, this);
-
-				}
-
-				if (typeof server_api === 'string') {
-
-					promise.then(null, function(data, result) {
+						this.settings.client = lychee.extend({}, settings);
 
 						_load_api(server_api, function(settings) {
 							this.settings.server = lychee.extend({}, settings);
-							oncomplete(null);
+							oncomplete(true);
 						}, this);
 
 					}, this);
 
+				} else if (c === true) {
+
+					_load_api(client_api, function(settings) {
+						this.settings.client = lychee.extend({}, settings);
+						oncomplete(true);
+					}, this);
+
+				} else if (s === true) {
+
+					_load_api(server_api, function(settings) {
+						this.settings.server = lychee.extend({}, settings);
+						oncomplete(true);
+					}, this);
+
+				} else {
+
+					oncomplete(true);
+
 				}
 
+			}, this);
 
-				promise.bind('complete', function() {
-					_initialize.call(this);
-				}, this, true);
+			flow.bind('load', function(oncomplete) {
 
-				promise.bind('error', function() {
-					_initialize.call(this);
-				}, this, true);
+				var result = this.trigger('load', [ oncomplete ]);
+				if (result === false) {
+					oncomplete(true);
+				}
 
-				promise.init();
+			}, this);
 
-			} else {
+			flow.bind('init', function(oncomplete) {
 
 				_initialize.call(this);
+				oncomplete(true);
 
-			}
+			}, this);
+
+			flow.bind('complete', function() {
+				this.trigger('init', []);
+			}, this);
+
+			flow.bind('error', function() {
+				_initialize.call(this);
+			}, this);
+
+			flow.init();
 
 		},
 
