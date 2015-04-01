@@ -12,7 +12,7 @@ lychee.define('tool.Main').requires([
 	var _JSON = lychee.data.JSON;
 
 	/*
-	 * XXX: This is a Hack, but inavoidable
+	 * HACKS
 	 */
 
 	(function(gui) {
@@ -52,7 +52,6 @@ lychee.define('tool.Main').requires([
 	})());
 
 
-
 	(function(global) {
 
 		if (typeof global.addEventListener !== 'undefined') {
@@ -62,10 +61,14 @@ lychee.define('tool.Main').requires([
 				var target = event.target;
 				if (target.tagName === 'A' && target.href.match(/lycheejs:\/\//g)) {
 
-					var main = global.MAIN || null;
-					if (main !== null) {
-						main.loop.trigger('update', []);
-					}
+					setTimeout(function() {
+
+						var main = global.MAIN || null;
+						if (main !== null) {
+							main.loop.trigger('update', []);
+						}
+
+					}, 200);
 
 				}
 
