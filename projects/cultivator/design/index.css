@@ -1067,8 +1067,33 @@ footer {
 
 
 
-/* Media Queries */
-@media (max-width: 678px) {
+/*
+ * MEDIA QUERIES
+ */
+
+@media (max-width: 1024px) {
+
+	div.main {
+		display: block;
+	}
+
+	div.main > article,
+	div.main > article.superwide,
+	div.main > article:nth-child(1),
+	div.main > article:nth-child(2),
+	div.main > article:nth-child(3) {
+		display: block;
+		margin: 16px;
+		min-width: initial;
+		max-width: none;
+		overflow: auto;
+	}
+
+}
+
+
+
+@media (max-width: 700px) {
 
 	menu {
 		position: fixed;
@@ -1116,24 +1141,6 @@ footer {
 		-ms-transform: rotate(90deg);
 		-webkit-transform: rotate(90deg);
 		transform: rotate(90deg);
-	}
-
-	div.main {
-		display: block;
-	}
-
-	div.main > article,
-	div.main > article.superwide,
-	div.main > article:nth-child(1),
-	div.main > article:nth-child(2),
-	div.main > article:nth-child(3) {
-
-		display: block;
-		margin: 16px;
-		min-width: initial;
-		max-width: none;
-		overflow: auto;
-
 	}
 
 }
