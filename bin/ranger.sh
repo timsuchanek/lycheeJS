@@ -59,8 +59,14 @@ if [ ! -d "./bin/ranger" ]; then
 	# 2. Inject design from cultivator project
 
 	cp -R ./projects/cultivator/design ./projects/cultivator/ranger/build/html-nwjs/main/design;
-	sed -i.bak 's/\/projects\/cultivator\/design/.\/design/g' ./projects/cultivator/ranger/build/html-nwjs/main/index.html;
-	rm ./projects/cultivator/ranger/build/html-nwjs/main/index.html.bak;
+
+	# Well, fuck you, Apple.
+	if [ "$OS" == "osx" ]; then
+		sed -i '' 's/\/projects\/cultivator\/design/.\/design/g' ./projects/cultivator/ranger/build/html-nwjs/main/index.html;
+	else
+		sed -i.bak 's/\/projects\/cultivator\/design/.\/design/g' ./projects/cultivator/ranger/build/html-nwjs/main/index.html;
+		rm ./projects/cultivator/ranger/build/html-nwjs/main/index.html.bak;
+	fi;
 
 
 	# 3. Re-package builds
