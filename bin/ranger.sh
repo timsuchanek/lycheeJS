@@ -60,6 +60,7 @@ if [ ! -d "./bin/ranger" ]; then
 
 	cp -R ./projects/cultivator/design ./projects/cultivator/ranger/build/html-nwjs/main/design;
 
+
 	# Well, fuck you, Apple.
 	if [ "$OS" == "osx" ]; then
 		sed -i '' 's/\/projects\/cultivator\/design/.\/design/g' ./projects/cultivator/ranger/build/html-nwjs/main/index.html;
