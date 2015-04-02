@@ -8,9 +8,7 @@
 		"icon":      "./icon.png",
 		"toolbar":   {{debug}},
 		"frame":     true,
-		"position":  "mouse",
-		"min_width":  1024,
-		"min_height": 768
+		"position":  "mouse"
 	},
 	"webkit": {
 		"plugin": false
