@@ -638,6 +638,19 @@ ui = (function(global) {
 
 		},
 
+		add: function(node, code) {
+
+		},
+
+		remove: function(node) {
+
+			var parent = node.parentNode || null;
+			if (parent !== null) {
+				parent.removeChild(node);
+			}
+
+		},
+
 		render: function(code) {
 
 			var state = document.querySelector('section[id].active');

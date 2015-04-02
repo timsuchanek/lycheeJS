@@ -31,12 +31,9 @@
 		text-shadow: #32afe5 0 0 10px, #32afe5 0 0 20px, #32afe5 0 0 40px;
 		-webkit-animation: textpulse 2000ms infinite;
 	}
-	#profiles div.wizard ul.select {
+	#profiles div.main ul.select {
 		width: auto;
 		margin: 0px 16px;
-	}
-	#profiles article.superwide {
-		min-width: 768px;
 	}
 	#profiles table label.ico-okay {
 		color: #32afe5;
@@ -89,70 +86,69 @@
 
 <section id="profiles">
 
-	<div class="wizard">
+	<div class="main">
 
 		<article id="profiles-select">
 			<h3><b>1</b>Select Profile</h3>
-			<p>
-				Select a Profile to modify.
-				Reboot when you are done.
-			</p>
 			<div>
 				<ul class="select">
 					<li><input tabindex="1" name="profiles-profile" type="radio" value="development" checked><span>development</span></li>
 					<li><input tabindex="1" name="profiles-profile" type="radio" value="production"><span>production</span></li>
 					<li><input tabindex="1" name="profiles-profile" type="radio" value="lycheejs.org"><span>lycheejs.org</span></li>
+					<li><input tabindex="1" name="profiles-profile" type="radio" value="new-profile"><span>new profile</span></li>
 				</ul>
 			</div>
-			<br>
-			<p class="center">
-				<button tabindex="1" class="ico-boot" onclick="setTimeout(function() { MAIN.init(); }, 1000); location.href='lycheejs://boot=' + ui.getValue('#profiles-select input');">Reboot Sorbet</button>
-			</p>
 		</article>
 
-		<article class="superwide">
+		<article id="profiles-settings" class="superwide">
 			<h3><b>2</b>Modify Profile</h3>
-			<div>
-				<table>
-					<tr>
-						<th>Admin Port</th>
-						<th>Server Port</th>
-						<td colspan="2"></td>
-					</tr>
-					<tr>
-						<td><input type="number" value="4848" disabled></td>
-						<td><input type="number" value="8080"></td>
-						<td colspan="2"></td>
-					</tr>
+			<table>
+				<tr>
+					<th>Host</th>
+					<th>Project</th>
+					<th>Status</th>
+					<th>Actions</th>
+				</tr>
+				<tr>
+					<td><input type="text" value="lycheejs.org"></td>
+					<td><input type="text" value="lycheeJS-website"></td>
+					<td><label class="ico-fail" disabled>Fail</label></td>
+					<td><button class="ico-remove ico-only" onclick="ui.remove(this.parentNode.parentNode)"></button></td>
+				</tr>
+				<tr>
+					<td><input type="text" value="localhost"></td>
+					<td><input type="text" value="*"></td>
+					<td><label class="ico-okay" disabled>Okay</label></td>
+					<td><button class="ico-remove ico-only" onclick="ui.remove(this.parentNode.parentNode)"></button></td>
+				</tr>
+				<tr class="div"></tr>
+				<tr class="div">
+					<th colspan="4">Add new Project</th>
+				</tr>
+				<tr class="menu">
+					<td><input type="text" value="" placeholder="Host"></td>
+					<td><input type="text" value="" placeholder="Project"></td>
+					<td></td>
+					<td><button class="ico-add ico-only"></button></td>
+				</tr>
+			</table>
+		</article>
 
-					<tr>
-						<th>Host</th>
-						<th>Project</th>
-						<th>Status</th>
-						<th>Actions</th>
-					</tr>
-					<tr>
-						<td><input type="text" value="lycheejs.org"></td>
-						<td><input type="text" value="lycheeJS-website"></td>
-						<td><label class="ico-fail" disabled>Fail</label></td>
-						<td><button class="ico-remove ico-only"></button></td>
-					</tr>
-					<tr>
-						<td><input type="text" value="localhost"></td>
-						<td><input type="text" value="*"></td>
-						<td><label class="ico-okay" disabled>Okay</label></td>
-						<td><button class="ico-remove ico-only"></button></td>
-					</tr>
-					<tr class="div"></tr>
-					<tr class="div"></tr>
-					<tr class="menu">
-						<td><input type="text" value="" placeholder="Hostname"></td>
-						<td><input type="text" value="" placeholder="Project"></td>
-						<td></td>
-						<td><button class="ico-add ico-only"></button></td>
-					</tr>
-				</table>
-			</div>
+		<article>
+			<h3><b>3</b>Save Profile</h3>
+			<table class="vertical">
+				<tr>
+					<th>Profile</th>
+					<td><input type="text" value="new-profile-1"></td>
+				</tr>
+				<tr>
+					<th>Port</th>
+					<td><input type="number" value="8080"></td>
+				</tr>
+			</table>
+			<p class="center">
+				<button tabindex="1" class="ico-boot" onclick="setTimeout(function() { MAIN.init(); }, 1000); location.href='lycheejs://boot=' + ui.getValue('#profiles-select input');">Save &amp; Reboot Sorbet</button>
+			</p>
 		</article>
 
 	</div>
@@ -160,50 +156,17 @@
 </section>
 
 <section id="help">
-
-	<div class="wizard">
-
-		<article class="wide">
-			<h3><b>1</b>Tool Usage</h3>
-			<div>
-				Install a Font on your System in order to use it with this Tool.
-				Modify the settings to tweak the Font, the rest is done automatically.
-			</div>
-		</article>
-
-		<article class="wide">
-			<h3><b>2</b>Engine Usage</h3>
-			<div>
-				The exported files include the Font (.fnt).
-				<br><br>
-				If you want to use the Font inside your Project, you have to rename
-				the files accordingly after copying them into the <q>source/entity</q> folder.
-				<br><br>
-				Example: If you have an Entity named <q>source/entity/Foo.js</q>,
-				you have to rename the downloaded Font to <q>source/entity/Foo.fnt</q>.
-			</div>
-			<p>
-				Then you can access the Font via the attachments parameter:
-			</p>
-			<pre class="javascript">
-lychee.define('game.entity.Foo').exports(function(lychee, game, global, attachments) {
-
-  var font = attachments['fnt'];
-  if (font instanceof Font) {
-    console.log('Yay, font available!', font);
-  }
-
-});
-			</pre>
-		</article>
-
-	</div>
-
+Help (coming soon...)
 </section>
 
 <footer>
 	lycheeJS is (c) 2012-2015 by LazerUnicorns and released under MIT license.
 </footer>
 <script src="./index.js"></script>
+<script>
+setTimeout(function() {
+	ui.changeState('profiles');
+}, 500);
+</script>
 </body>
 </html>    

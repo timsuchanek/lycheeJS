@@ -220,7 +220,12 @@ div.main {
 
 }
 
-div.main > article {
+
+
+div.main > article:nth-child(1) {
+	margin: 0px 16px 0px 0px;
+	min-width: 256px;
+	max-width: 384px;
 	-moz-box-flex: 1;
 	-webkit-box-flex: 1;
 	-ms-flex: 1;
@@ -228,20 +233,31 @@ div.main > article {
 	flex: 1;
 }
 
-div.main > article:nth-child(1) {
-	margin: 0px 16px 0px 0px;
-	min-width: 384px;
-	max-width: 384px;
-}
-
 div.main > article:nth-child(2) {
 	margin: 0px 0px 0px 16px;
+	overflow-x: auto;
+	overflow-y: hidden;
+	-moz-box-flex: 3;
+	-webkit-box-flex: 3;
+	-ms-flex: 3;
+	-webkit-flex: 3;
+	flex: 3;
 }
 
 div.main > article:nth-child(2) figure {
 	display: block;
 	min-height: 512px;
 	overflow: auto;
+}
+
+div.main > article:nth-child(3) {
+	margin: 0px 0px 0px 32px;
+	min-width: 256px;
+	-moz-box-flex: 1;
+	-webkit-box-flex: 1;
+	-ms-flex: 1;
+	-webkit-flex: 1;
+	flex: 1;
 }
 
 
@@ -374,6 +390,12 @@ article pre {
 	100% { text-shadow: #32afe5 0 0 10px;     }
 }
 
+@-ms-keyframes textpulse {
+	0%   { text-shadow: #32afe5 0 0 10px;     }
+	50%  { text-shadow: transparent 0 0 10px; }
+	100% { text-shadow: #32afe5 0 0 10px;     }
+}
+
 @-webkit-keyframes textpulse {
 	0%   { text-shadow: #32afe5 0 0 10px;     }
 	50%  { text-shadow: transparent 0 0 10px; }
@@ -387,21 +409,27 @@ article pre {
 }
 
 @-moz-keyframes pulse {
-	0%   { border: 1px solid #545857; box-shadow: transparent 0 0 20px; }
-	50%  { border: 1px solid #32afe5; box-shadow: #32afe5 0 0 20px;     }
-	100% { border: 1px solid #545857; box-shadow: transparent 0 0 20px; }
+	0%   { box-shadow: transparent 0 0 20px; }
+	50%  { box-shadow: #32afe5 0 0 20px;     }
+	100% { box-shadow: transparent 0 0 20px; }
+}
+
+@-ms-keyframes pulse {
+	0%   { box-shadow: transparent 0 0 20px; }
+	50%  { box-shadow: #32afe5 0 0 20px;     }
+	100% { box-shadow: transparent 0 0 20px; }
 }
 
 @-webkit-keyframes pulse {
-	0%   { border: 1px solid #545857; box-shadow: transparent 0 0 20px; }
-	50%  { border: 1px solid #32afe5; box-shadow: #32afe5 0 0 20px;     }
-	100% { border: 1px solid #545857; box-shadow: transparent 0 0 20px; }
+	0%   { box-shadow: transparent 0 0 20px; }
+	50%  { box-shadow: #32afe5 0 0 20px;     }
+	100% { box-shadow: transparent 0 0 20px; }
 }
 
 @keyframes pulse {
-	0%   { border: 1px solid #545857; box-shadow: transparent 0 0 20px; }
-	50%  { border: 1px solid #32afe5; box-shadow: #32afe5 0 0 20px;     }
-	100% { border: 1px solid #545857; box-shadow: transparent 0 0 20px; }
+	0%   { box-shadow: transparent 0 0 20px; }
+	50%  { box-shadow: #32afe5 0 0 20px;     }
+	100% { box-shadow: transparent 0 0 20px; }
 }
 
 
@@ -552,13 +580,7 @@ fieldset input[type="number"] {
 	display: block;
 	padding: 8px 16px;
 	font-size: 18px;
-	border: none;
-	border-bottom: 1px solid #5d6161;
 	border-radius: none;
-}
-
-fieldset input:last-child {
-	border-bottom: none;
 }
 
 
@@ -577,6 +599,7 @@ input[type="color"] {
 
 input[type="color"]:hover,
 input[type="color"]:focus {
+	border: 1px solid #32afe5;
 	-moz-animation: pulse 3000ms infinite;
 	-webkit-animation: pulse 3000ms infinite;
 	animation: pulse 3000ms infinite;
@@ -628,6 +651,7 @@ label.file:not(.ico-only) {
 label.file:hover,
 label.file:focus {
 	background: #32afe5;
+	border: 1px solid #32afe5;
 	text-shadow: #eeeeee 0 0 10px;
 	-moz-animation: pulse 3000ms infinite;
 	-webkit-animation: pulse 3000ms infinite;
@@ -656,7 +680,7 @@ input[type="number"] {
 	border-radius: 2px;
 	outline: none;
 	cursor: text;
-	text-align: right;
+	text-align: left;
 	-moz-transition: all 250ms ease-out;
 	-ms-transition: all 250ms ease-out;
 	-webkit-transition: all 250ms ease-out;
@@ -670,6 +694,7 @@ input[type="number"] {
 input[type="number"]:hover,
 input[type="number"]:focus {
 	color: #32afe5;
+	border: 1px solid #32afe5;
 	-moz-animation: pulse 3000ms infinite;
 	-webkit-animation: pulse 3000ms infinite;
 	animation: pulse 3000ms infinite;
@@ -694,6 +719,7 @@ input[type="number"]::-ms-input-placeholder {
 
 input[type="radio"] {
 	display: inline-block;
+	box-sizing: border-box;
 	width: 20px;
 	height: 20px;
 	margin: 0px;
@@ -722,7 +748,55 @@ input[type="radio"]:checked {
 
 input[type="radio"]:hover {
 	background: #32afe5;
+	border: 1px solid #32afe5;
 	-moz-animation: pulse 3000ms infinite;
+	-ms-animation: pulse 3000ms infinite;
+	-webkit-animation: pulse 3000ms infinite;
+	animation: pulse 3000ms infinite;
+}
+
+input[type="radio"][value^="new"],
+input[type="radio"][value^="new"]:checked,
+input[type="radio"][value^="new"]:hover {
+	width: 22px;
+	height: 22px;
+	border: 0px solid transparent;
+	background: transparent;
+	-moz-animation: none;
+	-ms-animation: none;
+	-webkit-animation: none;
+	animation: none;
+}
+
+input[type="radio"][value^="new"]:before {
+	display: inline-block;
+	box-sizing: border-box;
+	width: 20px;
+	height: 20px;
+	line-height: 20px;
+	margin: 0px;
+	padding: 0px;
+	background: transparent;
+	border: 0px solid transparent;
+	border-radius: 32px;
+	vertical-align: top;
+	text-align: center;
+	content: "\e095";
+	font-family: 'icon';
+	font-size: 20px;
+	color: #efefef;
+}
+
+input[type="radio"][value^="new"]:checked:before {
+	color: #efefef;
+	background: #32afe5;
+}
+
+input[type="radio"][value^="new"]:hover:before {
+	color: #efefef;
+	background: #32afe5;
+	-moz-animation: pulse 3000ms infinite;
+	-ms-animation: pulse 3000ms infinite;
 	-webkit-animation: pulse 3000ms infinite;
 	animation: pulse 3000ms infinite;
 }
@@ -773,6 +847,7 @@ input[type="range"]:after {
 input[type="range"]:hover,
 input[type="range"]:focus {
 	background: #32afe5;
+	border: 1px solid #32afe5;
 	-moz-animation: pulse 3000ms infinite;
 	-webkit-animation: pulse 3000ms infinite;
 	animation: pulse 3000ms infinite;
@@ -875,6 +950,7 @@ input[type="text"][placeholder] {
 input[type="text"]:hover,
 input[type="text"]:focus {
 	color: #32afe5;
+	border: 1px solid #32afe5;
 	-moz-animation: pulse 3000ms infinite;
 	-webkit-animation: pulse 3000ms infinite;
 	animation: pulse 3000ms infinite;
@@ -932,7 +1008,6 @@ table tr.div {
 table tr.menu th,
 table tr.menu td {
 	border-top: 2px solid #404948;
-	border-bottom: 2px solid #404948;
 	background: #2f3736;
 }
 
@@ -956,7 +1031,6 @@ table td button {
 
 table.vertical th {
 	width: 96px;
-	padding: 32px;
 	vertical-align: top;
 	text-align: left;
 }
@@ -1042,6 +1116,24 @@ footer {
 		-ms-transform: rotate(90deg);
 		-webkit-transform: rotate(90deg);
 		transform: rotate(90deg);
+	}
+
+	div.main {
+		display: block;
+	}
+
+	div.main > article,
+	div.main > article.superwide,
+	div.main > article:nth-child(1),
+	div.main > article:nth-child(2),
+	div.main > article:nth-child(3) {
+
+		display: block;
+		margin: 16px;
+		min-width: initial;
+		max-width: none;
+		overflow: auto;
+
 	}
 
 }
