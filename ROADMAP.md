@@ -1,20 +1,15 @@
 
 # Features Roadmap
 
-The features listed here are not implemented.
 This document shows the planned features for upcoming lycheeJS releases.
 Only if all features are completed, the lycheeJS release is merged
 back into master, tagged and published.
 
 
-## v0.8.5
-
-- sorbet.plugin.Fertilizer should auto-build environments for all projects
-- Fertilizer: html-nwjs integration for Linux, Mac OSX and Windows
-
 ## v0.8.6
 
 - /lychee/dist build via configure script for CDNJS and standalone deployment
+- sorbet.plugin.Fertilizer should auto-build environments for all projects
 - Sorbet Log File serialization to be inspectable and remote-debuggable via ranger
 - lychee.net.(client||remote).DHT as described in Bittorrent's DHT protocol [1] which extends lychee.data.BENCODE for its logical behaviours
 - API + Implementation: lychee.net.Hybrid

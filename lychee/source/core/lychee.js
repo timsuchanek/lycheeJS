@@ -167,7 +167,7 @@ lychee = typeof lychee !== 'undefined' ? lychee : (function(global) {
 		environment:  _environment,
 
 		ENVIRONMENTS: {},
-		VERSION:      0.84,
+		VERSION:      0.85,
 
 
 

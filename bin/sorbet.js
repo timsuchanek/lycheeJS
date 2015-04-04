@@ -1,4 +1,4 @@
-#!/usr/bin/env nodejs
+#!/usr/bin/env iojs
 
 
 var root   = require('path').resolve(__dirname, '../');

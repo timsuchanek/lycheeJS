@@ -1,8 +1,0 @@
-[Desktop Entry]
-Name=lycheejsURL
-Exec=/opt/lycheejs/bin/helper.sh %u
-Type=Application
-NoDisplay=true
-Categories=System;
-MimeType=x-scheme-handler/lycheejs;
-
