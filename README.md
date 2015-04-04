@@ -127,6 +127,7 @@ them inside your Game or Application.
 
 ## License
 
-The lycheeJS framework is licensed under the MIT License.
-The projects and demos are licensed under the CC0 (public domain) License.
+lycheeJS is (c) 2012-2015 LazerUnicorns <rainbow@lazerunicorns.com> and released under MIT license.
+The projects and demos are licensed under CC0 (public domain) license.
+The runtimes are owned and copyrighted by their respective owners.
 
