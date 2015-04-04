@@ -42,7 +42,7 @@ case "$1" in
 		if [ "$SORBET_USER" == "root" ] || [ "$SORBET_USER" == "lycheejs-sorbet" ]; then 
 			$LYCHEEJS_IOJS ./bin/sorbet.js start "$2" >> $SORBET_LOG 2>> $SORBET_ERR &
 		else
-			$LYCHEEJS_IOJS ./bin/sorbet.js start "$2";
+			$LYCHEEJS_IOJS ./bin/sorbet.js start "$2" &
 		fi;
 
 	;;
@@ -86,7 +86,7 @@ case "$1" in
 		if [ "$SORBET_USER" == "root" ] || [ "$SORBET_USER" == "lycheejs-sorbet" ]; then 
 			$LYCHEEJS_IOJS ./bin/sorbet.js start "$2" >> $SORBET_LOG 2>> $SORBET_ERR &
 		else
-			$LYCHEEJS_IOJS ./bin/sorbet.js start "$2";
+			$LYCHEEJS_IOJS ./bin/sorbet.js start "$2" &
 		fi;
 
 	;;
