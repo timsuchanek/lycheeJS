@@ -25,7 +25,8 @@ lychee.define('tool.data.SPRITE').requires([
 		defaults.depth       = null;
 		defaults.radius      = null;
 		defaults.states      = 'auto';
-		defaults.files        = [];
+		settings.statemap    = 'image';
+		defaults.files       = [];
 
 	})(_defaults);
 
