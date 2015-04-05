@@ -88,6 +88,18 @@ label.ico-only:before {
 .ico-tools:before       { content: "\e059"; }
 .ico-upload:before      { content: "\e084"; }
 
+
+
+body {
+	color: #e6e6e6;
+	background: #404948;
+	margin: 0;
+	padding: 0;
+	font-family: 'museo-sans-300';
+}
+
+
+
 #menu-toggle {
 	display: none;
 	width: 32px;
@@ -112,13 +124,6 @@ label.ico-only:before {
 }
 
 
-body {
-	color: #e6e6e6;
-	background: #404948;
-	margin: 0;
-	padding: 0;
-	font-family: 'museo-sans-300';
-}
 
 menu {
 	margin: 16px 0px 0px 32px;
@@ -558,7 +563,9 @@ button[disabled]:focus {
 	box-shadow: none;
 	cursor: not-allowed;
 	-moz-animation: none;
+	-ms-animation: none;
 	-webkit-animation: none;
+	animation: none;
 }
 
 *[onclick] {
@@ -966,6 +973,7 @@ input[disabled]:focus {
 	-moz-animation: none;
 	-ms-animation: none;
 	-webkit-animation: none;
+	animation: none;
 	cursor: not-allowed;
 }
 
