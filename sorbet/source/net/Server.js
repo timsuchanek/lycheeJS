@@ -130,7 +130,7 @@ lychee.define('sorbet.net.Server').tags({
 					var port = socket.remotePort;
 
 
-					socket.setTimeout(10000);
+					socket.setTimeout(0);
 
 
 					var remote = new sorbet.net.Remote({
