@@ -267,6 +267,29 @@ lychee.define('sorbet.Main').requires([
 				}, this);
 
 
+				var connections = 0;
+
+				this.server.bind('connect', function() {
+
+					connections++;
+
+				});
+
+				this.server.bind('disconnect', function() {
+
+					connections--;
+
+					if (typeof global.gc !== 'undefined') {
+
+						if (connections === 0) {
+							gc();
+						}
+
+					}
+
+				});
+
+
 				this.admin.connect();
 				this.server.connect();
 
