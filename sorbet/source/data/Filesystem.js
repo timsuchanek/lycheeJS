@@ -70,7 +70,7 @@ lychee.define('sorbet.data.Filesystem').exports(function(lychee, sorbet, global,
 			var resolved = _path.normalize(this.root + path);
 			if (callback !== null) {
 
-				_fs.readdirSync(resolved, function(err, data) {
+				_fs.readdir(resolved, function(err, data) {
 
 					if (err) {
 						callback.call(scope, null);
@@ -101,15 +101,8 @@ lychee.define('sorbet.data.Filesystem').exports(function(lychee, sorbet, global,
 			var resolved = _path.normalize(this.root + path);
 			if (callback !== null) {
 
-				_fs.readFile(resolved, function(err, data) {
-
-					if (err) {
-						callback.call(scope, null);
-					} else {
-						callback.call(scope, data);
-					}
-
-				});
+				var data = _fs.readFileSync(resolved);
+				callback.call(scope, data);
 
 			} else {
 
@@ -148,15 +141,14 @@ lychee.define('sorbet.data.Filesystem').exports(function(lychee, sorbet, global,
 
 				if (callback !== null) {
 
-					_fs.writeFile(resolved, data, encoding, function(err) {
+					var result = false;
+					try {
+						result = _fs.writeFileSync(resolved, data, encoding);
+					} catch(e) {
+						result = false;
+					}
 
-						if (err) {
-							callback.call(scope, false);
-						} else {
-							callback.call(scope, true);
-						}
-
-					});
+					callback.call(scope, result);
 
 				} else {
 
