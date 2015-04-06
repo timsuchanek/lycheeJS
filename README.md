@@ -29,14 +29,14 @@ There are prebuilt packages that ship all dependencies and
 runtimes lycheeJS needs in order to work and cross-compile
 properly.
 
-Take a look at [lycheejs.org/install.html](http://lycheejs.org/install.html)
+Take a look at [lycheejs.org](http://lycheejs.org)
 for a list of those available packages.
 
 
 ## Manual Installation
 
 
-### 1. Download lycheeJS
+** 1. Download lycheeJS **
 
 Download lycheeJS via [zip-file](https://github.com/LazerUnicorns/lycheeJS/archive/master.zip)
 and extract its contents. Rename the lycheeJS-master folder that
@@ -50,7 +50,7 @@ unzip lycheeJS-master.zip;
 mv lycheeJS-master lycheeJS;
 ```
 
-### 2. Download lycheeJS runtimes
+** 2. Download lycheeJS runtimes **
 
 ```bash
 cd ~/Development; # Change to your development folder
@@ -61,7 +61,7 @@ mv lycheeJS-runtime-master ./lycheeJS/bin/runtime;
 ```
 
 
-### 2. Start lycheeJS
+** 3. Start lycheeJS **
 
 If you installed lycheeJS via distributed package, you
 can use *lycheeJS Ranger* from the Applications Menu
