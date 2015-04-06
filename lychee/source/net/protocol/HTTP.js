@@ -283,12 +283,22 @@ lychee.define('lychee.net.protocol.HTTP').exports(function(lychee, global, attac
 
 					var buffer = _encode_buffer.call(this, status, headers, blob, binary);
 					if (buffer !== null) {
-						return this.socket.write(buffer);
+
+						this.socket.write(buffer);
+
+						delete buffer;
+						delete blob;
+
+						return true;
+
 					}
 
 				}
 
 			}
+
+
+			return false;
 
 		},
 

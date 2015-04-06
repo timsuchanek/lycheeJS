@@ -548,7 +548,14 @@ lychee.define('lychee.net.protocol.WS').exports(function(lychee, global) {
 
 					var buffer = _encode_buffer.call(this, blob, binary);
 					if (buffer !== null) {
-						return this.socket.write(buffer);
+
+						this.socket.write(buffer);
+
+						delete buffer;
+						delete blob;
+
+						return true;
+
 					}
 
 				}

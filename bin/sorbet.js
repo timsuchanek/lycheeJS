@@ -246,6 +246,15 @@ var _settings = (function() {
 
 					}, this);
 
+
+					if (typeof global.gc !== 'undefined') {
+
+						setInterval(function() {
+							gc();
+						}, 30000);
+
+					}
+
 				} else {
 
 					_clear_pid();
