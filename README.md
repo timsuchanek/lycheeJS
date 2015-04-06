@@ -92,7 +92,7 @@ npm run-script localhost;
 ## Documentation
 
 The documentation is available online at
-[http://lycheejs.org/documentation/index.html](http://lycheejs.org/documentation).
+[http://lycheejs.org/documentation/index.html](http://lycheejs.org/documentation/index.html).
 
 
 ## Roadmap
@@ -110,16 +110,16 @@ Take a look at the [CONTRIBUTING.md](CONTRIBUTING.md) file.
 ## Other (unsupported) JavaScript Runtimes
 
 The lycheeJS architecture is independent of the environment which
-means it will run on any theoretical JavaScript environment.
+means it will run in any theoretical JavaScript runtime.
 
 The only requirement for such a platform is a fully implemented
-[bootstrap API](http://lycheejs.org/documentation/api-bootstrap.html).
+[bootstrap API](http://lycheejs.org/documentation/bootstrap.html).
 
 For fully supporting a client-side environment, you will also have to implement
-a [lychee.Input](http://lycheejs.org/documentation/api-lychee-Input.html),
-a [lychee.Renderer](http://lycheejs.org/documentation/api-lychee-Renderer.html),
-a [lychee.Storage](http://lycheejs.org/documentation/api-lychee-Storage.html),
-and a [lychee.Viewport](http://lycheejs.org/documentation/api-lychee-Viewport.html).
+a [lychee.Input](http://lycheejs.org/documentation/lychee-Input.html),
+a [lychee.Renderer](http://lycheejs.org/documentation/lychee-Renderer.html),
+a [lychee.Storage](http://lycheejs.org/documentation/lychee-Storage.html),
+and a [lychee.Viewport](http://lycheejs.org/documentation/lychee-Viewport.html).
 
 These implementations are fully optional and only necessary if you are using
 them inside your Game or Application.
@@ -127,7 +127,7 @@ them inside your Game or Application.
 
 ## License
 
-lycheeJS is (c) 2012-2015 LazerUnicorns <rainbow@lazerunicorns.com> and released under MIT license.
+lycheeJS is (c) 2012-2015 LazerUnicorns and released under MIT license.
 The projects and demos are licensed under CC0 (public domain) license.
 The runtimes are owned and copyrighted by their respective owners.
 
