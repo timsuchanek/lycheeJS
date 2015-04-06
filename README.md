@@ -36,7 +36,7 @@ for a list of those available packages.
 ## Manual Installation
 
 
-** 1. Download lycheeJS **
+#### 1. Download lycheeJS
 
 Download lycheeJS via [zip-file](https://github.com/LazerUnicorns/lycheeJS/archive/master.zip)
 and extract its contents. Rename the lycheeJS-master folder that
@@ -50,7 +50,7 @@ unzip lycheeJS-master.zip;
 mv lycheeJS-master lycheeJS;
 ```
 
-** 2. Download lycheeJS runtimes **
+#### 2. Download lycheeJS runtimes
 
 ```bash
 cd ~/Development; # Change to your development folder
@@ -61,7 +61,7 @@ mv lycheeJS-runtime-master ./lycheeJS/bin/runtime;
 ```
 
 
-** 3. Start lycheeJS **
+#### 3. Start lycheeJS
 
 If you installed lycheeJS via distributed package, you
 can use *lycheeJS Ranger* from the Applications Menu
@@ -77,7 +77,7 @@ cd /path/to/lycheeJS;
 ```
 
 
-## NPM / NodeJS Integration
+#### NPM / NodeJS Integration
 
 You can modify the **~/lycheeJS/package.json**/*scripts* section to
 use your own sorbet profile. Take a look at the examples *localhost*
