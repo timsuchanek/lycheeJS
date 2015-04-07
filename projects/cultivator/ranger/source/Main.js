@@ -15,43 +15,6 @@ lychee.define('tool.Main').requires([
 	 * HACKS
 	 */
 
-	(function(gui) {
-
-		if (gui !== null) {
-
-			var win = gui.Window.get();
-			if (win !== null) {
-
-				win.on('close', function() {
-
-					var unboot = window.confirm('Do you want to shutdown lycheeJS?\nClick Cancel to let lycheeJS still serve your projects.');
-					if (unboot === true) {
-						location.href = 'lycheejs://unboot';
-					}
-
-					this.close(true);
-
-				});
-
-			}
-
-		}
-
-	})((function() {
-
-		var gui = null;
-
-		try {
-			gui = require('nw.gui');
-		} catch(err) {
-			gui = null;
-		}
-
-		return gui;
-
-	})());
-
-
 	(function(global) {
 
 		if (typeof global.addEventListener !== 'undefined') {

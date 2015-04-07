@@ -1,6 +1,7 @@
 
 lychee.define('sorbet.Main').requires([
 	'lychee.Input',
+	'lychee.data.JSON',
 	'sorbet.data.Host',
 	'sorbet.net.Server',
 //	'sorbet.mod.Fertilizer',
@@ -12,6 +13,9 @@ lychee.define('sorbet.Main').requires([
 ]).includes([
 	'lychee.event.Emitter'
 ]).exports(function(lychee, sorbet, global, attachments) {
+
+	var _JSON = lychee.data.JSON;
+
 
 	/*
 	 * HELPERS
@@ -26,10 +30,8 @@ lychee.define('sorbet.Main').requires([
 
 			var parameters = {};
 
-			if (data.headers.method === 'GET') {
-				parameters = {};
-			} else if (data.headers.method === 'PUT') {
-				parameters = JSON.parse(data.payload);
+			if (data.headers.method.match(/PUT|POST/)) {
+				parameters = _JSON.decode(data.payload) || {};
 			}
 
 

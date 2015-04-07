@@ -53,7 +53,7 @@
 	<li class="ico-help" onclick="ui.changeState('help');">Help</li>
 </menu>
 <aside>
-	<button class="ico-refresh" onclick="window.location.href='./index.html'">Refresh</button>
+	<button class="ico-exit" onclick="location.href='lycheejs://unboot=#';setTimeout(function(){ location.href='./index.html'; }, 0);">Shutdown</button>
 </aside>
 
 <section id="status" class="active">
@@ -76,7 +76,6 @@
 				<ul class="select">
 					<li><input name="status-profile" type="radio" value="development" checked><span>development</span></li>
 					<li><input name="status-profile" type="radio" value="production"><span>production</span></li>
-					<li><input name="status-profile" type="radio" value="lycheejs.org"><span>lycheejs.org</span></li>
 				</ul>
 			</div>
 			<p class="center">
@@ -98,7 +97,6 @@
 				<ul class="select">
 					<li><input name="profiles-profile" type="radio" value="development" checked><span>development</span></li>
 					<li><input name="profiles-profile" type="radio" value="production"><span>production</span></li>
-					<li><input name="profiles-profile" type="radio" value="lycheejs.org"><span>lycheejs.org</span></li>
 					<li><input name="profiles-profile" type="radio" value="new-profile"><span>new profile</span></li>
 				</ul>
 			</div>
@@ -140,7 +138,7 @@
 			<table class="vertical">
 				<tr>
 					<th>Profile</th>
-					<td><input id="profiles-save-identifier" type="text" value="new-profile-1"></td>
+					<td><input id="profiles-save-identifier" type="text" value="development"></td>
 				</tr>
 				<tr>
 					<th>Port</th>
@@ -149,7 +147,7 @@
 			</table>
 			<p class="center">
 				<button id="profiles-save-save" class="ico-upload" onclick="MAIN.state.trigger('save', [ui.value('#profiles-save-identifier'), ui.value('#profiles-save-port')])">Save</button>
-				<button id="profiles-save-boot" class="ico-boot" onclick="" disabled>Boot</button>
+				<button id="profiles-save-boot" class="ico-boot" onclick="location.href='lycheejs://boot=' + ui.value('#profiles-save-identifier');" disabled>Boot</button>
 			</p>
 		</article>
 

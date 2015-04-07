@@ -44,6 +44,50 @@ lychee.define('sorbet.serve.api.Profile').requires([
 	 * HELPERS
 	 */
 
+	var _update_profile = function(identifier, data) {
+
+		if (identifier === '') return false;
+
+
+		var filtered = {
+			port:  null,
+			hosts: {}
+		};
+
+
+		if (typeof data.port === 'number') {
+			filtered.port = (data.port | 0);
+		}
+
+		if (data.hosts instanceof Object) {
+
+			for (var host in data.hosts) {
+
+				var project = data.hosts[host];
+				if (typeof project === 'string' || project === null) {
+					filtered.hosts[host] = project;
+				}
+
+			}
+
+		}
+
+
+		if (typeof filtered.port === 'number' && Object.keys(filtered.hosts).length > 0) {
+
+			_profiles[identifier] = filtered;
+			_filesystem.write('/' + identifier + '.json', _JSON.encode(filtered));
+			_profiles[identifier].identifier = identifier;
+
+			return true;
+
+		}
+
+
+		return false;
+
+	};
+
 	var _to_header = function(status, data) {
 
 		var origin = data.headers['Origin'] || '*';
@@ -64,9 +108,9 @@ lychee.define('sorbet.serve.api.Profile').requires([
 	var _serialize = function(profile) {
 
 		return {
-			identifier: profile.identifier,
-			port:       profile.port  || 8080,
-			hosts:      profile.hosts || {}
+			identifier: profile.identifier || '',
+			port:       profile.port       || 8080,
+			hosts:      profile.hosts      || {}
 		};
 
 	};
@@ -160,13 +204,40 @@ lychee.define('sorbet.serve.api.Profile').requires([
 
 			} else if (method === 'PUT') {
 
-				ready({
-					status:  501,
-					headers: { 'Content-Type': 'application/json' },
-					payload: _JSON.encode({
-						error: 'Method not implemented.'
-					})
-				});
+				if (identifier !== null) {
+
+					var result = _update_profile(identifier, parameters);
+					if (result === true) {
+
+						ready({
+							status: 200,
+							headers: _to_header(200, data),
+							payload: ''
+						});
+
+					} else {
+
+						ready({
+							status:  400,
+							headers: { 'Content-Type': 'application/json' },
+							payload: _JSON.encode({
+								error: 'Bad Request: Invalid Payload.'
+							})
+						});
+
+					}
+
+				} else {
+
+					ready({
+						status:  400,
+						headers: { 'Content-Type': 'application/json' },
+						payload: _JSON.encode({
+							error: 'Bad Request: Invalid Identifier.'
+						})
+					});
+
+				}
 
 
 

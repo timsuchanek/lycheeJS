@@ -6,24 +6,20 @@ lowercase() {
 
 OS=`lowercase \`uname\``;
 
-LYCHEEJS_IOJS="";
 LYCHEEJS_ROOT=$(cd "$(dirname "$0")/../"; pwd);
 
 
 if [ "$OS" == "darwin" ]; then
 
 	OS="osx";
-	LYCHEEJS_IOJS="$LYCHEEJS_ROOT/bin/runtime/iojs/osx/iojs";
 
 elif [ "$OS" == "linux" ]; then
 
 	OS="linux";
-	LYCHEEJS_IOJS="$LYCHEEJS_ROOT/bin/runtime/iojs/linux/iojs";
 
 elif [ "$OS" == "windowsnt" ]; then
 
 	OS="windows";
-	LYCHEEJS_IOJS="$LYCHEEJS_ROOT/bin/runtime/iojs/windows/iojs.exe";
 
 fi;
 
@@ -88,8 +84,8 @@ if [ "$protocol" == "lycheejs" ]; then
 
 				cd $LYCHEEJS_ROOT;
 
-				$LYCHEEJS_IOJS ./bin/sorbet.js stop;
-				$LYCHEEJS_IOJS ./bin/sorbet.js start "$resource";
+				./bin/sorbet.sh stop;
+				./bin/sorbet.sh start "$resource";
 
 			;;
 
@@ -97,7 +93,7 @@ if [ "$protocol" == "lycheejs" ]; then
 
 				cd $LYCHEEJS_ROOT;
 
-				$LYCHEEJS_IOJS ./bin/sorbet.js stop;
+				./bin/sorbet.sh stop;
 
 			;;
 
