@@ -39,9 +39,6 @@ back into master, tagged and published.
 - API + Implementation: lychee.data.BSON
 - API + Implementation: lychee.data.MSGPACK
 - Fertilizer: html-webgl Refactor (webgl2d refactor)
-- Website: Overhauling and game.Main Architecture Diagram
-- Website: Refactor tool/configure.js script to generate API docs properly
-- Website: Refactor tool/configure.js script to generate Tutorials properly
 
 
 ## References (Articles and Sources)
