@@ -36,6 +36,28 @@
 
 
 
+::-moz-selection {
+	color: #efefef;
+	background: #32afe5;
+}
+
+::-ms-selection {
+	color: #efefef;
+	background: #32afe5;
+}
+
+::-webkit-selection {
+	color: #efefef;
+	background: #32afe5;
+}
+
+::selection {
+	color: #efefef;
+	background: #32afe5;
+}
+
+
+
 menu li:before,
 a.button:before,
 button:before,
@@ -170,6 +192,36 @@ aside > * {
 	display: inline-block;
 	margin: 16px 0px 0px 8px;
 }
+
+
+#logo {
+	display: block;
+	margin: 0px auto;
+	text-align: center;
+}
+
+#logo h1 {
+	display: inline-block;
+	vertical-align: middle;
+	margin: 16px;
+}
+
+#logo h2 {
+	display: inline-block;
+	vertical-align: middle;
+	margin: 0px;
+	padding: 0px;
+	color: #efefef;
+	font-family: 'museo-sans-300';
+	font-size: 64px;
+	font-weight: normal;
+}
+
+#logo h2 span {
+	color: #d0494b;
+}
+
+
 
 section {
 	display: block;

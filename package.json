@@ -3,7 +3,7 @@
 	"homepage":    "http://lycheejs.org",
 	"license":     "MIT",
 	"version":     "0.8.5",
-	"description": "Next-Gen isomorphic peer-to-peer Application Engine for Embedded, Console, Mobile, Server and Desktop",
+	"description": "Next-Gen Isomorphic Peer-to-Peer Application Engine for Embedded, Console, Mobile, Server and Desktop",
 
 	"keywords": [
 		"lycheejs",
@@ -26,20 +26,20 @@
 
 	"scripts": {
 
-		"postinstall": "./lychee/configure.js",
+		"postinstall": "./bin/configure.sh",
 
-		"start":       "./bin/sorbet.js start development",
-		"stop":        "./bin/sorbet.js stop",
+		"start":       "./bin/sorbet.sh start development",
+		"stop":        "./bin/sorbet.sh stop",
 
-		"development": "./bin/sorbet.js start development",
-		"production":  "./bin/sorbet.js start production"
+		"development": "./bin/sorbet.sh start development",
+		"production":  "./bin/sorbet.sh start production"
 
 	},
 
 	"bin": {
 
-		"fertilizer": "./bin/fertilizer.js",
-		"sorbet":     "./bin/sorbet.js"
+		"fertilizer": "./bin/fertilizer.sh",
+		"sorbet":     "./bin/sorbet.sh"
 
 	},
 
