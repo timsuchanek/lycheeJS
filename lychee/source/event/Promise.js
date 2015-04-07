@@ -144,10 +144,6 @@ lychee.define('lychee.event.Promise').includes([
 
 					return true;
 
-				} else {
-
-					this.trigger('error');
-
 				}
 
 			}
