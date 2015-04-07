@@ -429,7 +429,7 @@ ui = (function(global) {
 
 			items.forEach(function(item, index) {
 
-				if (item.className === 'active') {
+				if (item.className.indexOf('active') !== -1) {
 					_active = index;
 				}
 
@@ -554,6 +554,38 @@ ui = (function(global) {
 
 		download: _download,
 
+		enable: function(query) {
+
+			query = typeof query === 'string' ? query : null;
+
+
+			if (query !== null) {
+
+				var node = document.querySelector(query);
+				if (node !== null) {
+					node.disabled = false;
+				}
+
+			}
+
+		},
+
+		disable: function(query) {
+
+			query = typeof query === 'string' ? query : null;
+
+
+			if (query !== null) {
+
+				var node = document.querySelector(query);
+				if (node !== null) {
+					node.disabled = true;
+				}
+
+			}
+
+		},
+
 		value: function(query) {
 
 			var elements = [].slice.call(document.querySelectorAll(query));
@@ -568,6 +600,10 @@ ui = (function(global) {
 						if (input.checked === true) {
 							value.push(_convert_value(input.value));
 						}
+
+					} else if (input.type === 'text' && input.value != '') {
+
+						value.push('' + input.value);
 
 					} else if (input.value != '') {
 
@@ -590,7 +626,11 @@ ui = (function(global) {
 
 			} else if (elements.length === 1) {
 
-				return _convert_value(elements[0].value);
+				if (elements[0].type === 'text') {
+					return '' + elements[0].value;
+				} else {
+					return _convert_value(elements[0].value);
+				}
 
 			}
 
@@ -641,10 +681,6 @@ ui = (function(global) {
 				}
 
 			}
-
-		},
-
-		add: function(node, code) {
 
 		},
 

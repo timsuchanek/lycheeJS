@@ -12,6 +12,35 @@ lychee.define('tool.state.Profiles').includes([
 
 	var _profiles = {};
 
+	var _save_config = function(config) {
+
+		var url    = config.url;
+		var buffer = config.buffer;
+
+		if (buffer instanceof Object) {
+
+			var xhr = new XMLHttpRequest();
+
+			xhr.open('PUT', url, true);
+
+			xhr.onload = function() {
+
+				ui.enable('#profiles-save-boot');
+
+			};
+
+			xhr.onerror = xhr.ontimeout = function() {
+
+				ui.disable('#profiles-save-boot');
+
+			};
+
+			xhr.send(JSON.stringify(buffer));
+
+		}
+
+	};
+
 	var _ui_update = function() {
 
 		var config = new Config('http://localhost:4848/api/Profile?timestamp=' + Date.now());
@@ -129,6 +158,9 @@ lychee.define('tool.state.Profiles').includes([
 
 		this.bind('select', function(identifier) {
 
+			ui.disable('#profiles-save-boot');
+
+
 			var profile = _profiles[identifier];
 			if (profile instanceof Object) {
 
@@ -197,6 +229,17 @@ lychee.define('tool.state.Profiles').includes([
 			this.__profile.identifier = identifier;
 			this.__profile.port       = port;
 
+
+			var config = lychee.deserialize({
+				constructor: 'Config',
+				arguments:   [ 'http://localhost:4848/api/Profile?timestamp=' + Date.now() ],
+				blob:        {
+					buffer: 'data:application/json;base64,' + new Buffer(JSON.stringify(this.__profile), 'utf8').toString('base64')
+				}
+			});
+
+
+			_save_config.call(this, config);
 
 // TODO: PUT request to API to store profile
 // TODO: Relocate to lycheejs://boot=identifier afterwards

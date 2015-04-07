@@ -26,6 +26,13 @@ lychee.define('sorbet.Main').requires([
 
 			var parameters = {};
 
+			if (data.headers.method === 'GET') {
+				parameters = {};
+			} else if (data.headers.method === 'PUT') {
+				parameters = JSON.parse(data.payload);
+			}
+
+
 			var url = data.headers.url.split('?')[0];
 			var tmp = data.headers.url.split('?')[1] || '';
 

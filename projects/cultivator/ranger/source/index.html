@@ -136,7 +136,7 @@
 		</article>
 
 		<article id="profiles-save">
-			<h3><b>3</b>Save Profile</h3>
+			<h3><b>3</b>Save and Boot Profile</h3>
 			<table class="vertical">
 				<tr>
 					<th>Profile</th>
@@ -148,7 +148,8 @@
 				</tr>
 			</table>
 			<p class="center">
-				<button class="ico-boot" onclick="MAIN.state.trigger('save', [ui.value('#profiles-save-identifier'), ui.value('#profiles-save-port')])">Save &amp; Reboot Sorbet</button>
+				<button id="profiles-save-save" class="ico-upload" onclick="MAIN.state.trigger('save', [ui.value('#profiles-save-identifier'), ui.value('#profiles-save-port')])">Save</button>
+				<button id="profiles-save-boot" class="ico-boot" onclick="" disabled>Boot</button>
 			</p>
 		</article>
 
