@@ -65,7 +65,7 @@ mv lycheeJS-runtime-master ./lycheeJS/bin/runtime;
 
 If you installed lycheeJS via distributed package, you
 can use *lycheeJS Ranger* from the Applications Menu
-from your Operating System. This tool offers a GUI for
+of your Operating System. This tool offers a GUI for
 maintenance and management of lycheeJS and your projects.
 
 
