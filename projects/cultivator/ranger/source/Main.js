@@ -160,17 +160,6 @@ lychee.define('tool.Main').requires([
 
 		}, this, true);
 
-
-		this.bind('submit', function(id, settings) {
-
-			if (id === 'settings') {
-
-console.log('Settings Update', id, settings);
-
-			}
-
-		}, this);
-
 	};
 
 

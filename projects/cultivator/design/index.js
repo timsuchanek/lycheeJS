@@ -243,14 +243,14 @@ ui = (function(global) {
 	 * POLYFILLS
 	 */
 
-	document.addEventListener('DOMContentLoaded', function() {
+	var _refresh = function() {
 
 		var forms = [].slice.call(document.querySelectorAll('form[method="javascript"]'));
 		if (forms.length > 0) {
 
 			forms.forEach(function(form) {
 
-				form.onsubmit = function() {
+				form.onsubmit = typeof form.onsubmit === 'function' ? form.onsubmit : function() {
 
 					try {
 
@@ -299,13 +299,13 @@ ui = (function(global) {
 
 							if (element.type === 'radio') {
 
-								element.onclick = function() {
+								element.onclick = typeof element.onclick === 'function' ? element.onclick : function() {
 									form.onsubmit();
 								};
 
 							} else if (element.type === 'file') {
 
-								element.onchange = function() {
+								element.onchange = typeof element.onchange === 'function' ? element.onchange : function() {
 
 									this.__files = [];
 
@@ -350,7 +350,7 @@ ui = (function(global) {
 
 							} else {
 
-								element.onchange = function() {
+								element.onchange = typeof element.onchange === 'function' ? element.onchange : function() {
 
 									if (this.checkValidity() === true) {
 										form.onsubmit();
@@ -478,7 +478,7 @@ ui = (function(global) {
 
 		}
 
-	}, true);
+	};
 
 
 
@@ -540,6 +540,12 @@ ui = (function(global) {
 
 
 
+	document.addEventListener('DOMContentLoaded', function() {
+		_refresh();
+	}, true);
+
+
+
 	/*
 	 * IMPLEMENTATION
 	 */
@@ -548,7 +554,7 @@ ui = (function(global) {
 
 		download: _download,
 
-		getValue: function(query) {
+		value: function(query) {
 
 			var elements = [].slice.call(document.querySelectorAll(query));
 			if (elements.length > 1) {
@@ -651,11 +657,22 @@ ui = (function(global) {
 
 		},
 
-		render: function(code) {
+		render: function(code, query) {
 
-			var state = document.querySelector('section[id].active');
-			if (state !== null) {
-				state.innerHTML = code;
+			query = typeof query === 'string' ? query : 'section.active';
+
+
+			var node = document.querySelector(query);
+			if (node !== null) {
+
+				if (node.value !== undefined) {
+					node.value = code;
+				} else {
+					node.innerHTML = code;
+				}
+
+				_refresh();
+
 			}
 
 		}

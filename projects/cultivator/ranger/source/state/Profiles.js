@@ -1,6 +1,7 @@
 
 lychee.define('tool.state.Profiles').includes([
-	'lychee.game.State'
+	'lychee.game.State',
+	'lychee.event.Emitter'
 ]).tags({
 	platform: 'html'
 }).exports(function(lychee, tool, global, attachments) {
@@ -9,155 +10,94 @@ lychee.define('tool.state.Profiles').includes([
 	 * HELPERS
 	 */
 
+	var _profiles = {};
+
 	var _ui_update = function() {
 
 		var config = new Config('http://localhost:4848/api/Profile?timestamp=' + Date.now());
 		var that   = this;
 
 		config.onload = function(result) {
-			_ui_render.call(that, this.buffer);
+
+			if (this.buffer instanceof Array) {
+
+				this.buffer.forEach(function(profile) {
+
+					var id = profile.identifier;
+
+					if (_profiles[id] instanceof Object) {
+						_profiles[id].port  = profile.port;
+						_profiles[id].hosts = profile.hosts;
+					} else {
+						_profiles[id] = profile;
+					}
+
+				});
+
+			}
+
+			_ui_render_select.call(that, this.buffer);
+
 		};
 
 		config.load();
 
 	};
 
-	var _ui_render = function(buffer) {
+	var _ui_render_select = function(profiles) {
 
-		if (buffer instanceof Array) {
+		if (profiles instanceof Array) {
 
-			var main = this.main || null;
-			if (main !== null) {
-
-				var code     = '';
-				var port     = 80;
-				var profiles = buffer;
+			var code = '';
+			var that = this;
+			var id   = this.__profile.identifier;
 
 
+			code = profiles.map(function(profile, index) {
 
-				if (profiles.length > 0) {
+				var checked = id === profile.identifier;
+				var chunk   = '';
 
-					code += '<article class="wide">';
-					code += '<h3><b>1</b>Select Profile</h3>';
-					code += '<p class="center">Select a Profile you want to modify.</p>';
-					code += '<div>';
-					code += '<ul class="select">';
-					code += profiles.map(function(profile) {
-						return '<li><input name="profiles-profile" type="radio" value="' + profile.identifier + '"><span>' + profile.identifier + '</span></li>';
-					}).join('');
-					code += '</ul>';
-					code += '</div>';
-					code += '</article>';
+				chunk += '<li>';
+				chunk += '<input name="profiles-profile" type="radio" onclick="MAIN.state.trigger(\'select\', [this.value]);" value="' + profile.identifier + '"' + (checked ? ' checked' : '') + '>';
+				chunk += '<span>' + profile.identifier + '</span>';
+				chunk += '</li>';
 
-					code += '<article class="wide">';
-					code += '<h3><b>2</b>Modify Profile</h3>';
-					code += '</article>';
+				return chunk;
 
-					code += '<article>';
-					code += '<h3><b>3</b>Save or Reboot</h3>';
-					code += '<p class="center">Now you can save the Profile or Reboot Sorbet with its modifications.</p>';
-					code += '</article>';
+			}).join('');
 
-/*
-				code += '<table>';
-					profiles.forEach(function(profile, index) {
+			code += '<li><input name="profiles-profile" type="radio" onclick="MAIN.state.trigger(\'select\', [this.value]);" value="new-profile"><span>new profile</span></li>';
 
-						if (index !== 0) {
-							code += '<tr class="div"></tr>';
-						}
+			ui.render(code, '#profiles-select ul.select');
+
+		}
+
+	};
+
+	var _ui_render_settings = function(profile) {
+
+		if (profile instanceof Object) {
+
+			var code = '';
 
 
-						code += '<tr>';
-						code += '<th><h3>' + profile.identifier + '</h3></th>';
+			Object.keys(profile.hosts).forEach(function(host, index) {
+
+				var project = profile.hosts[host] === null ? '*' : profile.hosts[host];
+
+				code += '<tr>';
+				code += '<td><input name="host-' + index + '" type="text" value="' + host + '"></td>';
+				code += '<td><input name="project-' + index + '" type="text" value="' + project + '"></td>';
+				code += '<td><button class="ico-remove ico-only" onclick="MAIN.state.trigger(\'remove\', [\'' + host + '\']);return false;"></button></td>';
+				code += '</tr>';
+
+			});
 
 
-// :' + '<input type="number" value="' + profile.port + '"></th>';
-// code += '<th><input type="text" value="' + profile.identifier + '">:<input type="number" value="' + profile.port + '"></th>';
-
-
-						code += '</tr>';
-						code += '<tr>';
-						code += '<th>Host</th>';
-						code += '<th>Project</th>';
-						code += '</tr>';
-
-
-						for (var host in profile.hosts) {
-
-							var project = profile.hosts[host];
-
-
-							code += '<tr>';
-							code += '<td><input type="text" value="' + host + '"></td>';
-							code += '<td><input type="text" value="' + (project !== null ? project : '*') + '"></td>';
-							code += '</tr>';
-
-						}
-
-console.log(profile);
-
-					});
-
-
-
-					projects.forEach(function(project) {
-
-						var project_actions = [];
-						var project_status  = '';
-
-						if (project.server === null) {
-
-							if (project.sorbet === true) {
-								project_actions.push('<a class="button ico-start ico-only" href="lycheejs://start=' + project.identifier + '"></a>');
-								project_status = '<label class="ico-offline">Offline</label>';
-							} else {
-								project_actions.push('<button class="ico-start ico-only" disabled></button>');
-								project_status = '<label class="ico-offline" disabled>Offline</label>';
-							}
-
-						} else {
-							project_actions.push('<a class="button ico-stop ico-only" href="lycheejs://stop=' + project.identifier + '"></a>');
-							project_status = '<label class="ico-online">Online</label>';
-						}
-
-
-						if (project.filesystem !== null) {
-							project_actions.push('<a class="button ico-folder ico-only" href="lycheejs://file=' + project.filesystem + '"></a>');
-						}
-
-
-						if (project_hosts.length > 0) {
-
-							project_hosts.forEach(function(host) {
-
-								if (sorbet !== null && sorbet.details[host] === null) {
-									project_actions.push('<a class="button ico-browser ico-only" href="lycheejs://web=' + host + ':' + port + '/projects/' + project.identifier + '"></a>');
-								} else {
-									project_actions.push('<a class="button ico-browser ico-only" href="lycheejs://web=' + host + ':' + port + '"></a>');
-								}
-
-							});
-
-						}
-
-
-						code += '<tr>';
-						code += '<td>' + project.identifier + '</td>';
-						code += '<td>' + project_status + '</td>';
-						code += '<td>' + project_hosts.join(', ') + '</td>';
-						code += '<td>' + project_actions.join('') + '</td>';
-						code += '</tr>';
-
-					});
-
-*/
-
-				}
-
-
-//				ui.render(code);
-
-			}
+			ui.render(code,               '#profiles-settings table tbody');
+			ui.render(profile.identifier, '#profiles-save-identifier');
+			ui.render(profile.port,       '#profiles-save-port');
 
 		}
 
@@ -171,7 +111,98 @@ console.log(profile);
 
 	var Class = function(main) {
 
+		this.__profile = {
+			identifier: 'development',
+			port:       8080,
+			hosts:      { localhost: null }
+		};
+
+
 		lychee.game.State.call(this, main);
+		lychee.event.Emitter.call(this);
+
+
+
+		/*
+		 * INITIALIZATION
+		 */
+
+		this.bind('select', function(identifier) {
+
+			var profile = _profiles[identifier];
+			if (profile instanceof Object) {
+
+				this.__profile = profile;
+				_ui_render_settings.call(this, this.__profile);
+
+			} else if (identifier === 'new-profile') {
+
+				this.__profile = {
+					identifier: 'new-profile',
+					port:       8080,
+					hosts:      { localhost: null }
+				};
+				_ui_render_settings.call(this, this.__profile);
+
+			}
+
+		}, this);
+
+		this.bind('submit', function(id, settings) {
+
+			if (id === 'settings') {
+
+				this.__profile.hosts = {};
+
+
+				var length = (Object.keys(settings).length / 2) - 1;
+
+				for (var i = 0; i < length; i++) {
+
+					var host    = settings['host-' + i];
+					var project = settings['project-' + i];
+
+					this.__profile.hosts[host] = project === '*' ? null : project;
+
+				}
+
+			}
+
+		}, this);
+
+		this.bind('add', function(host, project) {
+
+			if (host.length > 0 && project.length > 0) {
+
+				if (this.__profile.hosts[host] === undefined) {
+					this.__profile.hosts[host] = project === '*' ? null : project;
+					_ui_render_settings.call(this, this.__profile);
+				}
+
+			}
+
+		}, this);
+
+		this.bind('remove', function(host) {
+
+			if (this.__profile.hosts[host] !== undefined) {
+				delete this.__profile.hosts[host];
+				_ui_render_settings.call(this, this.__profile);
+			}
+
+		}, this);
+
+		this.bind('save', function(identifier, port) {
+
+			this.__profile.identifier = identifier;
+			this.__profile.port       = port;
+
+
+// TODO: PUT request to API to store profile
+// TODO: Relocate to lycheejs://boot=identifier afterwards
+// TODO: Error integration if API requests fail (or are they failsafe?)
+
+		}, this);
 
 	};
 
@@ -192,7 +223,7 @@ console.log(profile);
 		 */
 
 		update: function(clock, delta) {
-			_ui_update.call(this);
+
 		},
 
 		enter: function() {
@@ -200,7 +231,7 @@ console.log(profile);
 		},
 
 		leave: function() {
-			_ui_render.call(this, null);
+
 		}
 
 	};

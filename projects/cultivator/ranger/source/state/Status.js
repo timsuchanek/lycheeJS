@@ -1,6 +1,7 @@
 
 lychee.define('tool.state.Status').includes([
-	'lychee.game.State'
+	'lychee.game.State',
+	'lychee.event.Emitter'
 ]).tags({
 	platform: 'html'
 }).exports(function(lychee, tool, global, attachments) {
@@ -180,7 +181,7 @@ lychee.define('tool.state.Status').includes([
 				code += '</table>';
 
 
-				ui.render(code);
+				ui.render(code, 'section.active');
 
 			}
 
@@ -197,6 +198,7 @@ lychee.define('tool.state.Status').includes([
 	var Class = function(main) {
 
 		lychee.game.State.call(this, main);
+		lychee.event.Emitter.call(this);
 
 	};
 

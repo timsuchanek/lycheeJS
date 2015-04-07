@@ -204,6 +204,7 @@ aside > * {
 	display: inline-block;
 	vertical-align: middle;
 	margin: 16px;
+	line-height: 0px;
 }
 
 #logo h2 {

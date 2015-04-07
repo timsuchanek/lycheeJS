@@ -35,6 +35,10 @@
 		width: auto;
 		margin: 0px 16px;
 	}
+	#profiles table {
+		overflow: auto;
+		max-width: 512px;
+	}
 	#profiles table label.ico-okay {
 		color: #32afe5;
 		text-shadow: #32afe5 0 0 10px, #32afe5 0 0 20px, #32afe5 0 0 40px;
@@ -70,13 +74,13 @@
 			</p>
 			<div>
 				<ul class="select">
-					<li><input tabindex="1" name="status-profile" type="radio" value="development" checked><span>development</span></li>
-					<li><input tabindex="1" name="status-profile" type="radio" value="production"><span>production</span></li>
-					<li><input tabindex="1" name="status-profile" type="radio" value="lycheejs.org"><span>lycheejs.org</span></li>
+					<li><input name="status-profile" type="radio" value="development" checked><span>development</span></li>
+					<li><input name="status-profile" type="radio" value="production"><span>production</span></li>
+					<li><input name="status-profile" type="radio" value="lycheejs.org"><span>lycheejs.org</span></li>
 				</ul>
 			</div>
 			<p class="center">
-				<button tabindex="1" class="ico-boot" onclick="setTimeout(function() { MAIN.init(); }, 1000); location.href='lycheejs://boot=' + ui.getValue('#status input');">Boot Sorbet</button>
+				<button class="ico-boot" onclick="setTimeout(function() { MAIN.init(); }, 1000); location.href='lycheejs://boot=' + ui.value('#status input');">Boot Sorbet</button>
 			</p>
 		</article>
 
@@ -92,62 +96,59 @@
 			<h3><b>1</b>Select Profile</h3>
 			<div>
 				<ul class="select">
-					<li><input tabindex="1" name="profiles-profile" type="radio" value="development" checked><span>development</span></li>
-					<li><input tabindex="1" name="profiles-profile" type="radio" value="production"><span>production</span></li>
-					<li><input tabindex="1" name="profiles-profile" type="radio" value="lycheejs.org"><span>lycheejs.org</span></li>
-					<li><input tabindex="1" name="profiles-profile" type="radio" value="new-profile"><span>new profile</span></li>
+					<li><input name="profiles-profile" type="radio" value="development" checked><span>development</span></li>
+					<li><input name="profiles-profile" type="radio" value="production"><span>production</span></li>
+					<li><input name="profiles-profile" type="radio" value="lycheejs.org"><span>lycheejs.org</span></li>
+					<li><input name="profiles-profile" type="radio" value="new-profile"><span>new profile</span></li>
 				</ul>
 			</div>
 		</article>
 
-		<article id="profiles-settings" class="superwide">
+		<article id="profiles-settings">
 			<h3><b>2</b>Modify Profile</h3>
-			<table>
-				<tr>
-					<th>Host</th>
-					<th>Project</th>
-					<th>Status</th>
-					<th>Actions</th>
-				</tr>
-				<tr>
-					<td><input type="text" value="lycheejs.org"></td>
-					<td><input type="text" value="lycheeJS-website"></td>
-					<td><label class="ico-fail" disabled>Fail</label></td>
-					<td><button class="ico-remove ico-only" onclick="ui.remove(this.parentNode.parentNode)"></button></td>
-				</tr>
-				<tr>
-					<td><input type="text" value="localhost"></td>
-					<td><input type="text" value="*"></td>
-					<td><label class="ico-okay" disabled>Okay</label></td>
-					<td><button class="ico-remove ico-only" onclick="ui.remove(this.parentNode.parentNode)"></button></td>
-				</tr>
-				<tr class="div"></tr>
-				<tr class="div">
-					<th colspan="4">Add new Project</th>
-				</tr>
-				<tr class="menu">
-					<td><input type="text" value="" placeholder="Host"></td>
-					<td><input type="text" value="" placeholder="Project"></td>
-					<td></td>
-					<td><button class="ico-add ico-only"></button></td>
-				</tr>
-			</table>
+			<form id="settings" enctype="application/json" action="MAIN.state" method="javascript">
+				<table>
+					<thead>
+						<tr>
+							<th>Host</th>
+							<th>Project</th>
+							<th>Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td><input type="text" value="localhost"></td>
+							<td><input type="text" value="*"></td>
+							<td><button class="ico-remove ico-only" onclick="ui.remove(this.parentNode.parentNode)"></button></td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr class="div"><td colspan="4"></td></tr>
+						<tr class="div"><th colspan="4">Add new Project</th></tr>
+						<tr class="menu">
+							<td><input type="text" id="new-host" name="new-host" value="" placeholder="Host" onchange="return false;"></td>
+							<td><input type="text" id="new-project" name="new-project" value="" placeholder="Project" onchange="return false;"></td>
+							<td><button class="ico-add ico-only" onclick="MAIN.state.trigger('add', [ui.value('#new-host'), ui.value('#new-project')]);return false;"></button></td>
+						</tr>
+					</tfoot>
+				</table>
+			</form>
 		</article>
 
-		<article>
+		<article id="profiles-save">
 			<h3><b>3</b>Save Profile</h3>
 			<table class="vertical">
 				<tr>
 					<th>Profile</th>
-					<td><input type="text" value="new-profile-1"></td>
+					<td><input id="profiles-save-identifier" type="text" value="new-profile-1"></td>
 				</tr>
 				<tr>
 					<th>Port</th>
-					<td><input type="number" value="8080"></td>
+					<td><input id="profiles-save-port" type="number" value="8080"></td>
 				</tr>
 			</table>
 			<p class="center">
-				<button tabindex="1" class="ico-boot" onclick="setTimeout(function() { MAIN.init(); }, 1000); location.href='lycheejs://boot=' + ui.getValue('#profiles-select input');">Save &amp; Reboot Sorbet</button>
+				<button class="ico-boot" onclick="MAIN.state.trigger('save', [ui.value('#profiles-save-identifier'), ui.value('#profiles-save-port')])">Save &amp; Reboot Sorbet</button>
 			</p>
 		</article>
 
@@ -163,10 +164,5 @@ Help (coming soon...)
 	lycheeJS is (c) 2012-2015 by LazerUnicorns and released under MIT license.
 </footer>
 <script src="./index.js"></script>
-<script>
-setTimeout(function() {
-	ui.changeState('profiles');
-}, 500);
-</script>
 </body>
 </html>    
