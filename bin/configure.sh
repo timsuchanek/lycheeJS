@@ -49,9 +49,12 @@ else
 
 		# Default chmod rights for folders
 
-		chmod -R 0766 ./bin;
-		chmod -R 0666 ./projects;
-		chmod -R 0666 ./lychee;
+		chmod -R 0777 ./bin;
+		chmod -R 0777 ./projects;
+		chmod -R 0777 ./lychee;
+		chmod -R 0777 ./sorbet;
+
+		touch ./sorbet/.pid;
 
 		# Make command line tools explicitely executable
 
