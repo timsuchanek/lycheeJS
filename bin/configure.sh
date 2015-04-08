@@ -47,6 +47,7 @@ else
 
 		echo "Fixing chmod rights...";
 
+		chmod -R 0777 ./bin;
 		chmod -R 0777 ./projects;
 		chmod -R 0777 ./lychee;
 
