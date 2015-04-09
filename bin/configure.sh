@@ -67,8 +67,13 @@ else
 
 		# Make runtimes explicitely executable
 
-		chmod +x $LYCHEEJS_IOJS;
-		chmod +x $LYCHEEJS_NWJS;
+		if [ -f "$LYCHEEJS_IOJS" ]; then
+			chmod +x $LYCHEEJS_IOJS;
+		fi;
+
+		if [ -f "$LYCHEEJS_NWJS" ]; then
+			chmod +x $LYCHEEJS_NWJS;
+		fi;
 
 		echo "Done.";
 
@@ -77,10 +82,14 @@ else
 
 	if [ "$OS" == "linux" ]; then
 
-		echo "Integrating Helper and Ranger...";
-		cp ./bin/helper/linux/helper.desktop /usr/share/applications/lycheejs-helper.desktop;
-		cp ./bin/helper/linux/ranger.desktop /usr/share/applications/lycheejs-ranger.desktop;
-		echo "Done.";
+		if [ -d /usr/share/applications ]; then
+
+			echo "Integrating Helper and Ranger...";
+			cp ./bin/helper/linux/helper.desktop /usr/share/applications/lycheejs-helper.desktop;
+			cp ./bin/helper/linux/ranger.desktop /usr/share/applications/lycheejs-ranger.desktop;
+			echo "Done.";
+
+		fi;
 
 	elif [ "$OS" == "osx" ]; then
 
