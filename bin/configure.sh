@@ -37,7 +37,6 @@ if [ "$USER" != "root" ]; then
 
 	echo "You are not root.";
 	echo "Use \"sudo $0\"";
-	exit 1;
 
 else
 
@@ -106,8 +105,4 @@ else
 	fi;
 
 fi;
-
-
-
-exit 0;
 
