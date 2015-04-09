@@ -47,14 +47,25 @@ else
 
 		echo "Fixing chmod rights...";
 
+		# Default chmod rights for folders
+
+		chmod -R 0777 ./bin;
 		chmod -R 0777 ./projects;
 		chmod -R 0777 ./lychee;
+		chmod -R 0777 ./sorbet;
 
+		touch ./sorbet/.pid;
+
+		# Make command line tools explicitely executable
+
+		chmod +x ./lychee/configure.js;
 		chmod +x ./bin/fertilizer.sh;
 		chmod +x ./bin/fertilizer.js;
 		chmod +x ./bin/helper.sh;
 		chmod +x ./bin/sorbet.sh;
 		chmod +x ./bin/sorbet.js;
+
+		# Make runtimes explicitely executable
 
 		chmod +x $LYCHEEJS_IOJS;
 		chmod +x $LYCHEEJS_NWJS;
