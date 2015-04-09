@@ -46,47 +46,52 @@ if [ ! -d "./bin/ranger" ]; then
 		rm -rf ./projects/cultivator/ranger/build;
 	fi;
 
+
 	./bin/fertilizer.sh cultivator/ranger "html-nwjs/main";
 
 
-	# 1. Remove previously packaged builds
+	if [ -d "./projects/cultivator/ranger/build/html-nwjs" ]; then
 
-	rm -rf ./projects/cultivator/ranger/build/html-nwjs/main-linux;
-	rm -rf ./projects/cultivator/ranger/build/html-nwjs/main-osx;
-	rm -rf ./projects/cultivator/ranger/build/html-nwjs/main-windows;
+		# 1. Remove previously packaged builds
 
-
-	# 2. Inject design from cultivator project
-
-	cp -R ./projects/cultivator/design ./projects/cultivator/ranger/build/html-nwjs/main/design;
+		rm -rf ./projects/cultivator/ranger/build/html-nwjs/main-linux;
+		rm -rf ./projects/cultivator/ranger/build/html-nwjs/main-osx;
+		rm -rf ./projects/cultivator/ranger/build/html-nwjs/main-windows;
 
 
-	# Well, fuck you, Apple.
-	if [ "$OS" == "osx" ]; then
-		sed -i '' 's/\/projects\/cultivator\/design/.\/design/g' ./projects/cultivator/ranger/build/html-nwjs/main/index.html;
-	else
-		sed -i.bak 's/\/projects\/cultivator\/design/.\/design/g' ./projects/cultivator/ranger/build/html-nwjs/main/index.html;
-		rm ./projects/cultivator/ranger/build/html-nwjs/main/index.html.bak;
+		# 2. Inject design from cultivator project
+
+		cp -R ./projects/cultivator/design ./projects/cultivator/ranger/build/html-nwjs/main/design;
+
+
+		# Well, fuck you, Apple.
+		if [ "$OS" == "osx" ]; then
+			sed -i '' 's/\/projects\/cultivator\/design/.\/design/g' ./projects/cultivator/ranger/build/html-nwjs/main/index.html;
+		else
+			sed -i.bak 's/\/projects\/cultivator\/design/.\/design/g' ./projects/cultivator/ranger/build/html-nwjs/main/index.html;
+			rm ./projects/cultivator/ranger/build/html-nwjs/main/index.html.bak;
+		fi;
+
+
+		# 3. Re-package builds
+
+		cd ./bin/runtime/html-nwjs;
+		./package.sh /projects/cultivator/ranger/build/html-nwjs/main ranger;
+
+
+		# 4. Cache binaries for fast bootup
+
+		cd $LYCHEEJS_ROOT;
+		mkdir ./bin/ranger;
+		cp ./asset/softcore/desktop ./bin/ranger/icon.png;
+
+		mv ./projects/cultivator/ranger/build/html-nwjs/main-linux ./bin/ranger/linux;
+		mv ./projects/cultivator/ranger/build/html-nwjs/main-osx ./bin/ranger/osx;
+		mv ./projects/cultivator/ranger/build/html-nwjs/main-windows ./bin/ranger/windows;
+
+		rm -rf ./projects/cultivator/ranger/build;
+
 	fi;
-
-
-	# 3. Re-package builds
-
-	cd ./bin/runtime/html-nwjs;
-	./package.sh /projects/cultivator/ranger/build/html-nwjs/main ranger;
-
-
-	# 4. Cache binaries for fast bootup
-
-	cd $LYCHEEJS_ROOT;
-	mkdir ./bin/ranger;
-	cp ./asset/logo_desktop.png ./bin/ranger/icon.png;
-
-	mv ./projects/cultivator/ranger/build/html-nwjs/main-linux ./bin/ranger/linux;
-	mv ./projects/cultivator/ranger/build/html-nwjs/main-osx ./bin/ranger/osx;
-	mv ./projects/cultivator/ranger/build/html-nwjs/main-windows ./bin/ranger/windows;
-
-	rm -rf ./projects/cultivator/ranger/build;
 
 fi;
 

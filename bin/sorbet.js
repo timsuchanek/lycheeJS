@@ -193,7 +193,7 @@ var _settings = (function() {
 				debug:   false,
 				sandbox: false,
 				build:   'sorbet.Main',
-				timeout: 1000,
+				timeout: 10000, // 10 seconds bootup time, because we also ship lycheeOS
 				packages: [
 					new lychee.Package('lychee', '/lychee/lychee.pkg'),
 					new lychee.Package('sorbet', '/sorbet/lychee.pkg')
