@@ -4,7 +4,6 @@ lychee.define('sorbet.Main').requires([
 	'lychee.data.JSON',
 	'sorbet.data.Host',
 	'sorbet.net.Server',
-//	'sorbet.mod.Fertilizer',
 	'sorbet.mod.Package',
 	'sorbet.mod.Server',
 	'sorbet.serve.API',
@@ -178,6 +177,7 @@ lychee.define('sorbet.Main').requires([
 	(function(projects) {
 
 		projects['lychee'] = new sorbet.data.Project('lychee', '/lychee');
+		projects['sorbet'] = new sorbet.data.Project('sorbet', '/sorbet');
 
 
 		var root_fs = new sorbet.data.Filesystem('/');
