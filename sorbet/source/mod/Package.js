@@ -274,6 +274,7 @@ lychee.define('sorbet.mod.Package').requires([
 
 						if (data !== null) {
 							project.filesystem.write('/lychee.pkg', data);
+							project.package = new sorbet.data.Package(new Buffer(data, 'utf8'));
 						}
 
 					}

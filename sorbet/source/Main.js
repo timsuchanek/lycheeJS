@@ -336,6 +336,24 @@ lychee.define('sorbet.Main').requires([
 
 		}.bind(this), 1000);
 
+
+		if (this.settings.server.port > 1024) {
+
+			setInterval(function() {
+
+				for (var id in _project_cache) {
+
+					var project = _project_cache[id];
+					if (sorbet.mod.Package.can(project) === true) {
+						sorbet.mod.Package.process(project);
+					}
+
+				}
+
+			}.bind(this), 10000);
+
+		}
+
 	};
 
 

@@ -96,9 +96,6 @@ lychee.define('sorbet.data.Package').includes([
 
 		lychee.event.Emitter.call(this);
 
-
-// console.log(this.files);
-
 	};
 
 
