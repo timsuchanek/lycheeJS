@@ -645,7 +645,7 @@ ui = (function(global) {
 			var states = [].slice.call(document.querySelectorAll('section[id]'));
 
 
-			if (menu.length === states.length) {
+			if (menu.length > 0 && states.length > 0) {
 
 				menu.forEach(function(item) {
 
