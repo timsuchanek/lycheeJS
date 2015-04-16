@@ -87,17 +87,27 @@ var _settings = (function() {
 	};
 
 
-	var args = [ process.argv[2] || '', process.argv[3] || '' ];
+	var raw_arg0 = process.argv[2] || '';
+	var raw_arg1 = process.argv[3] || '';
 
-	if (fs.existsSync(root + '/projects/' + args[0] + '/lychee.pkg') === true) {
 
-		settings.project = args[0];
+	var pkg_path = root + '/projects/' + raw_arg0 + '/lychee.pkg';
+	if (raw_arg0 === 'lychee') {
+		pkg_path = root + '/lychee/lychee.pkg';
+	} else if (raw_arg0 === 'sorbet') {
+		pkg_path = root + '/sorbet/lychee.pkg';
+	}
+
+
+	if (fs.existsSync(pkg_path) === true) {
+
+		settings.project = raw_arg0;
 
 
 		var json = null;
 
 		try {
-			json = JSON.parse(fs.readFileSync(root + '/projects/' + args[0] + '/lychee.pkg', 'utf8'));
+			json = JSON.parse(fs.readFileSync(pkg_path, 'utf8'));
 		} catch(e) {
 			json = null;
 		}
@@ -107,9 +117,9 @@ var _settings = (function() {
 
 			if (json.build instanceof Object && json.build.environments instanceof Object) {
 
-				if (json.build.environments[args[1]] instanceof Object) {
-					settings.identifier  = args[1];
-					settings.environment = json.build.environments[args[1]];
+				if (json.build.environments[raw_arg1] instanceof Object) {
+					settings.identifier  = raw_arg1;
+					settings.environment = json.build.environments[raw_arg1];
 				}
 
 			}

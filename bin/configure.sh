@@ -5,28 +5,42 @@ lowercase() {
 }
 
 OS=`lowercase \`uname\``;
+ARCH=`lowercase \`uname -m\``;
 USER=`whoami`;
 
 LYCHEEJS_IOJS="";
 LYCHEEJS_ROOT=$(cd "$(dirname "$0")/../"; pwd);
 
 
+if [ "$ARCH" == "x86_64" -o "$ARCH" == "amd64" ]; then
+	ARCH="x86_64";
+fi;
+
+if [ "$ARCH" == "i386" -o "$ARCH" == "i686" -o "$ARCH" == "i686-64" ]; then
+	ARCH="x86";
+fi;
+
+if [ "$ARCH" == "armv7l" -o "$ARCH" == "armv8" ]; then
+	ARCH="arm";
+fi;
+
+
 if [ "$OS" == "darwin" ]; then
 
 	OS="osx";
-	LYCHEEJS_IOJS="$LYCHEEJS_ROOT/bin/runtime/iojs/osx/iojs";
+	LYCHEEJS_IOJS="$LYCHEEJS_ROOT/bin/runtime/iojs/osx/$ARCH/iojs";
 	LYCHEEJS_NWJS="$LYCHEEJS_ROOT/bin/runtime/html-nwjs/osx/nwjs.app";
 
 elif [ "$OS" == "linux" ]; then
 
 	OS="linux";
-	LYCHEEJS_IOJS="$LYCHEEJS_ROOT/bin/runtime/iojs/linux/iojs";
+	LYCHEEJS_IOJS="$LYCHEEJS_ROOT/bin/runtime/iojs/linux/$ARCH/iojs";
 	LYCHEEJS_NWJS="$LYCHEEJS_ROOT/bin/runtime/html-nwjs/linux/nwjs";
 
 elif [ "$OS" == "windowsnt" ]; then
 
 	OS="windows";
-	LYCHEEJS_IOJS="$LYCHEEJS_ROOT/bin/runtime/iojs/windows/iojs.exe";
+	LYCHEEJS_IOJS="$LYCHEEJS_ROOT/bin/runtime/iojs/windows/$ARCH/iojs.exe";
 	LYCHEEJS_NWJS="$LYCHEEJS_ROOT/bin/runtime/html-nwjs/windows/nwjs.exe";
 
 fi;
