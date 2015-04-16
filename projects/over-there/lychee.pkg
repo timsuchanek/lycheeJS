@@ -1,0 +1,198 @@
+{
+	"build": {
+		"environments": {
+			"html-nwjs/main": {
+				"build": "game.Main",
+				"debug": false,
+				"sandbox": false,
+				"packages": [
+					[
+						"game",
+						"./lychee.pkg"
+					]
+				],
+				"tags": {
+					"platform": [
+						"html-nwjs",
+						"html"
+					]
+				},
+				"variant": "application"
+			},
+			"html/main": {
+				"build": "game.Main",
+				"debug": false,
+				"sandbox": false,
+				"packages": [
+					[
+						"game",
+						"./lychee.pkg"
+					]
+				],
+				"tags": {
+					"platform": [
+						"html"
+					]
+				},
+				"variant": "application"
+			},
+			"nodejs/server": {
+				"build": "game.net.Server",
+				"debug": false,
+				"sandbox": false,
+				"packages": [
+					[
+						"game",
+						"./lychee.pkg"
+					]
+				],
+				"tags": {
+					"platform": [
+						"nodejs"
+					]
+				},
+				"variant": "application"
+			}
+		}
+	},
+	"source": {
+		"environments": {},
+		"tags": {},
+		"files": {
+			"entity": {
+				"Background": [
+					"js",
+					"png"
+				],
+				"Emblem": [
+					"js",
+					"png"
+				],
+				"Airlock": [
+					"js",
+					"json",
+					"png"
+				],
+				"Room": [
+					"js",
+					"json",
+					"png"
+				],
+				"__TMP": {
+					"spaceapps-02": [
+						"png"
+					],
+					"spaceapps-04": [
+						"png"
+					],
+					"spaceapps-06": [
+						"png"
+					],
+					"spaceapps-08": [
+						"png"
+					],
+					"spaceapps-10": [
+						"png"
+					],
+					"spaceapps-12": [
+						"png"
+					],
+					"spaceapps-14": [
+						"png"
+					],
+					"spaceapps-19": [
+						"png"
+					],
+					"spaceapps-20": [
+						"png"
+					],
+					"spaceapps-22": [
+						"png"
+					],
+					"spaceapps-23": [
+						"png"
+					]
+				},
+				"Astronaut": [
+					"js",
+					"json",
+					"blue.png",
+					"light.png",
+					"green.png",
+					"red.png",
+					"orange.png",
+					"pink.png",
+					"purple.png",
+					"yellow.png"
+				],
+				"Midground": [
+					"js",
+					"png"
+				]
+			},
+			"net": {
+				"client": {},
+				"remote": {},
+				"Client": [
+					"js",
+					"json"
+				],
+				"Server": [
+					"js"
+				]
+			},
+			"state": {
+				"Game": [
+					"js",
+					"json",
+					"fnt"
+				]
+			},
+			"ui": {
+				"Bubble": [
+					"fnt",
+					"js",
+					"json",
+					"png",
+					"fe-1.png",
+					"fe-2.png",
+					"fe-3.png",
+					"fe-4.png",
+					"fe-5.png",
+					"fe-6.png"
+				],
+				"Button": [
+					"png",
+					"js"
+				],
+				"Overlay": [
+					"js",
+					"fnt"
+				],
+				"Bubbleas": [
+					"json",
+					"png"
+				],
+				"HUD": [
+					"js",
+					"png"
+				]
+			},
+			"DeviceSpecificHacks": [
+				"js"
+			],
+			"Main": [
+				"js"
+			],
+			"index": [
+				"js"
+			],
+			"lib": {
+				"ls": {}
+			},
+			"logo": [
+				"png"
+			]
+		}
+	}
+}

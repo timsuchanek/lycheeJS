@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+<head>
+	<title>LycheeJS Game Boilerplate</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<!-- BOOTSTRAP -->
+	<script src="/lychee/build/html/core.js"></script>
+
+	<style>
+		body {
+			margin: 0;
+			padding: 0;
+			color: #ffffff;
+			background: url('./entity/Background.png') #000000 center center repeat repeat;
+		}
+		
+		#intro {
+			display: block;
+			position: absolute;
+			top: 50%;
+			right: 50%;
+			bottom: 50%;
+			left: 50%;
+			text-align: center;
+			line-height: 100%;
+			opacity: 1;
+			-moz-transition: all 2s ease-out;
+			-ms-transition: all 2s ease-out;
+			-webkit-transition: all 2s ease-out;
+			transition: all 2s ease-out;
+		}
+
+		#intro img {
+			border: 0px;
+			-moz-transform: translate(-50%, -50%);
+			-ms-transform: translate(-50%, -50%);
+			-webkit-transform: translate(-50%, -50%);
+			transform: translate(-50%, -50%);
+		}
+
+		.lychee-Renderer-canvas {
+			display: block;
+			margin: 0 auto;
+			user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			-webkit-user-select: none;
+			opacity: 0;
+			-moz-transition: all 2s ease-out;
+			-ms-transition: all 2s ease-out;
+			-webkit-transition: all 2s ease-out;
+			transition: all 2s ease-out;
+		} 
+	</style>
+
+</head>
+<body>
+	<div id="intro">
+		<img src="./logo.png">
+	</div>
+	<script src="./index.js"></script>
+
+	<script>
+	setTimeout(function() {
+
+		var intro = document.querySelector('#intro');
+		if (intro !== null) {
+			intro.style.opacity = 0;
+		}
+
+	}, 0);
+
+	setTimeout(function() {
+
+		var canvas = document.querySelector('canvas');
+		if (canvas !== null) {
+			canvas.style.opacity = 1;
+		}
+
+	}, 1000);
+
+	setTimeout(function() {
+	
+		var intro = document.querySelector('#intro');
+		if (intro !== null) {
+			document.body.removeChild(intro);
+		}
+
+	}, 3000);
+	</script>
+</body>
+</html>    

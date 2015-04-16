@@ -1,0 +1,137 @@
+{
+	"layers": {
+		"background": {
+			"constructor": "lychee.game.Layer",
+			"arguments": [{}],
+			"blob": {
+				"entities": [{
+					"constructor": "game.entity.Background",
+					"arguments": [{}]
+				}, {
+					"constructor": "game.entity.Midground",
+					"arguments": [{}]
+				}],
+				"map": {
+					"background": 0
+				}
+			}
+		},
+		"midground": {
+			"constructor": "lychee.game.Layer",
+			"arguments": [{}],
+			"blob": {
+				"entities": [{
+					"constructor": "game.entity.Midground",
+					"arguments": [{}]
+				}],
+				"map": {
+					"midground": 0
+				}
+			}
+		},
+		"game": {
+			"constructor": "lychee.game.Layer",
+			"arguments": [{}],
+			"blob": {
+				"entities": [{
+					"constructor": "lychee.game.Layer",
+					"arguments": [{}],
+					"blob": {
+						"entities": [
+                          {
+							"constructor": "game.entity.Room",
+							"arguments": [{ "position": { "x": 0, "y": 0 }, "type" : "node1", "country" : "US" }]
+						  }, {
+							  "constructor": "game.entity.Airlock",
+							  "arguments": [{ "position": { "x": 0, "y": 80 }, "type": "horizontal-medium" }]
+						  }, {
+							  "constructor": "game.entity.Airlock",
+							  "arguments": [{ "position": { "x": 0, "y": -80 }, "type": "horizontal-big" }]
+						  }, {
+							"constructor": "game.entity.Airlock",
+							"arguments": [{ "position": { "x": 80, "y": 0 }, "type": "vertical-big" }]
+						  }, {
+							"constructor": "game.entity.Airlock",
+							"arguments": [{ "position": { "x": -80, "y": 0 }, "type": "vertical-big" }]
+						  }, {
+							"constructor": "game.entity.Room",
+							"arguments": [{ "position": { "x": 0, "y": 192 } , "type" : "fgb", "country" : "RU" }]
+						  }, {
+							"constructor": "game.entity.Airlock",
+							"arguments": [{ "position": { "x": 0, "y": 304 } , "type": "horizontal-small" }]
+						  }, {
+							"constructor": "game.entity.Room",
+							"arguments": [{ "position": { "x": 0, "y": 352 }, "type": "node0" }]
+						  }, {
+							"constructor": "game.entity.Airlock",
+							"arguments": [{ "position": { "x": 48, "y": 352 } , "type": "vertical-small" }]
+						  }, {
+							"constructor": "game.entity.Airlock",
+							"arguments": [{ "position": { "x": -48, "y": 352 } , "type": "vertical-small"  }]
+						  }, {
+							"constructor": "game.entity.Airlock",
+							"arguments": [{ "position": { "x": 0, "y": 400 } , "type": "horizontal-small" }]
+						  }, {
+							"constructor": "game.entity.Room",
+							"arguments": [{ "position": { "x": 0, "y": 512 }, "type" : "sm", "country" : "RU" }]
+						  }, {
+							"constructor": "game.entity.Room",
+							"arguments": [{ "position": { "x": -176, "y": 0 }, "type" : "node3", "alias" : "tranquility", "country" : "US" }]
+						  }, {
+							"constructor": "game.entity.Room",
+							"arguments": [{ "position": { "x": 128, "y": 0 }, "type" : "crewlock", "country" : "US" }]
+						  }, {
+							"constructor": "game.entity.Room",
+							"arguments": [{ "position": { "x": 0, "y": -208 }, "type" : "destiny", "country" : "US" }]
+						  }, {
+							"constructor": "game.entity.Airlock",
+							"arguments": [{ "position": { "x": 0, "y": -336 }, "type": "horizontal-big" }]
+						  }, {
+							"constructor": "game.entity.Room",
+							"arguments": [{ "position": { "x": 0, "y": -432 }, "type" : "harmony", "country" : "US" }]
+						  }, {
+							"constructor": "game.entity.Airlock",
+							"arguments": [{ "position": { "x": 80, "y": -416 }, "type": "vertical-big" }]
+						  }, {
+							"constructor": "game.entity.Airlock",
+							"arguments": [{ "position": { "x": -80, "y": -416 }, "type": "vertical-big" }]
+						  }, {
+							"constructor": "game.entity.Room",
+							"arguments": [{ "position": { "x": 208, "y": -416 }, "type" : "columbus", "country" : "US" }]
+						  }, {
+							"constructor": "game.entity.Room",
+							"arguments": [{ "position": { "x": -192, "y": -416 }, "type" : "jem", "country" : "EU" }]
+						  }, {
+							"constructor": "game.entity.Room",
+							"arguments": [{ "position": { "x": 128, "y": 352 }, "type" : "dc1", "country" : "USSR" }]
+						  }, {
+							"constructor": "game.entity.Room",
+							"arguments": [{ "position": { "x": -128, "y": 352 }, "type" : "mrm2", "country" : "US" }]
+						  }
+                        ]
+                    }
+                }],
+				"map": {
+					"ship": 0
+				}
+			}
+		},
+		"ui": {
+			"constructor": "lychee.ui.Layer",
+			"arguments": [{}],
+			"blob": {
+				"entities": [{
+					"constructor": "game.ui.Overlay",
+					"arguments": [{}]
+				}, {
+					"constructor": "game.ui.Button",
+					"arguments": [{}]
+				}],
+				"map": {
+					"overlay": 0,
+					"button": 1
+				}
+			}
+		}
+	}
+}
