@@ -1,5 +1,5 @@
 
-lychee.define('game.entity.Floor').includes([
+lychee.define('game.entity.Terrain').includes([
 	'lychee.game.Sprite'
 ]).exports(function(lychee, game, global, attachments) {
 
@@ -33,6 +33,8 @@ lychee.define('game.entity.Floor').includes([
 
 
 		lychee.game.Sprite.call(this, settings);
+
+		settings = null;
 
 	};
 

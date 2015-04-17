@@ -1,15 +1,13 @@
 
 lychee.define('game.net.Server').requires([
 	'lychee.data.BitON',
-	'game.net.remote.Highscore',
-	'game.net.remote.Multiplayer'
+	'game.net.remote.Controller'
 ]).includes([
 	'lychee.net.Server'
 ]).exports(function(lychee, game, global, attachments) {
 
-	var _BitON       = lychee.data.BitON;
-	var _highscore   = game.net.remote.Highscore;
-	var _multiplayer = game.net.remote.Multiplayer;
+	var _BitON      = lychee.data.BitON;
+	var _Controller = game.net.remote.Controller;
 
 
 	var Class = function(data) {
@@ -31,8 +29,7 @@ lychee.define('game.net.Server').requires([
 
 			console.log('(Lethal Maze) game.net.Server: Remote connected (' + remote.host + ':' + remote.port + ')');
 
-			remote.addService(new _highscore(remote));
-			remote.addService(new _multiplayer(remote));
+			remote.addService(new _Controller(remote));
 
 		}, this);
 

@@ -4,7 +4,7 @@
 	var environment = new lychee.Environment({
 		id:       'lethalmaze',
 		debug:    true,
-		sandbox:  true,
+		sandbox:  false,
 		build:    'game.Main',
 		packages: [
 			new lychee.Package('game', '../lychee.pkg')

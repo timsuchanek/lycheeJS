@@ -20,8 +20,7 @@ lychee.define('sorbet.mod.Package').requires([
 			if (pointer[name] !== undefined) {
 				pointer = pointer[name];
 			} else {
-				pointer[name] = path.length > 0 ? {} : [];
-				pointer = pointer[name];
+				pointer = pointer[name] = path.length > 0 ? {} : [];
 			}
 
 		}
