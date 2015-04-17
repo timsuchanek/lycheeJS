@@ -2,7 +2,6 @@
 lychee.define('game.Main').requires([
 	'game.net.Client',
 	'game.state.Game',
-	'game.state.Menu',
 	'game.DeviceSpecificHacks'
 ]).includes([
 	'lychee.game.Main'
@@ -28,15 +27,6 @@ lychee.define('game.Main').requires([
 				sound: true
 			},
 
-			logic: {
-				projection: lychee.game.Logic.PROJECTION.tile,
-				tile: {
-					width:  32,
-					height: 32,
-					depth:  1
-				}
-			},
-
 			renderer: {
 				id:         'lethalmaze',
 				width:      768,
@@ -54,10 +44,12 @@ lychee.define('game.Main').requires([
 		lychee.game.Main.call(this, settings);
 
 
-		this.bind('load', function() {
+		this.bind('load', function(oncomplete) {
 
 			this.settings.gameclient = this.settings.client;
 			this.settings.client     = null;
+
+			oncomplete(true);
 
 		}, this, true);
 
@@ -69,8 +61,7 @@ lychee.define('game.Main').requires([
 			}
 
 			this.setState('game', new game.state.Game(this));
-			this.setState('menu', new game.state.Menu(this));
-			this.changeState('menu');
+			this.changeState('game');
 
 		}, this, true);
 

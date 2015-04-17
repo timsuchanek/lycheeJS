@@ -96,40 +96,9 @@
 					"explosion.snd",
 					"powerup.snd",
 					"msc"
-				],
-				"Menu": [
-					"js",
-					"json"
 				]
 			},
-			"ui": {
-				"Button": [
-					"js",
-					"json",
-					"png",
-					"fnt"
-				],
-				"Dialog": [
-					"js",
-					"json",
-					"png"
-				],
-				"Highscores": [
-					"js",
-					"fnt"
-				],
-				"Layer": [
-					"js",
-					"json",
-					"png",
-					"fnt"
-				],
-				"Result": [
-					"js",
-					"json",
-					"png"
-				]
-			},
+			"ui": {},
 			"DeviceSpecificHacks": [
 				"js"
 			],

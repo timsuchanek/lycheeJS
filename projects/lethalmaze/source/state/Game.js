@@ -4,6 +4,7 @@ lychee.define('game.state.Game').requires([
 	'lychee.effect.Position',
 	'lychee.effect.Shake',
 	'lychee.game.Background',
+	'lychee.game.Logic',
 	'game.effect.Explosion',
 	'game.entity.Bullet',
 	'game.entity.Button',
@@ -13,9 +14,7 @@ lychee.define('game.state.Game').requires([
 	'game.entity.Wall',
 	'game.layer.Floor',
 	'game.layer.Objects',
-	'game.layer.Effects',
-	'game.ui.Dialog',
-	'game.ui.Result'
+	'game.layer.Effects'
 ]).includes([
 	'lychee.game.State'
 ]).exports(function(lychee, game, global, attachments) {
@@ -216,8 +215,6 @@ lychee.define('game.state.Game').requires([
 		this.queryLayer('game', 'floor').removeEntities();
 		this.queryLayer('game', 'objects').removeEntities();
 		this.queryLayer('game', 'effects').removeEntities();
-		this.queryLayer('ui',   'dialog').setVisible(true);
-		this.queryLayer('ui',   'result').setVisible(false);
 
 	};
 
@@ -292,17 +289,11 @@ lychee.define('game.state.Game').requires([
 			this.queryLayer('game', 'objects').removeEntity(player);
 
 
-			if (this.player === player) {
+console.log('destroy player');
 
-				this.queryLayer('ui', 'result').setVisible(true);
-
-			} else {
-
-				var index = this.players.indexOf(player);
-				if (index !== -1) {
-					this.players.splice(index, 1);
-				}
-
+			var index = this.players.indexOf(player);
+			if (index !== -1) {
+				this.players.splice(index, 1);
 			}
 
 		}, this);
@@ -542,6 +533,16 @@ lychee.define('game.state.Game').requires([
 		this.player   = null;
 		this.players  = [];
 
+		this.logic    = new lychee.game.Logic({
+			projection: lychee.game.Logic.PROJECTION.tile,
+			tile:       {
+				width:  32,
+				height: 32,
+				depth:   1
+			}
+		});
+
+
 		this.__action = 0;
 
 
@@ -619,13 +620,7 @@ lychee.define('game.state.Game').requires([
 			 * INITIALIZATION
 			 */
 
-			this.queryLayer('ui', 'result').setVisible(false);
-			this.queryLayer('ui', 'dialog').bind('device', function(device) {
-
-// TODO: Tablet UI integration
-
-			}, this);
-
+/*
 			this.queryLayer('ui', 'dialog').bind('start', function() {
 
 				var client = this.client;
@@ -680,6 +675,8 @@ lychee.define('game.state.Game').requires([
 				this.main.changeState('menu');
 
 			}, this);
+
+*/
 
 		},
 
@@ -886,9 +883,6 @@ lychee.define('game.state.Game').requires([
 
 						service.bind('start', function(data) {
 
-							this.queryLayer('ui', 'dialog').setVisible(false);
-							this.queryLayer('ui', 'result').setVisible(false);
-
 							this.main.input.bind('escape', function() {
 								service.leave();
 								this.main.changeState('menu');
@@ -904,12 +898,6 @@ lychee.define('game.state.Game').requires([
 							var index = data.tunnels.indexOf(data.tid);
 							if (index !== this.players.indexOf(this.player)) {
 								this.setPlayer(this.players[index]);
-							}
-
-
-							var dialog = this.queryLayer('ui', 'dialog');
-							if (dialog !== null) {
-								dialog.setMultiplayer(index, this.players);
 							}
 
 						}, this);
