@@ -17,7 +17,7 @@ lychee = typeof lychee !== 'undefined' ? lychee : (function(global) {
 
 	if (typeof Array.prototype.find !== 'function') {
 
-		Array.prototype.find = function(predicate) {
+		Array.prototype.find = function(predicate/*, thisArg */) {
 
 			if (this == null) {
 				throw new TypeError('Array.prototype.find called on null or undefined');
@@ -29,7 +29,7 @@ lychee = typeof lychee !== 'undefined' ? lychee : (function(global) {
 
 			var list    = Object(this);
 			var length  = list.length >>> 0;
-			var thisArg = arguments[1];
+			var thisArg = arguments.length >= 2 ? arguments[1] : void 0;
 			var value;
 
 			for (var i = 0; i < length; i++) {
@@ -46,6 +46,88 @@ lychee = typeof lychee !== 'undefined' ? lychee : (function(global) {
 			return undefined;
 
 		}
+
+	}
+
+	if (typeof Object.filter !== 'function') {
+
+		Object.filter = function(object, predicate/*, thisArg */) {
+
+			if (object !== Object(object)) {
+				throw new TypeError('Object.filter called on a non-object');
+			}
+
+			if (typeof predicate !== 'function') {
+				throw new TypeError('predicate must be a function');
+			}
+
+
+			var props   = [];
+			var values  = [];
+			var thisArg = arguments.length >= 3 ? arguments[2] : void 0;
+
+			for (var prop in object) {
+
+				var value = object[prop];
+
+				if (Object.prototype.hasOwnProperty.call(object, prop)) {
+
+					if (predicate.call(thisArg, value, prop, object)) {
+						props.push(prop);
+						values.push(value);
+					}
+
+				}
+
+			}
+
+
+			var filtered = {};
+
+			for (var i = 0; i < props.length; i++) {
+				filtered[props[i]] = values[i];
+			}
+
+
+			return filtered;
+
+		};
+
+	}
+
+	if (typeof Object.find !== 'function') {
+
+		Object.find = function(object, predicate/*, thisArg */) {
+
+			if (object !== Object(object)) {
+				throw new TypeError('Object.find called on a non-object');
+			}
+
+			if (typeof predicate !== 'function') {
+				throw new TypeError('predicate must be a function');
+			}
+
+
+			var thisArg = arguments.length >= 3 ? arguments[2] : void 0;
+
+			for (var prop in object) {
+
+				var value = object[prop];
+
+				if (Object.prototype.hasOwnProperty.call(object, prop)) {
+
+					if (predicate.call(thisArg, value, prop, object)) {
+						return value;
+					}
+
+				}
+
+			}
+
+
+			return undefined;
+
+		};
 
 	}
 
