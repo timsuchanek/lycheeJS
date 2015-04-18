@@ -95,9 +95,11 @@ lychee.define('tool.Main').requires([
 
 				setTimeout(function() {
 
-					sandbox.MAIN.settings.renderer.width  = 1024;
+					var width = window.innerWidth;
+					width = ((width - (16 + 3 * 64)) * 3) / 4; // don't touch this
+					sandbox.MAIN.settings.renderer.width  = width;
 					sandbox.MAIN.settings.renderer.height = 768;
-					sandbox.MAIN.renderer.setWidth(1024);
+					sandbox.MAIN.renderer.setWidth(width);
 					sandbox.MAIN.renderer.setHeight(768);
 
 					sandbox.MAIN.viewport.trigger('reshape', [

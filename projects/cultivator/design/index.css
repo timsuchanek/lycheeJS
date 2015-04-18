@@ -1302,13 +1302,18 @@ footer {
 	transform: rotate(-90deg) translateX(8px) translateY(1px);
 }
 
-
+#scene-settings .settings-control {
+	font-size: 12px;
+}
 
 #scene-settings .settings-control input {
 	width: 36px;
 	padding-right: 0;
 }
 
+#scene-settings .settings-control span {
+	text-transform: uppercase;
+}
 
 ul.layers, ul.layers ul {
 	list-style: none;
