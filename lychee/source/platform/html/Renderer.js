@@ -253,7 +253,7 @@ lychee.define('Renderer').tags({
 
 			this.__canvas.width       = this.width;
 			this.__canvas.style.width = this.width + 'px';
-			this.offset.x             = this.__canvas.offsetLeft;
+			this.offset.x             = this.__canvas.getBoundingClientRect().left;
 
 		},
 
@@ -271,7 +271,7 @@ lychee.define('Renderer').tags({
 
 			this.__canvas.height       = this.height;
 			this.__canvas.style.height = this.height + 'px';
-			this.offset.y              = this.__canvas.offsetTop;
+			this.offset.y              = this.__canvas.getBoundingClientRect().top;
 
 		},
 
