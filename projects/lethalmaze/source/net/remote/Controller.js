@@ -51,7 +51,8 @@ lychee.define('game.net.remote.Controller').includes([
 		if (tunnel !== null) {
 
 			tunnel.send({
-				sid: found.id
+				sid: found.id,
+				id:  found.remotes.indexOf(this.tunnel)
 			}, {
 				service: this.id,
 				event:   'init'
@@ -64,17 +65,41 @@ lychee.define('game.net.remote.Controller').includes([
 
 	var _on_unplug = function() {
 
-		var tunnel = this.tunnel;
+		var that = this;
 
 
 		_sessions = Object.filter(_sessions, function(value, key) {
 
-			var index = value.remotes.indexOf(tunnel);
+			var index = value.remotes.indexOf(that.tunnel);
 			if (index !== -1) {
 				value.remotes.splice(index, 1);
 			}
 
-			return value.remotes.length !== 0;
+
+			if (value.remotes.length !== 0) {
+
+				if (index !== -1) {
+
+					value.remotes.forEach(function(remote) {
+
+						remote.send({
+							id: index
+						}, {
+							service: that.id,
+							event:   'destroy'
+						});
+
+					});
+
+				}
+
+				return true;
+
+			} else {
+
+				return false;
+
+			}
 
 		});
 
@@ -96,15 +121,6 @@ lychee.define('game.net.remote.Controller').includes([
 
 		this.bind('plug',   _on_plug,   this);
 		this.bind('unplug', _on_unplug, this);
-
-
-// TODO: Send stuff to clients
-
-		this.bind('unplug', function() {
-
-console.log('JOINED NEW CLIENT');
-
-		}, this);
 
 	};
 
