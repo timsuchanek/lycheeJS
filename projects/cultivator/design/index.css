@@ -1370,6 +1370,7 @@ ul.layers .ico-arrow-down, ul.layers .ico-arrow-up {
 ul.layers ul {
 	height: 0;
 	overflow: hidden;
+	padding-left: 16px;
 }
 
 ul.layers ul.active {
