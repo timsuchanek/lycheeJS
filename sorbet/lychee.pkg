@@ -68,6 +68,9 @@
 					],
 					"Server": [
 						"js"
+					],
+					"Editor": [
+						"js"
 					]
 				},
 				"API": [
