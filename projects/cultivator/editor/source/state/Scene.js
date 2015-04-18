@@ -1,5 +1,5 @@
 
-lychee.define('tool.state.Profiles').includes([
+lychee.define('tool.state.Scene').includes([
 	'lychee.game.State',
 	'lychee.event.Emitter'
 ]).tags({
@@ -269,8 +269,10 @@ lychee.define('tool.state.Profiles').includes([
 
 		},
 
-		enter: function() {
-			_ui_update.call(this);
+		enter: function(data) {
+// TODO: Render scene graph from data into layers
+// TODO: Render settings with default selected entity
+//			_ui_update.call(this);
 		},
 
 		leave: function() {

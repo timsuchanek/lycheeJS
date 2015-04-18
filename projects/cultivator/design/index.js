@@ -639,7 +639,10 @@ ui = (function(global) {
 
 		},
 
-		changeState: function(identifier) {
+		changeState: function(identifier, data) {
+
+			data = data instanceof Object ? data : null;
+
 
 			var menu   = [].slice.call(document.querySelectorAll('menu li'));
 			var states = [].slice.call(document.querySelectorAll('section[id]'));
@@ -673,9 +676,9 @@ ui = (function(global) {
 				if (target !== null) {
 
 					if (target instanceof Function) {
-						target(identifier);
+						target(identifier, data);
 					} else if (target instanceof Object && typeof target.changeState === 'function') {
-						target.changeState(identifier);
+						target.changeState(identifier, data);
 					}
 
 				}

@@ -35,9 +35,7 @@
 
 			"state": {
 
-				"Bootup":   [ "js" ],
-				"Profiles": [ "js" ],
-				"Status":   [ "js" ]
+				"Scene": [ "js" ]
 
 			},
 

@@ -1,10 +1,8 @@
 
 lychee.define('tool.Main').requires([
 	'lychee.data.JSON',
-	'tool.state.Bootup',
-	'tool.state.Profiles',
-	'tool.state.Status'
-]).includes([
+	'tool.state.Scene'
+).includes([
 	'lychee.game.Main'
 ]).tags({
 	platform: 'html'
@@ -50,7 +48,7 @@ lychee.define('tool.Main').requires([
 
 	var _load_api = function(callback, scope) {
 
-		var config = new Config('http://localhost:4848/api/Project?timestamp=' + Date.now());
+		var config = new Config('http://localhost:4848/api/Editor?timestamp=' + Date.now());
 
 		config.onload = function(result) {
 			callback.call(scope, result);
@@ -102,18 +100,11 @@ lychee.define('tool.Main').requires([
 
 		this.bind('init', function() {
 
-			this.setState('bootup',   new tool.state.Bootup(this));
-			this.setState('profiles', new tool.state.Profiles(this));
-			this.setState('status',   new tool.state.Status(this));
+			this.setState('scene', new tool.state.Scene(this));
 
+			_load_api(function(data) {
 
-			_load_api(function(result) {
-
-				if (result === true) {
-					ui.changeState('status');
-				} else {
-					ui.changeState('bootup');
-				}
+				ui.changeState('scene', data);
 
 			}, this);
 
