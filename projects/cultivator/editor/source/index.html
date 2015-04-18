@@ -66,49 +66,82 @@
 		</article>
 
 		<article id="scene-settings">
-			<h3>Settings</h3>
-			<table class="vertical">
-			<tr>
-				<th>Name</th>
-				<td>lyche.ui.Button</td>
-			</tr>
-			<tr class="no-border">
-				<th><h4>Position</h4></th>
-				<td></td>
-			</tr>
-			<tr>
-				<th>x</th>
-				<td><input id="position-x" type="number" value="123"></td>
-			</tr>
-			<tr>
-				<th>y</th>
-				<td><input id="position-y" type="number" value="56"></td>
-			</tr>
-			<tr class="no-border">
-				<th><h4>Size</h4></th>
-				<td></td>
-			</tr>
-			<tr>
-				<th>width</th>
-				<td><input id="width" type="number" value="64"></td>
-			</tr>
-			<tr>
-				<th>height</th>
-				<td><input id="height" type="number" value="64"></td>
-			</tr>
+			<h3 onclick="MAIN.state.trigger('toggle_settings', [ this ]);">Settings <label class="ico-arrow-down"></label></h3>
+			<div class="collapse-content" id="settings-collapse">
+				<table class="vertical">
+					<tr>
+						<th>Name</th>
+						<td>lyche.ui.Button</td>
+					</tr>
+					<tr class="no-border">
+						<th><h4>Position</h4></th>
+						<td></td>
+					</tr>
+					<tr>
+						<th>x</th>
+						<td><input id="position-x" type="number" value="123"></td>
+					</tr>
+					<tr>
+						<th>y</th>
+						<td><input id="position-y" type="number" value="56"></td>
+					</tr>
+					<tr class="no-border">
+						<th><h4>Size</h4></th>
+						<td></td>
+					</tr>
+					<tr>
+						<th>width</th>
+						<td><input id="width" type="number" value="64"></td>
+					</tr>
+					<tr>
+						<th>height</th>
+						<td><input id="height" type="number" value="64"></td>
+					</tr>
+				</table>				
+			</div>
 
-
-			</table>
-			<h3>Layers</h3>
-			<div>
+			<h3 onclick="MAIN.state.trigger('toggle_layers', [ this ]);">Layers <label class="ico-arrow-down active"></label></h3>
+			<div class="collapse-content active" id="layers-collapse">
 				<ul class="layers">
-					<li><label class="ico-eye"></label><span>lychee.ui.Layer</span></li>
-					<li><label class="ico-eye"></label><span>lychee.game.Layer</span></li>
 					<li>
-						<span><label class="ico-eye"></label>lychee.ui.Layer</span>
+						<label class="ico-arrow-down"></label>
+						<label class="ico-eye"></label>
+						<span>lychee.ui.Layer</span>
 						<ul>
-							<li><label class="ico-eye"></label><span>lychee.ui.Button</span></li>
-							<li><label class="ico-eye"></label><span>game.entity.Tank</span></li>
+							<li>
+								<label class="ico-eye"></label>
+								<span>lychee.ui.Schmutton</span>
+							</li>
+							<li>
+								<label class="ico-eye"></label>
+								<span>game.entity.Apple</span>
+							</li>
+						</ul>
+					</li>
+					<li>
+						<label class="ico-arrow-down"></label>
+						<label class="ico-eye"></label>
+						<span>lychee.game.Layer</span>
+						<ul>
+							<li>
+								<label class="ico-eye"></label>
+								<span>lychee.ui.ButtonKutton</span>
+							</li>
+						</ul>
+					</li>
+					<li>
+						<label class="ico-arrow-down active"></label>
+						<label class="ico-eye"></label>
+						<span>lychee.ui.Layer</span>
+						<ul class="active">
+							<li>
+								<label class="ico-eye"></label>
+								<span>lychee.ui.Button</span>
+							</li>
+							<li>
+								<label class="ico-eye"></label>
+								<span>game.entity.Tank</span>
+							</li>
 						</ul>
 					</li>
 				</ul>
