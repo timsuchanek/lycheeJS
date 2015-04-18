@@ -111,7 +111,8 @@ lychee.define('tool.state.Scene').includes([
 			var code = '';
 
 
-			Object.keys(profile.hosts).forEach(function(host, index) {
+			Object
+			.keys(profile.hosts).forEach(function(host, index) {
 
 				var project = profile.hosts[host] === null ? '*' : profile.hosts[host];
 
@@ -332,7 +333,10 @@ lychee.define('tool.state.Scene').includes([
 
 			var layerCode = '<ul class="layers">'
 
-			Object.keys(layers).forEach(function(layerName) {
+			Object
+			.keys(layers)
+			.reverse()
+			.forEach(function(layerName) {
 				var layer = layers[layerName];
 				var blob = layer.serialize();
 
