@@ -46,6 +46,75 @@ lychee.define('tool.Main').requires([
 	 * HELPERS
 	 */
 
+	var _initialize = function(identifier, callback, scope) {
+
+		var environment = new lychee.Environment({
+			id:      identifier,
+			debug:   true,
+			sandbox: true,
+			build:   'game.Main',
+			packages: [
+				new lychee.Package('game', '/projects/' + identifier + '/lychee.pkg')
+			],
+			tags:     {
+				platform: [ 'html' ]
+			}
+		});
+
+
+		Object.values(lychee.environment.definitions).filter(function(definition) {
+			return definition.id.substr(0, 6) === 'lychee';
+		}).forEach(function(definition) {
+			environment.define(definition);
+		});
+
+
+		lychee.setEnvironment(environment);
+
+		lychee.init(function(sandbox) {
+
+			var lychee = sandbox.lychee;
+			var game   = sandbox.game;
+
+
+			// This allows using #MAIN in JSON files
+			sandbox.MAIN = new game.Main();
+			sandbox.MAIN.init();
+
+
+			setTimeout(function() {
+
+				var _canvas  = document.querySelector('#' + identifier);
+				var _wrapper = document.querySelector('#scene-preview-wrapper');
+
+				if (_canvas !== null && _wrapper !== null) {
+					_canvas.parentNode.removeChild(_canvas);
+					_wrapper.appendChild(_canvas);
+				}
+
+
+				setTimeout(function() {
+
+					sandbox.MAIN.settings.renderer.width  = 1024;
+					sandbox.MAIN.settings.renderer.height = 768;
+					sandbox.MAIN.renderer.setWidth(1024);
+					sandbox.MAIN.renderer.setHeight(768);
+
+					sandbox.MAIN.viewport.trigger('reshape', [
+						sandbox.MAIN.viewport.orientation,
+						sandbox.MAIN.viewport.rotation
+					]);
+
+			   		callback.call(scope, environment);
+
+				}, 100);
+
+			}, 100);
+
+		});
+
+	};
+
 	var _load_api = function(callback, scope) {
 
 		var config = new Config('http://localhost:4848/api/Editor?timestamp=' + Date.now());
@@ -102,17 +171,12 @@ lychee.define('tool.Main').requires([
 
 			this.setState('scene', new tool.state.Scene(this));
 
-			_load_api(function(data) {
 
-				var project = null;
+			_initialize('boilerplate', function(environment) {
 
-				if (data instanceof Array) {
-					project = data.find(function(obj) {
-						return obj.identifier === 'boilerplate';
-					}) || null;
-				}
+global._ENV = environment;
 
-				ui.changeState('scene', project);
+				ui.changeState('scene', environment);
 
 			}, this);
 
