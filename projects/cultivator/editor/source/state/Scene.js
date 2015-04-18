@@ -276,13 +276,13 @@ lychee.define('tool.state.Scene').includes([
 			var state = this.getState();
 			var entity = state.queryLayer.apply(state, query);
 
+
 			if (entity !== null) {
-				if (entity.alpha === 1) {
-					entity.setAlpha(0);
-				} else {
-					entity.setAlpha(1);
+				if (lychee.interfaceof(lychee.ui.Entity, entity)) {
+					entity.setVisible(!entity.visible);
+				} else if (lychee.interfaceof(lychee.game.Entity, entity)) {
+					entity.setAlpha(entity.alpha === 1 ? 0 : 1);
 				}
-				debugger
 			}
 
 			eye.classList.toggle('visible');
