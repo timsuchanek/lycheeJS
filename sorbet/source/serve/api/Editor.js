@@ -149,11 +149,17 @@ lychee.define('sorbet.serve.api.Editor').requires([
 					var project = host.getProject(identifier);
 					if (project !== null && identifier !== 'lychee' && identifier !== 'sorbet') {
 
-						ready({
-							status:  200,
-							headers: _to_header(200, data),
-							payload: _JSON.encode(_serialize(project))
-						});
+						// XXX: Asset Serialization is asynchronous
+						_serialize(project);
+						setTimeout(function() {
+
+							ready({
+								status:  200,
+								headers: _to_header(200, data),
+								payload: _JSON.encode(_serialize(project))
+							});
+
+						}, 1000);
 
 					} else {
 
@@ -169,16 +175,22 @@ lychee.define('sorbet.serve.api.Editor').requires([
 
 				} else {
 
-					var projects = host.projects.map(_serialize).filter(function(project) {
+					var projects = host.projects.filter(function(project) {
 						return project.identifier !== 'lychee' && project.identifier !== 'sorbet';
 					});
 
 
-					ready({
-						status:  200,
-						headers: _to_header(200, data),
-						payload: _JSON.encode(projects)
-					});
+					// XXX: Asset Serialization is asynchronous
+					projects.map(_serialize);
+					setTimeout(function() {
+
+						ready({
+							status:  200,
+							headers: _to_header(200, data),
+							payload: _JSON.encode(projects.map(_serialize))
+						});
+
+					}, 1000);
 
 				}
 
