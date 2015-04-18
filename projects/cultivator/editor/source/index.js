@@ -2,7 +2,7 @@
 (function(lychee, global) {
 
 	var environment = new lychee.Environment({
-		id:      'ranger',
+		id:      'editor',
 		debug:   false,
 		sandbox: false,
 		build:   'tool.Main',
