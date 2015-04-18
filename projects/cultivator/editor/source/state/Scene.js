@@ -270,6 +270,9 @@ lychee.define('tool.state.Scene').includes([
 		},
 
 		enter: function(data) {
+
+console.log(data);
+
 // TODO: Render scene graph from data into layers
 // TODO: Render settings with default selected entity
 //			_ui_update.call(this);
