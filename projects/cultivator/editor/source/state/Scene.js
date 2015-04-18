@@ -111,7 +111,8 @@ lychee.define('tool.state.Scene').includes([
 			var code = '';
 
 
-			Object.keys(profile.hosts).forEach(function(host, index) {
+			Object
+			.keys(profile.hosts).forEach(function(host, index) {
 
 				var project = profile.hosts[host] === null ? '*' : profile.hosts[host];
 
@@ -332,24 +333,52 @@ lychee.define('tool.state.Scene').includes([
 
 			var layerCode = '<ul class="layers">'
 
-			Object.keys(layers).forEach(function(layerName) {
-				var layer = layers[layerName];
-				var blob = layer.serialize();
+			function _generateChildren(layerName, layer, recursive, lastQuery) {
 
-				layerCode += '<li><label class="ico-eye visible" ></label>';
-				layerCode += '<label class="ico-arrow-down active"></label>';
-				// debugger
-				// layerCode += '<span>' + layerName +' (' + blob.constructor + ')</span>';
-				layerCode += '<span>' + layerName + '</span>';
+				lastQuery = lastQuery || null;
 
-				if (blob.blob.entities.length > 0) {
-					layerCode += '<ul class="active">';
+				if (layerName === '' || layer === null) {
+					return '';
+				}
 
-					layerCode += blob.blob.entities.map(function(entity, index) {
+				var blob = layer;
+
+				if (typeof layer.serialize === 'function') {
+					blob = layer.serialize();
+				}
+				
+				var childrenCode = '';
+
+				if (!recursive) {
+					childrenCode += '<li><label class="ico-eye visible" ></label>';
+
+					if (blob.blob.entities && blob.blob.entities.length > 0) {
+						childrenCode += '<label class="ico-arrow-down active"></label>';
+					}
+
+					// debugger
+					// childrenCode += '<span>' + layerName +' (' + blob.constructor + ')</span>';
+					childrenCode += '<span>' + layerName + '</span>';
+
+
+				}
+				
+				if (blob.blob.entities && blob.blob.entities.length > 0) {
+					childrenCode += '<ul class="active">';
+
+					childrenCode += blob.blob.entities.map(function(entity, index) {
 						// debugger
 						var values = Object.values(blob.blob.map);
 						var mapValue = Object.keys(blob.blob.map)[values.indexOf(index)];
-						var query = [layerName, mapValue];
+						
+						var query = [];
+
+						if (lastQuery) {
+							query = lastQuery;
+							query[1] += ' > ' + mapValue;
+						} else {
+							query = [layerName, mapValue];
+						}
 
 						var queryString = '[]';
 
@@ -359,19 +388,30 @@ lychee.define('tool.state.Scene').includes([
 
 						}
 
-						console.log(queryString);
-
 						return '<li>'
 							+ '<label class="ico-eye visible" onclick=\'MAIN.state.trigger("toggle_visibility", [ this, ' + queryString + ' ])\'></label>'
 							// + '<span>' + mapValue + ' (' + entity.constructor + ')</span>'
 							+ '<span>' + mapValue + '</span>'
+							+ _generateChildren(mapValue, entity, true, query)
 							+ '</li>';
 					}).join('\n');
 
-					layerCode += '</ul>';
+					childrenCode += '</ul>';
 				}
-				layerCode += '</li>';
-			});
+			
+				childrenCode += '</li>';
+
+				return childrenCode;
+			};
+
+
+			layerCode += Object
+										.keys(layers)
+										.reverse()
+										.map(function(layerName) {
+											return _generateChildren(layerName, layers[layerName], false);
+										})
+										.join('\n');
 
 			layerCode += '</ul>';
 
