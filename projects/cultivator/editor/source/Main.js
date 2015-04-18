@@ -73,9 +73,6 @@ lychee.define('tool.Main').requires([
 
 		lychee.init(function(sandbox) {
 
-			lychee.setEnvironment(null);
-
-
 			var lychee = sandbox.lychee;
 			var game   = sandbox.game;
 
@@ -85,18 +82,34 @@ lychee.define('tool.Main').requires([
 			sandbox.MAIN.init();
 
 
-			var _canvas = document.querySelector('#' + identifier);
-			if (_canvas !== null) {
-				_canvas.parentNode.removeChild(_canvas);
-			}
+			setTimeout(function() {
 
-			var _wrapper = document.querySelector('#scene-preview-wrapper');
-			if (_wrapper !== null) {
-				_wrapper.appendChild(_canvas);
-			}
+				var _canvas  = document.querySelector('#' + identifier);
+				var _wrapper = document.querySelector('#scene-preview-wrapper');
+
+				if (_canvas !== null && _wrapper !== null) {
+					_canvas.parentNode.removeChild(_canvas);
+					_wrapper.appendChild(_canvas);
+				}
 
 
-			callback.call(scope, environment);
+				setTimeout(function() {
+
+					sandbox.MAIN.settings.renderer.width  = 1024;
+					sandbox.MAIN.settings.renderer.height = 768;
+					sandbox.MAIN.renderer.setWidth(1024);
+					sandbox.MAIN.renderer.setHeight(768);
+
+					sandbox.MAIN.viewport.trigger('reshape', [
+						sandbox.MAIN.viewport.orientation,
+						sandbox.MAIN.viewport.rotation
+					]);
+
+			   		callback.call(scope, environment);
+
+				}, 100);
+
+			}, 100);
 
 		});
 
@@ -161,9 +174,9 @@ lychee.define('tool.Main').requires([
 
 			_initialize('boilerplate', function(environment) {
 
-				ui.changeState('scene', environment);
+global._ENV = environment;
 
-console.log(environment);
+				ui.changeState('scene', environment);
 
 			}, this);
 
