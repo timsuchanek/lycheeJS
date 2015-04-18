@@ -1261,7 +1261,7 @@ footer {
 }
 
 
-#editor #scene article h3 label.ico-arrow-down {
+#editor #scene article h3 label.ico-arrow-down, #editor #scene article .layers label.ico-arrow-down  {
 	-moz-transition: all 250ms ease-out;
 	-ms-transition: all 250ms ease-out;
 	-webkit-transition: all 250ms ease-out;
@@ -1272,7 +1272,7 @@ footer {
 	transform: rotate(90deg) translateX(8px);
 }
 
-#editor #scene article h3 label.ico-arrow-down.active {
+#editor #scene article h3 label.ico-arrow-down.active, #editor #scene article .layers label.ico-arrow-down.active  {
 	-moz-transform: rotate(-90deg);
 	-ms-transform: rotate(-90deg);
 	-webkit-transform: rotate(-90deg);
@@ -1327,6 +1327,15 @@ ul.layers {
 
 ul.layers .ico-arrow-down, ul.layers .ico-arrow-up {
 	font-size: 10px;
+}
+
+ul.layers ul {
+	height: 0;
+	overflow: hidden;
+}
+
+ul.layers ul.active {
+	height: auto;
 }
 
 

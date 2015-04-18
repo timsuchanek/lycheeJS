@@ -66,8 +66,8 @@
 		</article>
 
 		<article id="scene-settings">
-			<h3 onclick="MAIN.state.trigger('toggle_settings', [ this ]);">Settings <label class="ico-arrow-down active"></label></h3>
-			<div class="collapse-content active" id="settings-collapse">
+			<h3 onclick="MAIN.state.trigger('toggle_settings', [ this ]);">Settings <label class="ico-arrow-down"></label></h3>
+			<div class="collapse-content" id="settings-collapse">
 				<table class="vertical">
 					<tr>
 						<th>Name</th>
@@ -107,17 +107,33 @@
 						<label class="ico-arrow-down"></label>
 						<label class="ico-eye"></label>
 						<span>lychee.ui.Layer</span>
+						<ul>
+							<li>
+								<label class="ico-eye"></label>
+								<span>lychee.ui.Schmutton</span>
+							</li>
+							<li>
+								<label class="ico-eye"></label>
+								<span>game.entity.Apple</span>
+							</li>
+						</ul>
 					</li>
 					<li>
 						<label class="ico-arrow-down"></label>
 						<label class="ico-eye"></label>
 						<span>lychee.game.Layer</span>
+						<ul>
+							<li>
+								<label class="ico-eye"></label>
+								<span>lychee.ui.ButtonKutton</span>
+							</li>
+						</ul>
 					</li>
 					<li>
-						<label class="ico-arrow-up"></label>
+						<label class="ico-arrow-down active"></label>
 						<label class="ico-eye"></label>
 						<span>lychee.ui.Layer</span>
-						<ul>
+						<ul class="active">
 							<li>
 								<label class="ico-eye"></label>
 								<span>lychee.ui.Button</span>
