@@ -46,8 +46,69 @@ lychee.define('tool.Main').requires([
 	 * HELPERS
 	 */
 
+	var _on_changestate = function(main) {
+
+		var input = main.input;
+		if (input !== null) {
+
+			var touch_events = input.___events.touch.splice(0);
+			var swipe_events = input.___events.swipe.splice(0);
+
+			input.___events.touch = [];
+			input.___events.swipe = [];
+
+
+			input.bind('touch', function(id, position, delta) {
+
+				switch (this.mode) {
+
+					case 'live':
+
+						touch_events.forEach(function(event) {
+							event.callback.call(event.scope, id, position, delta);
+						});
+
+					break;
+
+					case 'edit':
+
+// TODO: Place current layer/entity at current position
+
+					break;
+
+				}
+
+			}, this);
+
+			input.bind('swipe', function(id, type, position, delta, swipe) {
+
+				switch (this.mode) {
+
+					case 'live':
+
+						swipe_events.forEach(function(event) {
+							event.callback.call(event.scope, id, type, position, delta, swipe);
+						});
+
+					break;
+
+					case 'edit':
+
+// TODO: Move current layer/entity across current swipe
+
+					break;
+
+				}
+
+			}, this);
+
+		}
+
+	};
+
 	var _initialize = function(identifier, callback, scope) {
 
+		var that        = this;
 		var environment = new lychee.Environment({
 			id:      identifier,
 			debug:   true,
@@ -78,6 +139,11 @@ lychee.define('tool.Main').requires([
 
 
 			// This allows using #MAIN in JSON files
+			game.Main.prototype.changeState = function(id) {
+				sandbox.lychee.game.Main.prototype.changeState.call(this, id);
+				_on_changestate.call(that, this);
+			};
+
 			sandbox.MAIN = new game.Main();
 			sandbox.MAIN.init();
 
@@ -92,24 +158,7 @@ lychee.define('tool.Main').requires([
 					_wrapper.appendChild(_canvas);
 				}
 
-
-				setTimeout(function() {
-
-					var width = window.innerWidth;
-					width = ((width - (16 + 3 * 64)) * 3) / 4; // don't touch this
-					sandbox.MAIN.settings.renderer.width  = width;
-					sandbox.MAIN.settings.renderer.height = 768;
-					sandbox.MAIN.renderer.setWidth(width);
-					sandbox.MAIN.renderer.setHeight(768);
-
-					sandbox.MAIN.viewport.trigger('reshape', [
-						sandbox.MAIN.viewport.orientation,
-						sandbox.MAIN.viewport.rotation
-					]);
-
-			   		callback.call(scope, environment);
-
-				}, 100);
+			   	callback.call(scope, environment);
 
 			}, 100);
 
@@ -157,6 +206,10 @@ lychee.define('tool.Main').requires([
 		}, data);
 
 
+		this.mode = 'edit';
+		this.mode = 'live';
+
+
 		lychee.game.Main.call(this, settings);
 
 
@@ -174,11 +227,30 @@ lychee.define('tool.Main').requires([
 			this.setState('scene', new tool.state.Scene(this));
 
 
-			_initialize('boilerplate', function(environment) {
+			_initialize.call(this, 'boilerplate', function(environment) {
+
+				ui.changeState('scene', environment);
 
 global._ENV = environment;
 
-				ui.changeState('scene', environment);
+				// XXX: Wait for transition to complete until we dispatch
+				setTimeout(function() {
+
+					var sandbox = this;
+					var width   = ((window.innerWidth - (16 + 3 * 64)) * 3) / 4; // don't touch this
+					var height  = 768;
+
+					sandbox.MAIN.settings.renderer.width  = width;
+					sandbox.MAIN.settings.renderer.height = height;
+					sandbox.MAIN.renderer.setWidth(width);
+					sandbox.MAIN.renderer.setHeight(height);
+
+					sandbox.MAIN.viewport.trigger('reshape', [
+						sandbox.MAIN.viewport.orientation,
+						sandbox.MAIN.viewport.rotation
+					]);
+
+				}.bind(environment.global), 500);
 
 			}, this);
 
