@@ -1221,6 +1221,8 @@
 					this.onload = null;
 				}
 
+				return;
+
 			}
 
 
@@ -1313,11 +1315,45 @@
 	 * PRELOADER IMPLEMENTATION
 	 */
 
-	var Stuff = function(url) {
+	var _stuff_cache = {};
 
-		this.url    = url;
-		this.onload = null;
-		this.buffer = null;
+
+	var _clone_stuff = function(origin, clone) {
+
+		if (origin.buffer !== null) {
+
+			clone.buffer = origin.buffer;
+
+			clone.__load = false;
+
+		}
+
+	};
+
+
+	var Stuff = function(url, ignore) {
+
+		url    = typeof url === 'string' ? url : null;
+		ignore = ignore === true;
+
+
+		this.url      = url;
+		this.onload   = null;
+		this.buffer   = null;
+
+		this.__ignore = ignore;
+		this.__load   = true;
+
+
+		if (url !== null) {
+
+			if (_stuff_cache[url] !== undefined) {
+				_clone_stuff(_stuff_cache[url], this);
+			} else {
+				_stuff_cache[url] = this;
+			}
+
+		}
 
 	};
 
@@ -1344,8 +1380,15 @@
 
 		load: function() {
 
-			if (this.buffer !== null) {
+			if (this.__load === false) {
+
+				if (this.onload instanceof Function) {
+					this.onload(true);
+					this.onload = null;
+				}
+
 				return;
+
 			}
 
 
@@ -1382,15 +1425,19 @@
 
 					} else {
 
-						__filename = that.url;
+						if (that.__ignore === false) {
 
-						if (require.cache[file] !== undefined) {
-							delete require.cache[file];
+							__filename = that.url;
+
+							if (require.cache[file] !== undefined) {
+								delete require.cache[file];
+							}
+
+							require(file);
+
+							__filename = null;
+
 						}
-
-						require(file);
-
-						__filename = null;
 
 
 						that.buffer = raw.toString();
