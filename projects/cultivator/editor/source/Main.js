@@ -46,6 +46,40 @@ lychee.define('tool.Main').requires([
 	 * HELPERS
 	 */
 
+	var _trace_entity = function(position) {
+
+		var pos = {
+			x: position.x - this.offset.x,
+			y: position.y - this.offset.y
+		};
+
+
+		var entity = this.getEntity(null, pos);
+		if (entity !== null) {
+
+			if (typeof entity.getEntity === 'function') {
+
+				var result = _trace_entity.call(entity, {
+					x: pos.x - entity.position.x,
+					y: pos.y - entity.position.y
+				});
+
+				if (result !== null) {
+					return result;
+				}
+
+			}
+
+
+			return entity;
+
+		}
+
+
+		return null;
+
+	};
+
 	var _on_changestate = function(main) {
 
 		var input = main.input;
@@ -58,11 +92,15 @@ lychee.define('tool.Main').requires([
 			input.___events.swipe = [];
 
 
+			input.setTouch(true);
+			input.setSwipe(true);
+
+
 			input.bind('touch', function(id, position, delta) {
 
 				switch (this.mode) {
 
-					case 'live':
+					case 'play':
 
 						touch_events.forEach(function(event) {
 							event.callback.call(event.scope, id, position, delta);
@@ -70,7 +108,34 @@ lychee.define('tool.Main').requires([
 
 					break;
 
-					case 'edit':
+					case 'modify':
+
+						var found = null;
+						var pos   = {
+							x: position.x - main.renderer.offset.x - main.renderer.width  / 2,
+							y: position.y - main.renderer.offset.y - main.renderer.height / 2
+						};
+
+
+						Object.values(main.state.__layers).reverse().forEach(function(layer) {
+
+							var entity = _trace_entity.call(layer, pos);
+							if (found === null) {
+								found = entity;
+							}
+
+						});
+
+						this.entity = found;
+
+						var state = this.state;
+						if (state !== null) {
+							state.trigger('entity', [ this.entity ]);
+						}
+
+					break;
+
+					case 'create':
 
 // TODO: Place current layer/entity at current position
 
@@ -84,7 +149,7 @@ lychee.define('tool.Main').requires([
 
 				switch (this.mode) {
 
-					case 'live':
+					case 'play':
 
 						swipe_events.forEach(function(event) {
 							event.callback.call(event.scope, id, type, position, delta, swipe);
@@ -92,9 +157,27 @@ lychee.define('tool.Main').requires([
 
 					break;
 
-					case 'edit':
+					case 'modify':
 
-// TODO: Move current layer/entity across current swipe
+						var pos = {
+							x: position.x - main.renderer.offset.x - main.renderer.width  / 2,
+							y: position.y - main.renderer.offset.y - main.renderer.height / 2
+						};
+
+
+						var entity = this.entity;
+						if (entity !== null) {
+
+							entity.setPosition({
+								x: pos.x,
+								y: pos.y
+							});
+
+						}
+
+					break;
+
+					case 'create':
 
 					break;
 
@@ -206,8 +289,9 @@ lychee.define('tool.Main').requires([
 		}, data);
 
 
-		this.mode = 'edit';
-		this.mode = 'live';
+		this.entity   = null;
+		this.mode     = 'play';
+		this.template = null;
 
 
 		lychee.game.Main.call(this, settings);
@@ -255,6 +339,18 @@ global._ENV = environment;
 			}, this);
 
 		}, this, true);
+
+		this.bind('mode', function(mode) {
+
+			this.mode   = mode;
+			this.entity = null;
+
+			var state = this.state;
+			if (state !== null) {
+				state.trigger('entity', [ this.entity ]);
+			}
+
+		}, this);
 
 	};
 

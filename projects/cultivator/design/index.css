@@ -88,6 +88,7 @@ label.ico-only:before {
 .ico-browser:before     { content: "\e037"; }
 .ico-connections:before { content: "\e059"; }
 .ico-console:before     { content: "\e011"; }
+.ico-create:before      { content: "\e095"; }
 .ico-download:before    { content: "\e083"; }
 .ico-editor:before      { content: "\e00c"; }
 .ico-error:before       { content: "\e082"; }
@@ -97,9 +98,11 @@ label.ico-only:before {
 .ico-help:before        { content: "\e08b"; }
 .ico-intro:before       { content: "\e020"; }
 .ico-message:before     { content: "\e086"; }
+.ico-modify:before      { content: "\e023"; }
 .ico-offline:before     { content: "\e082"; }
 .ico-okay:before        { content: "\e080"; }
 .ico-online:before      { content: "\e071"; }
+.ico-play:before        { content: "\e01b"; }
 .ico-projects:before    { content: "\e04b"; }
 .ico-refresh:before     { content: "\e098"; }
 .ico-remove:before      { content: "\e07c"; }
@@ -110,7 +113,7 @@ label.ico-only:before {
 .ico-tools:before       { content: "\e059"; }
 .ico-upload:before      { content: "\e084"; }
 .ico-eye:before         { content: "\e087"; }
-.ico-arrow-right:before  { content: "\e071"; }
+.ico-arrow-right:before { content: "\e071"; }
 .ico-arrow-down:before  { content: "\e071"; }
 .ico-arrow-up:before    { content: "\e071"; }
 
