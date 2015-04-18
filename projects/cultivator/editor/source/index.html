@@ -66,38 +66,29 @@
 		</article>
 
 		<article id="scene-settings">
-			<h3 onclick="MAIN.state.trigger('toggle_settings', [ this ]);">Settings <label class="ico-arrow-down"></label></h3>
+			<h3 onclick="MAIN.state.trigger('toggle_settings', [ this ]);" class="selected">lyche.ui.Button <label class="ico-arrow-down"></label></h3>
 			<div class="collapse-content" id="settings-collapse">
-				<table class="vertical">
-					<tr>
-						<th>Name</th>
-						<td>lyche.ui.Button</td>
-					</tr>
-					<tr class="no-border">
-						<th><h4>Position</h4></th>
-						<td></td>
-					</tr>
-					<tr>
-						<th>x</th>
-						<td><input id="position-x" type="number" value="123"></td>
-					</tr>
-					<tr>
-						<th>y</th>
-						<td><input id="position-y" type="number" value="56"></td>
-					</tr>
-					<tr class="no-border">
-						<th><h4>Size</h4></th>
-						<td></td>
-					</tr>
-					<tr>
-						<th>width</th>
-						<td><input id="width" type="number" value="64"></td>
-					</tr>
-					<tr>
-						<th>height</th>
-						<td><input id="height" type="number" value="64"></td>
-					</tr>
-				</table>				
+				
+				<div class="settings-control">
+					<div class="row">
+						<span>Position</span>
+					</div>
+					<div class="row">
+						<label>x</label>
+						<input id="position-x" type="number" value="123">
+						<label>y</label>
+						<input id="position-y" type="number" value="123">
+					</div>
+					<div class="row">
+						<span>Size</span>
+					</div>
+					<div class="row">
+						<label>W</label>
+						<input id="width" type="number" value="64">
+						<label>H</label>
+						<input id="width" type="number" value="64">
+					</div>
+				</div>
 			</div>
 
 			<h3 onclick="MAIN.state.trigger('toggle_layers', [ this ]);">Layers <label class="ico-arrow-down active"></label></h3>

@@ -1202,9 +1202,14 @@ footer {
  */
 
 #editor #scene article h3 {
-	height: 26px;
-	padding: 8px;
-	line-height: 26px;
+	font-size: 12px;
+	padding: 12px 28px;
+	border-bottom: none;
+}
+
+#editor #scene article h3.selected {
+	color: #32afe5;
+	font-family: 'museo-sans-500';
 }
 
 #editor #scene article h3 label {
@@ -1272,45 +1277,34 @@ footer {
 	transform: rotate(90deg) translateX(8px);
 }
 
-#editor #scene article h3 label.ico-arrow-down.active, #editor #scene article .layers label.ico-arrow-down.active  {
+#editor #scene article .layers label.ico-arrow-down  {
+	-moz-transition: all 250ms ease-out;
+	-ms-transition: all 250ms ease-out;
+	-webkit-transition: all 250ms ease-out;
+	transition: all 250ms ease-out;
+	-moz-transform: rotate(90deg);
+	-ms-transform: rotate(90deg);
+	-webkit-transform: rotate(90deg);
+	transform: rotate(90deg);
+}
+
+#editor #scene article h3 label.ico-arrow-down.active  {
 	-moz-transform: rotate(-90deg);
 	-ms-transform: rotate(-90deg);
 	-webkit-transform: rotate(-90deg);
 	transform: rotate(-90deg);
 }
 
-#scene-settings table.vertical tr h4 {
-	margin: 5px 0 0 0;
+#editor #scene article .layers label.ico-arrow-down.active  {
+	-moz-transform: rotate(-90deg) translateX(8px) translateY(1px);
+	-ms-transform: rotate(-90deg) translateX(8px) translateY(1px);
+	-webkit-transform: rotate(-90deg) translateX(8px) translateY(1px);
+	transform: rotate(-90deg) translateX(8px) translateY(1px);
 }
 
-#scene-settings table.vertical tr {
-	line-height: 1;
-}
 
-#scene-settings table.vertical tr th, #scene-settings table.vertical tr td {
-	padding: 2px 16px 4px;
-	font-size: 12px;
-	border-bottom: 1px solid #404948;
-	vertical-align: middle;
-}
 
-#scene-settings table.vertical tr th {
-	text-align: right;
-}
-
-#scene-settings table.vertical tr td {
-	text-align: left;	
-}
-
-#scene-settings table.vertical tr.no-border th, #scene-settings table.vertical tr.no-border td {
-	border-bottom: none;
-}
-
-#scene-settings table.vertical tr:first-child th, #scene-settings table.vertical tr:first-child td {
-	padding: 8px 16px;
-}
-
-#scene-settings input {
+#scene-settings .settings-control input {
 	width: 36px;
 	padding-right: 0;
 }
