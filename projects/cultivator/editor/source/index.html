@@ -67,8 +67,8 @@
 		</article>
 
 		<article id="scene-settings">
-			<h3 onclick="MAIN.state.trigger('toggle_settings', [ this ]);" class="selected">lyche.ui.Button <label class="ico-arrow-down active"></label></h3>
-			<div class="collapse-content active" id="settings-collapse">
+			<h3 onclick="MAIN.state.trigger('toggle_settings', [ this ]);" class="selected">lyche.ui.Button <label class="ico-arrow-down"></label></h3>
+			<div class="collapse-content" id="settings-collapse">
 				
 				<div class="settings-control">
 					<div class="row">
@@ -94,11 +94,11 @@
 			</div>
 
 			<h3 onclick="MAIN.state.trigger('toggle_layers', [ this ]);">Layers <label class="ico-arrow-down active"></label></h3>
-			<div class="collapse-content active" id="layers-collapse">
+			<div class="collapse-content active no-padding" id="layers-collapse">
 				<ul class="layers">
-					<li>
-						<label class="ico-arrow-down"></label>
+					<li class="visible">
 						<label class="ico-eye"></label>
+						<label class="ico-arrow-down"></label>
 						<span>lychee.ui.Layer</span>
 						<ul>
 							<li>
@@ -112,8 +112,8 @@
 						</ul>
 					</li>
 					<li>
-						<label class="ico-arrow-down"></label>
 						<label class="ico-eye"></label>
+						<label class="ico-arrow-down"></label>
 						<span>lychee.game.Layer</span>
 						<ul>
 							<li>
@@ -122,9 +122,9 @@
 							</li>
 						</ul>
 					</li>
-					<li>
-						<label class="ico-arrow-down active"></label>
+					<li class="visible">
 						<label class="ico-eye"></label>
+						<label class="ico-arrow-down active"></label>
 						<span>lychee.ui.Layer</span>
 						<ul class="active">
 							<li>

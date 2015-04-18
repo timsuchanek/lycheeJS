@@ -272,6 +272,22 @@ lychee.define('tool.state.Scene').includes([
 			.toggle('active');
 		}, this);
 
+		this.bind('toggle_visibility', function(eye, query) {
+			var state = this.getState();
+			var entity = state.queryLayer.apply(state, query);
+
+			if (entity !== null) {
+				if (entity.alpha === 1) {
+					entity.setAlpha(0);
+				} else {
+					entity.setAlpha(1);
+				}
+				debugger
+			}
+
+			eye.classList.toggle('visible');
+		}, this);
+
 	};
 
 
@@ -294,9 +310,73 @@ lychee.define('tool.state.Scene').includes([
 
 		},
 
-		enter: function(data) {
+		getState: function() {
+			if (this.env !== null) {
+				return this.env.global.MAIN.state;
+			}
+		},
 
-console.log(data);
+		getLayers: function() {
+			if (this.env !== null) {
+				return this.env.global.MAIN.state.__layers;
+			}
+		},
+
+
+		enter: function(__env) {
+
+			this.env = __env || null;
+
+
+			var layers = this.getLayers();
+
+			var layerCode = '<ul class="layers">'
+
+			Object.keys(layers).forEach(function(layerName) {
+				var layer = layers[layerName];
+				var blob = layer.serialize();
+
+				layerCode += '<li><label class="ico-eye visible" ></label>';
+				layerCode += '<label class="ico-arrow-down active"></label>';
+				// debugger
+				// layerCode += '<span>' + layerName +' (' + blob.constructor + ')</span>';
+				layerCode += '<span>' + layerName + '</span>';
+
+				if (blob.blob.entities.length > 0) {
+					layerCode += '<ul class="active">';
+
+					layerCode += blob.blob.entities.map(function(entity, index) {
+						// debugger
+						var values = Object.values(blob.blob.map);
+						var mapValue = Object.keys(blob.blob.map)[values.indexOf(index)];
+						var query = [layerName, mapValue];
+
+						var queryString = '[]';
+
+						try {
+							queryString = JSON.stringify(query);
+						} catch (e) {
+
+						}
+
+						console.log(queryString);
+
+						return '<li>'
+							+ '<label class="ico-eye visible" onclick=\'MAIN.state.trigger("toggle_visibility", [ this, ' + queryString + ' ])\'></label>'
+							// + '<span>' + mapValue + ' (' + entity.constructor + ')</span>'
+							+ '<span>' + mapValue + '</span>'
+							+ '</li>';
+					}).join('\n');
+
+					layerCode += '</ul>';
+				}
+				layerCode += '</li>';
+			});
+
+			layerCode += '</ul>';
+
+			ui.render(layerCode, '#layers-collapse');
+
 
 // TODO: Render scene graph from data into layers
 // TODO: Render settings with default selected entity
@@ -304,7 +384,7 @@ console.log(data);
 		},
 
 		leave: function() {
-
+			this.env = null;
 		}
 
 	};

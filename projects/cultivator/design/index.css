@@ -110,15 +110,20 @@ label.ico-only:before {
 .ico-tools:before       { content: "\e059"; }
 .ico-upload:before      { content: "\e084"; }
 .ico-eye:before         { content: "\e087"; }
+.ico-arrow-right:before  { content: "\e071"; }
 .ico-arrow-down:before  { content: "\e071"; }
 .ico-arrow-up:before    { content: "\e071"; }
 
-.ico-arrow-down, .ico-arrow-up {
+.ico-arrow-down, .ico-arrow-up, .ico-arrow-right {
 	display: inline-block;
 	font-size: 10px;
   line-height: 16px;
   vertical-align: middle;
 
+}
+
+*[onlick] {
+	cursor: pointer;
 }
 
 
@@ -1219,7 +1224,7 @@ footer {
 }
 
 #editor #scene div.main > article:nth-child(1) {
-	margin: 0px 0px 0px 16px;
+	margin: 0px 0px 0px 8px;
 	display: block;
 	min-height: 512px;
 	overflow: auto;
@@ -1233,7 +1238,7 @@ footer {
 }
 
 #editor #scene div.main > article:nth-child(2) {
-	margin: 0px 0px 0px 32px;
+	margin: 0px 0px 0px 16px;
 	min-width: initial;
 	max-width: initial;
 	-moz-box-flex: 1;
@@ -1241,6 +1246,7 @@ footer {
 	-ms-flex: 1;
 	-webkit-flex: 1;
 	flex: 1;
+	background: none;
 }
 
 
@@ -1251,6 +1257,7 @@ footer {
 #scene-settings div.collapse-content {
 	padding: 0;
 	margin: 0;
+	margin-bottom: 16px;
 	-moz-transition: all 250ms ease-out;
 	-ms-transition: all 250ms ease-out;
 	-webkit-transition: all 250ms ease-out;
@@ -1258,11 +1265,12 @@ footer {
 	overflow: hidden;
 	min-height: 0;
 	max-height: 0px;
+	background: #363f3e;
 }
 
 #scene-settings div.collapse-content.active {
 	min-height: 0;
-	max-height: 292px;
+	max-height: 2000px; /* ATTENTION PLEASE: hacky */
 }
 
 
@@ -1282,10 +1290,10 @@ footer {
 	-ms-transition: all 250ms ease-out;
 	-webkit-transition: all 250ms ease-out;
 	transition: all 250ms ease-out;
-	-moz-transform: rotate(90deg);
-	-ms-transform: rotate(90deg);
-	-webkit-transform: rotate(90deg);
-	transform: rotate(90deg);
+	-moz-transform: rotate(90deg) translateX(4px);
+	-ms-transform: rotate(90deg) translateX(4px);
+	-webkit-transform: rotate(90deg) translateX(4px);
+	transform: rotate(90deg) translateX(4px);
 }
 
 #editor #scene article h3 label.ico-arrow-down.active  {
@@ -1303,7 +1311,37 @@ footer {
 }
 
 #scene-settings .settings-control {
-	font-size: 12px;
+	font-size: 11px;
+	padding: 17px 25px;
+	letter-spacing: 0.1em;
+}
+
+#scene-settings .row {
+	padding: 8px 0;
+	display: -webkit-box;
+	display: -moz-flex;
+	display: -ms-flex;
+	display: -webkit-flex;
+	display: flex;
+
+	-moz-flex-flow: row nowrap;
+	-ms-flex-flow: row nowrap;
+	-webkit-flex-flow: row nowrap;
+	flex-flow: row nowrap;
+}
+
+#scene-settings .settings-control label {
+	display: block;
+	text-align: center;
+	line-height: 32px;
+}
+
+#scene-settings .settings-control label, #scene-settings .settings-control input {
+	-moz-box-flex: 1;
+	-webkit-box-flex: 1;
+	-ms-flex: 1;
+	-webkit-flex: 1;
+	flex: 1;
 }
 
 #scene-settings .settings-control input {
@@ -1320,7 +1358,8 @@ ul.layers, ul.layers ul {
 }
 
 ul.layers {
-	padding: 0;
+	padding: 0 8px;
+	margin: 0;
 }
 
 
@@ -1335,6 +1374,37 @@ ul.layers ul {
 
 ul.layers ul.active {
 	height: auto;
+}
+
+ul.layers li {
+	padding: 8px 16px;
+	margin: 8px 0;
+}
+
+ul.layers li.visible {
+	background: #2f3736;
+}
+
+ul.layers li span {
+	font-size: 11px;
+}
+
+ul.layers li .ico-eye {
+	opacity: 0.3;
+	font-size: 13px;
+}
+
+ul.layers li.visible .ico-eye, ul.layers li .ico-eye.visible {
+	opacity: 1;
+}
+
+ul.layers li .ico-eye, ul.layers li .ico-arrow-right, ul.layers li .ico-arrow-down {
+	width: 26px;
+	padding: 0;
+	margin: 0;
+	text-align: center;
+	line-height: 32px;
+	display: inline-block;
 }
 
 
