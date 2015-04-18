@@ -48,10 +48,10 @@ lychee.define('tool.Main').requires([
 
 	var _load_api = function(callback, scope) {
 
-		var config = new Config('http://localhost:4848/api/Project?timestamp=' + Date.now());
+		var config = new Config('http://localhost:4848/api/Editor?timestamp=' + Date.now());
 
 		config.onload = function(result) {
-			callback.call(scope, result);
+			callback.call(scope, this.buffer);
 		};
 
 		config.load();
@@ -104,7 +104,15 @@ lychee.define('tool.Main').requires([
 
 			_load_api(function(data) {
 
-				ui.changeState('scene', data);
+				var project = null;
+
+				if (data instanceof Array) {
+					project = data.find(function(obj) {
+						return obj.identifier === 'boilerplate';
+					}) || null;
+				}
+
+				ui.changeState('scene', project);
 
 			}, this);
 

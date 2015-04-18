@@ -1,6 +1,7 @@
 
 lychee.define('sorbet.serve.API').requires([
 	'lychee.data.JSON',
+	'sorbet.serve.api.Editor',
 	'sorbet.serve.api.Profile',
 	'sorbet.serve.api.Project',
 	'sorbet.serve.api.Server'
@@ -9,6 +10,7 @@ lychee.define('sorbet.serve.API').requires([
 	var _JSON = lychee.data.JSON;
 
 	var _ADMIN  = {
+		'Editor':  sorbet.serve.api.Editor,
 		'Profile': sorbet.serve.api.Profile,
 		'Project': sorbet.serve.api.Project
 	};
