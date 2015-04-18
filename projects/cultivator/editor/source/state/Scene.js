@@ -356,7 +356,7 @@ lychee.define('tool.state.Scene').includes([
 						childrenCode += '<label class="ico-arrow-down active"></label>';
 					}
 
-					// debugger
+
 					// childrenCode += '<span>' + layerName +' (' + blob.constructor + ')</span>';
 					childrenCode += '<span>' + layerName + '</span>';
 
@@ -367,10 +367,11 @@ lychee.define('tool.state.Scene').includes([
 					childrenCode += '<ul class="active">';
 
 					childrenCode += blob.blob.entities.map(function(entity, index) {
-						// debugger
+
 						var values = Object.values(blob.blob.map);
 						var mapValue = Object.keys(blob.blob.map)[values.indexOf(index)];
-						
+
+
 						var query = [];
 
 						if (lastQuery) {
@@ -380,6 +381,8 @@ lychee.define('tool.state.Scene').includes([
 							query = [layerName, mapValue];
 						}
 
+						console.log(query);
+
 						var queryString = '[]';
 
 						try {
@@ -388,11 +391,15 @@ lychee.define('tool.state.Scene').includes([
 
 						}
 
+						var newChild = _generateChildren(mapValue, entity, true, query);
+
+						query = [];
+
 						return '<li>'
 							+ '<label class="ico-eye visible" onclick=\'MAIN.state.trigger("toggle_visibility", [ this, ' + queryString + ' ])\'></label>'
 							// + '<span>' + mapValue + ' (' + entity.constructor + ')</span>'
 							+ '<span>' + mapValue + '</span>'
-							+ _generateChildren(mapValue, entity, true, query)
+							+ newChild
 							+ '</li>';
 					}).join('\n');
 
