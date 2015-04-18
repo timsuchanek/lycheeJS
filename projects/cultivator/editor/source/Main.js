@@ -2,7 +2,7 @@
 lychee.define('tool.Main').requires([
 	'lychee.data.JSON',
 	'tool.state.Scene'
-).includes([
+]).includes([
 	'lychee.game.Main'
 ]).tags({
 	platform: 'html'
