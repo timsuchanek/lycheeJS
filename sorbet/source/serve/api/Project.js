@@ -3,7 +3,11 @@ lychee.define('sorbet.serve.api.Project').requires([
 	'lychee.data.JSON'
 ]).exports(function(lychee, sorbet, global, attachments) {
 
-	var _JSON = lychee.data.JSON;
+	// var _JSON = lychee.data.JSON;
+	var _JSON = {
+		encode: JSON.stringify,
+		decode: JSON.parse
+	};
 
 
 
@@ -28,7 +32,7 @@ lychee.define('sorbet.serve.api.Project').requires([
 	};
 
 
-	var _get_sorbet = function() {
+	var _dispatch_sorbet = function(project) {
 
 		var details = {};
 		var host    = null;
@@ -70,13 +74,10 @@ lychee.define('sorbet.serve.api.Project').requires([
 		}
 
 
-		return {
-			identifier: 'sorbet',
-			details:    details,
-			filesystem: null,
-			server:     { host: host, port: port },
-			sorbet:     false
-		};
+		project.details    = details;
+		project.filesystem = null;
+		project.server     = { host: host, port: port },
+		project.sorbet     = false;
 
 	};
 
@@ -161,21 +162,15 @@ lychee.define('sorbet.serve.api.Project').requires([
 
 			} else if (method === 'GET') {
 
-				if (identifier === 'sorbet') {
-
-					ready({
-						status:  200,
-						headers: {
-							'Content-Control': 'no-transform',
-							'Content-Type':    'application/json'
-						},
-						payload: _JSON.encode(_serialize(_get_sorbet()))
-					});
-
-				} else if (identifier !== null) {
+				if (identifier !== null) {
 
 					var project = host.getProject(identifier);
 					if (project !== null) {
+
+						if (project.identifier === 'sorbet') {
+							_dispatch_sorbet(project);
+						}
+
 
 						ready({
 							status:  200,
@@ -198,8 +193,9 @@ lychee.define('sorbet.serve.api.Project').requires([
 				} else {
 
 					var projects = host.projects.map(_serialize);
-					if (projects.length > 0) {
-						projects.push(_serialize(_get_sorbet()));
+					var sorbet   = projects.find(function(project) { return project.identifier === 'sorbet'; }) || null;
+					if (sorbet !== null) {
+						_dispatch_sorbet(sorbet);
 					}
 
 
