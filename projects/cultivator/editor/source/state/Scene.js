@@ -247,6 +247,31 @@ lychee.define('tool.state.Scene').includes([
 
 		}, this);
 
+
+		this.bind('toggle_settings', function(h3) {
+			h3
+			.querySelector('label.ico-arrow-down')
+			.classList
+			.toggle('active');
+
+			document
+			.querySelector('#settings-collapse')
+			.classList
+			.toggle('active');
+		}, this);
+
+		this.bind('toggle_layers', function(h3) {
+			h3
+			.querySelector('label.ico-arrow-down')
+			.classList
+			.toggle('active');
+			
+			document
+			.querySelector('#layers-collapse')
+			.classList
+			.toggle('active');
+		}, this);
+
 	};
 
 

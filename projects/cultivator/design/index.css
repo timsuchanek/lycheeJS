@@ -110,7 +110,37 @@ label.ico-only:before {
 .ico-tools:before       { content: "\e059"; }
 .ico-upload:before      { content: "\e084"; }
 .ico-eye:before         { content: "\e087"; }
+.ico-arrow-down:before  { content: "\e071"; }
+.ico-arrow-up:before    { content: "\e071"; }
 
+.ico-arrow-down, .ico-arrow-up {
+	display: inline-block;
+	font-size: 10px;
+  line-height: 16px;
+  vertical-align: middle;
+
+}
+
+
+
+.ico-arrow-down {
+	-moz-transform: rotate(90deg);
+	-ms-transform: rotate(90deg);
+	-webkit-transform: rotate(90deg);
+	transform: rotate(90deg);
+
+	margin-top: 6px;
+
+}
+
+.ico-arrow-up {
+	-moz-transform: rotate(-90deg);
+	-ms-transform: rotate(-90deg);
+	-webkit-transform: rotate(-90deg);
+	transform: rotate(-90deg);
+
+	margin-top: -8px;
+}
 
 
 body {
@@ -1177,6 +1207,12 @@ footer {
 	line-height: 26px;
 }
 
+#editor #scene article h3 label {
+	float: right;
+	margin-top: 1px;
+	cursor: pointer;
+}
+
 #editor #scene div.main > article:nth-child(1) {
 	margin: 0px 0px 0px 16px;
 	display: block;
@@ -1206,6 +1242,42 @@ footer {
 /**
  * Editor's Right Sidebar
  */
+
+#scene-settings div.collapse-content {
+	padding: 0;
+	margin: 0;
+	-moz-transition: all 250ms ease-out;
+	-ms-transition: all 250ms ease-out;
+	-webkit-transition: all 250ms ease-out;
+	transition: all 250ms ease-out;
+	overflow: hidden;
+	min-height: 0;
+	max-height: 0px;
+}
+
+#scene-settings div.collapse-content.active {
+	min-height: 0;
+	max-height: 292px;
+}
+
+
+#editor #scene article h3 label.ico-arrow-down {
+	-moz-transition: all 250ms ease-out;
+	-ms-transition: all 250ms ease-out;
+	-webkit-transition: all 250ms ease-out;
+	transition: all 250ms ease-out;
+	-moz-transform: rotate(90deg) translateX(8px);
+	-ms-transform: rotate(90deg) translateX(8px);
+	-webkit-transform: rotate(90deg) translateX(8px);
+	transform: rotate(90deg) translateX(8px);
+}
+
+#editor #scene article h3 label.ico-arrow-down.active {
+	-moz-transform: rotate(-90deg);
+	-ms-transform: rotate(-90deg);
+	-webkit-transform: rotate(-90deg);
+	transform: rotate(-90deg);
+}
 
 #scene-settings table.vertical tr h4 {
 	margin: 5px 0 0 0;
@@ -1241,6 +1313,20 @@ footer {
 #scene-settings input {
 	width: 36px;
 	padding-right: 0;
+}
+
+
+ul.layers, ul.layers ul {
+	list-style: none;
+}
+
+ul.layers {
+	padding: 0;
+}
+
+
+ul.layers .ico-arrow-down, ul.layers .ico-arrow-up {
+	font-size: 10px;
 }
 
 
