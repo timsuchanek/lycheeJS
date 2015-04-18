@@ -26,11 +26,6 @@
 					"json",
 					"png"
 				],
-				"Terrain": [
-					"js",
-					"json",
-					"png"
-				],
 				"Item": [
 					"js",
 					"json",
@@ -49,6 +44,11 @@
 				],
 				"lycheeJS": [
 					"js",
+					"png"
+				],
+				"Terrain": [
+					"js",
+					"json",
 					"png"
 				]
 			},
@@ -92,14 +92,14 @@
 			"index": [
 				"js"
 			],
+			"Controller": [
+				"js"
+			],
 			"data": {
 				"Level": [
 					"js"
 				]
-			},
-			"Controller": [
-				"js"
-			]
+			}
 		}
 	}
 }

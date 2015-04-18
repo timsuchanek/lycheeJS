@@ -109,6 +109,7 @@ label.ico-only:before {
 .ico-stop:before        { content: "\e072"; }
 .ico-tools:before       { content: "\e059"; }
 .ico-upload:before      { content: "\e084"; }
+.ico-eye:before         { content: "\e087"; }
 
 
 
@@ -276,6 +277,7 @@ div.main {
 	-webkit-flex-flow: row nowrap;
 	flex-flow: row nowrap;
 
+	overflow-y: auto;
 }
 
 
@@ -437,6 +439,44 @@ article pre {
 }
 
 
+/**
+ * Tabs
+ */
+
+ul.tabs {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	background: #2f3736;
+	padding-top: 10px;
+}
+
+ul.tabs li {
+	display: inline-block;
+	padding: 8px;
+	line-height: 16px;
+	text-transform: uppercase;
+	font-family: 'museo-sans-300';
+	margin-left: 5px;
+	background: #363f3e;
+	cursor: pointer;
+	-moz-transition: all 250ms ease-out;
+	-ms-transition: all 250ms ease-out;
+	-webkit-transition: all 250ms ease-out;
+	transition: all 250ms ease-out;
+}
+
+ul.tabs li:first-child {
+	margin-left: 10px;
+}
+
+ul.tabs li:hover, ul.tabs li:active {
+	background: #32afe5;
+}
+
+ul.tabs li.active {
+	background: #32afe5;
+}
 
 /*
  * UI
@@ -1126,6 +1166,82 @@ footer {
 	z-index: 200;
 }
 
+
+/**
+ * Custom Styles for Editor
+ */
+
+#editor #scene article h3 {
+	height: 26px;
+	padding: 8px;
+	line-height: 26px;
+}
+
+#editor #scene div.main > article:nth-child(1) {
+	margin: 0px 0px 0px 16px;
+	display: block;
+	min-height: 512px;
+	overflow: auto;
+	-moz-box-flex: 3;
+	-webkit-box-flex: 3;
+	-ms-flex: 3;
+	-webkit-flex: 3;
+	flex: 3;
+	max-width: initial;
+	min-width: initial;
+}
+
+#editor #scene div.main > article:nth-child(2) {
+	margin: 0px 0px 0px 32px;
+	min-width: initial;
+	max-width: initial;
+	-moz-box-flex: 1;
+	-webkit-box-flex: 1;
+	-ms-flex: 1;
+	-webkit-flex: 1;
+	flex: 1;
+}
+
+
+/**
+ * Editor's Right Sidebar
+ */
+
+#scene-settings table.vertical tr h4 {
+	margin: 5px 0 0 0;
+}
+
+#scene-settings table.vertical tr {
+	line-height: 1;
+}
+
+#scene-settings table.vertical tr th, #scene-settings table.vertical tr td {
+	padding: 2px 16px 4px;
+	font-size: 12px;
+	border-bottom: 1px solid #404948;
+	vertical-align: middle;
+}
+
+#scene-settings table.vertical tr th {
+	text-align: right;
+}
+
+#scene-settings table.vertical tr td {
+	text-align: left;	
+}
+
+#scene-settings table.vertical tr.no-border th, #scene-settings table.vertical tr.no-border td {
+	border-bottom: none;
+}
+
+#scene-settings table.vertical tr:first-child th, #scene-settings table.vertical tr:first-child td {
+	padding: 8px 16px;
+}
+
+#scene-settings input {
+	width: 36px;
+	padding-right: 0;
+}
 
 
 /*

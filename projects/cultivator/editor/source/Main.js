@@ -48,7 +48,7 @@ lychee.define('tool.Main').requires([
 
 	var _load_api = function(callback, scope) {
 
-		var config = new Config('http://localhost:4848/api/Editor?timestamp=' + Date.now());
+		var config = new Config('http://localhost:4848/api/Project?timestamp=' + Date.now());
 
 		config.onload = function(result) {
 			callback.call(scope, result);
