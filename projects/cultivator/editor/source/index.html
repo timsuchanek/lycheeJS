@@ -40,15 +40,46 @@
 		flex: 1;
 		background: none;
 	}
- 
 
+
+	#scene-settings div.collapse-content {
+		margin-bottom: 16px;
+		-moz-transition: all 250ms ease-out;
+		-ms-transition: all 250ms ease-out;
+		-webkit-transition: all 250ms ease-out;
+		transition: all 250ms ease-out;
+		overflow: hidden;
+		min-height: 0;
+		max-height: 0px;
+		background: #363f3e;
+	}
+	
+	#scene-settings div.collapse-content.active {
+		min-height: 0;
+		max-height: 2000px;
+	}
+
+
+	#scene-settings .ico-eye {
+		opacity: 0.3;
+	}
+
+	#scene-settings .ico-eye.active {
+		opacity: 1;
+	}
+
+
+	#scene-settings-wrapper,
+	#scene-layers-wrapper {
+		margin: 0px;
+	}
 
 	#scene-settings-wrapper > div {
 		font-size: 11px;
 		padding: 17px 25px;
 		letter-spacing: 0.1em;
 	}
-	
+
 	#scene-settings-wrapper .row {
 		padding: 8px 0;
 		display: -webkit-box;
@@ -86,26 +117,60 @@
 		text-transform: uppercase;
 	}
 
+	#scene-layers-wrapper {
+		padding: 8px;
+	}
 
-#scene-settings div.collapse-content {
-	padding: 0;
-	margin: 0;
-	margin-bottom: 16px;
-	-moz-transition: all 250ms ease-out;
-	-ms-transition: all 250ms ease-out;
-	-webkit-transition: all 250ms ease-out;
-	transition: all 250ms ease-out;
-	overflow: hidden;
-	min-height: 0;
-	max-height: 0px;
-	background: #363f3e;
-}
+	#scene-layers-wrapper ul {
+		margin: 0px 0px 0px 0px;
+		padding: 0px 0px 0px 0px;
+		list-style: none;
+	}
 
-#scene-settings div.collapse-content.active {
-	min-height: 0;
-	max-height: 2000px;
-}
+	#scene-layers-wrapper ul li {
+		font-size: 12px;
+		line-height: 16px;
+	}
 
+	#scene-layers-wrapper li ul {
+		display: none;
+	}
+
+	#scene-layers-wrapper li.active > ul {
+		display: block;
+	}
+
+	#scene-layers-wrapper ul ul {
+		padding: 0px 0px 0px 32px;
+	}
+
+
+	.ico-eye,
+	.ico-arrow {
+		display: inline-block;
+		width: 32px;
+		line-height: 32px;
+		padding: 0;
+		margin: 0;
+		text-align: center;
+		cursor: pointer;
+	}
+
+	.ico-eye {
+		font-size: 12px;
+	}
+
+	.ico-arrow {
+		font-size: 8px;
+	}
+
+	label.ico-eye:before {
+		margin: 0px 8px 0px 8px;
+	}
+
+	label.ico-arrow:before {
+		margin: 0px 8px 0px 8px;
+	}
 
 	
 
@@ -122,81 +187,8 @@
 	font-family: 'museo-sans-500';
 }
 
-#editor #scene article h3 label {
-	float: right;
-	margin-top: 1px;
-	cursor: pointer;
-}
 
 
-
-
-
-
-#editor #scene article h3 label.ico-arrow-down, #editor #scene article .layers label.ico-arrow-down  {
-	-moz-transition: all 250ms ease-out;
-	-ms-transition: all 250ms ease-out;
-	-webkit-transition: all 250ms ease-out;
-	transition: all 250ms ease-out;
-	-moz-transform: rotate(90deg) translateX(8px);
-	-ms-transform: rotate(90deg) translateX(8px);
-	-webkit-transform: rotate(90deg) translateX(8px);
-	transform: rotate(90deg) translateX(8px);
-}
-
-#editor #scene article .layers label.ico-arrow-down  {
-	-moz-transition: all 250ms ease-out;
-	-ms-transition: all 250ms ease-out;
-	-webkit-transition: all 250ms ease-out;
-	transition: all 250ms ease-out;
-	-moz-transform: rotate(90deg) translateX(4px);
-	-ms-transform: rotate(90deg) translateX(4px);
-	-webkit-transform: rotate(90deg) translateX(4px);
-	transform: rotate(90deg) translateX(4px);
-}
-
-#editor #scene article h3 label.ico-arrow-down.active  {
-	-moz-transform: rotate(-90deg);
-	-ms-transform: rotate(-90deg);
-	-webkit-transform: rotate(-90deg);
-	transform: rotate(-90deg);
-}
-
-#editor #scene article .layers label.ico-arrow-down.active  {
-	-moz-transform: rotate(-90deg) translateX(8px) translateY(1px);
-	-ms-transform: rotate(-90deg) translateX(8px) translateY(1px);
-	-webkit-transform: rotate(-90deg) translateX(8px) translateY(1px);
-	transform: rotate(-90deg) translateX(8px) translateY(1px);
-}
-
-
-ul.layers, ul.layers ul {
-	list-style: none;
-}
-
-ul.layers {
-	padding: 0 8px;
-	margin: 0;
-}
-
-
-ul.layers .ico-arrow-down, ul.layers .ico-arrow-up {
-	font-size: 10px;
-}
-
-ul.layers ul {
-	height: 0;
-	overflow: hidden;
-	padding-left: 16px;
-}
-
-ul.layers ul.active {
-	height: auto;
-}
-
-ul.layers li {
-	padding: 8px 16px;
-	margin: 8px 0;
 }
 
 ul.layers li.visible {
@@ -207,23 +199,6 @@ ul.layers li span {
 	font-size: 11px;
 }
 
-ul.layers li .ico-eye {
-	opacity: 0.3;
-	font-size: 13px;
-}
-
-ul.layers li.visible .ico-eye, ul.layers li .ico-eye.visible {
-	opacity: 1;
-}
-
-ul.layers li .ico-eye, ul.layers li .ico-arrow-right, ul.layers li .ico-arrow-down {
-	width: 26px;
-	padding: 0;
-	margin: 0;
-	text-align: center;
-	line-height: 32px;
-	display: inline-block;
-}
 */
 
 

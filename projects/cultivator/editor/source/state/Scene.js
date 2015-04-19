@@ -17,12 +17,12 @@ lychee.define('tool.state.Scene').includes([
 		var name = this.label ? this.label : (parent.__map[query.split('/').pop()] || blob.constructor);
 
 
-		code += '<li title="' + blob.constructor + '">';
+		code += '<li class="active" title="' + blob.constructor + '">';
 
-		code += '<label class="ico-eye visible" onclick="MAIN.state.trigger(\'visibility\', [\'' + query + '\']);this.classList.toggle(\'visible\');"></label>';
+		code += '<label class="ico-eye active" onclick="MAIN.state.trigger(\'visibility\', [\'' + query + '\']);this.classList.toggle(\'active\');this.parentNode.classList.toggle(\'active\');"></label>';
 
 		if (this.entities instanceof Array && this.entities.length > 0) {
-			code += '<label class="ico-arrow-down active"></label>';
+			code += '<label class="ico-arrow down active" onclick="this.parentNode.classList.toggle(\'active\');this.classList.toggle(\'down\');this.classList.toggle(\'right\'); void 1337;"></label>';
 		}
 
 

@@ -113,42 +113,47 @@ label.ico-only:before {
 .ico-tools:before       { content: "\e059"; }
 .ico-upload:before      { content: "\e084"; }
 .ico-eye:before         { content: "\e087"; }
-.ico-arrow-right:before { content: "\e071"; }
-.ico-arrow-down:before  { content: "\e071"; }
-.ico-arrow-up:before    { content: "\e071"; }
+.ico-arrow:before       { content: "\e071"; }
 
-.ico-arrow-down, .ico-arrow-up, .ico-arrow-right {
-	display: inline-block;
-	font-size: 10px;
-  line-height: 16px;
-  vertical-align: middle;
 
-}
 
 *[onlick] {
 	cursor: pointer;
 }
 
 
+.ico-arrow {
+	-moz-transition: all 250ms ease-out;
+	-ms-transition: all 250ms ease-out;
+	-webkit-transition: all 250ms ease-out;
+	transition: all 250ms ease-out;
+}
 
-.ico-arrow-down {
+.ico-arrow.right {
+	/* default state */
+}
+
+.ico-arrow.down {
 	-moz-transform: rotate(90deg);
 	-ms-transform: rotate(90deg);
 	-webkit-transform: rotate(90deg);
 	transform: rotate(90deg);
-
-	margin-top: 6px;
-
 }
 
-.ico-arrow-up {
-	-moz-transform: rotate(-90deg);
-	-ms-transform: rotate(-90deg);
-	-webkit-transform: rotate(-90deg);
-	transform: rotate(-90deg);
-
-	margin-top: -8px;
+.ico-arrow.left {
+	-moz-transform: rotate(180deg);
+	-ms-transform: rotate(180deg);
+	-webkit-transform: rotate(180deg);
+	transform: rotate(180deg);
 }
+
+.ico-arrow.up {
+	-moz-transform: rotate(270deg);
+	-ms-transform: rotate(270deg);
+	-webkit-transform: rotate(270deg);
+	transform: rotate(270deg);
+}
+
 
 
 body {
