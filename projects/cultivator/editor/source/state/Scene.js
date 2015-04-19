@@ -10,126 +10,67 @@ lychee.define('tool.state.Scene').includes([
 	 * HELPERS
 	 */
 
-	var _profiles = {};
+	var _render = function(query, parent) {
 
-	var _save_config = function(config) {
+		var blob = this.serialize();
+		var code = '';
+		var name = this.label ? this.label : (parent.__map[query.split('/').pop()] || blob.constructor);
 
-		var url    = config.url;
-		var buffer = config.buffer;
 
-		if (buffer instanceof Object) {
+		code += '<li title="' + blob.constructor + '">';
 
-			var xhr = new XMLHttpRequest();
+		code += '<label class="ico-eye visible" onclick="MAIN.state.trigger(\'visibility\', [\'' + query + '\']);this.classList.toggle(\'visible\');"></label>';
 
-			xhr.open('PUT', url, true);
+		if (this.entities instanceof Array && this.entities.length > 0) {
+			code += '<label class="ico-arrow-down active"></label>';
+		}
 
-			xhr.onload = function() {
 
-				ui.enable('#profiles-save-boot');
+		code += '<span>' + name + '</span>';
 
-			};
 
-			xhr.onerror = xhr.ontimeout = function() {
+		if (this.entities instanceof Array && this.entities.length > 0) {
 
-				ui.disable('#profiles-save-boot');
+			code += '<ul>';
 
-			};
+			var parent = this;
 
-			xhr.send(JSON.stringify(buffer));
+			this.entities.forEach(function(entity, index) {
+				code += _render.call(entity, query + '/' + index, parent);
+			});
+
+			code += '</ul>';
 
 		}
+
+
+		code += '</li>';
+
+		return code;
 
 	};
 
 	var _ui_update = function() {
 
-		var config = new Config('http://localhost:4848/api/Profile?timestamp=' + Date.now());
-		var that   = this;
-
-		config.onload = function(result) {
-
-			if (this.buffer instanceof Array) {
-
-				this.buffer.forEach(function(profile) {
-
-					var id = profile.identifier;
-
-					if (_profiles[id] instanceof Object) {
-						_profiles[id].port  = profile.port;
-						_profiles[id].hosts = profile.hosts;
-					} else {
-						_profiles[id] = profile;
-					}
-
-				});
-
-			}
-
-			_ui_render_select.call(that, this.buffer);
-
-		};
-
-		config.load();
-
-	};
-
-	var _ui_render_select = function(profiles) {
-
-		if (profiles instanceof Array) {
-
-			var code = '';
-			var that = this;
-			var id   = this.__profile.identifier;
+		var code   = '';
+		var layers = this.environment.global.MAIN.state.__layers;
 
 
-			code = profiles.map(function(profile, index) {
+		code += '<ul>';
 
-				var checked = id === profile.identifier;
-				var chunk   = '';
+		Object.values(layers).reverse().forEach(function(layer, index) {
 
-				chunk += '<li>';
-				chunk += '<input name="profiles-profile" type="radio" onclick="MAIN.state.trigger(\'select\', [this.value]);" value="' + profile.identifier + '"' + (checked ? ' checked' : '') + '>';
-				chunk += '<span>' + profile.identifier + '</span>';
-				chunk += '</li>';
+			var dummy = { __map: {} };
+			dummy.__map[index] = Object.keys(layers).reverse()[index];
 
-				return chunk;
+			code += _render.call(layer, '/' + index, dummy);
 
-			}).join('');
+		});
 
-			code += '<li><input name="profiles-profile" type="radio" onclick="MAIN.state.trigger(\'select\', [this.value]);" value="new-profile"><span>new profile</span></li>';
-
-			ui.render(code, '#profiles-select ul.select');
-
-		}
-
-	};
-
-	var _ui_render_settings = function(profile) {
-
-		if (profile instanceof Object) {
-
-			var code = '';
+		code += '</ul>';
 
 
-			Object
-			.keys(profile.hosts).forEach(function(host, index) {
-
-				var project = profile.hosts[host] === null ? '*' : profile.hosts[host];
-
-				code += '<tr>';
-				code += '<td><input name="host-' + index + '" type="text" value="' + host + '"></td>';
-				code += '<td><input name="project-' + index + '" type="text" value="' + project + '"></td>';
-				code += '<td><button class="ico-remove ico-only" onclick="MAIN.state.trigger(\'remove\', [\'' + host + '\']);return false;"></button></td>';
-				code += '</tr>';
-
-			});
-
-
-			ui.render(code,               '#profiles-settings table tbody');
-			ui.render(profile.identifier, '#profiles-save-identifier');
-			ui.render(profile.port,       '#profiles-save-port');
-
-		}
+		ui.render(code, '#scene-layers-wrapper');
 
 	};
 
@@ -141,11 +82,8 @@ lychee.define('tool.state.Scene').includes([
 
 	var Class = function(main) {
 
-		this.__profile = {
-			identifier: 'development',
-			port:       8080,
-			hosts:      { localhost: null }
-		};
+
+		this.environment = null;
 
 
 		lychee.game.State.call(this, main);
@@ -157,136 +95,46 @@ lychee.define('tool.state.Scene').includes([
 		 * INITIALIZATION
 		 */
 
-		this.bind('select', function(identifier) {
+		this.bind('entity', function(entity) {
 
-			ui.disable('#profiles-save-boot');
+// TODO: Use Entity selection for properties/settings
 
-
-			var profile = _profiles[identifier];
-			if (profile instanceof Object) {
-
-				this.__profile = profile;
-				_ui_render_settings.call(this, this.__profile);
-
-			} else if (identifier === 'new-profile') {
-
-				this.__profile = {
-					identifier: 'new-profile',
-					port:       8080,
-					hosts:      { localhost: null }
-				};
-				_ui_render_settings.call(this, this.__profile);
-
-			}
+console.log('ENTITY selected', entity);
 
 		}, this);
 
 		this.bind('submit', function(id, settings) {
 
-			if (id === 'settings') {
+		}, this);
 
-				this.__profile.hosts = {};
+		this.bind('visibility', function(query) {
 
+			var path    = query.split('/').slice(1);
+			var layers  = this.environment.global.MAIN.state.__layers;
+			var pointer = Object.values(layers).reverse()[path.shift()];
 
-				var length = (Object.keys(settings).length / 2) - 1;
+			while (path.length > 0) {
 
-				for (var i = 0; i < length; i++) {
-
-					var host    = settings['host-' + i];
-					var project = settings['project-' + i];
-
-					this.__profile.hosts[host] = project === '*' ? null : project;
-
+				if (pointer.entities instanceof Array) {
+					pointer = pointer.entities[path.shift()];
 				}
 
 			}
 
-		}, this);
 
-		this.bind('add', function(host, project) {
-
-			if (host.length > 0 && project.length > 0) {
-
-				if (this.__profile.hosts[host] === undefined) {
-					this.__profile.hosts[host] = project === '*' ? null : project;
-					_ui_render_settings.call(this, this.__profile);
-				}
-
-			}
-
-		}, this);
-
-		this.bind('remove', function(host) {
-
-			if (this.__profile.hosts[host] !== undefined) {
-				delete this.__profile.hosts[host];
-				_ui_render_settings.call(this, this.__profile);
-			}
-
-		}, this);
-
-		this.bind('save', function(identifier, port) {
-
-			this.__profile.identifier = identifier;
-			this.__profile.port       = port;
-
-
-			var config = lychee.deserialize({
-				constructor: 'Config',
-				arguments:   [ 'http://localhost:4848/api/Profile?timestamp=' + Date.now() ],
-				blob:        {
-					buffer: 'data:application/json;base64,' + new Buffer(JSON.stringify(this.__profile), 'utf8').toString('base64')
-				}
-			});
-
-
-			_save_config.call(this, config);
-
-// TODO: PUT request to API to store profile
-// TODO: Relocate to lycheejs://boot=identifier afterwards
-// TODO: Error integration if API requests fail (or are they failsafe?)
-
-		}, this);
-
-
-		this.bind('toggle_settings', function(h3) {
-			h3
-			.querySelector('label.ico-arrow-down')
-			.classList
-			.toggle('active');
-
-			document
-			.querySelector('#settings-collapse')
-			.classList
-			.toggle('active');
-		}, this);
-
-		this.bind('toggle_layers', function(h3) {
-			h3
-			.querySelector('label.ico-arrow-down')
-			.classList
-			.toggle('active');
-			
-			document
-			.querySelector('#layers-collapse')
-			.classList
-			.toggle('active');
-		}, this);
-
-		this.bind('toggle_visibility', function(eye, query) {
-			var state = this.getState();
-			var entity = state.queryLayer.apply(state, query);
-
-
+			var entity = pointer || null;
 			if (entity !== null) {
-				if (lychee.interfaceof(lychee.ui.Entity, entity)) {
+
+				if (lychee.interfaceof(lychee.ui.Layer, entity) || lychee.interfaceof(lychee.game.Layer, entity)) {
+					entity.setVisible(!entity.visible);
+				} else if (lychee.interfaceof(lychee.ui.Entity, entity)) {
 					entity.setVisible(!entity.visible);
 				} else if (lychee.interfaceof(lychee.game.Entity, entity)) {
 					entity.setAlpha(entity.alpha === 1 ? 0 : 1);
 				}
+
 			}
 
-			eye.classList.toggle('visible');
 		}, this);
 
 	};
@@ -311,127 +159,21 @@ lychee.define('tool.state.Scene').includes([
 
 		},
 
-		getState: function() {
-			if (this.env !== null) {
-				return this.env.global.MAIN.state;
-			}
-		},
+		enter: function(environment) {
 
-		getLayers: function() {
-			if (this.env !== null) {
-				return this.env.global.MAIN.state.__layers;
-			}
-		},
+			this.environment = environment;
+			_ui_update.call(this);
 
+			lychee.game.State.prototype.enter.call(this);
 
-		enter: function(__env) {
-
-			this.env = __env || null;
-
-
-			var layers = this.getLayers();
-
-			var layerCode = '<ul class="layers">'
-
-			function _generateChildren(layerName, layer, recursive, lastQuery) {
-
-				lastQuery = lastQuery || null;
-
-				if (layerName === '' || layer === null) {
-					return '';
-				}
-
-				var blob = layer;
-
-				if (typeof layer.serialize === 'function') {
-					blob = layer.serialize();
-				}
-				
-				var childrenCode = '';
-
-				if (!recursive) {
-					childrenCode += '<li><label class="ico-eye visible" ></label>';
-
-					if (blob.blob.entities && blob.blob.entities.length > 0) {
-						childrenCode += '<label class="ico-arrow-down active"></label>';
-					}
-
-
-					// childrenCode += '<span>' + layerName +' (' + blob.constructor + ')</span>';
-					childrenCode += '<span>' + layerName + '</span>';
-
-
-				}
-				
-				if (blob.blob.entities && blob.blob.entities.length > 0) {
-					childrenCode += '<ul class="active">';
-
-					childrenCode += blob.blob.entities.map(function(entity, index) {
-
-						var values = Object.values(blob.blob.map);
-						var mapValue = Object.keys(blob.blob.map)[values.indexOf(index)];
-
-
-						var query = [];
-
-						if (lastQuery) {
-							query = lastQuery;
-							query[1] += ' > ' + mapValue;
-						} else {
-							query = [layerName, mapValue];
-						}
-
-						console.log(query);
-
-						var queryString = '[]';
-
-						try {
-							queryString = JSON.stringify(query);
-						} catch (e) {
-
-						}
-
-						var newChild = _generateChildren(mapValue, entity, true, query);
-
-						query = [];
-
-						return '<li>'
-							+ '<label class="ico-eye visible" onclick=\'MAIN.state.trigger("toggle_visibility", [ this, ' + queryString + ' ])\'></label>'
-							// + '<span>' + mapValue + ' (' + entity.constructor + ')</span>'
-							+ '<span>' + mapValue + '</span>'
-							+ newChild
-							+ '</li>';
-					}).join('\n');
-
-					childrenCode += '</ul>';
-				}
-			
-				childrenCode += '</li>';
-
-				return childrenCode;
-			};
-
-
-			layerCode += Object
-										.keys(layers)
-										.reverse()
-										.map(function(layerName) {
-											return _generateChildren(layerName, layers[layerName], false);
-										})
-										.join('\n');
-
-			layerCode += '</ul>';
-
-			ui.render(layerCode, '#layers-collapse');
-
-
-// TODO: Render scene graph from data into layers
-// TODO: Render settings with default selected entity
-//			_ui_update.call(this);
 		},
 
 		leave: function() {
-			this.env = null;
+
+			this.environment = null;
+
+			lychee.game.State.prototype.leave.call(this);
+
 		}
 
 	};

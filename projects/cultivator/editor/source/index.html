@@ -15,29 +15,218 @@
 	<script src="/lychee/build/html/core.js"></script>
 
 	<style>
-	#bootup div.wizard ul.select {
-		width: auto;
-		margin: 0px 16px;
-	}
-	#status article.hidden {
-		display: none;
-	}
-	#status table label.ico-online {
-		color: #32afe5;
-		text-shadow: #32afe5 0 0 10px, #32afe5 0 0 20px, #32afe5 0 0 40px;
-	}
-	#profiles div.main ul.select {
-		width: auto;
-		margin: 0px 16px;
-	}
-	#profiles table {
+	#scene div.main > article:nth-child(1) {
+		margin: 0px 0px 0px 8px;
+		display: block;
+		min-height: 512px;
 		overflow: auto;
-		max-width: 512px;
+		-moz-box-flex: 3;
+		-webkit-box-flex: 3;
+		-ms-flex: 3;
+		-webkit-flex: 3;
+		flex: 3;
+		max-width: initial;
+		min-width: initial;
 	}
-	#profiles table label.ico-okay {
-		color: #32afe5;
-		text-shadow: #32afe5 0 0 10px, #32afe5 0 0 20px, #32afe5 0 0 40px;
+	
+	#scene div.main > article:nth-child(2) {
+		margin: 0px 0px 0px 16px;
+		min-width: initial;
+		max-width: initial;
+		-moz-box-flex: 1;
+		-webkit-box-flex: 1;
+		-ms-flex: 1;
+		-webkit-flex: 1;
+		flex: 1;
+		background: none;
 	}
+ 
+
+
+	#scene-settings-wrapper > div {
+		font-size: 11px;
+		padding: 17px 25px;
+		letter-spacing: 0.1em;
+	}
+	
+	#scene-settings-wrapper .row {
+		padding: 8px 0;
+		display: -webkit-box;
+		display: -moz-flex;
+		display: -ms-flex;
+		display: -webkit-flex;
+		display: flex;
+	
+		-moz-flex-flow: row nowrap;
+		-ms-flex-flow: row nowrap;
+		-webkit-flex-flow: row nowrap;
+		flex-flow: row nowrap;
+	}
+	
+	#scene-settings-wrapper label {
+		display: block;
+		text-align: center;
+		line-height: 32px;
+	}
+	
+	#scene-settings-wrapper label, #scene-settings-wrapper input {
+		-moz-box-flex: 1;
+		-webkit-box-flex: 1;
+		-ms-flex: 1;
+		-webkit-flex: 1;
+		flex: 1;
+	}
+	
+	#scene-settings-wrapper input {
+		width: 36px;
+		padding-right: 0;
+	}
+	
+	#scene-settings-wrapper span {
+		text-transform: uppercase;
+	}
+
+
+#scene-settings div.collapse-content {
+	padding: 0;
+	margin: 0;
+	margin-bottom: 16px;
+	-moz-transition: all 250ms ease-out;
+	-ms-transition: all 250ms ease-out;
+	-webkit-transition: all 250ms ease-out;
+	transition: all 250ms ease-out;
+	overflow: hidden;
+	min-height: 0;
+	max-height: 0px;
+	background: #363f3e;
+}
+
+#scene-settings div.collapse-content.active {
+	min-height: 0;
+	max-height: 2000px;
+}
+
+
+	
+
+/**
+
+#editor #scene article h3 {
+	font-size: 12px;
+	padding: 12px 28px;
+	border-bottom: none;
+}
+
+#editor #scene article h3.selected {
+	color: #32afe5;
+	font-family: 'museo-sans-500';
+}
+
+#editor #scene article h3 label {
+	float: right;
+	margin-top: 1px;
+	cursor: pointer;
+}
+
+
+
+
+
+
+#editor #scene article h3 label.ico-arrow-down, #editor #scene article .layers label.ico-arrow-down  {
+	-moz-transition: all 250ms ease-out;
+	-ms-transition: all 250ms ease-out;
+	-webkit-transition: all 250ms ease-out;
+	transition: all 250ms ease-out;
+	-moz-transform: rotate(90deg) translateX(8px);
+	-ms-transform: rotate(90deg) translateX(8px);
+	-webkit-transform: rotate(90deg) translateX(8px);
+	transform: rotate(90deg) translateX(8px);
+}
+
+#editor #scene article .layers label.ico-arrow-down  {
+	-moz-transition: all 250ms ease-out;
+	-ms-transition: all 250ms ease-out;
+	-webkit-transition: all 250ms ease-out;
+	transition: all 250ms ease-out;
+	-moz-transform: rotate(90deg) translateX(4px);
+	-ms-transform: rotate(90deg) translateX(4px);
+	-webkit-transform: rotate(90deg) translateX(4px);
+	transform: rotate(90deg) translateX(4px);
+}
+
+#editor #scene article h3 label.ico-arrow-down.active  {
+	-moz-transform: rotate(-90deg);
+	-ms-transform: rotate(-90deg);
+	-webkit-transform: rotate(-90deg);
+	transform: rotate(-90deg);
+}
+
+#editor #scene article .layers label.ico-arrow-down.active  {
+	-moz-transform: rotate(-90deg) translateX(8px) translateY(1px);
+	-ms-transform: rotate(-90deg) translateX(8px) translateY(1px);
+	-webkit-transform: rotate(-90deg) translateX(8px) translateY(1px);
+	transform: rotate(-90deg) translateX(8px) translateY(1px);
+}
+
+
+ul.layers, ul.layers ul {
+	list-style: none;
+}
+
+ul.layers {
+	padding: 0 8px;
+	margin: 0;
+}
+
+
+ul.layers .ico-arrow-down, ul.layers .ico-arrow-up {
+	font-size: 10px;
+}
+
+ul.layers ul {
+	height: 0;
+	overflow: hidden;
+	padding-left: 16px;
+}
+
+ul.layers ul.active {
+	height: auto;
+}
+
+ul.layers li {
+	padding: 8px 16px;
+	margin: 8px 0;
+}
+
+ul.layers li.visible {
+	background: #2f3736;
+}
+
+ul.layers li span {
+	font-size: 11px;
+}
+
+ul.layers li .ico-eye {
+	opacity: 0.3;
+	font-size: 13px;
+}
+
+ul.layers li.visible .ico-eye, ul.layers li .ico-eye.visible {
+	opacity: 1;
+}
+
+ul.layers li .ico-eye, ul.layers li .ico-arrow-right, ul.layers li .ico-arrow-down {
+	width: 26px;
+	padding: 0;
+	margin: 0;
+	text-align: center;
+	line-height: 32px;
+	display: inline-block;
+}
+*/
+
+
 	</style>
 </head>
 <body id="editor">
@@ -56,26 +245,20 @@
 	<div class="main">
 
 		<article id="scene-preview">
-			<ul class="tabs">
-				<li class="active">Menu</li>
-				<li>Game</li>
-				<li>Highscore</li>
-				<li>Deine Mudda</li>
-			</ul>
-			<div id="scene-preview-tools">
-				<button class="ico-only ico-play" onclick="MAIN.trigger('mode', [ 'play' ]);"></button>
-				<button class="ico-only ico-modify" onclick="MAIN.trigger('mode', [ 'modify' ]);"></button>
-				<button class="ico-only ico-create" onclick="MAIN.trigger('mode', [ 'create' ]);"></button>
-			</div>
-			<div id="scene-preview-wrapper">
-			</div>
+			<h3>
+				<div id="scene-preview-tools">
+					<button class="ico-only ico-play" onclick="MAIN.trigger('mode', [ 'play' ]);"></button>
+					<button class="ico-only ico-modify" onclick="MAIN.trigger('mode', [ 'modify' ]);"></button>
+					<button class="ico-only ico-create" onclick="MAIN.trigger('mode', [ 'create' ]);"></button>
+				</div>
+			</h3>
+			<div id="scene-preview-wrapper"></div>
 		</article>
 
 		<article id="scene-settings">
-			<h3 onclick="MAIN.state.trigger('toggle_settings', [ this ]);" class="selected">lyche.ui.Button <label class="ico-arrow-down"></label></h3>
-			<div class="collapse-content" id="settings-collapse">
-				
-				<div class="settings-control">
+			<h3 onclick="ui.toggle('#scene-settings-wrapper');" class="selected">lyche.ui.Button <label class="ico-arrow-down"></label></h3>
+			<div class="collapse-content active" id="scene-settings-wrapper">
+				<div>
 					<div class="row">
 						<span>Position</span>
 					</div>
@@ -93,57 +276,12 @@
 						<input id="width" type="number" value="64">
 						<label>H</label>
 						<input id="width" type="number" value="64">
-
 					</div>
 				</div>
 			</div>
 
-			<h3 onclick="MAIN.state.trigger('toggle_layers', [ this ]);">Layers <label class="ico-arrow-down active"></label></h3>
-			<div class="collapse-content active no-padding" id="layers-collapse">
-				<ul class="layers">
-					<li class="visible">
-						<label class="ico-eye"></label>
-						<label class="ico-arrow-down"></label>
-						<span>lychee.ui.Layer</span>
-						<ul>
-							<li>
-								<label class="ico-eye"></label>
-								<span>lychee.ui.Schmutton</span>
-							</li>
-							<li>
-								<label class="ico-eye"></label>
-								<span>game.entity.Apple</span>
-							</li>
-						</ul>
-					</li>
-					<li>
-						<label class="ico-eye"></label>
-						<label class="ico-arrow-down"></label>
-						<span>lychee.game.Layer</span>
-						<ul>
-							<li>
-								<label class="ico-eye"></label>
-								<span>lychee.ui.ButtonKutton</span>
-							</li>
-						</ul>
-					</li>
-					<li class="visible">
-						<label class="ico-eye"></label>
-						<label class="ico-arrow-down active"></label>
-						<span>lychee.ui.Layer</span>
-						<ul class="active">
-							<li>
-								<label class="ico-eye"></label>
-								<span>lychee.ui.Button</span>
-							</li>
-							<li>
-								<label class="ico-eye"></label>
-								<span>game.entity.Tank</span>
-							</li>
-						</ul>
-					</li>
-				</ul>
-			</div>
+			<h3 onclick="ui.toggle('#scene-layers-wrapper');">Layers <label class="ico-arrow-down active"></label></h3>
+			<div class="collapse-content active no-padding" id="scene-layers-wrapper"></div>
 		</article>
 
 	</div>
