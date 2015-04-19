@@ -171,37 +171,6 @@
 	label.ico-arrow:before {
 		margin: 0px 8px 0px 8px;
 	}
-
-	
-
-/**
-
-#editor #scene article h3 {
-	font-size: 12px;
-	padding: 12px 28px;
-	border-bottom: none;
-}
-
-#editor #scene article h3.selected {
-	color: #32afe5;
-	font-family: 'museo-sans-500';
-}
-
-
-
-}
-
-ul.layers li.visible {
-	background: #2f3736;
-}
-
-ul.layers li span {
-	font-size: 11px;
-}
-
-*/
-
-
 	</style>
 </head>
 <body id="editor">
@@ -231,10 +200,10 @@ ul.layers li span {
 		</article>
 
 		<article id="scene-settings">
-			<h3 onclick="ui.toggle('#scene-settings-wrapper');" class="selected">lyche.ui.Button <label class="ico-arrow-down"></label></h3>
+			<h3 onclick="ui.toggle('#scene-settings-wrapper');">No Entity selected</h3>
 
 			<form id="settings" enctype="application/json" action="MAIN.state" method="javascript">
-			<div class="collapse-content active" id="scene-settings-wrapper">
+			<div class="collapse-content" id="scene-settings-wrapper">
 				<div>
 					<div class="row">
 						<span>Position</span>
@@ -258,7 +227,7 @@ ul.layers li span {
 			</div>
 			</form>
 
-			<h3 onclick="ui.toggle('#scene-layers-wrapper');">Layers <label class="ico-arrow-down active"></label></h3>
+			<h3 onclick="ui.toggle('#scene-layers-wrapper');">Layers</h3>
 			<div class="collapse-content active no-padding" id="scene-layers-wrapper"></div>
 		</article>
 
