@@ -32,7 +32,9 @@
 		"stop":        "./bin/sorbet.sh stop",
 
 		"development": "./bin/sorbet.sh start development",
-		"production":  "./bin/sorbet.sh start production"
+		"production":  "./bin/sorbet.sh start production",
+
+		"local-git":   "git daemon --reuseaddr --base-path=. --export-all --verbose"
 
 	},
 
