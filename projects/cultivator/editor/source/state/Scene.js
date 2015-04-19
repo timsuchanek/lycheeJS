@@ -106,6 +106,9 @@ lychee.define('tool.state.Scene').includes([
 		 * INITIALIZATION
 		 */
 
+		this.main.bind('changestate', _ui_update, this);
+
+
 		this.bind('entity', function(entity) {
 
 			if (entity !== null) {
@@ -203,7 +206,9 @@ console.log(settings);
 		enter: function(environment) {
 
 			this.environment = environment;
-			this.main.bind('changestate', _ui_update, this);
+
+			var id = Object.keys(MAIN.__states)[Object.values(MAIN.__states).indexOf(MAIN.state)] || null;
+			_ui_update.call(this, id);
 
 			lychee.game.State.prototype.enter.call(this);
 
@@ -212,7 +217,6 @@ console.log(settings);
 		leave: function() {
 
 			this.environment = null;
-			this.main.unbind('changestate', _ui_update, this);
 
 			lychee.game.State.prototype.leave.call(this);
 
