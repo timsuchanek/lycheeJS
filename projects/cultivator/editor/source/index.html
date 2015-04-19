@@ -42,6 +42,11 @@
 	}
 
 
+	#scene-preview-mode button.active {
+		background: #32afe5;
+		text-shadow: #eeeeee 0 0 10px;
+	}
+
 	#scene-settings div.collapse-content {
 		margin-bottom: 16px;
 		-moz-transition: all 250ms ease-out;
@@ -190,10 +195,10 @@
 
 		<article id="scene-preview">
 			<h3>
-				<div id="scene-preview-tools">
-					<button class="ico-only ico-play" onclick="MAIN.trigger('mode', [ 'play' ]);"></button>
-					<button class="ico-only ico-modify" onclick="MAIN.trigger('mode', [ 'modify' ]);"></button>
-					<button class="ico-only ico-create" onclick="MAIN.trigger('mode', [ 'create' ]);"></button>
+				<div id="scene-preview-mode">
+					<button id="scene-preview-mode-play" class="ico-only ico-play active" onclick="MAIN.trigger('changemode', [ 'play' ]);"></button>
+					<button id="scene-preview-mode-modify" class="ico-only ico-modify" onclick="MAIN.trigger('changemode', [ 'modify' ]);"></button>
+					<button id="scene-preview-mode-create" class="ico-only ico-create" onclick="MAIN.trigger('changemode', [ 'create' ]);"></button>
 				</div>
 			</h3>
 			<div id="scene-preview-wrapper"></div>

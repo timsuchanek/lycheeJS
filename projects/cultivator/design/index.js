@@ -593,9 +593,11 @@ ui = (function(global) {
 
 			if (query !== null) {
 
-				var node = document.querySelector(query);
-				if (node !== null) {
-					_set_active(node);
+				var nodes = [].slice.call(document.querySelectorAll(query));
+				if (nodes.length > 0) {
+					nodes.forEach(function(node) {
+						_set_active(node);
+					});
 				}
 
 			}
@@ -609,9 +611,11 @@ ui = (function(global) {
 
 			if (query !== null) {
 
-				var node = document.querySelector(query);
-				if (node !== null) {
-					_set_inactive(node);
+				var nodes = [].slice.call(document.querySelectorAll(query));
+				if (nodes.length > 0) {
+					nodes.forEach(function(node) {
+						_set_inactive(node);
+					});
 				}
 
 			}

@@ -364,7 +364,7 @@ lychee.define('tool.Main').requires([
 
 		}, this, true);
 
-		this.bind('mode', function(mode) {
+		this.bind('changemode', function(mode) {
 
 			this.mode   = mode;
 			this.entity = null;
@@ -373,6 +373,9 @@ lychee.define('tool.Main').requires([
 			if (state !== null) {
 				state.trigger('entity', [ this.entity ]);
 			}
+
+			ui.inactive('#scene-preview-mode button');
+			ui.active('#scene-preview-mode-' + mode);
 
 		}, this);
 
