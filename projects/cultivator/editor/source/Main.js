@@ -361,7 +361,7 @@ lychee.define('tool.Main').requires([
 						sandbox.MAIN.viewport.rotation
 					]);
 
-				}.bind(environment.global), 500);
+				}.bind(environment.global), 1000);
 
 			}, this);
 
