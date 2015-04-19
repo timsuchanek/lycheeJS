@@ -338,7 +338,10 @@ lychee.define('tool.Main').requires([
 			_initialize.call(this, 'boilerplate', function(environment) {
 
 				this.environment = environment;
-				ui.changeState('scene', environment);
+
+				setTimeout(function() {
+					ui.changeState('scene', environment);
+				}, 500);
 
 
 				// XXX: Wait for transition to complete until we dispatch
