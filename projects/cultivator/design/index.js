@@ -586,6 +586,38 @@ ui = (function(global) {
 
 		},
 
+		active: function(query) {
+
+			query = typeof query === 'string' ? query : null;
+
+
+			if (query !== null) {
+
+				var node = document.querySelector(query);
+				if (node !== null) {
+					_set_active(node);
+				}
+
+			}
+
+		},
+
+		inactive: function(query) {
+
+			query = typeof query === 'string' ? query : null;
+
+
+			if (query !== null) {
+
+				var node = document.querySelector(query);
+				if (node !== null) {
+					_set_inactive(node);
+				}
+
+			}
+
+		},
+
 		toggle: function(query) {
 
 			query = typeof query === 'string' ? query : null;

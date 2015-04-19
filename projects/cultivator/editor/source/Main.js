@@ -98,48 +98,58 @@ lychee.define('tool.Main').requires([
 
 			input.bind('touch', function(id, position, delta) {
 
-				switch (this.mode) {
-
-					case 'play':
-
-						touch_events.forEach(function(event) {
-							event.callback.call(event.scope, id, position, delta);
-						});
-
-					break;
-
-					case 'modify':
-
-						var found = null;
-						var pos   = {
-							x: position.x - main.renderer.offset.x - main.renderer.width  / 2,
-							y: position.y - main.renderer.offset.y - main.renderer.height / 2
-						};
+				var x1 = main.renderer.offset.x;
+				var y1 = main.renderer.offset.y;
+				var x2 = x1 + main.renderer.width;
+				var y2 = y1 + main.renderer.height;
 
 
-						Object.values(main.state.__layers).reverse().forEach(function(layer) {
+				if (position.x > x1 && position.x < x2 && position.y > y1 && position.y < y2) {
 
-							var entity = _trace_entity.call(layer, pos);
-							if (found === null) {
-								found = entity;
+					switch (this.mode) {
+
+						case 'play':
+
+							touch_events.forEach(function(event) {
+								event.callback.call(event.scope, id, position, delta);
+							});
+
+						break;
+
+						case 'modify':
+
+							var found = null;
+							var pos   = {
+								x: position.x - main.renderer.offset.x - main.renderer.width  / 2,
+								y: position.y - main.renderer.offset.y - main.renderer.height / 2
+							};
+
+
+							Object.values(main.state.__layers).reverse().forEach(function(layer) {
+
+								var entity = _trace_entity.call(layer, pos);
+								if (found === null) {
+									found = entity;
+								}
+
+							});
+
+							this.entity = found;
+
+							var state = this.state;
+							if (state !== null) {
+								state.trigger('entity', [ this.entity ]);
 							}
 
-						});
+						break;
 
-						this.entity = found;
-
-						var state = this.state;
-						if (state !== null) {
-							state.trigger('entity', [ this.entity ]);
-						}
-
-					break;
-
-					case 'create':
+						case 'create':
 
 // TODO: Place current layer/entity at current position
 
-					break;
+						break;
+
+					}
 
 				}
 
@@ -147,39 +157,54 @@ lychee.define('tool.Main').requires([
 
 			input.bind('swipe', function(id, type, position, delta, swipe) {
 
-				switch (this.mode) {
-
-					case 'play':
-
-						swipe_events.forEach(function(event) {
-							event.callback.call(event.scope, id, type, position, delta, swipe);
-						});
-
-					break;
-
-					case 'modify':
-
-						var pos = {
-							x: position.x - main.renderer.offset.x - main.renderer.width  / 2,
-							y: position.y - main.renderer.offset.y - main.renderer.height / 2
-						};
+				var x1 = main.renderer.offset.x;
+				var y1 = main.renderer.offset.y;
+				var x2 = x1 + main.renderer.width;
+				var y2 = y1 + main.renderer.height;
 
 
-						var entity = this.entity;
-						if (entity !== null) {
+				if (position.x > x1 && position.x < x2 && position.y > y1 && position.y < y2) {
 
-							entity.setPosition({
-								x: pos.x,
-								y: pos.y
+					switch (this.mode) {
+
+						case 'play':
+
+							swipe_events.forEach(function(event) {
+								event.callback.call(event.scope, id, type, position, delta, swipe);
 							});
 
-						}
+						break;
 
-					break;
+						case 'modify':
 
-					case 'create':
+							var pos = {
+								x: position.x - main.renderer.offset.x - main.renderer.width  / 2,
+								y: position.y - main.renderer.offset.y - main.renderer.height / 2
+							};
 
-					break;
+
+							var entity = this.entity;
+							if (entity !== null) {
+
+								entity.setPosition({
+									x: pos.x,
+									y: pos.y
+								});
+
+								var state = this.state;
+								if (state !== null) {
+									state.trigger('entity', [ entity ]);
+								}
+
+							}
+
+						break;
+
+						case 'create':
+
+						break;
+
+					}
 
 				}
 

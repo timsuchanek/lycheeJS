@@ -97,13 +97,45 @@ lychee.define('tool.state.Scene').includes([
 
 		this.bind('entity', function(entity) {
 
-// TODO: Use Entity selection for properties/settings
+			if (entity !== null) {
 
-console.log('ENTITY selected', entity);
+				var blob = entity.serialize();
+
+				ui.render(blob.constructor, '#scene-settings > h3');
+				ui.active('#scene-settings-wrapper');
+
+
+				[].slice.call(document.querySelectorAll('#scene-settings-wrapper input')).forEach(function(element) {
+
+global._ELEMENT = element;
+
+					switch (element.name) {
+
+						case 'entity-position-x': element.value = entity.position.x; break;
+						case 'entity-position-y': element.value = entity.position.y; break;
+						case 'entity-width':      element.value = entity.width;      break;
+						case 'entity-height':     element.value = entity.height;     break;
+
+					}
+
+				});
+
+			} else {
+
+				ui.render('No Entity selected', '#scene-settings > h3');
+				ui.inactive('#scene-settings-wrapper');
+
+			}
 
 		}, this);
 
 		this.bind('submit', function(id, settings) {
+
+			if (id === 'settings') {
+
+console.log(settings);
+
+			}
 
 		}, this);
 

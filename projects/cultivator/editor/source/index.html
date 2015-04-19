@@ -232,6 +232,8 @@ ul.layers li span {
 
 		<article id="scene-settings">
 			<h3 onclick="ui.toggle('#scene-settings-wrapper');" class="selected">lyche.ui.Button <label class="ico-arrow-down"></label></h3>
+
+			<form id="settings" enctype="application/json" action="MAIN.state" method="javascript">
 			<div class="collapse-content active" id="scene-settings-wrapper">
 				<div>
 					<div class="row">
@@ -239,21 +241,22 @@ ul.layers li span {
 					</div>
 					<div class="row">
 						<label>x</label>
-						<input id="position-x" type="number" value="123">
+						<input type="number" name="entity-position-x" min="-2048" max="2048" value="" placeholder="0">
 						<label>y</label>
-						<input id="position-y" type="number" value="123">
+						<input type="number" name="entity-position-y" min="-2048" max="2048" value="" placeholder="0">
 					</div>
 					<div class="row">
 						<span>Size</span>
 					</div>
 					<div class="row">
 						<label>W</label>
-						<input id="width" type="number" value="64">
+						<input type="number" name="entity-width" min="0" max="2048" value="" placeholder="0">
 						<label>H</label>
-						<input id="width" type="number" value="64">
+						<input type="number" name="entity-height" min="0" max="2048" value="" placeholder="0">
 					</div>
 				</div>
 			</div>
+			</form>
 
 			<h3 onclick="ui.toggle('#scene-layers-wrapper');">Layers <label class="ico-arrow-down active"></label></h3>
 			<div class="collapse-content active no-padding" id="scene-layers-wrapper"></div>
