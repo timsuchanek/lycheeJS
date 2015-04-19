@@ -80,13 +80,135 @@ lychee.define('tool.Main').requires([
 
 	};
 
+	var _on_touch = function(id, position, delta) {
+
+		var main = this.environment.global.MAIN;
+		var x1   = main.renderer.offset.x;
+		var y1   = main.renderer.offset.y;
+		var x2   = x1 + main.renderer.width;
+		var y2   = y1 + main.renderer.height;
+
+
+		if (position.x > x1 && position.x < x2 && position.y > y1 && position.y < y2) {
+
+			switch (this.mode) {
+
+				case 'play':
+
+					this.__simulation.touch.forEach(function(event) {
+						event.callback.call(event.scope, id, position, delta);
+					});
+
+				break;
+
+				case 'modify':
+
+					var found = null;
+					var pos   = {
+						x: position.x - main.renderer.offset.x - main.renderer.width  / 2,
+						y: position.y - main.renderer.offset.y - main.renderer.height / 2
+					};
+
+
+					Object.values(main.state.__layers).reverse().forEach(function(layer) {
+
+						var entity = _trace_entity.call(layer, pos);
+						if (found === null) {
+							found = entity;
+						}
+
+					});
+
+					this.entity = found;
+
+					var state = this.state;
+					if (state !== null) {
+						state.trigger('entity', [ this.entity ]);
+					}
+
+				break;
+
+				case 'create':
+
+// TODO: Place current layer/entity at current position
+
+				break;
+
+			}
+
+		}
+
+	};
+
+	var _on_swipe = function(id, type, position, delta, swipe) {
+
+		var main = this.environment.global.MAIN;
+		var x1   = main.renderer.offset.x;
+		var y1   = main.renderer.offset.y;
+		var x2   = x1 + main.renderer.width;
+		var y2   = y1 + main.renderer.height;
+
+
+		if (position.x > x1 && position.x < x2 && position.y > y1 && position.y < y2) {
+
+			switch (this.mode) {
+
+				case 'play':
+
+					this.__simulation.swipe.forEach(function(event) {
+						event.callback.call(event.scope, id, type, position, delta, swipe);
+					});
+
+				break;
+
+				case 'modify':
+
+					var pos = {
+						x: position.x - main.renderer.offset.x - main.renderer.width  / 2,
+						y: position.y - main.renderer.offset.y - main.renderer.height / 2
+					};
+
+
+					var entity = this.entity;
+					if (entity !== null) {
+
+						entity.setPosition({
+							x: pos.x,
+							y: pos.y
+						});
+
+						var state = this.state;
+						if (state !== null) {
+							state.trigger('entity', [ entity ]);
+						}
+
+					}
+
+				break;
+
+				case 'create':
+
+				break;
+
+			}
+
+		}
+
+	};
+
 	var _on_changestate = function(main) {
 
 		var input = main.input;
 		if (input !== null) {
 
-			var touch_events = input.___events.touch.splice(0);
-			var swipe_events = input.___events.swipe.splice(0);
+			input.unbind('touch', _on_touch, this);
+			input.unbind('swipe', _on_swipe, this);
+
+
+			this.__simulation = {
+				touch: input.___events.touch.splice(0),
+				swipe: input.___events.swipe.splice(0)
+			};
 
 			input.___events.touch = [];
 			input.___events.swipe = [];
@@ -96,119 +218,8 @@ lychee.define('tool.Main').requires([
 			input.setSwipe(true);
 
 
-			input.bind('touch', function(id, position, delta) {
-
-				var x1 = main.renderer.offset.x;
-				var y1 = main.renderer.offset.y;
-				var x2 = x1 + main.renderer.width;
-				var y2 = y1 + main.renderer.height;
-
-
-				if (position.x > x1 && position.x < x2 && position.y > y1 && position.y < y2) {
-
-					switch (this.mode) {
-
-						case 'play':
-
-							touch_events.forEach(function(event) {
-								event.callback.call(event.scope, id, position, delta);
-							});
-
-						break;
-
-						case 'modify':
-
-							var found = null;
-							var pos   = {
-								x: position.x - main.renderer.offset.x - main.renderer.width  / 2,
-								y: position.y - main.renderer.offset.y - main.renderer.height / 2
-							};
-
-
-							Object.values(main.state.__layers).reverse().forEach(function(layer) {
-
-								var entity = _trace_entity.call(layer, pos);
-								if (found === null) {
-									found = entity;
-								}
-
-							});
-
-							this.entity = found;
-
-							var state = this.state;
-							if (state !== null) {
-								state.trigger('entity', [ this.entity ]);
-							}
-
-						break;
-
-						case 'create':
-
-// TODO: Place current layer/entity at current position
-
-						break;
-
-					}
-
-				}
-
-			}, this);
-
-			input.bind('swipe', function(id, type, position, delta, swipe) {
-
-				var x1 = main.renderer.offset.x;
-				var y1 = main.renderer.offset.y;
-				var x2 = x1 + main.renderer.width;
-				var y2 = y1 + main.renderer.height;
-
-
-				if (position.x > x1 && position.x < x2 && position.y > y1 && position.y < y2) {
-
-					switch (this.mode) {
-
-						case 'play':
-
-							swipe_events.forEach(function(event) {
-								event.callback.call(event.scope, id, type, position, delta, swipe);
-							});
-
-						break;
-
-						case 'modify':
-
-							var pos = {
-								x: position.x - main.renderer.offset.x - main.renderer.width  / 2,
-								y: position.y - main.renderer.offset.y - main.renderer.height / 2
-							};
-
-
-							var entity = this.entity;
-							if (entity !== null) {
-
-								entity.setPosition({
-									x: pos.x,
-									y: pos.y
-								});
-
-								var state = this.state;
-								if (state !== null) {
-									state.trigger('entity', [ entity ]);
-								}
-
-							}
-
-						break;
-
-						case 'create':
-
-						break;
-
-					}
-
-				}
-
-			}, this);
+			input.bind('touch', _on_touch, this);
+			input.bind('swipe', _on_swipe, this);
 
 		}
 
@@ -249,7 +260,7 @@ lychee.define('tool.Main').requires([
 			// This allows using #MAIN in JSON files
 			game.Main.prototype.changeState = function(id) {
 				sandbox.lychee.game.Main.prototype.changeState.call(this, id);
-				_on_changestate.call(that, this);
+				that.trigger('changestate', [ id, this ]);
 			};
 
 			sandbox.MAIN = new game.Main();
@@ -271,18 +282,6 @@ lychee.define('tool.Main').requires([
 			}, 100);
 
 		});
-
-	};
-
-	var _load_api = function(callback, scope) {
-
-		var config = new Config('http://localhost:4848/api/Editor?timestamp=' + Date.now());
-
-		config.onload = function(result) {
-			callback.call(scope, this.buffer);
-		};
-
-		config.load();
 
 	};
 
@@ -338,9 +337,9 @@ lychee.define('tool.Main').requires([
 
 			_initialize.call(this, 'boilerplate', function(environment) {
 
+				this.environment = environment;
 				ui.changeState('scene', environment);
 
-global._ENV = environment;
 
 				// XXX: Wait for transition to complete until we dispatch
 				setTimeout(function() {
@@ -374,6 +373,12 @@ global._ENV = environment;
 			if (state !== null) {
 				state.trigger('entity', [ this.entity ]);
 			}
+
+		}, this);
+
+		this.bind('changestate', function(id, main) {
+
+			_on_changestate.call(this, main);
 
 		}, this);
 

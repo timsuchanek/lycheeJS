@@ -10,6 +10,8 @@ lychee.define('tool.state.Scene').includes([
 	 * HELPERS
 	 */
 
+	var _cache  = {};
+
 	var _render = function(query, parent) {
 
 		var blob = this.serialize();
@@ -50,24 +52,33 @@ lychee.define('tool.state.Scene').includes([
 
 	};
 
-	var _ui_update = function() {
+	var _ui_update = function(id) {
 
-		var code   = '';
+		var code   = typeof _cache[id] === 'string' ? _cache[id] : '';
 		var layers = this.environment.global.MAIN.state.__layers;
 
 
-		code += '<ul>';
+		if (code === '') {
 
-		Object.values(layers).reverse().forEach(function(layer, index) {
+			code += '<ul>';
 
-			var dummy = { __map: {} };
-			dummy.__map[index] = Object.keys(layers).reverse()[index];
+			Object.values(layers).reverse().forEach(function(layer, index) {
 
-			code += _render.call(layer, '/' + index, dummy);
+				var dummy = { __map: {} };
+				dummy.__map[index] = Object.keys(layers).reverse()[index];
 
-		});
+				code += _render.call(layer, '/' + index, dummy);
 
-		code += '</ul>';
+			});
+
+			code += '</ul>';
+
+		}
+
+
+		if (_cache[id] === undefined) {
+			_cache[id] = code;
+		}
 
 
 		ui.render(code, '#scene-layers-wrapper');
@@ -106,8 +117,6 @@ lychee.define('tool.state.Scene').includes([
 
 
 				[].slice.call(document.querySelectorAll('#scene-settings-wrapper input')).forEach(function(element) {
-
-global._ELEMENT = element;
 
 					switch (element.name) {
 
@@ -194,7 +203,7 @@ console.log(settings);
 		enter: function(environment) {
 
 			this.environment = environment;
-			_ui_update.call(this);
+			this.main.bind('changestate', _ui_update, this);
 
 			lychee.game.State.prototype.enter.call(this);
 
@@ -203,6 +212,7 @@ console.log(settings);
 		leave: function() {
 
 			this.environment = null;
+			this.main.unbind('changestate', _ui_update, this);
 
 			lychee.game.State.prototype.leave.call(this);
 
