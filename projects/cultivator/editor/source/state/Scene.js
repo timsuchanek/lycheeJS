@@ -54,6 +54,9 @@ lychee.define('tool.state.Scene').includes([
 
 	var _ui_update = function(id) {
 
+		if (this.environment === null) return false;
+
+
 		var code   = typeof _cache[id] === 'string' ? _cache[id] : '';
 		var layers = this.environment.global.MAIN.state.__layers;
 
