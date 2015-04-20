@@ -658,6 +658,10 @@ button {
 	font-weight: normal;
 	text-align: center;
 	text-transform: uppercase;
+	overflow: hidden;
+	white-space:nowrap;
+	-ms-text-overflow: ellipsis;
+	text-overflow: ellipsis;
 	outline: none;
 	cursor: pointer;
 	-moz-transition: all 250ms ease-out;

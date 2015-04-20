@@ -65,7 +65,7 @@
 				</ul>
 			</div>
 			<p class="center">
-				<button tabindex="10" class="ico-editor" onclick="var id = ui.value('#intro-learn input'); if (id !== null) window.open('./editor/index.html?identifier=' + id);">Open in Editor</button>
+				<button tabindex="10" class="ico-editor" onclick="var id = ui.value('#intro-learn input'); if (id !== null) window.open('lycheejs://edit=' + id);">Open in Editor</button>
 			</p>
 		</article>
 
@@ -83,7 +83,7 @@
 				<div style="height:32px"></div>
 			</div>
 			<p class="center">
-				<button disabled class="ico-editor" onclick="var id = ui.value('#intro-plant input'); if (id !== null) window.open('./editor/index.html?identifier=' + id);">Create Project</button>
+				<button disabled class="ico-editor" onclick="var id = ui.value('#intro-plant input'); if (id !== null) window.open('lycheejs://create=' + id);">Create Project</button>
 			</p>
 		</article>
 
@@ -272,5 +272,24 @@
 	lycheeJS is (c) 2012-2015 by LazerUnicorns and released under MIT license.
 </footer>
 
+<script>
+// XXX: Integration for public cultivator setup
+(function(window) {
+
+	var _original_open = window.open;
+
+	window.open = function(url) {
+
+		var edit = 'lycheejs://edit=';
+		if (location.hostname !== 'localhost' && url.substr(0, edit.length) === edit) {
+			url = '/projects/cultivator/editor/source/index.html?/projects/' + url.substr(edit.length) + '/lychee.pkg';
+		}
+
+		_original_open(url);
+
+	};
+
+})(this);
+</script>
 </body>
 </html>    

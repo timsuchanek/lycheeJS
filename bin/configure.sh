@@ -72,9 +72,11 @@ else
 		# Make command line tools explicitely executable
 
 		chmod +x ./lychee/configure.js;
+		chmod +x ./bin/editor.sh;
 		chmod +x ./bin/fertilizer.sh;
 		chmod +x ./bin/fertilizer.js;
 		chmod +x ./bin/helper.sh;
+		chmod +x ./bin/ranger.sh;
 		chmod +x ./bin/sorbet.sh;
 		chmod +x ./bin/sorbet.js;
 
@@ -97,7 +99,8 @@ else
 
 		if [ -d /usr/share/applications ]; then
 
-			echo "Integrating Helper and Ranger...";
+			echo "Integrating Editor, Helper and Ranger...";
+			cp ./bin/helper/linux/editor.desktop /usr/share/applications/lycheejs-editor.desktop;
 			cp ./bin/helper/linux/helper.desktop /usr/share/applications/lycheejs-helper.desktop;
 			cp ./bin/helper/linux/ranger.desktop /usr/share/applications/lycheejs-ranger.desktop;
 			echo "Done.";
@@ -106,13 +109,13 @@ else
 
 	elif [ "$OS" == "osx" ]; then
 
-		echo "Integrating Helper and Ranger...";
+		echo "Integrating Editor, Helper and Ranger...";
 		open ./bin/helper/osx/helper.app;
 		echo "Done.";
 
 	elif [ "$OS" == "windows" ]; then
 
-		echo "Integrating Helper and Ranger...";
+		echo "Integrating Editor, Helper and Ranger...";
 		regedit.exe /S ./bin/helper/windows/helper.reg;
 		echo "Done.";
 

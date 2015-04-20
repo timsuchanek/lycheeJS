@@ -8,7 +8,10 @@ lychee.define('tool.Main').requires([
 	platform: 'html'
 }).exports(function(lychee, tool, global, attachments) {
 
-	var _JSON = lychee.data.JSON;
+	var _JSON   = lychee.data.JSON;
+	var PROJECT = null;
+
+
 
 	/*
 	 * HACKS
@@ -37,6 +40,30 @@ lychee.define('tool.Main').requires([
 			}, true);
 
 		}
+
+	})(global);
+
+	(function(global) {
+
+		try {
+
+			var gui = require('nw.gui');
+			PROJECT = gui.App.argv[0];
+
+		} catch(e) {
+
+			if (location instanceof Object) {
+
+				var url = (location.search || '?').substr(1);
+				if (url.length > 0) {
+					PROJECT = url;
+				}
+
+			}
+
+		}
+
+alert(PROJECT);
 
 	})(global);
 
@@ -253,33 +280,41 @@ lychee.define('tool.Main').requires([
 
 		lychee.init(function(sandbox) {
 
-			var lychee = sandbox.lychee;
-			var game   = sandbox.game;
+			if (sandbox === null) {
+
+				callback.call(scope, null);
+
+			} else {
+
+				var lychee = sandbox.lychee;
+				var game   = sandbox.game;
 
 
-			// This allows using #MAIN in JSON files
-			game.Main.prototype.changeState = function(id) {
-				sandbox.lychee.game.Main.prototype.changeState.call(this, id);
-				that.trigger('changestate', [ id, this ]);
-			};
+				// This allows using #MAIN in JSON files
+				game.Main.prototype.changeState = function(id) {
+					sandbox.lychee.game.Main.prototype.changeState.call(this, id);
+					that.trigger('changestate', [ id, this ]);
+				};
 
-			sandbox.MAIN = new game.Main();
-			sandbox.MAIN.init();
+				sandbox.MAIN = new game.Main();
+				sandbox.MAIN.init();
 
 
-			setTimeout(function() {
+				setTimeout(function() {
 
-				var _canvas  = document.querySelector('#' + identifier);
-				var _wrapper = document.querySelector('#scene-preview-wrapper');
+					var _canvas  = document.querySelector('#' + identifier);
+					var _wrapper = document.querySelector('#scene-preview-wrapper');
 
-				if (_canvas !== null && _wrapper !== null) {
-					_canvas.parentNode.removeChild(_canvas);
-					_wrapper.appendChild(_canvas);
-				}
+					if (_canvas !== null && _wrapper !== null) {
+						_canvas.parentNode.removeChild(_canvas);
+						_wrapper.appendChild(_canvas);
+					}
 
-			   	callback.call(scope, environment);
+				   	callback.call(scope, environment);
 
-			}, 100);
+				}, 100);
+
+			}
 
 		});
 
@@ -295,11 +330,13 @@ lychee.define('tool.Main').requires([
 
 		var settings = lychee.extend({
 
-			client:   null,
-			input:    null,
-			jukebox:  null,
-			renderer: null,
-			server:   null,
+			identifier: 'boilerplate',
+
+			client:     null,
+			input:      null,
+			jukebox:    null,
+			renderer:   null,
+			server:     null,
 
 			loop: {
 				update: 1/10,
@@ -335,33 +372,38 @@ lychee.define('tool.Main').requires([
 			this.setState('scene', new tool.state.Scene(this));
 
 
-			_initialize.call(this, 'boilerplate', function(environment) {
-
-				this.environment = environment;
-
-				setTimeout(function() {
-					ui.changeState('scene', environment);
-				}, 500);
+			_initialize.call(this, this.settings.identifier, function(environment) {
 
 
-				// XXX: Wait for transition to complete until we dispatch
-				setTimeout(function() {
+				if (environment !== null) {
 
-					var sandbox = this;
-					var width   = ((window.innerWidth - (16 + 3 * 64)) * 3) / 4; // don't touch this
-					var height  = 768;
+					this.environment = environment;
 
-					sandbox.MAIN.settings.renderer.width  = width;
-					sandbox.MAIN.settings.renderer.height = height;
-					sandbox.MAIN.renderer.setWidth(width);
-					sandbox.MAIN.renderer.setHeight(height);
+					setTimeout(function() {
+						ui.changeState('scene', environment);
+					}, 500);
 
-					sandbox.MAIN.viewport.trigger('reshape', [
-						sandbox.MAIN.viewport.orientation,
-						sandbox.MAIN.viewport.rotation
-					]);
 
-				}.bind(environment.global), 1000);
+					// XXX: Wait for transition to complete until we dispatch
+					setTimeout(function() {
+
+						var sandbox = this;
+						var width   = ((window.innerWidth - (16 + 3 * 64)) * 3) / 4; // don't touch this
+						var height  = 768;
+
+						sandbox.MAIN.settings.renderer.width  = width;
+						sandbox.MAIN.settings.renderer.height = height;
+						sandbox.MAIN.renderer.setWidth(width);
+						sandbox.MAIN.renderer.setHeight(height);
+
+						sandbox.MAIN.viewport.trigger('reshape', [
+							sandbox.MAIN.viewport.orientation,
+							sandbox.MAIN.viewport.rotation
+						]);
+
+					}.bind(environment.global), 1500);
+
+				}
 
 			}, this);
 

@@ -3,7 +3,7 @@
 
 	var environment = new lychee.Environment({
 		id:      'editor',
-		debug:   true,
+		debug:   false,
 		sandbox: false,
 		build:   'tool.Main',
 		packages: [

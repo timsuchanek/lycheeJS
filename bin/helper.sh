@@ -65,6 +65,16 @@ if [ "$protocol" == "lycheejs" ]; then
 		resource=${url#*=};
 	fi;
 
+	if [ "${url:11:4}" == "edit" ]; then
+		action="edit";
+		resource=${url#*=};
+	fi;
+
+	if [ "${url:11:5}" == "create" ]; then
+		action="create";
+		resource=${url#*=};
+	fi;
+
 	if [ "${url:11:4}" == "file" ]; then
 		action="file";
 		resource=${url#*=};
@@ -106,6 +116,16 @@ if [ "$protocol" == "lycheejs" ]; then
 			stop)
 
 				_put_API_Projects "stop" "$resource";
+
+			;;
+
+			edit)
+
+				if [ "$OS" == "linux" -o "$OS" == "osx" ]; then
+					./bin/editor.sh "file://$LYCHEEJS_ROOT/projects/$resource/lychee.pkg" 2>&1;
+				elif [ "$OS" == "windows"]; then
+					./bin/editor.sh "file://c:$LYCHEEJS_ROOT/projects/$resource/lychee.pkg" 2>&1;
+				fi;
 
 			;;
 
