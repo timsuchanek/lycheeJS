@@ -50,6 +50,8 @@ lychee.define('tool.Main').requires([
 			var gui = require('nw.gui');
 			PROJECT = gui.App.argv[0];
 
+alert(PROJECT);
+
 		} catch(e) {
 
 			if (location instanceof Object) {
@@ -62,8 +64,6 @@ lychee.define('tool.Main').requires([
 			}
 
 		}
-
-alert(PROJECT);
 
 	})(global);
 
@@ -252,16 +252,16 @@ alert(PROJECT);
 
 	};
 
-	var _initialize = function(identifier, callback, scope) {
+	var _initialize = function(url, callback, scope) {
 
 		var that        = this;
 		var environment = new lychee.Environment({
-			id:      identifier,
+			id:      'editor-sandbox',
 			debug:   true,
 			sandbox: true,
 			build:   'game.Main',
 			packages: [
-				new lychee.Package('game', '/projects/' + identifier + '/lychee.pkg')
+				new lychee.Package('game', url)
 			],
 			tags:     {
 				platform: [ 'html' ]
@@ -302,7 +302,7 @@ alert(PROJECT);
 
 				setTimeout(function() {
 
-					var _canvas  = document.querySelector('#' + identifier);
+					var _canvas  = document.querySelector('body > .lychee-Renderer');
 					var _wrapper = document.querySelector('#scene-preview-wrapper');
 
 					if (_canvas !== null && _wrapper !== null) {
@@ -329,8 +329,6 @@ alert(PROJECT);
 	var Class = function(data) {
 
 		var settings = lychee.extend({
-
-			identifier: 'boilerplate',
 
 			client:     null,
 			input:      null,
@@ -372,7 +370,7 @@ alert(PROJECT);
 			this.setState('scene', new tool.state.Scene(this));
 
 
-			_initialize.call(this, this.settings.identifier, function(environment) {
+			_initialize.call(this, PROJECT, function(environment) {
 
 
 				if (environment !== null) {

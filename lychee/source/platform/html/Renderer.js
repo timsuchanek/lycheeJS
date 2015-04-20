@@ -148,7 +148,7 @@ lychee.define('Renderer').tags({
 		this.offset     = { x: 0, y: 0 };
 
 		this.__canvas           = global.document.createElement('canvas');
-		this.__canvas.className = 'lychee-Renderer-canvas';
+		this.__canvas.className = 'lychee-Renderer';
 		this.__ctx              = this.__canvas.getContext('2d');
 		global.document.body.appendChild(this.__canvas);
 
