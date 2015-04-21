@@ -42,9 +42,8 @@ If you want to install lycheejs in that way, you can simply
 execute this in the Terminal:
 
 ```bash
-# This will create a folder ./lycheeJS
+# This will create a lycheeJS Installation in ./lycheejs
 wget -q -O - http://lycheejs.org/dist/lycheejs-0.8.6.sh | bash;
-./lycheeJS/bin/sorbet.sh start development;
 ```
 
 
