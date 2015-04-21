@@ -50,17 +50,17 @@ lychee.define('tool.Main').requires([
 			var gui = require('nw.gui');
 			PROJECT = gui.App.argv[0];
 
-alert(PROJECT);
-
 		} catch(e) {
 
-			if (location instanceof Object) {
+		}
 
-				var url = (location.search || '?').substr(1);
-				if (url.length > 0) {
-					PROJECT = url;
-				}
 
+		var location = global.location || null;
+		if (location instanceof Object) {
+
+			var url = (location.search || '?').substr(1);
+			if (url.length > 0) {
+				PROJECT = url;
 			}
 
 		}
@@ -254,64 +254,80 @@ alert(PROJECT);
 
 	var _initialize = function(url, callback, scope) {
 
-		var that        = this;
-		var environment = new lychee.Environment({
-			id:      'editor-sandbox',
-			debug:   true,
-			sandbox: true,
-			build:   'game.Main',
-			packages: [
-				new lychee.Package('game', url)
-			],
-			tags:     {
-				platform: [ 'html' ]
-			}
-		});
+console.log(url);
+
+		if (typeof url === 'string' && url.split('/').pop() === 'lychee.pkg') {
+
+			var path = url.split('/');
+			var root = path.slice(0, path.indexOf('projects')).join('/');
+
+console.log(url, path, root);
+
+			var that        = this;
+			var environment = new lychee.Environment({
+				id:      'editor-sandbox',
+				debug:   true,
+				sandbox: true,
+				build:   'game.Main',
+				packages: [
+					new lychee.Package('lychee', root + '/lychee/lychee.pkg'),
+					new lychee.Package('game', url)
+				],
+				tags:     {
+					platform: [ 'html' ]
+				}
+			});
 
 
 
 
-		lychee.setEnvironment(environment);
+			lychee.setEnvironment(environment);
 
-		lychee.init(function(sandbox) {
+			lychee.init(function(sandbox) {
 
-			if (sandbox === null) {
+				if (sandbox === null) {
 
-				callback.call(scope, null);
+					callback.call(scope, null);
 
-			} else {
+				} else {
 
-				var lychee = sandbox.lychee;
-				var game   = sandbox.game;
-
-
-				// This allows using #MAIN in JSON files
-				game.Main.prototype.changeState = function(id) {
-					sandbox.lychee.game.Main.prototype.changeState.call(this, id);
-					that.trigger('changestate', [ id, this ]);
-				};
-
-				sandbox.MAIN = new game.Main();
-				sandbox.MAIN.init();
+					var lychee = sandbox.lychee;
+					var game   = sandbox.game;
 
 
-				setTimeout(function() {
+					// This allows using #MAIN in JSON files
+					game.Main.prototype.changeState = function(id) {
+						sandbox.lychee.game.Main.prototype.changeState.call(this, id);
+						that.trigger('changestate', [ id, this ]);
+					};
 
-					var _canvas  = document.querySelector('body > .lychee-Renderer');
-					var _wrapper = document.querySelector('#scene-preview-wrapper');
+					sandbox.MAIN = new game.Main();
+					sandbox.MAIN.init();
 
-					if (_canvas !== null && _wrapper !== null) {
-						_canvas.parentNode.removeChild(_canvas);
-						_wrapper.appendChild(_canvas);
-					}
 
-				   	callback.call(scope, environment);
+					setTimeout(function() {
 
-				}, 100);
+						var _canvas  = document.querySelector('body > .lychee-Renderer');
+						var _wrapper = document.querySelector('#scene-preview-wrapper');
 
-			}
+						if (_canvas !== null && _wrapper !== null) {
+							_canvas.parentNode.removeChild(_canvas);
+							_wrapper.appendChild(_canvas);
+						}
 
-		});
+					   	callback.call(scope, environment);
+
+					}, 100);
+
+				}
+
+			});
+
+		} else {
+
+			callback.call(scope, null);
+
+		}
 
 	};
 
@@ -365,8 +381,41 @@ alert(PROJECT);
 			this.setState('scene', new tool.state.Scene(this));
 
 
-			_initialize.call(this, PROJECT, function(environment) {
+			if (PROJECT !== null) {
+				this.open(PROJECT);
+			}
 
+		}, this, true);
+
+		this.bind('changemode', function(mode) {
+
+			this.mode   = mode;
+			this.entity = null;
+
+			var state = this.state;
+			if (state !== null) {
+				state.trigger('entity', [ this.entity ]);
+			}
+
+			ui.inactive('#scene-preview-mode button');
+			ui.active('#scene-preview-mode-' + mode);
+
+		}, this);
+
+		this.bind('changestate', function(id, main) {
+
+			_on_changestate.call(this, main);
+
+		}, this);
+
+	};
+
+
+	Class.prototype = {
+
+		open: function(url) {
+
+			_initialize.call(this, url, function(environment) {
 
 				if (environment !== null) {
 
@@ -400,33 +449,7 @@ alert(PROJECT);
 
 			}, this);
 
-		}, this, true);
-
-		this.bind('changemode', function(mode) {
-
-			this.mode   = mode;
-			this.entity = null;
-
-			var state = this.state;
-			if (state !== null) {
-				state.trigger('entity', [ this.entity ]);
-			}
-
-			ui.inactive('#scene-preview-mode button');
-			ui.active('#scene-preview-mode-' + mode);
-
-		}, this);
-
-		this.bind('changestate', function(id, main) {
-
-			_on_changestate.call(this, main);
-
-		}, this);
-
-	};
-
-
-	Class.prototype = {
+		}
 
 	};
 

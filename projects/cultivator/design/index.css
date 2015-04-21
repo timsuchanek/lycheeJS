@@ -1241,7 +1241,7 @@ footer {
 
 
 
-@media (max-width: 700px) {
+@media (max-width: 640px) {
 
 	menu {
 		position: fixed;
@@ -1291,9 +1291,6 @@ footer {
 		transform: rotate(90deg);
 	}
 
-}
-
-@media (max-width: 640px) {
 
 	div.wizard article {
 		max-width: 512px;

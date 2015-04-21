@@ -1,30 +1,44 @@
 
+
+# Auto-built applications
+/bin/editor
 /bin/ranger
 /bin/runtime
 
+
 /projects/*
-/projects/*/build
-/projects/cultivator/ranger/build
 /projects/*/lychee.store
 !/projects/README.md
+
+
+# Whitelisted git-tracked projects
+!/projects/blitzkrieg
 !/projects/boilerplate
 !/projects/cultivator
 !/projects/mode7
 !/projects/over-there
 !/projects/pong
 !/projects/tictactoe
-
-!/projects/blitzkrieg
 !/projects/lethalmaze
+
+
+# Not-yet ready projects
 !/projects/p2pdemo
 
+
+# Cultivator
+/projects/*/build
+/projects/cultivator/editor/build
+/projects/cultivator/ranger/build
+
+
+# lychee and sorbet
 /lychee/build/*
 /lychee/dist
-/lychee.store
-
-/sorbet/lychee.store
 /sorbet/.pid
 /sorbet/build/*
 
+
 .DS_Store
 npm-debug.log
+

@@ -9,6 +9,7 @@
 	<link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="64x64 32x32 16x16">
 	<link rel="stylesheet" href="./design/index.css">
 	<script src="./design/index.js"></script>
+	<script src="/lychee/build/html/core.js"></script>
 </head>
 <body>
 <menu>
@@ -18,9 +19,6 @@
 	<li class="ico-tools" onclick="ui.changeState('tools');">Tools</li>
 	<li class="ico-help" onclick="ui.changeState('help');">Help</li>
 </menu>
-<aside>
-	<button class="ico-refresh" onclick="window.location.href='./index.html'">Refresh</button>
-</aside>
 
 <section id="intro" class="active">
 
@@ -274,20 +272,101 @@
 
 <script>
 // XXX: Integration for public cultivator setup
-(function(window) {
+(function(global) {
 
-	var _original_open = window.open;
+	var _original_open = global.open;
 
-	window.open = function(url) {
+	var location = global.location || null;
+	if (location instanceof Object) {
 
-		var edit = 'lycheejs://edit=';
-		if (location.hostname !== 'localhost' && url.substr(0, edit.length) === edit) {
-			url = '/projects/cultivator/editor/source/index.html?/projects/' + url.substr(edit.length) + '/lychee.pkg';
+		if (location.hostname === 'localhost') {
+
+			var config = new Config('http://localhost:4848/api/Project');
+
+			config.onload = function(result) {
+
+				if (result === true) {
+
+					if (this.buffer instanceof Array) {
+
+						var articles = [].slice.call(document.querySelectorAll('#projects article'));
+						if (articles.length > 0) {
+
+							this.buffer.filter(function(project) {
+								return !project.identifier.match(/lychee|sorbet/);
+							}).forEach(function(project) {
+
+								var article = articles.find(function(node) {
+									return node.id === 'projects-' + project.identifier;
+								}) || null;
+
+								if (article === null) {
+									article = articles[0].cloneNode(true);
+								}
+
+
+								article.id                            = 'projects-' + project.identifier;
+								article.querySelector('h3').innerHTML = project.identifier;
+								article.querySelector('img').src      = '/projects/' + project.identifier + '/icon.png';
+								article.querySelector('img').onerror  = function() {
+									this.src = '/projects/cultivator/design/icon.png';
+								};
+
+
+								if (articles.indexOf(article) === -1) {
+									articles.push(article);
+								}
+
+							});
+
+							articles.sort(function(a, b) {
+								if (a.id < b.id) return -1;
+								if (a.id > b.id) return  1;
+								return 0;
+							});
+
+
+							var wrapper = document.querySelector('#projects div');
+							if (wrapper !== null) {
+
+								articles.forEach(function(article) {
+
+									if (article.parentNode !== null) {
+										article.parentNode.removeChild(article);
+									}
+
+									wrapper.appendChild(article);
+
+								});
+
+							}
+
+						}
+
+					}
+
+				}
+
+			};
+
+			config.load();
+
+		} else {
+
+			global.open = function(url) {
+
+				var edit = 'lycheejs://edit=';
+				if (url.substr(0, edit.length) === edit) {
+					url = '/projects/cultivator/editor/source/index.html?/projects/' + url.substr(edit.length) + '/lychee.pkg';
+				}
+
+				_original_open(url);
+
+			};
+
 		}
 
-		_original_open(url);
-
-	};
+	}
 
 })(this);
 </script>
