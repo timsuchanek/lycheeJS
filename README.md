@@ -1,5 +1,5 @@
 
-# lycheeJS (v0.8.6)
+# lycheeJS (0.8.6)
 
 [![NPM Version][npm-image]][npm-url]
 [![NPM Downloads][downloads-image]][downloads-url]
@@ -43,7 +43,7 @@ execute this in the Terminal:
 
 ```bash
 # This will create a folder ./lycheeJS
-wget -q -O - http://lycheejs.org/dist/lycheejs-v0.8.6.sh | bash;
+wget -q -O - http://lycheejs.org/dist/lycheejs-0.8.6.sh | bash;
 ./lycheeJS/bin/sorbet.sh start development;
 ```
 
