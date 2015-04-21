@@ -97,10 +97,10 @@
 			<h3>Boilerplate</h3>
 			<div class="center">
 				<p>
-					<img src="/projects/boilerplate/icon.png" onclick="window.open('../../projects/boilerplate');">
+					<img src="/projects/boilerplate/icon.png">
 				</p>
 				<div class="center">
-					<button class="ico-browser ico-only" onclick="window.open('../../projects/boilerplate');" title="Open in Browser"></button>
+					<button class="ico-browser ico-only" onclick="window.open('/projects/boilerplate');" title="Open in Browser"></button>
 					<button class="ico-editor ico-only" onclick="window.open('lycheejs://edit=boilerplate');" title="Open in Editor"></button>
 					<button class="ico-folder ico-only" onclick="window.open('lycheejs://file=boilerplate');" title="Open in File Manager"></button>
 				</div>
@@ -111,7 +111,7 @@
 			<h3>Mode7</h3>
 			<div class="center">
 				<p>
-					<img src="/projects/mode7/icon.png" onclick="window.open('../../projects/mode7');">
+					<img src="/projects/mode7/icon.png">
 				</p>
 				<div class="center">
 					<button class="ico-browser ico-only" onclick="window.open('../../projects/mode7');" title="Open in Browser"></button>
@@ -125,7 +125,7 @@
 			<h3>Pong</h3>
 			<div class="center">
 				<p>
-					<img src="/projects/pong/icon.png" onclick="window.open('../../projects/pong');">
+					<img src="/projects/pong/icon.png">
 				</p>
 				<div class="center">
 					<button class="ico-browser ico-only" onclick="window.open('../../projects/pong');" title="Open in Browser"></button>
@@ -136,10 +136,10 @@
 		</article>
 
 		<article id="projects-tictactoe">
-			<h3>Tic Tac Toe</h3>
+			<h3>TicTacToe</h3>
 			<div class="center">
 				<p>
-					<img src="/projects/tictactoe/icon.png" onclick="window.open('../../projects/tictactoe');">
+					<img src="/projects/tictactoe/icon.png">
 				</p>
 				<div class="center">
 					<button class="ico-browser ico-only" onclick="window.open('../../projects/tictactoe');" title="Open in Browser"></button>
@@ -293,7 +293,7 @@
 						if (articles.length > 0) {
 
 							this.buffer.filter(function(project) {
-								return !project.identifier.match(/lychee|sorbet/);
+								return !project.identifier.match(/cultivator|lychee|sorbet/);
 							}).forEach(function(project) {
 
 								var article = articles.find(function(node) {
@@ -311,6 +311,23 @@
 								article.querySelector('img').onerror  = function() {
 									this.src = '/projects/cultivator/design/icon.png';
 								};
+
+								var buttons = [].slice.call(article.querySelectorAll('button'));
+								if (buttons.length > 0) {
+
+									buttons.forEach(function(button, index) {
+
+										switch (index) {
+
+											case 0: button.setAttribute('onclick', 'window.open(\'/projects/' + project.identifier + '\');');       break;
+											case 1: button.setAttribute('onclick', 'window.open(\'lycheejs://edit=' + project.identifier + '\');'); break;
+											case 2: button.setAttribute('onclick', 'window.open(\'lycheejs://file=' + project.identifier + '\');'); break;
+
+										}
+
+									});
+
+								}
 
 
 								if (articles.indexOf(article) === -1) {
@@ -351,7 +368,19 @@
 
 			config.load();
 
+			global.open = function(url) {
+				location.href = url;
+			};
+
 		} else {
+
+
+			[].slice.call(document.querySelectorAll('#projects article button')).filter(function(button, index) {
+				return index % 3 === 2;
+			}).forEach(function(button) {
+				button.parentNode.removeChild(button);
+			});
+
 
 			global.open = function(url) {
 
@@ -360,7 +389,12 @@
 					url = '/projects/cultivator/editor/source/index.html?/projects/' + url.substr(edit.length) + '/lychee.pkg';
 				}
 
-				_original_open(url);
+
+				if (url.substr(0, 11) === 'lycheejs://') {
+					location.href = url;
+				} else {
+					_original_open(url);
+				}
 
 			};
 
