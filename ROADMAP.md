@@ -8,7 +8,7 @@ back into master, tagged and published.
 
 ## v0.8.6
 
-- /lychee/dist build via configure script for CDNJS and standalone deployment
+- Rename nodejs platform to iojs platform
 - sorbet.plugin.Fertilizer should auto-build environments for all projects
 - Sorbet Log File serialization to be inspectable and remote-debuggable via ranger
 - lychee.net.(client||remote).DHT as described in Bittorrent's DHT protocol [1] which extends lychee.data.BENCODE for its logical behaviours

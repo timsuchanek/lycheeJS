@@ -133,17 +133,17 @@ if [ "$protocol" == "lycheejs" ]; then
 
 				if [ "$OS" == "linux" ]; then
 
-					xdg-open "file://$resource" 2>&1;
+					xdg-open "file://$LYCHEEJS_ROOT/projects/$resource" 2>&1;
 					exit 0;
 
 				elif [ "$OS" == "osx" ]; then
 
-					open "file://$resource" 2>&1;
+					open "file://$LYCHEEJS_ROOT/projects/$resource" 2>&1;
 					exit 0;
 
 				elif [ "$OS" == "windows" ]; then
 
-					explorer "file://c:$resource";
+					explorer "file://c:$LYCHEEJS_ROOT/projects/$resource";
 					exit 0;
 
 				fi;

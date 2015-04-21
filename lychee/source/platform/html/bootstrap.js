@@ -7,55 +7,46 @@
 
 	var _load_asset = function(settings, callback, scope) {
 
-		var proto = settings.url.split(':')[0];
-		if (proto === 'file') {
+		var xhr = new XMLHttpRequest();
 
-			callback.call(scope, null);
-
-		} else {
-
-			var xhr = new XMLHttpRequest();
-
-			xhr.open('GET', settings.url, true);
+		xhr.open('GET', settings.url, true);
 
 
-			if (settings.headers instanceof Object) {
+		if (settings.headers instanceof Object) {
 
-				for (var header in settings.headers) {
-					xhr.setRequestHeader(header, settings.headers[header]);
-				}
-
+			for (var header in settings.headers) {
+				xhr.setRequestHeader(header, settings.headers[header]);
 			}
 
-
-			xhr.onload = function() {
-
-				try {
-					callback.call(scope, xhr.responseText || xhr.responseXML);
-				} catch(err) {
-					lychee.Debugger.report(lychee.environment, err, null);
-				} finally {
-					xhr = null;
-				}
-
-			};
-
-			xhr.onerror = xhr.ontimeout = function() {
-
-				try {
-					callback.call(scope, null);
-				} catch(err) {
-					lychee.Debugger.report(lychee.environment, err, null);
-				} finally {
-					xhr = null;
-				}
-
-			};
-
-
-			xhr.send(null);
-
 		}
+
+
+		xhr.onload = function() {
+
+			try {
+				callback.call(scope, xhr.responseText || xhr.responseXML);
+			} catch(err) {
+				lychee.Debugger.report(lychee.environment, err, null);
+			} finally {
+				xhr = null;
+			}
+
+		};
+
+		xhr.onerror = xhr.ontimeout = function() {
+
+			try {
+				callback.call(scope, null);
+			} catch(err) {
+				lychee.Debugger.report(lychee.environment, err, null);
+			} finally {
+				xhr = null;
+			}
+
+		};
+
+
+		xhr.send(null);
 
 	};
 

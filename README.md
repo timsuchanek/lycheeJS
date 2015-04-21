@@ -1,5 +1,5 @@
 
-# lycheeJS (v0.8.5)
+# lycheeJS (v0.8.6)
 
 [![NPM Version][npm-image]][npm-url]
 [![NPM Downloads][downloads-image]][downloads-url]
@@ -29,51 +29,22 @@ There are prebuilt packages that ship all dependencies and
 runtimes lycheeJS needs in order to work and cross-compile
 properly.
 
-Take a look at [lycheejs.org](http://lycheejs.org)
-for a list of those available packages.
+Take a look at [lycheejs.org](http://lycheejs.org) for a list
+of available packages for your your operating system.
 
 
 ## Manual Installation
 
+The netinstall shell script allows to automatically install
+lycheeJS on any server.
 
-#### 1. Download lycheeJS
-
-Download lycheeJS via [zip-file](https://github.com/LazerUnicorns/lycheeJS/archive/master.zip)
-and extract its contents. Rename the lycheeJS-master folder that
-was inside the archive accordingly.
-
-```bash
-cd ~/Development; # Change to your development folder
-
-wget https://github.com/LazerUnicorns/lycheeJS/archive/master.zip -O lycheeJS-master.zip;
-unzip lycheeJS-master.zip;
-mv lycheeJS-master lycheeJS;
-```
-
-#### 2. Download lycheeJS runtimes
+If you want to install lycheejs in that way, you can simply
+execute this in the Terminal:
 
 ```bash
-cd ~/Development; # Change to your development folder
-
-wget https://github.com/LazerUnicorns/lycheeJS-runtime/archive/master.zip;
-unzip lycheeJS-runtime-master.zip;
-mv lycheeJS-runtime-master ./lycheeJS/bin/runtime;
-```
-
-
-#### 3. Start lycheeJS
-
-If you installed lycheeJS via distributed package, you
-can use *lycheeJS Ranger* from the Applications Menu
-of your Operating System. This tool offers a GUI for
-maintenance and management of lycheeJS and your projects.
-
-
-If you manually installed lycheeJS, you can start Sorbet via Terminal:
-
-```bash
-cd /path/to/lycheeJS;
-./bin/sorbet.sh start development;
+# This will create a folder ./lycheeJS
+wget -q -O - http://lycheejs.org/dist/lycheejs-v0.8.6.sh | bash;
+./lycheeJS/bin/sorbet.sh start development;
 ```
 
 

@@ -108,7 +108,7 @@ if [ ! -d "./bin/editor" ]; then
 		mv ./projects/cultivator/editor/build/html-nwjs/main-osx ./bin/editor/osx;
 		mv ./projects/cultivator/editor/build/html-nwjs/main-windows ./bin/editor/windows;
 
-		rm -rf ./projects/cultivator/editor/build;
+#		rm -rf ./projects/cultivator/editor/build;
 
 	fi;
 

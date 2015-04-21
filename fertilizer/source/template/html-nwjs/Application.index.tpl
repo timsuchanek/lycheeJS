@@ -12,8 +12,6 @@
 
 		lychee.init(function(sandbox) {
 
-console.log('INIT fired!');
-
 			var lychee = sandbox.lychee;
 			var app    = sandbox.app;
 			var game   = sandbox.game;

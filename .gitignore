@@ -34,7 +34,6 @@
 
 # lychee and sorbet
 /lychee/build/*
-/lychee/dist
 /sorbet/.pid
 /sorbet/build/*
 

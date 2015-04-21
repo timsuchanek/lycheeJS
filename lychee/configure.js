@@ -1,4 +1,4 @@
-#!/usr/bin/env nodejs
+#!/usr/bin/env iojs
 
 (function() {
 
@@ -486,7 +486,7 @@
 		Object.keys(_BOOTSTRAP).forEach(function(platform) {
 
 			var result = true;
-			var path   = _path.resolve(_root, './lychee/dist/lychee.' + platform + '.js');
+			var path   = _path.resolve(_root, './lychee/build/' + platform + '/main.js');
 			var dir    = _path.dirname(path);
 			var code   = (function(bootstrap) {
 
