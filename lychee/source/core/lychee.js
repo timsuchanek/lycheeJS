@@ -662,15 +662,25 @@ lychee = typeof lychee !== 'undefined' ? lychee : (function(global) {
 
 			if (environment !== null) {
 
+				if (this.environment !== null && environment.sandbox === true) {
+
+					Object.values(this.environment.definitions).filter(function(definition) {
+						return definition.id.substr(0, 6) === 'lychee';
+					}).forEach(function(definition) {
+						environment.define(definition);
+					});
+
+				}
+
 				this.environment = environment;
-				this.debug = this.environment.debug;
+				this.debug       = this.environment.debug;
 
 				return true;
 
 			} else {
 
 				this.environment = _environment;
-				this.debug = this.environment.debug;
+				this.debug       = this.environment.debug;
 
 			}
 

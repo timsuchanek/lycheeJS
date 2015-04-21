@@ -269,11 +269,6 @@ alert(PROJECT);
 		});
 
 
-		Object.values(lychee.environment.definitions).filter(function(definition) {
-			return definition.id.substr(0, 6) === 'lychee';
-		}).forEach(function(definition) {
-			environment.define(definition);
-		});
 
 
 		lychee.setEnvironment(environment);
