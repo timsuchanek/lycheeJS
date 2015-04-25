@@ -86,10 +86,9 @@ label.ico-only:before {
 .ico-add:before         { content: "\e095"; }
 .ico-boot:before        { content: "\e05c"; }
 .ico-browser:before     { content: "\e037"; }
-.ico-connections:before { content: "\e059"; }
 .ico-console:before     { content: "\e011"; }
 .ico-create:before      { content: "\e095"; }
-.ico-debugger:before    { content: "\e052"; }
+.ico-debug:before       { content: "\e052"; }
 .ico-download:before    { content: "\e083"; }
 .ico-editor:before      { content: "\e00c"; }
 .ico-error:before       { content: "\e082"; }
@@ -106,6 +105,7 @@ label.ico-only:before {
 .ico-play:before        { content: "\e01b"; }
 .ico-projects:before    { content: "\e04b"; }
 .ico-refresh:before     { content: "\e098"; }
+.ico-remotes:before     { content: "\e059"; }
 .ico-remove:before      { content: "\e07c"; }
 .ico-settings:before    { content: "\e09a"; }
 .ico-status:before      { content: "\e06a"; }
@@ -433,7 +433,6 @@ article {
 	background: #363f3e;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	line-height: 1.5;
 	letter-spacing: 0.02em;
 }
 
@@ -1171,6 +1170,10 @@ table td {
 	font-family: 'museo-sans-300';
 	font-weight: normal;
 	text-align: left;
+}
+
+table td.div {
+	background: transparent;
 }
 
 table td:first-child {

@@ -30,9 +30,10 @@ lychee.define('lychee.net.Server').tags({
 		id:    'server',
 		type:  lychee.Storage.TYPE.persistent,
 		model: {
-			id:   '::ffff:1337',
-			host: '::ffff',
-			port: 1337
+			id:    '::ffff:1337',
+			state: 'default',
+			host:  '::ffff',
+			port:  1337
 		}
 	});
 

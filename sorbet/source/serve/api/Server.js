@@ -25,12 +25,13 @@ lychee.define('sorbet.serve.api.Server').requires([
 
 					if (database['server']['@objects'] instanceof Array) {
 
-						remotes.push.apply(remotes, database['debugger']['@objects'].map(function(remote) {
+						remotes.push.apply(remotes, database['server']['@objects'].map(function(remote) {
 
 							return {
-								id:   remote.host + ':' + remote.port,
-								host: remote.host,
-								port: remote.port
+								id:     remote.host + ':' + remote.port,
+								state:  remote.state,
+								host:   remote.host,
+								port:   remote.port
 							};
 
 						}));

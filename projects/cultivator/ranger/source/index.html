@@ -22,7 +22,8 @@
 	#status article.hidden {
 		display: none;
 	}
-	#status table label.ico-online {
+	#status table label.ico-online,
+	#remotes table label.ico-online {
 		color: #32afe5;
 		text-shadow: #32afe5 0 0 10px, #32afe5 0 0 20px, #32afe5 0 0 40px;
 	}
@@ -36,9 +37,6 @@
 	#profiles table label.ico-okay {
 		color: #32afe5;
 		text-shadow: #32afe5 0 0 10px, #32afe5 0 0 20px, #32afe5 0 0 40px;
-	}
-	#remotes tr.disabled {
-		color: grey;
 	}
 	</style>
 </head>
@@ -81,33 +79,7 @@
 
 <section id="remotes">
 
-	<table>
-		<tr>
-			<th>Remote</th>
-			<th>Project</th>
-			<th>Pipes</th>
-			<th>Requests</th>
-			<th>Actions</th>
-		</tr>
-		<tr>
-			<td>::ffff:127.0.0.1</td>
-			<td><a href="#todo">boilerplate</a></td>
-			<td>1337</td>
-			<td><a href="#todo">51579</a>, <a href="#todo">51580</a></td>
-			<td>
-				<button class="ico-remove ico-only" onclick="MAIN.state.trigger('remove', [ 'asdasdasd' ]);"></button>
-				<button class="ico-debugger ico-only" onclick="MAIN.state.trigger('debug', [ 'asdasdasd' ]);"></button>
-			</td>
-		</tr>
-		<tr class="div"></tr>
-		<tr class="disabled">
-			<td>::ffff:127.0.0.1</td>
-			<td>-</td>
-			<td>1337</td>
-			<td>-</td>
-			<td><button class="ico-okay ico-only" onclick="MAIN.state.trigger('remove', [ 'asdasdasd' ]);"></button></td>
-		</tr>
-	</table>
+	<div id="remotes-servers" class="wizard"></div>
 
 </section>
 
