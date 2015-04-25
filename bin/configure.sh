@@ -62,14 +62,14 @@ else
 
 		# Default chmod rights for folders
 
-		find ./lychee -type d -print0 | xargs -0 chmod 755;
-		find ./lychee -type f -print0 | xargs -0 chmod 644;
+		find ./lychee -type d -print0 | xargs -0 chmod 777;
+		find ./lychee -type f -print0 | xargs -0 chmod 666;
 
-		find ./projects -type d -print0 | xargs -0 chmod 755;
-		find ./projects -type f -print0 | xargs -0 chmod 644;
+		find ./projects -type d -print0 | xargs -0 chmod 777;
+		find ./projects -type f -print0 | xargs -0 chmod 666;
 
-		find ./sorbet -type d -print0 | xargs -0 chmod 755;
-		find ./sorbet -type f -print0 | xargs -0 chmod 644;
+		find ./sorbet -type d -print0 | xargs -0 chmod 777;
+		find ./sorbet -type f -print0 | xargs -0 chmod 666;
 
 		touch ./sorbet/.pid;
 
