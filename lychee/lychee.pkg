@@ -1,210 +1,402 @@
 {
-
 	"build": {
-
 		"environments": {
-
 			"html/main": {
-				"build":    "lychee.game.Main",
-				"debug":    false,
-				"sandbox":  false,
-				"packages": [ [ "lychee", "./lychee.pkg" ] ],
-				"tags":     { "platform": [ "html" ] },
-				"variant":  "library"
-			},
-
-			"nodejs/main": {
-				"build":    "lychee.game.Main",
-				"debug":    false,
-				"sandbox":  false,
-				"packages": [ [ "lychee", "./lychee.pkg" ] ],
-				"tags":     { "platform": [ "nodejs" ] },
-				"variant":  "library"
-			}
-
-		},
-
-		"files": {
-
-		}
-
-	},
-
-	"source": {
-
-		"environments": {
-
-		},
-
-		"tags": {
-
-			"platform": {
-
-				"html":          "platform/html",
-				"html-webgl":    "platform/html-webgl",
-				"html-nwjs":     "platform/html-nwjs",
-				"nodejs":        "platform/nodejs",
-				"nodejs-sdl":    "platform/nodejs-sdl",
-				"nodejs-webgl":  "platform/nodejs-webgl"
-
-			}
-
-		},
-
-		"files": {
-
-			"platform": {
-
-				"html": {
-
-					"bootstrap": [ "js" ],
-
-					"net": {
-						"Client": [ "js" ],
-						"Remote": [ "js" ],
-						"Server": [ "js" ]
-					},
-
-					"Input":    [ "js" ],
-					"Renderer": [ "js" ],
-					"Storage":  [ "js" ],
-					"Viewport": [ "js" ]
-
+				"build": "lychee.game.Main",
+				"debug": false,
+				"sandbox": false,
+				"packages": [
+					[
+						"lychee",
+						"./lychee.pkg"
+					]
+				],
+				"tags": {
+					"platform": [
+						"html"
+					]
 				},
-
+				"variant": "library"
+			},
+			"nodejs/main": {
+				"build": "lychee.game.Main",
+				"debug": false,
+				"sandbox": false,
+				"packages": [
+					[
+						"lychee",
+						"./lychee.pkg"
+					]
+				],
+				"tags": {
+					"platform": [
+						"nodejs"
+					]
+				},
+				"variant": "library"
+			}
+		},
+		"files": {
+			"html": {
+				"core": [
+					"js"
+				],
+				"main": [
+					"js"
+				]
+			},
+			"html-nwjs": {
+				"core": [
+					"js"
+				],
+				"main": [
+					"js"
+				]
+			},
+			"html-webgl": {
+				"core": [
+					"js"
+				],
+				"main": [
+					"js"
+				]
+			},
+			"nodejs": {
+				"core": [
+					"js"
+				],
+				"main": [
+					"js"
+				]
+			},
+			"nodejs-sdl": {
+				"core": [
+					"js"
+				],
+				"main": [
+					"js"
+				]
+			},
+			"nodejs-webgl": {
+				"core": [
+					"js"
+				],
+				"main": [
+					"js"
+				]
+			}
+		}
+	},
+	"source": {
+		"environments": {},
+		"tags": {
+			"platform": {
+				"html": "platform/html",
+				"html-webgl": "platform/html-webgl",
+				"html-nwjs": "platform/html-nwjs",
+				"nodejs": "platform/nodejs",
+				"nodejs-sdl": "platform/nodejs-sdl",
+				"nodejs-webgl": "platform/nodejs-webgl"
+			}
+		},
+		"files": {
+			"platform": {
+				"html": {
+					"bootstrap": [
+						"js"
+					],
+					"net": {
+						"Client": [
+							"js"
+						],
+						"Remote": [
+							"js"
+						],
+						"Server": [
+							"js"
+						]
+					},
+					"Input": [
+						"js"
+					],
+					"Renderer": [
+						"js"
+					],
+					"Storage": [
+						"js"
+					],
+					"Viewport": [
+						"js"
+					]
+				},
 				"html-webgl": {
-
 					"Renderer": [
 						"js",
 						"Sprite.vs",
 						"Sprite.fs"
 					]
-
 				},
-
 				"nodejs": {
-
-					"bootstrap": [ "js" ],
-
+					"bootstrap": [
+						"js"
+					],
 					"net": {
-						"Client":   [ "js" ],
-						"Remote":   [ "js" ],
-						"Server":   [ "js" ]
+						"Client": [
+							"js"
+						],
+						"Remote": [
+							"js"
+						],
+						"Server": [
+							"js"
+						]
 					},
-
-					"Input":    [ "js" ],
-					"Renderer": [ "js" ],
-					"Storage":  [ "js" ],
-					"Viewport": [ "js" ]
-
+					"Input": [
+						"js"
+					],
+					"Renderer": [
+						"js"
+					],
+					"Storage": [
+						"js"
+					],
+					"Viewport": [
+						"js"
+					]
 				}
-
 			},
-
 			"core": {
-				"lychee":      [ "js" ],
-				"Asset":       [ "js" ],
-				"Debugger":    [ "js" ],
-				"Definition":  [ "js" ],
-				"Environment": [ "js" ],
-				"Package":     [ "js" ]
+				"lychee": [
+					"js"
+				],
+				"Asset": [
+					"js"
+				],
+				"Debugger": [
+					"js"
+				],
+				"Definition": [
+					"js"
+				],
+				"Environment": [
+					"js"
+				],
+				"Package": [
+					"js"
+				]
 			},
-
 			"data": {
-				"BENCODE": [ "js" ],
-				"BitON":   [ "js" ],
-				"JSON":    [ "js" ]
+				"BENCODE": [
+					"js"
+				],
+				"BitON": [
+					"js"
+				],
+				"JSON": [
+					"js"
+				]
 			},
-
 			"effect": {
-				"Alpha":     [ "js" ],
-				"Color":     [ "js" ],
-				"Lightning": [ "js" ],
-				"Offset":    [ "js" ],
-				"Position":  [ "js" ],
-				"Radius":    [ "js" ],
-				"Shake":     [ "js" ],
-				"Velocity":  [ "js" ]
+				"Alpha": [
+					"js"
+				],
+				"Lightning": [
+					"js"
+				],
+				"Offset": [
+					"js"
+				],
+				"Position": [
+					"js"
+				],
+				"Radius": [
+					"js"
+				],
+				"Shake": [
+					"js"
+				],
+				"Velocity": [
+					"js"
+				],
+				"Color": [
+					"js"
+				]
 			},
-
 			"event": {
-				"Emitter": [ "js" ],
-				"Flow":    [ "js" ],
-				"Promise": [ "js" ],
-				"Queue":   [ "js" ]
+				"Emitter": [
+					"js"
+				],
+				"Flow": [
+					"js"
+				],
+				"Promise": [
+					"js"
+				],
+				"Queue": [
+					"js"
+				]
 			},
-
 			"game": {
-				"Background": [ "js" ],
-				"Emitter":    [ "js" ],
-				"Entity":     [ "js" ],
-				"Jukebox":    [ "js" ],
-				"Layer":      [ "js" ],
-				"Logic":      [ "js" ],
-				"Loop":       [ "js" ],
-				"Main":       [ "js" ],
-				"Physic":     [ "js" ],
-				"Sprite":     [ "js" ],
-				"State":      [ "js" ]
+				"Background": [
+					"js"
+				],
+				"Emitter": [
+					"js"
+				],
+				"Entity": [
+					"js"
+				],
+				"Jukebox": [
+					"js"
+				],
+				"Layer": [
+					"js"
+				],
+				"Logic": [
+					"js"
+				],
+				"Loop": [
+					"js"
+				],
+				"Main": [
+					"js"
+				],
+				"Physic": [
+					"js"
+				],
+				"Sprite": [
+					"js"
+				],
+				"State": [
+					"js"
+				]
 			},
-
 			"math": {
-				"Matrix4":    [ "js" ],
-				"Quaternion": [ "js" ],
-				"Vector2":    [ "js" ],
-				"Vector3":    [ "js" ],
-				"Vector4":    [ "js" ]
+				"Matrix4": [
+					"js"
+				],
+				"Quaternion": [
+					"js"
+				],
+				"Vector2": [
+					"js"
+				],
+				"Vector3": [
+					"js"
+				],
+				"Vector4": [
+					"js"
+				]
 			},
-
 			"net": {
-
-				"Service":  [ "js" ],
-				"Tunnel":   [ "js" ],
-
+				"Service": [
+					"js"
+				],
+				"Tunnel": [
+					"js"
+				],
 				"client": {
-					"Chat":        [ "js" ],
-					"Controller":  [ "js" ],
-					"Session":     [ "js" ]
+					"Chat": [
+						"js"
+					],
+					"Debugger": [
+						"js"
+					],
+					"Session": [
+						"js"
+					]
 				},
-
 				"protocol": {
-					"HTTP": [ "js" ],
-					"WS":   [ "js" ]
+					"HTTP": [
+						"js"
+					],
+					"WS": [
+						"js"
+					]
 				},
-
 				"remote": {
-					"Chat":        [ "js" ],
-					"Controller":  [ "js" ],
-					"Session":     [ "js" ]
+					"Chat": [
+						"js"
+					],
+					"Debugger": [
+						"js"
+					],
+					"Session": [
+						"js"
+					]
 				}
-
 			},
-
 			"ui": {
-				"Button":    [ "js" ],
-				"Entity":    [ "js" ],
-				"Input":     [ "js" ],
-				"Joystick":  [ "js" ],
-				"Label":     [ "js" ],
-				"Layer":     [ "js" ],
-				"Select":    [ "js" ],
-				"Slider":    [ "js" ],
-				"Sprite":    [ "js" ],
-				"Switch":    [ "js" ],
-				"Textarea":  [ "js" ]
+				"Button": [
+					"js"
+				],
+				"Entity": [
+					"js"
+				],
+				"Input": [
+					"js"
+				],
+				"Joystick": [
+					"js"
+				],
+				"Label": [
+					"js"
+				],
+				"Layer": [
+					"js"
+				],
+				"Select": [
+					"js"
+				],
+				"Slider": [
+					"js"
+				],
+				"Sprite": [
+					"js"
+				],
+				"Switch": [
+					"js"
+				],
+				"Textarea": [
+					"js"
+				]
 			},
-
 			"verlet": {
-				"AngleConstraint":    [ "js" ],
-				"DistanceConstraint": [ "js" ],
-				"Particle":           [ "js" ],
-				"Tire":               [ "js" ],
-				"Vector2":            [ "js" ],
-				"World":              [ "js" ]
+				"AngleConstraint": [
+					"js"
+				],
+				"DistanceConstraint": [
+					"js"
+				],
+				"Particle": [
+					"js"
+				],
+				"Tire": [
+					"js"
+				],
+				"Vector2": [
+					"js"
+				],
+				"World": [
+					"js"
+				]
+			},
+			"ai": {
+				"neural": {
+					"Agent": [
+						"js"
+					],
+					"Evolution": [
+						"js"
+					],
+					"Genome": [
+						"js"
+					],
+					"Network": [
+						"js"
+					]
+				}
 			}
-
 		}
-
 	}
-
 }

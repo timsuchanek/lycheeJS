@@ -662,6 +662,7 @@ button {
 	white-space:nowrap;
 	-ms-text-overflow: ellipsis;
 	text-overflow: ellipsis;
+	vertical-align: middle;
 	outline: none;
 	cursor: pointer;
 	-moz-transition: all 250ms ease-out;
@@ -1132,7 +1133,7 @@ label[disabled] {
 table {
 	width: 100%;
 	margin: 0px auto;
-	border-spacing: 0px 2px;
+	border-spacing: 2px 2px;
 }
 
 table th {

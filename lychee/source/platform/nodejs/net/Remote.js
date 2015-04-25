@@ -3,7 +3,8 @@ lychee.define('lychee.net.Remote').tags({
 	platform: 'nodejs'
 }).requires([
 	'lychee.net.protocol.HTTP',
-	'lychee.net.protocol.WS'
+	'lychee.net.protocol.WS',
+	'lychee.net.remote.Debugger'
 ]).includes([
 	'lychee.net.Tunnel'
 ]).supports(function(lychee, global) {
@@ -47,6 +48,7 @@ lychee.define('lychee.net.Remote').tags({
 
 		this.bind('connect', function() {
 			this.__isConnected = true;
+			this.addService(new lychee.net.remote.Debugger(this));
 		}, this);
 
 		this.bind('disconnect', function() {

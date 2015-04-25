@@ -192,8 +192,13 @@ lychee.define('sorbet.serve.api.Project').requires([
 
 				} else {
 
-					var projects = host.projects.map(_serialize);
-					var sorbet   = projects.find(function(project) { return project.identifier === 'sorbet'; }) || null;
+					var projects = host.projects.filter(function(project) {
+						return !project.identifier.match(/cultivator/);
+					}).map(_serialize);
+					var sorbet   = projects.find(function(project) {
+						return project.identifier === 'sorbet';
+					}) || null;
+
 					if (sorbet !== null) {
 						_dispatch_sorbet(sorbet);
 					}

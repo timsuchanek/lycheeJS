@@ -180,24 +180,31 @@ lychee.define('sorbet.Main').requires([
 		projects['sorbet'] = new sorbet.data.Project('sorbet', '/sorbet');
 
 
-		var root_fs = new sorbet.data.Filesystem('/');
-		var ids     = root_fs.dir('/projects').filter(function(value) {
-			return value !== 'README.md';
+		var filesystem = new sorbet.data.Filesystem('/');
+
+		filesystem.dir('/projects').filter(function(value) {
+			return !value.match(/README\.md|cultivator/);
+		}).forEach(function(id) {
+
+			var info1 = filesystem.info('/projects/' + id + '/index.html');
+			var info2 = filesystem.info('/projects/' + id + '/lychee.pkg');
+			if ((info1 !== null && info1.type === 'file') || (info2 !== null && info2.type === 'file')) {
+				projects[id] = new sorbet.data.Project(id, '/projects/' + id);
+			}
+
 		});
 
-		if (ids.length > 0) {
+		filesystem.dir('/projects/cultivator').filter(function(value) {
+			return !value.match(/index\.html|design/);
+		}).forEach(function(id) {
 
-			ids.forEach(function(id) {
+			var info1 = filesystem.info('/projects/cultivator/' + id + '/index.html');
+			var info2 = filesystem.info('/projects/cultivator/' + id + '/lychee.pkg');
+			if ((info1 !== null && info1.type === 'file') || (info2 !== null && info2.type === 'file')) {
+				projects['cultivator/' + id] = new sorbet.data.Project('cultivator/' + id, '/projects/cultivator/' + id);
+			}
 
-				var info1 = root_fs.info('/projects/' + id + '/index.html');
-				var info2 = root_fs.info('/projects/' + id + '/lychee.pkg');
-				if ((info1 !== null && info1.type === 'file') || (info2 !== null && info2.type === 'file')) {
-					projects[id] = new sorbet.data.Project(id, '/projects/' + id);
-				}
-
-			});
-
-		}
+		});
 
 	})(_project_cache);
 
@@ -278,13 +285,13 @@ lychee.define('sorbet.Main').requires([
 
 				var connections = 0;
 
-				this.server.bind('connect', function() {
+				this.server.bind('connect', function(remote) {
 
 					connections++;
 
 				});
 
-				this.server.bind('disconnect', function() {
+				this.server.bind('disconnect', function(remote) {
 
 					connections--;
 

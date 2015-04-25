@@ -133,12 +133,6 @@ lychee.define('sorbet.mod.Package').requires([
 
 		can: function(project) {
 
-			// Ignore lychee core for now, because we want to develop with unstable builds
-			if (project.identifier === 'lychee') {
-				return false;
-			}
-
-
 			if (project.package !== null) {
 
 				var diff    = null;
