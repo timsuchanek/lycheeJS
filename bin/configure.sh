@@ -62,15 +62,21 @@ else
 
 		# Default chmod rights for folders
 
-		chmod -R 0777 ./projects;
-		chmod -R 0777 ./lychee;
-		chmod -R 0777 ./sorbet;
+		find ./lychee -type d -print0 | xargs -0 chmod 755;
+		find ./lychee -type f -print0 | xargs -0 chmod 644;
+
+		find ./projects -type d -print0 | xargs -0 chmod 755;
+		find ./projects -type f -print0 | xargs -0 chmod 644;
+
+		find ./sorbet -type d -print0 | xargs -0 chmod 755;
+		find ./sorbet -type f -print0 | xargs -0 chmod 644;
 
 		touch ./sorbet/.pid;
 
 		# Make command line tools explicitely executable
 
 		chmod +x ./lychee/configure.js;
+		chmod +x ./projects/*/sorbet.js;
 		chmod +x ./bin/editor.sh;
 		chmod +x ./bin/fertilizer.sh;
 		chmod +x ./bin/fertilizer.js;

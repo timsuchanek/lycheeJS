@@ -117,7 +117,8 @@ lychee.define('sorbet.serve.File').requires([
 			} else if (url.substr(0, 9) === '/projects') {
 
 				var identifier = url.split('/')[2];
-				var project    = host.getProject(identifier);
+
+				var project = host.getProject(identifier);
 				if (project !== null) {
 
 					var path = '/' + url.split('/').slice(3).join('/');

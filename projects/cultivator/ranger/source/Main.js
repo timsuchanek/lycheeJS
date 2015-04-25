@@ -2,7 +2,9 @@
 lychee.define('tool.Main').requires([
 	'lychee.data.JSON',
 	'tool.state.Bootup',
+//	'tool.state.Console',
 	'tool.state.Profiles',
+	'tool.state.Remotes',
 	'tool.state.Status'
 ]).includes([
 	'lychee.game.Main'
@@ -104,6 +106,7 @@ lychee.define('tool.Main').requires([
 
 			this.setState('bootup',   new tool.state.Bootup(this));
 			this.setState('profiles', new tool.state.Profiles(this));
+			this.setState('remotes',  new tool.state.Remotes(this));
 			this.setState('status',   new tool.state.Status(this));
 
 

@@ -183,7 +183,7 @@ lychee.define('sorbet.Main').requires([
 		var filesystem = new sorbet.data.Filesystem('/');
 
 		filesystem.dir('/projects').filter(function(value) {
-			return !value.match(/README\.md|cultivator/);
+			return !value.match(/README\.md/);
 		}).forEach(function(id) {
 
 			var info1 = filesystem.info('/projects/' + id + '/index.html');

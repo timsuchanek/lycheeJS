@@ -89,6 +89,7 @@ label.ico-only:before {
 .ico-connections:before { content: "\e059"; }
 .ico-console:before     { content: "\e011"; }
 .ico-create:before      { content: "\e095"; }
+.ico-debugger:before    { content: "\e052"; }
 .ico-download:before    { content: "\e083"; }
 .ico-editor:before      { content: "\e00c"; }
 .ico-error:before       { content: "\e082"; }
@@ -449,6 +450,8 @@ article h3 {
 	font-size: 16px;
 	font-weight: normal;
 	text-transform: uppercase;
+	text-overflow: hidden;
+	white-space: nowrap;
 	border-bottom: 2px solid #404948;
 }
 
@@ -619,6 +622,7 @@ ul.select li {
 	line-height: 32px;
 	list-style: none;
 	text-align: left;
+	white-space: nowrap;
 }
 
 ul.select li span {

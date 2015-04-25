@@ -1,5 +1,5 @@
 
-lychee.define('tool.state.Profiles').includes([
+lychee.define('tool.state.Remotes').includes([
 	'lychee.game.State',
 	'lychee.event.Emitter'
 ]).tags({
@@ -12,38 +12,9 @@ lychee.define('tool.state.Profiles').includes([
 
 	var _profiles = {};
 
-	var _save_config = function(config) {
-
-		var url    = config.url;
-		var buffer = config.buffer;
-
-		if (buffer instanceof Object) {
-
-			var xhr = new XMLHttpRequest();
-
-			xhr.open('PUT', url, true);
-
-			xhr.onload = function() {
-
-				ui.enable('#profiles-save-boot');
-
-			};
-
-			xhr.onerror = xhr.ontimeout = function() {
-
-				ui.disable('#profiles-save-boot');
-
-			};
-
-			xhr.send(JSON.stringify(buffer));
-
-		}
-
-	};
-
 	var _ui_update = function() {
 
-		var config = new Config('http://localhost:4848/api/Profile?timestamp=' + Date.now());
+		var config = new Config('http://localhost:4848/api/Connection?timestamp=' + Date.now());
 		var that   = this;
 
 		config.onload = function(result) {
@@ -238,9 +209,6 @@ lychee.define('tool.state.Profiles').includes([
 				}
 			});
 
-
-			_save_config.call(this, config);
-
 // TODO: PUT request to API to store profile
 // TODO: Relocate to lycheejs://boot=identifier afterwards
 // TODO: Error integration if API requests fail (or are they failsafe?)
@@ -270,7 +238,7 @@ lychee.define('tool.state.Profiles').includes([
 		},
 
 		enter: function() {
-			_ui_update.call(this);
+//			_ui_update.call(this);
 		},
 
 		leave: function() {
