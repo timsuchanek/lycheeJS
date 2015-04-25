@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=lycheeJS Editor
-Exec=/opt/lycheejs/bin/editor.sh
+Exec=__ROOT__/bin/editor.sh
 Icon=lycheejs
 Type=Application
 NoDisplay=false

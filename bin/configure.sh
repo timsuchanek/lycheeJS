@@ -105,9 +105,16 @@ else
 		if [ -d /usr/share/applications ]; then
 
 			echo "Integrating Editor, Helper and Ranger...";
+
 			cp ./bin/helper/linux/editor.desktop /usr/share/applications/lycheejs-editor.desktop;
 			cp ./bin/helper/linux/helper.desktop /usr/share/applications/lycheejs-helper.desktop;
 			cp ./bin/helper/linux/ranger.desktop /usr/share/applications/lycheejs-ranger.desktop;
+
+
+			sed -i 's|__ROOT__|'$LYCHEEJS_ROOT'|g' "/usr/share/applications/lycheejs-editor.desktop";
+			sed -i 's|__ROOT__|'$LYCHEEJS_ROOT'|g' "/usr/share/applications/lycheejs-helper.desktop";
+			sed -i 's|__ROOT__|'$LYCHEEJS_ROOT'|g' "/usr/share/applications/lycheejs-ranger.desktop";
+
 			echo "Done.";
 
 		fi;
