@@ -68,10 +68,12 @@ lychee.define('sorbet.serve.api.Docs').requires([
   };
 
 
-  var _getDocs = function() {
+  var _getDocs = function(moduleName) {
     var tree = {};
     var SRC_PREFIX = '/lychee/source/';
     var API_PREFIX = '/lychee/api/';
+
+    moduleName = moduleName[0] === '/' ? moduleName : '/' + moduleName;
 
     var _walk = function() {
 
@@ -94,8 +96,6 @@ lychee.define('sorbet.serve.api.Docs').requires([
           this.pointerString += dirName + '/';
         } while (parentsCopy.length > 0);
 
-        pointer[this.file] = {};
-
       }
 
 
@@ -106,17 +106,35 @@ lychee.define('sorbet.serve.api.Docs').requires([
 
 
       if (files === null) {
-        var doc = _filesystem.read(API_PREFIX + this.pointerString.substring(0, this.pointerString.length - 3) + '.md');
+        var packageName = this.file.split('.');
+        packageName = packageName.slice(0, packageName.length - 1).join('.');
+
+        if (moduleName === SRC_PREFIX + this.pointerString.substring(0, this.pointerString.length - 3)) {
+
+          var doc = _filesystem.read(API_PREFIX + this.pointerString.substring(0, this.pointerString.length - 3) + '.md');
+
+          // remove file extension
 
 
-        if (doc === null) {
-          pointer[this.file] = null;
+          if (doc === null) {
+
+            pointer[packageName] = null;
+
+          } else {
+
+            pointer[packageName] = lychee.serialize(doc);
+
+          }
+
         } else {
-          pointer[this.file] = lychee.serialize(doc);
+          pointer[packageName] = null;
         }
 
         return;
       } else {
+
+        pointer[this.file] = {};
+
         files.forEach(function(newFile) {
 
           var newWalkScope = {
@@ -153,7 +171,8 @@ lychee.define('sorbet.serve.api.Docs').requires([
     process: function(host, url, data, ready) {
 
       var method     = data.headers.method;
-      var parameters = data.headers.parameters;
+      var parameters = data.headers.parameters || null;
+      var module     = parameters !== null && parameters.hasOwnProperty('module') ? parameters.module : null;
 
       /*
        * 1: OPTIONS
@@ -180,13 +199,28 @@ lychee.define('sorbet.serve.api.Docs').requires([
 
       } else if (method === 'GET') {
 
-        var docs = _getDocs();
+        if (module !== null) {
+          var docs = _getDocs(module);
 
-        ready({
-          status:  200,
-          headers: _to_header(200, data),
-          payload: _JSON.encode(docs)
-        });
+          ready({
+            status:  200,
+            headers: _to_header(200, data),
+            payload: _JSON.encode(docs)
+          });
+
+        } else {
+
+          ready({
+            status:  400,
+            headers: _to_header(400, data),
+            payload: _JSON.encode({
+              error: 'module parameter is missing. Try eg. ?module=lychee.core.Asset'
+            })
+          });
+
+        }
+
+
 
 
 
