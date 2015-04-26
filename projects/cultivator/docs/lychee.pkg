@@ -12,10 +12,6 @@
 				"js"
 			],
 			"lib": {
-				"markdown": [
-					"js",
-					"min.js"
-				],
 				"marked": [
 					"js"
 				],

@@ -17,17 +17,41 @@
 	<script src="/lychee/build/html/core.js"></script>
 
 	<style>
-		article pre {
-			padding: 16px;
-		}
-
-		code {
-			font-size: 16px;
-		}
 
 		h1#version {
+			margin-top: 0;
 			margin-left: 32px;
 		}
+
+		h1#version #logo {
+			display: inline-block;
+		}
+
+		h1#version #logo h2 {
+			font-size: 36px;
+		}
+
+		#score {
+			margin-top: 24px;
+			margin-right: 32px;
+			float: right;
+			font-size: 20px;
+			line-height: 2em;
+		}
+
+		#score span {
+			padding: 0 5px;
+			font-size: 36px;
+		}
+
+		#num-documented {
+			color: rgb(208, 73, 75);
+		}
+
+		#num-total {
+			color: #888;
+		}
+
 
 		article#packages-tree ul, article#packages-tree ul ul {
 			list-style: none;
@@ -70,6 +94,9 @@
 			color: white;
 		}
 
+		article#packages-tree ul li a.no-docs {
+			color: #888;
+		}
 
 		article#docs {
 			padding: 16px;
@@ -83,13 +110,28 @@
 			margin: 16px;
 		}
 
+		article#docs pre {
+			padding: 16px;
+		}
+
+		article#docs code {
+			font-size: 16px;
+		}
+
 
 	</style>
 </head>
 <body>
 
 <header>
-	<h1 id="version">lycheeJS 0.8.6 API Docs</h1>	
+
+	<h1 id="version">
+		<div id="logo">
+			<h1><img alt="Logo" src="/desktop.svg" width="64" height="64"></h1>
+			<h2>lychee<span>js</span> 0.8.6 API Docs</h2>
+		</div>
+		<span id="score"></span>
+	</h1>
 </header>
 
 <section class="active">

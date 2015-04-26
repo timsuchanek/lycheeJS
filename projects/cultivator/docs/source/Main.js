@@ -17,7 +17,6 @@ lychee.define('tool.Main').requires([
 
 	var _load_api = function(callback, scope) {
 
-		console.log('calling docs with ', this.activeDoc);
 		this.config = new Config('http://localhost:4848/api/Docs?module=' + this.activeDoc);
 
 		this.config.onload = function(result) {
@@ -38,15 +37,25 @@ lychee.define('tool.Main').requires([
 			var pointer = this[key];
 			var currentPath = LYCHEE_SRC + this.__path + '/' + key;
 
-			if (currentPath === main.activeDoc) {
 
-				code += '<a onclick="window.open(\'' + this.__path + key + '\')" class="active">' + key + '</a>';
+			if (typeof pointer === 'boolean' || (pointer.hasOwnProperty('constructor') || pointer.hasOwnProperty('arguments'))) {
+
+				var classCode = currentPath === main.activeDoc ? ' class="active': 'class="';
+
+				if (pointer === false) {
+					classCode += ' no-docs"';
+				} else {
+					classCode += '"'
+				}
+
+				code += '<a onclick="window.open(\'?module=' + currentPath + '\', \'_self\')"' + classCode + '>' + key + '</a>';
+
 
 				if (pointer && pointer.hasOwnProperty('constructor') && pointer.hasOwnProperty('arguments')) {
-					main.activeBlob = pointer;
+					main.activeBlob = pointer || null;
 				}
-			} else if (pointer === null || (pointer.hasOwnProperty('constructor') || pointer.hasOwnProperty('arguments'))) {
-				code += '<a onclick="window.open(\'?module=' + currentPath + '\', \'_self\')">' + key + '</a>';
+
+				main.count(!!pointer);
 
 			} else if (typeof pointer === 'object') {
 				code += '<span>' + key + '</span>';
@@ -62,6 +71,16 @@ lychee.define('tool.Main').requires([
 
 		return code;
 	};
+
+	var _render_score = function() {
+		var code = ''
+						+ '<span id="num-documented">' + this.documentedClasses + '</span>'
+						+ '/'
+						+ '<span id="num-total">' + this.classes + '</span>'
+						+ ' classes documented';
+
+		ui.render(code, "#score");
+	}
 
 	var _parse_url = function() {
 		var url = location.href.split('?');
@@ -97,9 +116,12 @@ lychee.define('tool.Main').requires([
 
 		lychee.game.Main.call(this, settings);
 
-		this.activeBlob = null;
-		this.activeDoc  = "/lychee/source/core/Asset";
-		this.config     = null;
+		this.activeBlob 					= null;
+		this.activeDoc  					= "/lychee/source/core/Asset";
+		this.config     					= null;
+		this.classes    					= 0;
+		this.documentedClasses    = 0;
+		this.undocumentedClasses  = 0;
 
 		/*
 		 * INITIALIZATION
@@ -117,26 +139,40 @@ lychee.define('tool.Main').requires([
 					this.config.buffer.__path = '';
 
 					var code = _render.call(this.config.buffer, this);
+
 					ui.render(code, '#packages-tree');
 
+					_render_score.call(this);
 
-					var docs = '';
 
 					if (this.activeBlob !== null) {
 						var markdownCode = lychee.deserialize(this.activeBlob).toString();
 
-						marked.setOptions({
-							highlight: function(code) {
-								return hljs.highlightAuto(code).value;
-							}
-						});
+						function _renderMarkdown() {
+							marked.setOptions({
+								highlight: function(code) {
+									return hljs.highlightAuto(code).value;
+								}
+							});
 
-						docs = marked(markdownCode);
+							var docs = marked(markdownCode);
+
+							ui.render(docs, '#docs');
+
+						}
+
+						if (marked) {
+							_renderMarkdown(code);
+						} else {
+							setInterval(_renderMarkdown.bind(this, code), 500);
+						}
+
 					} else {
-						docs = '<h1>This class currently has no docs :(</h1>';
+						var docs = '<h1>This class currently has no docs :(</h1>';
+
+						ui.render(docs, '#docs');
 					}
 
-					ui.render(docs, '#docs');
 				}
 			}, this);
 
@@ -151,7 +187,14 @@ lychee.define('tool.Main').requires([
 
 
 	Class.prototype = {
-
+		count: function(val) {
+			this.classes++;
+			if (val) {
+				this.documentedClasses++;
+			} else {
+				this.undocumentedClasses++;
+			}
+		}
 	};
 
 

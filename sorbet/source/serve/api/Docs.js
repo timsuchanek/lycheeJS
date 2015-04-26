@@ -109,16 +109,16 @@ lychee.define('sorbet.serve.api.Docs').requires([
         var packageName = this.file.split('.');
         packageName = packageName.slice(0, packageName.length - 1).join('.');
 
-        if (moduleName === SRC_PREFIX + this.pointerString.substring(0, this.pointerString.length - 3)) {
+        var doc = _filesystem.read(API_PREFIX + this.pointerString.substring(0, this.pointerString.length - 3) + '.md');
 
-          var doc = _filesystem.read(API_PREFIX + this.pointerString.substring(0, this.pointerString.length - 3) + '.md');
+        if (moduleName === SRC_PREFIX + this.pointerString.substring(0, this.pointerString.length - 3)) {
 
           // remove file extension
 
 
           if (doc === null) {
 
-            pointer[packageName] = null;
+            pointer[packageName] = false;
 
           } else {
 
@@ -127,7 +127,8 @@ lychee.define('sorbet.serve.api.Docs').requires([
           }
 
         } else {
-          pointer[packageName] = null;
+
+          pointer[packageName] = doc !== null;
         }
 
         return;
