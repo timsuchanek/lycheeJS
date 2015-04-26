@@ -15,6 +15,19 @@ lychee.define('tool.Main').requires([
 	 * HELPERS
 	 */
 
+	var _load_api = function(callback, scope) {
+
+		this.config = new Config('http://localhost:4848/api/Docs');
+
+		this.config.onload = function(result) {
+			callback.call(scope, result);
+		};
+
+		this.config.load();
+
+	};
+
+
 
 	/*
 	 * IMPLEMENTATION
@@ -40,13 +53,17 @@ lychee.define('tool.Main').requires([
 		lychee.game.Main.call(this, settings);
 
 
+		this.config = null;
 
 		/*
 		 * INITIALIZATION
 		 */
 
 		this.bind('init', function() {
-
+			_load_api.call(this, function(result) {
+				// walk...
+				// lychee.deserialize
+			}, this);
 
 		}, this, true);
 

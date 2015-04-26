@@ -71,6 +71,7 @@ lychee.define('sorbet.serve.api.Docs').requires([
   var _getDocs = function() {
     var tree = {};
     var SRC_PREFIX = '/lychee/source/';
+    var API_PREFIX = '/lychee/api/';
 
     var _walk = function() {
 
@@ -98,13 +99,22 @@ lychee.define('sorbet.serve.api.Docs').requires([
       }
 
 
-      this.pointerString += this.file + '/';
+      this.pointerString += this.file;
+
 
       var files = _filesystem.dir(SRC_PREFIX + this.pointerString);
 
 
       if (files === null) {
-        pointer[this.file] = 'This file\'s name is: ' + this.file;
+        var doc = _filesystem.read(API_PREFIX + this.pointerString.substring(0, this.pointerString.length - 3) + '.md');
+
+
+        if (doc === null) {
+          pointer[this.file] = null;
+        } else {
+          pointer[this.file] = lychee.serialize(doc);
+        }
+
         return;
       } else {
         files.forEach(function(newFile) {
