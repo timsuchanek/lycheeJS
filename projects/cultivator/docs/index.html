@@ -18,6 +18,7 @@
 
 	<style>
 
+
 		h1#version {
 			margin-top: 0;
 			margin-left: 32px;
@@ -51,6 +52,41 @@
 		#num-total {
 			color: #888;
 		}
+
+		body.scrolling h1#version #logo h1 {
+			margin: 8px;
+		}
+
+		body.scrolling h1#version #logo h2 {
+			font-size: 18px;
+		}
+
+		body.scrolling h1#version #logo h1 img {
+			width: 32px;
+			height: 32px;
+		}
+
+		body.scrolling #score {
+			margin-top: 12px;
+			font-size: 14px;
+		}
+
+		body.scrolling #score span {
+			font-size: 18px;
+		}
+
+		header * {
+			-moz-transition: all 250ms ease-out;
+			-ms-transition: all 250ms ease-out;
+			-webkit-transition: all 250ms ease-out;
+			transition: all 250ms ease-out;
+		}
+
+		body.scrolling section.active {
+			top: 48px;
+		}
+
+
 
 
 		article#packages-tree ul, article#packages-tree ul ul {

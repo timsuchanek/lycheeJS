@@ -129,6 +129,20 @@ lychee.define('tool.Main').requires([
 
 		this.bind('init', function() {
 
+			var mainArea = document.querySelector('section.active');
+			var body = document.querySelector('body');
+			mainArea.onscroll = function(e) {
+				if (mainArea.scrollTop > 96) {
+					if (!body.classList.contains('scrolling')) {
+						body.classList.add('scrolling');
+					}
+				} else {
+					if (body.classList.contains('scrolling')) {
+						body.classList.remove('scrolling');
+					}
+				}
+			}
+
 			_parse_url.call(this);
 
 			_load_api.call(this, function(result) {
@@ -157,6 +171,11 @@ lychee.define('tool.Main').requires([
 
 							var docs = marked(markdownCode);
 
+							// TODO: continue here ;)
+
+							// docs.split(/=\{(.*)\}/);
+							var x = /=\{(.*)\}/g.exec(docs);
+							// debugger
 							ui.render(docs, '#docs');
 
 						}
@@ -164,7 +183,7 @@ lychee.define('tool.Main').requires([
 						if (marked) {
 							_renderMarkdown(code);
 						} else {
-							setInterval(_renderMarkdown.bind(this, code), 500);
+							setTimeout(_renderMarkdown.bind(this, code), 500);
 						}
 
 					} else {
