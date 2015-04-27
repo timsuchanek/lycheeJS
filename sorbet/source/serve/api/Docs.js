@@ -28,46 +28,6 @@ lychee.define('sorbet.serve.api.Docs').requires([
   };
 
 
-  var _walk_source = function(filesystem, files) {
-
-    var root = {};
-
-
-    files.forEach(function(file) {
-
-      var pointer = root;
-      var path    = file.split('/').slice(1);
-      if (path[path.length - 1].indexOf('.') !== -1) {
-        path.push.apply(path, path.pop().split('.'));
-      }
-
-
-      while (path.length > 1) {
-
-        var name = path.shift();
-        if (pointer[name] !== undefined) {
-          pointer = pointer[name];
-        } else {
-          pointer = pointer[name] = {};
-        }
-
-      }
-
-
-      var ext    = path.shift();
-      var asset  = filesystem.asset('/source' + file);
-      if (asset !== null) {
-        pointer[ext] = lychee.serialize(asset);
-      }
-
-    });
-
-
-    return root;
-
-  };
-
-
   var _getDocs = function(moduleName) {
     var tree = {};
     var SRC_PREFIX = '/lychee/source/';
