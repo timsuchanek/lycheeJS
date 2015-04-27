@@ -19,14 +19,7 @@
 					"highlight": [
 						"pack.js"
 					],
-					"styles": {
-						"brown_papersq": [
-							"png"
-						],
-						"school_book": [
-							"png"
-						]
-					}
+					"styles": {}
 				}
 			}
 		}

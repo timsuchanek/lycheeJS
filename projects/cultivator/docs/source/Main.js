@@ -15,6 +15,21 @@ lychee.define('tool.Main').requires([
 	 * HELPERS
 	 */
 
+	var _debounce = function(fn, delay) {
+	  var timer = null;
+
+	  return function () {
+	    var context = this
+	    var args    = arguments;
+
+	    clearTimeout(timer);
+
+	    timer = setTimeout(function () {
+	      fn.apply(context, args);
+	    }, delay);
+	  };
+	};
+
 	var _load_api = function(callback, scope) {
 
 		this.config = new Config('http://localhost:4848/api/Docs?module=' + this.activeDoc);
@@ -131,8 +146,9 @@ lychee.define('tool.Main').requires([
 
 			var mainArea = document.querySelector('section.active');
 			var body = document.querySelector('body');
-			mainArea.onscroll = function(e) {
-				if (mainArea.scrollTop > 96) {
+
+			mainArea.onscroll = _debounce(function(e) {
+				if (mainArea.scrollTop > 0) {
 					if (!body.classList.contains('scrolling')) {
 						body.classList.add('scrolling');
 					}
@@ -141,7 +157,7 @@ lychee.define('tool.Main').requires([
 						body.classList.remove('scrolling');
 					}
 				}
-			}
+			}, 100);
 
 			_parse_url.call(this);
 
@@ -171,12 +187,57 @@ lychee.define('tool.Main').requires([
 
 							var docs = marked(markdownCode);
 
-							// TODO: continue here ;)
+							/**
+							 * Parse custom ={tags} into articles
+							 */
 
-							// docs.split(/=\{(.*)\}/);
-							var x = /=\{(.*)\}/g.exec(docs);
-							// debugger
-							ui.render(docs, '#docs');
+							docs = docs.split(/=\{(.*)\}/);
+							var docsCode = docs[0];
+
+							var constructorSeen  = false;
+							var propertySeen     = false;
+							var methodSeen       = false;
+
+							for (var i = 1; i < docs.length; i += 2) {
+
+								if (docs[i] === 'constructor') {
+									if (!constructorSeen) {
+										constructorSeen = true;
+										docsCode += '<h2>Constructor</h2>';
+									}
+								} else if (docs[i].substring(0, 10) === 'properties') {
+									if (!propertySeen) {
+										propertySeen = true;
+										docsCode += '<h2>Properties</h2>'
+									}
+
+									var propertyName = docs[i].split('-')[1];
+
+									docsCode += '<h4>' + propertyName + '</h4>';
+
+									var strong = '<strong class="highlight">' + propertyName + '</strong>';
+									docs[i+1] = docs[i+1].replace(new RegExp(propertyName, 'g'), strong);
+
+								} else if (docs[i].substring(0, 7) === 'methods') {
+									if (!methodSeen) {
+										methodSeen = true;
+										docsCode += '<h2>Methods</h2>'
+									}
+
+									var methodName = docs[i].split('-')[1];
+
+									docsCode += '<h4>' + methodName + '</h4>';
+
+									var strong = '<strong class="highlight">' + methodName + '</strong>';
+									docs[i+1] = docs[i+1].replace(new RegExp(methodName, 'g'), strong);
+								}
+
+								docsCode += '<article class="' + docs[i] + '">'
+								         +  docs[i + 1]
+								         +  '</article>';
+							}
+
+							ui.render(docsCode, '#docs');
 
 						}
 

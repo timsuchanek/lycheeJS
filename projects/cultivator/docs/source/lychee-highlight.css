@@ -84,6 +84,7 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
 .css .unit,
 .css .hljs-important {
   color: rgb(208,73,75);
+  font-weight: bold;
 }
 
 .hljs-function .hljs-keyword,
