@@ -75,7 +75,6 @@ lychee.define('sorbet.serve.api.Docs').requires([
 
         path = _source_to_api(path);
 
-        console.log(path);
 
         var doc = _filesystem.read(path);
 
@@ -88,6 +87,8 @@ lychee.define('sorbet.serve.api.Docs').requires([
 
           if (moduleName === SRC_PREFIX + this.pointerString.substring(0, this.pointerString.length - 3)) {
             pointer[packageName] = lychee.serialize(doc);
+          } else {
+            pointer[packageName] = true;
           }
 
         }

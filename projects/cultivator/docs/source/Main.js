@@ -9,11 +9,94 @@ lychee.define('tool.Main').requires([
 
 	var _JSON = lychee.data.JSON;
 	var LYCHEE_SRC = '/lychee/source';
-
+	var _CACHE = {};
+	var NO_DOCS = '<h1>This class currently has no docs :(</h1>'
+	            + 'If you want some, you can kick our ass at github.';
 
 	/*
 	 * HELPERS
 	 */
+
+	var _custom_parser = function(docs) {
+		docs = docs.split(/=\{(.*)\}/);
+		var docsCode = docs[0];
+
+		var enumSeen         = false;
+		var eventSeen        = false;
+		var methodSeen       = false;
+		var propertySeen     = false;
+
+
+		for (var i = 1; i < docs.length; i += 2) {
+
+			var constructorCode  = '';
+
+			if (docs[i] === 'constructor') {
+
+				var strong = '<strong class="highlight">' + this.activeModule + '</strong>';
+				docs[i+1] = docs[i+1].replace(new RegExp(this.activeModule, 'g'), strong);
+				constructorCode = ' id="' + docs[i] + '"';
+
+			} else if (docs[i].substring(0, 5) === 'enums') {
+				if (!enumSeen) {
+					enumSeen = true;
+					docsCode += '<h2>Enums</h2>'
+				}
+
+				var enumName = docs[i].split('-')[1];
+
+				docsCode += '<h4 id="' + docs[i] + '"><a href="#' + docs[i] + '">' + enumName + '</a></h4>';
+
+				var strong = '<strong class="highlight">' + enumName + '</strong>';
+				docs[i+1] = docs[i+1].replace(new RegExp(enumName, 'g'), strong);
+
+			} else if (docs[i].substring(0, 6) === 'events') {
+				if (!eventSeen) {
+					eventSeen = true;
+					docsCode += '<h2>Events</h2>'
+				}
+
+				var eventName = docs[i].split('-')[1];
+
+				docsCode += '<h4 id="' + docs[i] + '"><a href="#' + docs[i] + '">' + eventName + '</a></h4>';
+
+				var strong = '<strong class="highlight">' + eventName + '</strong>';
+				docs[i+1] = docs[i+1].replace(new RegExp(eventName, 'g'), strong);
+
+			} else if (docs[i].substring(0, 10) === 'properties') {
+				if (!propertySeen) {
+					propertySeen = true;
+					docsCode += '<h2>Properties</h2>'
+				}
+
+				var propertyName = docs[i].split('-')[1];
+
+				docsCode += '<h4 id="' + docs[i] + '"><a href="#' + docs[i] + '">' + propertyName + '</a></h4>';
+
+				var strong = '<strong class="highlight">' + propertyName + '</strong>';
+				docs[i+1] = docs[i+1].replace(new RegExp(propertyName, 'g'), strong);
+
+			} else if (docs[i].substring(0, 7) === 'methods') {
+				if (!methodSeen) {
+					methodSeen = true;
+					docsCode += '<h2>Methods</h2>'
+				}
+
+				var methodName = docs[i].split('-')[1];
+
+				docsCode += '<h4 id="' + docs[i] + '"><a href="#' + docs[i] + '">' + methodName + '</a></h4>';
+
+				var strong = '<strong class="highlight">' + methodName + '</strong>';
+				docs[i+1] = docs[i+1].replace(new RegExp(methodName, 'g'), strong);
+			}
+
+			docsCode += '<article' + constructorCode + '>'
+			         +  docs[i + 1]
+			         +  '</article>';
+		}
+
+		return docsCode;
+	}
 
 	var _debounce = function(fn, delay) {
 	  var timer = null;
@@ -30,7 +113,7 @@ lychee.define('tool.Main').requires([
 	  };
 	};
 
-	var _load_api = function(callback, scope) {
+	var _initial_api = function(callback, scope) {
 
 		this.config = new Config('http://localhost:4848/api/Docs?module=' + this.activeDoc);
 
@@ -40,6 +123,94 @@ lychee.define('tool.Main').requires([
 		};
 
 		this.config.load();
+	};
+
+	var _open_doc = function(_module, event) {
+		if (typeof _module !== 'string' || _module === this.activeDoc) return;
+
+		this.activeDoc    = _module;
+		this.activeModule = _module.split('/').pop();
+
+
+		// disable the old tree element, enable the new
+		_set_tree_active.call(this, _module);
+
+		if (_CACHE[this.activeDoc]) {
+
+			ui.render(_CACHE[this.activeDoc], '#docs');
+
+			var state = {
+				activeDoc: this.activeDoc,
+				activeModule: this.activeModule
+			};
+
+			history.pushState(state, this.activeModule, "index.html?module=" + this.activeDoc);
+
+		} else {
+			this.config       = new Config('http://localhost:4848/api/Docs?module=' + this.activeDoc + '&docsonly');
+
+			this.config.onload = function(result) {
+
+				this.activeBlob = this.config.buffer.doc;
+
+				if (this.activeBlob) {
+
+					var markdownCode = lychee.deserialize(this.activeBlob).toString();
+					_render_markdown.call(this, markdownCode);
+
+				} else {
+					_CACHE[this.activeDoc] = NO_DOCS;
+					ui.render(NO_DOCS, '#docs');
+				}
+
+				var state = {
+					activeDoc: this.activeDoc,
+					activeModule: this.activeModule
+				};
+				console.log('pushing state', state);
+				history.pushState(state, this.activeModule, "index.html?module=" + this.activeDoc);
+
+			}.bind(this);
+
+			this.config.load();
+
+		}
+
+
+
+		window.onpopstate = function(stateEvent) {
+			var state = stateEvent.state;
+			var worked = false;
+
+			if (state !== null) {
+				this.activeModule = state.activeModule;
+				this.activeDoc = state.activeDoc;
+				worked = true;
+			} else {
+				var oldDoc = document.location.href.split('?')[1].split('=')[1];
+				if (_CACHE[oldDoc]) {
+					worked = true;
+					this.activeDoc = oldDoc;
+					this.activeModule = oldDoc.split('/').pop();
+					console.log('paarrssse', this.activeDoc, this.activeModule);
+				}
+			}
+
+			if (worked) {
+
+				_set_tree_active.call(this, this.activeDoc);
+
+				ui.render(_CACHE[this.activeDoc], '#docs');
+
+			}
+
+
+		}.bind(this);
+
+		event.preventDefault();
+		event.stopPropagation();
+
+		return false;
 	};
 
 	var _parse_url = function() {
@@ -58,7 +229,7 @@ lychee.define('tool.Main').requires([
 		}
 	};
 
-	var _render = function(main) {
+	var _render_tree = function(main) {
 		var code = '<ul>';
 
 		Object.keys(this).forEach(function(key) {
@@ -70,7 +241,13 @@ lychee.define('tool.Main').requires([
 
 			if (typeof pointer === 'boolean' || (pointer.hasOwnProperty('constructor') || pointer.hasOwnProperty('arguments'))) {
 
-				var classCode = currentPath === main.activeDoc ? ' class="active': 'class="';
+				var classCode = 'class="';
+				var id = 'tree' + currentPath.split('/').join('-');
+
+				if (currentPath === main.activeDoc) {
+					classCode = ' class="active';
+					main.activeTreeId = id;
+				}
 
 				if (pointer === false) {
 					classCode += ' no-docs"';
@@ -78,7 +255,8 @@ lychee.define('tool.Main').requires([
 					classCode += '"'
 				}
 
-				code += '<a onclick="window.open(\'?module=' + currentPath + '\', \'_self\')"' + classCode + '>' + key + '</a>';
+
+				code += '<a id="' + id + '" href="index.html?module=' + currentPath + '" onclick="MAIN.trigger(\'open_doc\', [\'' + currentPath + '\', event]); return false;"' + classCode + '>' + key + '</a>';
 
 
 				if (pointer && pointer.hasOwnProperty('constructor') && pointer.hasOwnProperty('arguments')) {
@@ -91,7 +269,7 @@ lychee.define('tool.Main').requires([
 				code += '<span>' + key + '</span>';
 
 				pointer.__path = this.__path + '/' + key;
-				code += _render.call(pointer, main);
+				code += _render_tree.call(pointer, main);
 			}
 
 			code += '</li>';
@@ -102,6 +280,33 @@ lychee.define('tool.Main').requires([
 		return code;
 	};
 
+
+	var _render_markdown = function(markdownCode) {
+		marked.setOptions({
+			highlight: function(code) {
+				return hljs.highlightAuto(code).value;
+			}
+		});
+
+		var docs = marked(markdownCode);
+
+		/**
+		 * Parse custom ={tags}
+		 */
+		var docsCode = _custom_parser.call(this, docs);
+
+		ui.render(docsCode, '#docs');
+
+		_CACHE[this.activeDoc] = docsCode;
+
+		setTimeout(function() {
+			if (typeof this.position === 'string') {
+				_scroll_to_id(this.position);
+			}
+		}.bind(this), 10);
+
+	};
+
 	var _render_score = function() {
 		var code = ''
 						+ '<span id="num-documented">' + this.documentedClasses + '</span>'
@@ -110,18 +315,34 @@ lychee.define('tool.Main').requires([
 						+ ' classes documented';
 
 		ui.render(code, "#score");
-	}
+	};
 
 	var _scroll_to_id = function(id) {
 		var element = document.getElementById(id);
 
-		element.scrollIntoView({
-			block: 'start',
-			behavior: 'smooth'
+		if (element) {
+			element.scrollIntoView({
+				block: 'start',
+				behavior: 'smooth'
+			});
+		}
+	};
+
+	var _set_tree_active = function(_module) {
+
+		console.log('call on me');
+
+		[].slice.call(document.querySelectorAll('#packages-tree a.active')).forEach(function(element) {
+			console.log('removin it', element);
+			element.classList.remove('active');
+			console.log('yeah, removed it', element);
 		});
+
+		this.activeTreeId = 'tree' + _module.split('/').join('-');
+		treeElement = document.getElementById(this.activeTreeId);
+		treeElement.classList.add('active');
+
 	}
-
-
 
 	/*
 	 * IMPLEMENTATION
@@ -154,6 +375,7 @@ lychee.define('tool.Main').requires([
 		this.documentedClasses    = 0;
 		this.position             = null;
 		this.undocumentedClasses  = 0;
+		this.activeTreeId    = null;
 
 		/*
 		 * INITIALIZATION
@@ -179,14 +401,14 @@ lychee.define('tool.Main').requires([
 
 			_parse_url.call(this);
 
-			_load_api.call(this, function(result) {
+			_initial_api.call(this, function(result) {
 
 				if (result) {
 
 					// initial value for recursion
 					this.config.buffer.__path = '';
 
-					var code = _render.call(this.config.buffer, this);
+					var code = _render_tree.call(this.config.buffer, this);
 
 					ui.render(code, '#packages-tree');
 
@@ -196,118 +418,16 @@ lychee.define('tool.Main').requires([
 					if (this.activeBlob !== null) {
 						var markdownCode = lychee.deserialize(this.activeBlob).toString();
 
-						function _renderMarkdown() {
-							marked.setOptions({
-								highlight: function(code) {
-									return hljs.highlightAuto(code).value;
-								}
-							});
-
-							var docs = marked(markdownCode);
-
-							/**
-							 * Parse custom ={tags} into articles
-							 */
-
-							docs = docs.split(/=\{(.*)\}/);
-							var docsCode = docs[0];
-
-							var enumSeen         = false;
-							var eventSeen        = false;
-							var methodSeen       = false;
-							var propertySeen     = false;
-
-
-							for (var i = 1; i < docs.length; i += 2) {
-
-								var constructorCode  = '';
-
-								if (docs[i] === 'constructor') {
-
-									var strong = '<strong class="highlight">' + this.activeModule + '</strong>';
-									docs[i+1] = docs[i+1].replace(new RegExp(this.activeModule, 'g'), strong);
-									constructorCode = ' id="' + docs[i] + '"';
-
-								} else if (docs[i].substring(0, 5) === 'enums') {
-									if (!enumSeen) {
-										enumSeen = true;
-										docsCode += '<h2>Enums</h2>'
-									}
-
-									var enumName = docs[i].split('-')[1];
-
-									docsCode += '<h4 id="' + docs[i] + '"><a href="#' + docs[i] + '">' + enumName + '</a></h4>';
-
-									var strong = '<strong class="highlight">' + enumName + '</strong>';
-									docs[i+1] = docs[i+1].replace(new RegExp(enumName, 'g'), strong);
-
-								} else if (docs[i].substring(0, 6) === 'events') {
-									if (!eventSeen) {
-										eventSeen = true;
-										docsCode += '<h2>Events</h2>'
-									}
-
-									var eventName = docs[i].split('-')[1];
-
-									docsCode += '<h4 id="' + docs[i] + '"><a href="#' + docs[i] + '">' + eventName + '</a></h4>';
-
-									var strong = '<strong class="highlight">' + eventName + '</strong>';
-									docs[i+1] = docs[i+1].replace(new RegExp(eventName, 'g'), strong);
-
-								} else if (docs[i].substring(0, 10) === 'properties') {
-									if (!propertySeen) {
-										propertySeen = true;
-										docsCode += '<h2>Properties</h2>'
-									}
-
-									var propertyName = docs[i].split('-')[1];
-
-									docsCode += '<h4 id="' + docs[i] + '"><a href="#' + docs[i] + '">' + propertyName + '</a></h4>';
-
-									var strong = '<strong class="highlight">' + propertyName + '</strong>';
-									docs[i+1] = docs[i+1].replace(new RegExp(propertyName, 'g'), strong);
-
-								} else if (docs[i].substring(0, 7) === 'methods') {
-									if (!methodSeen) {
-										methodSeen = true;
-										docsCode += '<h2>Methods</h2>'
-									}
-
-									var methodName = docs[i].split('-')[1];
-
-									docsCode += '<h4 id="' + docs[i] + '"><a href="#' + docs[i] + '">' + methodName + '</a></h4>';
-
-									var strong = '<strong class="highlight">' + methodName + '</strong>';
-									docs[i+1] = docs[i+1].replace(new RegExp(methodName, 'g'), strong);
-								}
-
-								docsCode += '<article' + constructorCode + '>'
-								         +  docs[i + 1]
-								         +  '</article>';
-							}
-
-							ui.render(docsCode, '#docs');
-
-							setTimeout(function() {
-								if (typeof this.position === 'string') {
-									_scroll_to_id(this.position);
-								}
-							}.bind(this), 10);
-
-						}
-
 						if (marked) {
-							_renderMarkdown.call(this, code);
+							_render_markdown.call(this, markdownCode);
 						} else {
 							// if the markdown parser `marked` hasn't loaded yet
-							setTimeout(_renderMarkdown.bind(this, code), 500);
+							setTimeout(_render_markdown.bind(this, markdownCode), 500);
 						}
 
 					} else {
-						var docs = '<h1>This class currently has no docs :(</h1>'
-						         + 'If you want some, you can kick our ass at github.';
-
-						ui.render(docs, '#docs');
+						_CACHE[this.activeDoc] = NO_DOCS;
+						ui.render(NO_DOCS, '#docs');
 					}
 
 				}
@@ -315,10 +435,7 @@ lychee.define('tool.Main').requires([
 
 		}, this, true);
 
-		this.bind('submit', function(id, settings) {
-
-
-		}, this);
+		this.bind('open_doc', _open_doc, this);
 
 	};
 
