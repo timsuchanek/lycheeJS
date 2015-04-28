@@ -113,6 +113,22 @@ lychee.define('tool.Main').requires([
 	  };
 	};
 
+	var _generate_actions = function() {
+
+		var code = '';
+		if (this.activeBlob !== null) {
+
+			var GITHUB_URL = 'https://github.com/LazerUnicorns/lycheeJS/edit/development-0.9/lychee/api/';
+
+			var suffix = this.activeDoc.split('/source/')[1];
+
+			code = '<a class="edit" href="' + GITHUB_URL + suffix + '.md">Edit on Github</a>';
+
+		}
+
+		return code;
+	}
+
 	var _initial_api = function(callback, scope) {
 
 		this.config = new Config('http://localhost:4848/api/Docs?module=' + this.activeDoc);
@@ -137,7 +153,7 @@ lychee.define('tool.Main').requires([
 
 		if (_CACHE[this.activeDoc]) {
 
-			ui.render(_CACHE[this.activeDoc], '#docs');
+			ui.render(_generate_actions.call(this) + _CACHE[this.activeDoc], '#docs');
 
 			var state = {
 				activeDoc: this.activeDoc,
@@ -147,7 +163,7 @@ lychee.define('tool.Main').requires([
 			history.pushState(state, this.activeModule, "index.html?module=" + this.activeDoc);
 
 		} else {
-			this.config       = new Config('http://localhost:4848/api/Docs?module=' + this.activeDoc + '&docsonly');
+			this.config = new Config('http://localhost:4848/api/Docs?module=' + this.activeDoc + '&docsonly');
 
 			this.config.onload = function(result) {
 
@@ -160,7 +176,7 @@ lychee.define('tool.Main').requires([
 
 				} else {
 					_CACHE[this.activeDoc] = NO_DOCS;
-					ui.render(NO_DOCS, '#docs');
+					ui.render(_generate_actions.call(this) + NO_DOCS, '#docs');
 				}
 
 				var state = {
@@ -200,7 +216,7 @@ lychee.define('tool.Main').requires([
 
 				_set_tree_active.call(this, this.activeDoc);
 
-				ui.render(_CACHE[this.activeDoc], '#docs');
+				ui.render(_generate_actions.call(this) + _CACHE[this.activeDoc], '#docs');
 
 			}
 
@@ -295,7 +311,7 @@ lychee.define('tool.Main').requires([
 		 */
 		var docsCode = _custom_parser.call(this, docs);
 
-		ui.render(docsCode, '#docs');
+		ui.render(_generate_actions.call(this) + docsCode, '#docs');
 
 		_CACHE[this.activeDoc] = docsCode;
 
@@ -383,7 +399,7 @@ lychee.define('tool.Main').requires([
 
 		this.bind('init', function() {
 
-			var mainArea = document.querySelector('section.active');
+			var mainArea = document.querySelector('#docs');
 			var body = document.querySelector('body');
 
 			mainArea.onscroll = _debounce(function(e) {
@@ -427,7 +443,7 @@ lychee.define('tool.Main').requires([
 
 					} else {
 						_CACHE[this.activeDoc] = NO_DOCS;
-						ui.render(NO_DOCS, '#docs');
+						ui.render(_generate_actions.call(this) + NO_DOCS, '#docs');
 					}
 
 				}
