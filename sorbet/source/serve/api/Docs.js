@@ -49,7 +49,6 @@ lychee.define('sorbet.serve.api.Docs').requires([
 
       } else {
 
-
         do {
           var dirName = parentsCopy.shift();
           pointer = pointer[dirName];
@@ -70,6 +69,22 @@ lychee.define('sorbet.serve.api.Docs').requires([
         packageName = packageName.slice(0, packageName.length - 1).join('.');
 
         var doc = _filesystem.read(API_PREFIX + this.pointerString.substring(0, this.pointerString.length - 3) + '.md');
+
+        if (doc === null) {
+          /**
+           * try in the core or net folder. this make sense for all platform specific implementations,
+           * because they have the same API
+           */
+          if (/platform/.test(this.pointerString)) {
+
+            if (/net/.test(this.pointerString)) {
+              doc = _filesystem.read(API_PREFIX + 'net/' + this.file.substring(0, this.file.length - 3) + '.md');
+            } else {
+              doc = _filesystem.read(API_PREFIX + 'core/' + this.file.substring(0, this.file.length - 3) + '.md');
+            }
+
+          }
+        }
 
         if (moduleName === SRC_PREFIX + this.pointerString.substring(0, this.pointerString.length - 3)) {
 
@@ -182,9 +197,6 @@ lychee.define('sorbet.serve.api.Docs').requires([
         }
 
 
-
-
-
       /*
        * 3: PUT
        */
@@ -209,4 +221,3 @@ lychee.define('sorbet.serve.api.Docs').requires([
   return Module;
 
 });
-
