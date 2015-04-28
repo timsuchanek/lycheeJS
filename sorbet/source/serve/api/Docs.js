@@ -6,6 +6,8 @@ lychee.define('sorbet.serve.api.Docs').requires([
 
   var _JSON = lychee.data.JSON;
   var _filesystem = new sorbet.data.Filesystem('/');
+  var SRC_PREFIX = '/lychee/source/';
+  var API_PREFIX = '/lychee/api/';
 
   /*
    * HELPERS
@@ -28,12 +30,11 @@ lychee.define('sorbet.serve.api.Docs').requires([
   };
 
 
-  var _getDocs = function(moduleName) {
+  var _get_docs_tree = function(moduleName) {
     var tree = {};
-    var SRC_PREFIX = '/lychee/source/';
-    var API_PREFIX = '/lychee/api/';
 
     moduleName = moduleName[0] === '/' ? moduleName : '/' + moduleName;
+
 
     var _walk = function() {
 
@@ -65,46 +66,32 @@ lychee.define('sorbet.serve.api.Docs').requires([
 
 
       if (files === null) {
+
+        // For cases like Class.Name.Awesome.js
         var packageName = this.file.split('.');
         packageName = packageName.slice(0, packageName.length - 1).join('.');
 
-        var doc = _filesystem.read(API_PREFIX + this.pointerString.substring(0, this.pointerString.length - 3) + '.md');
+        var path = _translate_platform(SRC_PREFIX + this.pointerString.substring(0, this.pointerString.length - 3));
+
+        path = _source_to_api(path);
+
+        console.log(path);
+
+        var doc = _filesystem.read(path);
+
 
         if (doc === null) {
-          /**
-           * try in the core or net folder. this make sense for all platform specific implementations,
-           * because they have the same API
-           */
-          if (/platform/.test(this.pointerString)) {
 
-            if (/net/.test(this.pointerString)) {
-              doc = _filesystem.read(API_PREFIX + 'net/' + this.file.substring(0, this.file.length - 3) + '.md');
-            } else {
-              doc = _filesystem.read(API_PREFIX + 'core/' + this.file.substring(0, this.file.length - 3) + '.md');
-            }
-
-          }
-        }
-
-        if (moduleName === SRC_PREFIX + this.pointerString.substring(0, this.pointerString.length - 3)) {
-
-          // remove file extension
-
-
-          if (doc === null) {
-
-            pointer[packageName] = false;
-
-          } else {
-
-            pointer[packageName] = lychee.serialize(doc);
-
-          }
+          pointer[packageName] = false;
 
         } else {
 
-          pointer[packageName] = doc !== null;
+          if (moduleName === SRC_PREFIX + this.pointerString.substring(0, this.pointerString.length - 3)) {
+            pointer[packageName] = lychee.serialize(doc);
+          }
+
         }
+
 
         return;
       } else {
@@ -136,6 +123,43 @@ lychee.define('sorbet.serve.api.Docs').requires([
     return tree;
   };
 
+  var _get_docs_only = function(moduleName) {
+    moduleName = moduleName[0] === '/' ? moduleName.slice(1, moduleName.length) : moduleName;
+    moduleName = _translate_platform(moduleName);
+
+    var doc = _filesystem.read(_source_to_api(moduleName));
+    return {
+      doc: lychee.serialize(doc)
+    };
+  };
+
+  var _source_to_api = function(src) {
+    var apiString = API_PREFIX + src.split('/source/')[1].replace('.js', '.md');
+    if (apiString.substr(apiString.length - 3) !== '.md') {
+      apiString += '.md';
+    }
+    return apiString;
+  }
+
+  var _translate_platform = function(moduleName) {
+    /**
+     * if we have a platform specific implementation,
+     * take the implementation from lychee/api/core or lychee/api/net
+     */
+
+    var newName = moduleName;
+
+    if (/platform/.test(moduleName)) {
+      if (/net/.test(moduleName)) {
+        newName = SRC_PREFIX + "net/" + moduleName.split('/').pop();
+      } else {
+        newName = SRC_PREFIX + "core/" + moduleName.split('/').pop();
+      }
+    }
+
+    return newName;
+  }
+
 
 
   /*
@@ -149,6 +173,7 @@ lychee.define('sorbet.serve.api.Docs').requires([
       var method     = data.headers.method;
       var parameters = data.headers.parameters || null;
       var module     = parameters !== null && parameters.hasOwnProperty('module') ? parameters.module : null;
+      var docsonly   = parameters !== null && parameters.hasOwnProperty('docsonly') ? parameters.docsonly : null;
 
       /*
        * 1: OPTIONS
@@ -176,7 +201,13 @@ lychee.define('sorbet.serve.api.Docs').requires([
       } else if (method === 'GET') {
 
         if (module !== null) {
-          var docs = _getDocs(module);
+          var docs = null;
+
+          if (docsonly !== null) {
+            docs = _get_docs_only(module);
+          } else {
+            docs = _get_docs_tree(module);
+          }
 
           ready({
             status:  200,
