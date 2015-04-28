@@ -40,7 +40,22 @@ lychee.define('tool.Main').requires([
 		};
 
 		this.config.load();
+	};
 
+	var _parse_url = function() {
+
+		var url = location.href.split('?');
+		if (url.length > 1) {
+			var params = url[1].split('#');
+			var param = params[0].split('=');
+			this.position = params.length > 1 ? params[1] : null;
+
+			if (param.length > 1 && param[0] == 'module') {
+				this.activeDoc = param[1];
+				this.activeModule = param[1].split('/').pop();
+			}
+
+		}
 	};
 
 	var _render = function(main) {
@@ -97,15 +112,15 @@ lychee.define('tool.Main').requires([
 		ui.render(code, "#score");
 	}
 
-	var _parse_url = function() {
-		var url = location.href.split('?');
-		if (url.length > 1) {
-			var param = url[1].split('=');
-			if (param.length > 1 && param[0] == 'module') {
-				this.activeDoc = param[1];
-			}
-		}
+	var _scroll_to_id = function(id) {
+		var element = document.getElementById(id);
+
+		element.scrollIntoView({
+			block: 'start',
+			behavior: 'smooth'
+		});
 	}
+
 
 
 	/*
@@ -131,11 +146,13 @@ lychee.define('tool.Main').requires([
 
 		lychee.game.Main.call(this, settings);
 
-		this.activeBlob 					= null;
-		this.activeDoc  					= "/lychee/source/core/Asset";
-		this.config     					= null;
-		this.classes    					= 0;
+		this.activeBlob           = null;
+		this.activeDoc            = "/lychee/source/core/Asset";
+		this.activeModule         = 'Asset';
+		this.config               = null;
+		this.classes              = 0;
 		this.documentedClasses    = 0;
+		this.position             = null;
 		this.undocumentedClasses  = 0;
 
 		/*
@@ -157,6 +174,7 @@ lychee.define('tool.Main').requires([
 						body.classList.remove('scrolling');
 					}
 				}
+				return e;
 			}, 100);
 
 			_parse_url.call(this);
@@ -194,17 +212,20 @@ lychee.define('tool.Main').requires([
 							docs = docs.split(/=\{(.*)\}/);
 							var docsCode = docs[0];
 
-							var constructorSeen  = false;
 							var propertySeen     = false;
 							var methodSeen       = false;
 
+
 							for (var i = 1; i < docs.length; i += 2) {
 
+								var constructorCode  = '';
+
 								if (docs[i] === 'constructor') {
-									if (!constructorSeen) {
-										constructorSeen = true;
-										docsCode += '<h2>Constructor</h2>';
-									}
+
+									var strong = '<strong class="highlight">' + this.activeModule + '</strong>';
+									docs[i+1] = docs[i+1].replace(new RegExp(this.activeModule, 'g'), strong);
+									constructorCode = ' id="' + docs[i] + '"';
+
 								} else if (docs[i].substring(0, 10) === 'properties') {
 									if (!propertySeen) {
 										propertySeen = true;
@@ -213,7 +234,7 @@ lychee.define('tool.Main').requires([
 
 									var propertyName = docs[i].split('-')[1];
 
-									docsCode += '<h4>' + propertyName + '</h4>';
+									docsCode += '<h4 id="' + docs[i] + '"><a href="#' + docs[i] + '">' + propertyName + '</a></h4>';
 
 									var strong = '<strong class="highlight">' + propertyName + '</strong>';
 									docs[i+1] = docs[i+1].replace(new RegExp(propertyName, 'g'), strong);
@@ -226,29 +247,37 @@ lychee.define('tool.Main').requires([
 
 									var methodName = docs[i].split('-')[1];
 
-									docsCode += '<h4>' + methodName + '</h4>';
+									docsCode += '<h4 id="' + docs[i] + '"><a href="#' + docs[i] + '">' + methodName + '</a></h4>';
 
 									var strong = '<strong class="highlight">' + methodName + '</strong>';
 									docs[i+1] = docs[i+1].replace(new RegExp(methodName, 'g'), strong);
 								}
 
-								docsCode += '<article class="' + docs[i] + '">'
+								docsCode += '<article' + constructorCode + '>'
 								         +  docs[i + 1]
 								         +  '</article>';
 							}
 
 							ui.render(docsCode, '#docs');
 
+							setTimeout(function() {
+								if (typeof this.position === 'string') {
+									_scroll_to_id(this.position);
+								}
+							}.bind(this), 10);
+
 						}
 
 						if (marked) {
-							_renderMarkdown(code);
+							_renderMarkdown.call(this, code);
 						} else {
+							// if the markdown parser `marked` hasn't loaded yet
 							setTimeout(_renderMarkdown.bind(this, code), 500);
 						}
 
 					} else {
-						var docs = '<h1>This class currently has no docs :(</h1>';
+						var docs = '<h1>This class currently has no docs :(</h1>'
+						         + 'If you want some, you can kick our ass at github.';
 
 						ui.render(docs, '#docs');
 					}
