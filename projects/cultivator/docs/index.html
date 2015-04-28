@@ -192,12 +192,48 @@
 			font-size: 18px;
 		}
 
+		article#docs article#constructor pre:nth-of-type(1) {
+			padding-left: 0;
+			margin-bottom: 40px;
+			background: none;
+		}
+
+		article#docs article#constructor pre:nth-of-type(1) code {
+			background: none;
+			font-size: 22px;
+		}
+
 		article#docs code strong.highlight {
 			color: #32afe5;
 			text-shadow: #32afe5 0 0 10px;
 			-moz-animation: textpulse 3000ms infinite;
 			-webkit-animation: textpulse 3000ms infinite;
 			animation: textpulse 3000ms infinite;
+		}
+
+
+		article#docs article#constructor pre:nth-of-type(1) strong.highlight {
+			color: rgb(208,73,75);
+			text-shadow: rgba(208,73,75,.5) 0 0 10px;
+			-moz-animation: none;
+			-webkit-animation: none;
+			animation: none;
+		}
+
+
+		article#docs h4 a {
+			color: white;
+		}
+
+		article#docs h4 a:hover {
+			text-shadow: none;
+			-moz-animation: none;
+			-webkit-animation: none;
+			animation: none;
+		}
+
+		article#docs h4 a:hover:after {
+			content: "#";
 		}
 
 
