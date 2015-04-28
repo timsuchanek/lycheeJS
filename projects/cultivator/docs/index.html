@@ -86,6 +86,22 @@
 			top: 48px;
 		}
 
+		div.main {
+			height: 100vh;
+			backface-visibility: hidden;
+			will-change: overflow;
+		}
+
+		article#packages-tree, article#docs {
+			overflow: auto;
+			-webkit-overflow-scrolling: touch;
+			-ms-overflow-style: none;
+		}
+
+		article#packages-tree::-webkit-scrollbar,
+		article#docs::-webkit-scrollbar {
+			display: none;
+		}
 
 		article#packages-tree ul, article#packages-tree ul ul {
 			list-style: none;
