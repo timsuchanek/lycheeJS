@@ -212,8 +212,10 @@ lychee.define('tool.Main').requires([
 							docs = docs.split(/=\{(.*)\}/);
 							var docsCode = docs[0];
 
-							var propertySeen     = false;
+							var enumSeen         = false;
+							var eventSeen        = false;
 							var methodSeen       = false;
+							var propertySeen     = false;
 
 
 							for (var i = 1; i < docs.length; i += 2) {
@@ -225,6 +227,32 @@ lychee.define('tool.Main').requires([
 									var strong = '<strong class="highlight">' + this.activeModule + '</strong>';
 									docs[i+1] = docs[i+1].replace(new RegExp(this.activeModule, 'g'), strong);
 									constructorCode = ' id="' + docs[i] + '"';
+
+								} else if (docs[i].substring(0, 5) === 'enums') {
+									if (!enumSeen) {
+										enumSeen = true;
+										docsCode += '<h2>Enums</h2>'
+									}
+
+									var enumName = docs[i].split('-')[1];
+
+									docsCode += '<h4 id="' + docs[i] + '"><a href="#' + docs[i] + '">' + enumName + '</a></h4>';
+
+									var strong = '<strong class="highlight">' + enumName + '</strong>';
+									docs[i+1] = docs[i+1].replace(new RegExp(enumName, 'g'), strong);
+
+								} else if (docs[i].substring(0, 6) === 'events') {
+									if (!eventSeen) {
+										eventSeen = true;
+										docsCode += '<h2>Events</h2>'
+									}
+
+									var eventName = docs[i].split('-')[1];
+
+									docsCode += '<h4 id="' + docs[i] + '"><a href="#' + docs[i] + '">' + eventName + '</a></h4>';
+
+									var strong = '<strong class="highlight">' + eventName + '</strong>';
+									docs[i+1] = docs[i+1].replace(new RegExp(eventName, 'g'), strong);
 
 								} else if (docs[i].substring(0, 10) === 'properties') {
 									if (!propertySeen) {
