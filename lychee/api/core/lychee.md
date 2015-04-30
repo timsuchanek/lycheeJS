@@ -1,7 +1,9 @@
 
 ={constructor}
 
-# lychee;
+```javascript-constructor
+lychee;
+```
 
 This implementation is a Module and has no constructor.
 
@@ -22,11 +24,11 @@ therefore are identical across all platforms.
 
 ### (Boolean) lychee.debug;
 
-The *(Boolean) debug* property is the flag that
+The `(Boolean) debug` property is the flag that
 determines if the current environment is being
 debugged.
 
-If set to *true*, it influences event
+If set to `true`, it influences event
 serialization and logging additional debug data
 to the console.
 
@@ -52,7 +54,7 @@ lychee.init(function(sandbox) {
 
 ### (lychee.Environment) lychee.environment;
 
-The *(lychee.Environment) environment* property
+The `(lychee.Environment) environment` property
 has a back-reference to the currently active
 environment.
 
@@ -90,13 +92,13 @@ lychee.init(function(sandbox) {
 
 ### (Object) lychee.ENVIRONMENTS;
 
-The *(Object) ENVIRONMENTS* property is a cache
+The `(Object) ENVIRONMENTS` property is a cache
 that contains all previously loaded isolated
 environments that were built for library usage.
 
 The key is the unique identifier of the environment,
-for example *boilerplate/html/main* or
-*sorbet/html/core*.
+for example `boilerplate/html/main` or
+`sorbet/html/core`.
 
 
 
@@ -104,9 +106,9 @@ for example *boilerplate/html/main* or
 
 ### (Number) lychee.VERSION;
 
-The *(Number) VERSION* property is representing
-the lycheeJS major and minor version (e.g. *0.8*
-or *1.0*).
+The `(Number) VERSION` property is representing
+the lycheeJS major and minor version (e.g. `0.8`
+or `1.0`).
 
 
 
@@ -114,11 +116,11 @@ or *1.0*).
 
 ### (Boolean) lychee.diff(aobject, bobject);
 
-- *(Object) aobject* is an Object.
-- *(Object) bobject* is an Object.
+- `(Object) aobject` is an Object.
+- `(Object) bobject` is an Object.
 
-This method returns *true* if the objects are
-differing from each other. It will return *false*
+This method returns `true` if the objects are
+differing from each other. It will return `false`
 if both objects are identical.
 
 ```javascript
@@ -138,10 +140,10 @@ console.log(lychee.diff(bar, foo)); // false
 
 ### (Boolean) lychee.enumof(template, value);
 
-- *(Enum) template* is an object consisting of
-*(String) key* and *(Number) value*.
+- `(Enum) template` is an object consisting of
+`(String) key` and `(Number) value`.
 
-- *(Number) value* is representing the Enum data
+- `(Number) value` is representing the Enum data
 to verify.
 
 ```
@@ -161,7 +163,7 @@ console.log(lychee.enumof(MY_ENUM, 1337));        // false
 
 ### (Object) lychee.extend(target [, object1, object2, ...]);
 
-- *(Object) target* is the target object that will
+- `(Object) target` is the target object that will
 be extended with the properties of the other objects.
 
 This method will extend the target object and iterate
@@ -186,7 +188,7 @@ console.log(foo); // { bar: 'qux', qux: 'doo' }
 
 ### (Object) lychee.extendsafe(target [, object1, object2, ...]);
 
-- *(Object) target* is the target object that will
+- `(Object) target` is the target object that will
 be extended with the properties of the other objects.
 
 This method will extend the target object and iterate
@@ -220,7 +222,7 @@ console.log(blu); // { bar: 'qux', qux: 13.37 }
 
 ### (Object) lychee.extendunlink(target [, object1, object2, ...]);
 
-- *(Object) target* is the target object that will
+- `(Object) target` is the target object that will
 be extended with the properties of the other objects.
 
 This method will extend the target object and iterate
@@ -254,12 +256,12 @@ console.log(blu); // { bar: 'qux', qux: 13.37 }
 
 ### (Boolean) lychee.interfaceof(template, instance);
 
-- *(Class || Module) template* is the interface
+- `(Class || Module) template` is the interface
 the instance is be validated against.
 
-- *(Object) instance* is the instance that is validated.
+- `(Object) instance` is the instance that is validated.
 
-This method returns *true* on success and *false* on failure.
+This method returns `true` on success and `false` on failure.
 It will match the API of the instance against the template.
 It will check properties, enums and method names.
 
@@ -283,11 +285,11 @@ lychee.interfaceof(Bar, doo); // true
 
 ### (Object || null) lychee.deserialize(data);
 
-- *(Serialization Object) data* is the serialized
+- `(Serialization Object) data` is the serialized
 data of an instance that was created by a previous
 [serialize()](#methods-serialize) call.
 
-This method returns a *Serialization Object* on success and *null* on failure.
+This method returns a `Serialization Object` on success and `null` on failure.
 It will try to serialize the given definition.
 
 ```javascript
@@ -307,9 +309,9 @@ if (instance instanceof lychee.Input) {
 
 ### (Serialization Object || null) lychee.serialize(definition);
 
-- *(Object) definition* is the instance that is serialized.
+- `(Object) definition` is the instance that is serialized.
 
-This method returns a *Serialization Object* on success and *null* on failure.
+This method returns a `Serialization Object` on success and `null` on failure.
 It will try to serialize the given definition.
 
 ```javascript
@@ -329,10 +331,10 @@ if (data !== null) {
 
 ### (lychee.Definition) lychee.define(identifier);
 
-- *(String) identifier* is the unique identifier
+- `(String) identifier` is the unique identifier
 for the lychee.Definition.
 
-This method returns a *lychee.Definition* instance.
+This method returns a `lychee.Definition` instance.
 It will currify the [exports()](lychee.Definition#methods-exports)
 method in order to define the definition in the
 currently active [lychee.environment](#properties-environment).
@@ -343,7 +345,7 @@ currently active [lychee.environment](#properties-environment).
 
 ### (void) lychee.init(callback);
 
-- *(Function) callback* is the callback that is
+- `(Function) callback` is the callback that is
 executed once the active [lychee.environment](#properties-environment)
 is initialized successfully.
 
@@ -353,7 +355,7 @@ instance which is reflected by the [lychee.environment](#properties-environment)
 property.
 
 ```javascript
-var env = new lychee.Environment({ /* ... */ });
+var env = new lychee.Environment({ /` ... `/ });
 
 lychee.setEnvironment(env);              // true
 console.log(lychee.environment === env); // true
@@ -374,15 +376,15 @@ lychee.init(function(sandbox) {
 
 ### (Boolean) lychee.setEnvironment(environment);
 
-- *(lychee.Environment) environment* is a [lychee.Environment](lychee.Environment)
-instance. If set to *null*, the original environment will be used.
+- `(lychee.Environment) environment` is a [lychee.Environment](lychee.Environment)
+instance. If set to `null`, the original environment will be used.
 
-This method returns *true* on success and *false* on failure.
+This method returns `true` on success and `false` on failure.
 It will set the active environment and dispatch its
 [debug](lychee.Environment#properties-debug) property.
 
 ```javascript
-var env = new lychee.Environment({ /* ... */ });
+var env = new lychee.Environment({ /` ... `/ });
 
 lychee.setEnvironment(env);                       // true
 console.log(lychee.environment === env);          // true
