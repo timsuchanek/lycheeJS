@@ -1,6 +1,7 @@
 
 lychee.define('sorbet.serve.API').requires([
 	'lychee.data.JSON',
+	'sorbet.serve.api.Docs',
 	'sorbet.serve.api.Editor',
 	'sorbet.serve.api.Profile',
 	'sorbet.serve.api.Project',
@@ -16,6 +17,7 @@ lychee.define('sorbet.serve.API').requires([
 	};
 
 	var _PUBLIC = {
+		'Docs':  sorbet.serve.api.Docs,
 		'Server':  sorbet.serve.api.Server
 	};
 

@@ -1,0 +1,327 @@
+<!doctype html>
+<html>
+<head>
+	<title>lycheeJS 0.8.6 API Docs</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<link rel="stylesheet" href="/projects/cultivator/design/index.css">
+	<link rel="stylesheet" href="/projects/cultivator/docs/source/lychee-highlight.css">
+	<script src="/projects/cultivator/docs/source/lib/highlight/highlight.pack.js"></script>
+	<script src="/projects/cultivator/docs/source/lib/marked.js"></script>
+
+	<script src="/projects/cultivator/design/index.js"></script>
+
+	<!-- BOOTSTRAP -->
+	<script src="/lychee/build/html/core.js"></script>
+
+	<style>
+
+
+		h1#version {
+			margin-top: 0;
+			margin-left: 32px;
+		}
+
+		h1#version #logo {
+			display: inline-block;
+		}
+
+		h1#version #logo h2 {
+			font-size: 36px;
+		}
+
+		#score {
+			margin-top: 24px;
+			margin-right: 32px;
+			float: right;
+			font-size: 20px;
+			line-height: 2em;
+		}
+
+		#score span {
+			padding: 0 5px;
+			font-size: 36px;
+		}
+
+		#num-documented {
+			color: rgb(208, 73, 75);
+		}
+
+		#num-total {
+			color: #888;
+		}
+
+		body.scrolling h1#version #logo h1 {
+			margin: 8px;
+		}
+
+		body.scrolling h1#version #logo h2 {
+			font-size: 18px;
+		}
+
+		body.scrolling h1#version #logo h1 img {
+			width: 32px;
+			height: 32px;
+		}
+
+		body.scrolling #score {
+			margin-top: 12px;
+			font-size: 14px;
+		}
+
+		body.scrolling #score span {
+			font-size: 18px;
+		}
+
+		header * {
+			-moz-transition: all 250ms ease-out;
+			-ms-transition: all 250ms ease-out;
+			-webkit-transition: all 250ms ease-out;
+			transition: all 250ms ease-out;
+		}
+
+		body.scrolling section.active {
+			top: 48px;
+		}
+
+		div.main {
+			height: 100vh;
+			backface-visibility: hidden;
+			will-change: overflow;
+		}
+
+		article#packages-tree, article#docs {
+			overflow: auto;
+			-webkit-overflow-scrolling: touch;
+			-ms-overflow-style: none;
+		}
+
+		article#packages-tree::-webkit-scrollbar,
+		article#docs::-webkit-scrollbar {
+			display: none;
+		}
+
+		article#packages-tree ul, article#packages-tree ul ul {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+		}
+
+		article#packages-tree ul {
+			margin: 16px 16px 16px -8px;
+		}
+
+		article#packages-tree ul li {
+			padding-left: 16px;
+		}
+
+		article#packages-tree ul li:has(> a):hover {
+			background: #ff0000;
+		}
+
+		article#packages-tree ul li span, article#packages-tree ul li a {
+			line-height: 2;
+			padding-left: 16px;
+			display: block;
+			font-size: 14px;
+		}
+
+		article#packages-tree ul li a {
+			color: rgb(208, 73, 75);
+			display: block;
+		}
+
+		article#packages-tree ul li a:hover,
+		article#packages-tree ul li a:focus,
+		article#packages-tree ul li a.active {
+			text-shadow: none;
+			-moz-animation: none;
+			-webkit-animation: none;
+			animation: none;
+			background: rgb(208, 73, 75);
+			color: white;
+		}
+
+		article#packages-tree ul li a.no-docs {
+			color: #888;
+		}
+
+		article#docs {
+			padding: 16px;
+		}
+
+		article#docs h1 {
+			margin-top: 0;
+		}
+
+		article#docs h2 {
+			margin-left: 16px;
+			font-family: 'museo-sans-300';
+			font-size: 30px;
+		}
+
+		article#docs h3 {
+			font-family: monospace;
+			text-transform: none;
+			font-weight: bold;
+		}
+
+		article#docs h4 {
+			margin-left: 16px;
+			font-size: 20px;
+			font-weight: bold;
+			font-family: monospace;
+		}
+
+		article#docs p {
+			margin: 16px;
+		}
+
+		article#docs p,
+		article#docs li {
+			line-height: 1.5;
+			font-size: 16px;
+		}
+
+		article#docs li {
+			margin-bottom: 3px;
+		}
+
+		article#docs pre {
+			padding: 16px;
+		}
+
+		article#docs code {
+			font-size: 14px;
+			background: #1f2726;
+			padding: 0.2em;
+			padding-right: 0.4em;
+			display: inline-block;
+			border-radius: 3px;
+		}
+
+		article#docs code.lang-javascript-constructor,
+		article#docs code.lang-javascript-enum,
+		article#docs code.lang-javascript-event,
+		article#docs code.lang-javascript-method,
+		article#docs code.lang-javascript-property {
+			font-size: 18px;
+		}
+
+		article#docs article#constructor pre:nth-of-type(1) {
+			padding-left: 0;
+			margin-bottom: 40px;
+			background: none;
+		}
+
+		article#docs article#constructor pre:nth-of-type(1) code {
+			background: none;
+			font-size: 22px;
+		}
+
+		article#docs code strong.highlight {
+			color: #32afe5;
+			text-shadow: #32afe5 0 0 10px;
+			-moz-animation: textpulse 3000ms infinite;
+			-webkit-animation: textpulse 3000ms infinite;
+			animation: textpulse 3000ms infinite;
+		}
+
+
+		article#docs article#constructor pre:nth-of-type(1) strong.highlight {
+			color: rgb(208,73,75);
+			text-shadow: rgba(208,73,75,.5) 0 0 10px;
+			-moz-animation: none;
+			-webkit-animation: none;
+			animation: none;
+		}
+
+
+		article#docs h4 a {
+			color: white;
+		}
+
+		article#docs h4 a:hover {
+			text-shadow: none;
+			-moz-animation: none;
+			-webkit-animation: none;
+			animation: none;
+		}
+
+		article#docs h4 a:hover:after {
+			content: "#";
+		}
+
+		article#docs .edit {
+			float: right;
+		}
+
+
+	</style>
+</head>
+<body>
+
+<header>
+
+	<h1 id="version">
+		<div id="logo">
+			<h1><img alt="Logo" src="/desktop.svg" width="64" height="64"></h1>
+			<h2>lychee<span>js</span> 0.8.6 API Docs</h2>
+		</div>
+		<span id="score"></span>
+	</h1>
+</header>
+
+<section class="active">
+
+	<div class="main">
+
+		<article id="packages-tree">
+		</article>
+
+		<article id="docs" class="markdown-body">
+		</article>
+
+	</div>
+
+</section>
+
+<footer>
+	lycheeJS is (c) 2012-2015 by LazerUnicorns and released under MIT license.
+</footer>
+
+<script>
+(function(lychee, global) {
+
+	var environment = new lychee.Environment({
+		id:      'font',
+		debug:   false,
+		sandbox: false,
+		build:   'tool.Main',
+		packages: [
+			new lychee.Package('tool', './lychee.pkg')
+		],
+		tags:     {
+			platform: [ 'html' ]
+		}
+	});
+
+
+	lychee.setEnvironment(environment);
+
+	lychee.init(function(sandbox) {
+
+		var lychee = sandbox.lychee;
+		var tool   = sandbox.tool;
+
+		sandbox.MAIN = new tool.Main();
+		sandbox.MAIN.init();
+
+	});
+
+})(lychee, typeof global !== 'undefined' ? global : this);
+</script>
+</body>
+</html>

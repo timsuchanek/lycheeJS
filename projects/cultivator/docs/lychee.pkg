@@ -1,0 +1,27 @@
+{
+	"build": {
+		"environments": {},
+		"files": {}
+	},
+	"source": {
+		"environments": {},
+		"tags": {},
+		"files": {
+			"data": {},
+			"Main": [
+				"js"
+			],
+			"lib": {
+				"marked": [
+					"js"
+				],
+				"highlight": {
+					"highlight": [
+						"pack.js"
+					],
+					"styles": {}
+				}
+			}
+		}
+	}
+}
