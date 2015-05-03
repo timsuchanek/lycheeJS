@@ -88,7 +88,7 @@ label.ico-only:before {
 .ico-browser:before     { content: "\e037"; }
 .ico-console:before     { content: "\e011"; }
 .ico-create:before      { content: "\e095"; }
-.ico-debug:before       { content: "\e052"; }
+.ico-debugger:before    { content: "\e052"; }
 .ico-download:before    { content: "\e083"; }
 .ico-editor:before      { content: "\e00c"; }
 .ico-error:before       { content: "\e082"; }
@@ -452,6 +452,10 @@ article h3 {
 	text-overflow: hidden;
 	white-space: nowrap;
 	border-bottom: 2px solid #404948;
+}
+
+article h3.center {
+	text-align: center;
 }
 
 article h3 b {

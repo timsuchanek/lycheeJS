@@ -10,7 +10,7 @@ lychee.define('tool.state.Remotes').includes([
 	 * HELPERS
 	 */
 
-	var _profiles = {};
+	var _servers = {};
 
 	var _ui_update = function() {
 
@@ -21,9 +21,25 @@ lychee.define('tool.state.Remotes').includes([
 
 			if (this.buffer instanceof Array) {
 
-				_ui_render.call(that, this.buffer.filter(function(server) {
+				var servers = this.buffer.filter(function(server) {
+					return server.port !== null;
+				});
+
+
+
+				_ui_render.call(that, servers.filter(function(server) {
 					return server.remotes.length > 0;
 				}));
+
+
+				servers.forEach(function(server) {
+
+					_servers[server.identifier] = {
+						host: server.host,
+						port: server.port
+					};
+
+				});
 
 			}
 
@@ -35,10 +51,9 @@ lychee.define('tool.state.Remotes').includes([
 
 	var _ui_render = function(servers) {
 
-		if (servers instanceof Array) {
+		var code = '';
 
-			var code = '';
-
+		if (servers.length > 0) {
 
 			servers.forEach(function(server) {
 
@@ -55,20 +70,25 @@ lychee.define('tool.state.Remotes').includes([
 				server.remotes.forEach(function(remote) {
 
 					var remote_actions = [];
-					var remote_status  = '';
-					var remote_status  = remote.status === 'online' ? 'online' : 'offline';
+					var remote_mode    = '';
 
-					if (remote.status === 'online') {
-						remote_status = '<label class="ico-online">Online</label>';
-						remote_actions.push('<a class="button ico-debug ico-only" href="lycheejs://debug=' + server.identifier + '/' + remote.id + '">');
+					if (remote.mode === 'default') {
+
+						remote_actions.push('<button class="ico-editor ico-only" onclick="MAIN.state.trigger(\'connect\', [\'' + server.identifier + '\', \'' + remote.id + '\', \'editor\']);"></button>');
+						remote_actions.push('<button class="ico-debugger ico-only" onclick="MAIN.state.trigger(\'connect\', [\'' + server.identifier + '\', \'' + remote.id + '\', \'debugger\']);"></button>');
+						remote_mode = '<label class="ico-offline" disabled>Offline</label';
+
 					} else {
-						remote_actions.push('-');
-						remote_status = '<label class="ico-offline" disabled>Offline</label';
+
+						remote_mode = '<label class="ico-online">' + remote.mode + '</label>';
+						remote_actions.push('<button class="ico-debug ico-only" onclick="MAIN.state.trigger(\'disconnect\', [\'' + server.identifier + '\', \'' + remote.id + '\']);"></button>');
+
 					}
 
+
 					code += '<tr>';
-					code += '<td>' + remote.id + '</td>';
-					code += '<td>' + remote_status + '</td>';
+					code += '<td>' + remote.id               + '</td>';
+					code += '<td>' + remote_mode             + '</td>';
 					code += '<td>' + remote_actions.join('') + '</td>';
 					code += '</tr>';
 
@@ -79,10 +99,16 @@ lychee.define('tool.state.Remotes').includes([
 
 			});
 
+		} else {
 
-			ui.render(code, '#remotes-servers');
+			code += '<article class="wide">';
+			code += '<h3 class="center">No Remote connected to any Server</h3>';
+			code += '</article>';
 
 		}
+
+
+		ui.render(code, '#remotes-servers');
 
 	};
 
@@ -96,6 +122,66 @@ lychee.define('tool.state.Remotes').includes([
 
 		lychee.game.State.call(this, main);
 		lychee.event.Emitter.call(this);
+
+
+		lychee.debug = true;
+		this.client  = new lychee.net.Client({});
+		lychee.debug = false;
+
+
+
+		/*
+		 * INITIALIZATION
+		 */
+
+		this.bind('connect', function(project, remote, mode) {
+
+			var server = _servers[project] || null;
+			if (server !== null) {
+
+				this.client.setHost(server.host);
+				this.client.setPort(server.port);
+				this.client.connect();
+
+
+				var service = this.client.getService('debugger');
+				if (service !== null) {
+					service.setMode(mode);
+					service.connect(remote);
+				}
+
+
+				this.client.disconnect();
+
+			}
+
+console.log('CONNECT', project, remote, mode, server);
+
+		}, this);
+
+		this.bind('disconnect', function(project, remote) {
+
+			var server = _servers[project] || null;
+			if (server !== null) {
+
+				this.client.setHost(server.host);
+				this.client.setPort(server.port);
+				this.client.connect();
+
+
+				var service = this.client.getService('debugger');
+				if (service !== null) {
+					service.disconnect(remote);
+				}
+
+
+				this.client.disconnect();
+
+			}
+
+console.log('DISCONNECT', project, remote, server);
+
+		}, this);
 
 	};
 
