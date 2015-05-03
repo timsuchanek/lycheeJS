@@ -18,6 +18,24 @@
 
 	<style>
 
+		a.button.view {
+			background: none;
+			color: #f2f2f2;
+			border: none;
+			margin-right: 32px;
+		}
+
+		a.button.view:hover {
+			color: #31c0ff;
+			text-shadow: none;
+			-moz-animation: none;
+			-webkit-animation: none;
+			animation: none;
+		}
+
+		a.button.view.active {
+			color: #31c0ff;
+		}
 
 		h1#version {
 			margin-top: 0;
@@ -150,6 +168,12 @@
 
 		article#docs {
 			padding: 16px;
+			background: none;
+			color: #b3b3b3;
+		}
+
+		article#docs article {
+			background: none;
 		}
 
 		article#docs h1 {
@@ -183,7 +207,11 @@
 		article#docs p,
 		article#docs li {
 			line-height: 1.5;
-			font-size: 16px;
+			font-size: 17px;
+			font-family: 'museo-sans-300';
+			color: rgb(179,179,179);
+			-webkit-font-smoothing: auto;
+			letter-spacing: 0.05em;
 		}
 
 		article#docs li {
@@ -193,16 +221,17 @@
 		article#docs pre {
 			padding: 16px;
 			font-family: monaco, Consolas, 'Lucida Console', monospace;
+			background: #2f3736;
 		}
 
 		article#docs code {
 			font-size: 14px;
-			background: #1f2726;
-			padding: 0.2em;
-			padding-right: 0.4em;
+			background: #2f3736;
+			padding: 0.2em 0.4em;
 			display: inline-block;
 			border-radius: 3px;
 			font-family: monaco, Consolas, 'Lucida Console', monospace;
+			-webkit-font-smoothing: antialiased;
 		}
 
 /*		article#docs code.lang-javascript-constructor,

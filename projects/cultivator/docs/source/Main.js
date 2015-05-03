@@ -122,7 +122,9 @@ lychee.define('tool.Main').requires([
 
 			var suffix = this.active_doc.split('/source/')[1];
 
-			code = '<a class="edit" href="' + GITHUB_URL + suffix + '.md">Edit on Github</a>';
+			code += '<a href="#" class="button ico-docs view active">Docs View</a>';
+			code += '<a href="#" class="button ico-glasses view">Source View</a>';
+			code += '<a class="button ico-edit edit" href="' + GITHUB_URL + suffix + '.md">Edit on Github</a>';
 
 		}
 
