@@ -30,18 +30,18 @@ lychee.define('sorbet.serve.api.Docs').requires([
   };
 
 
-  var _get_docs_tree = function(moduleName) {
+  var _get_docs_tree = function(name) {
     var tree = {};
 
-    moduleName = moduleName[0] === '/' ? moduleName : '/' + moduleName;
+    name = name[0] === '/' ? name : '/' + name;
 
 
     var _walk = function() {
 
       var pointer = tree;
-      var parentsCopy = this.parents.slice();
+      var parents_copy = this.parents.slice();
 
-      this.pointerString = '';
+      this.pointer = '';
 
 
       if (this.parents.length === 0) {
@@ -51,27 +51,27 @@ lychee.define('sorbet.serve.api.Docs').requires([
       } else {
 
         do {
-          var dirName = parentsCopy.shift();
-          pointer = pointer[dirName];
-          this.pointerString += dirName + '/';
-        } while (parentsCopy.length > 0);
+          var dir = parents_copy.shift();
+          pointer = pointer[dir];
+          this.pointer += dir + '/';
+        } while (parents_copy.length > 0);
 
       }
 
 
-      this.pointerString += this.file;
+      this.pointer += this.file;
 
 
-      var files = _filesystem.dir(SRC_PREFIX + this.pointerString);
+      var files = _filesystem.dir(SRC_PREFIX + this.pointer);
 
 
       if (files === null) {
 
         // For cases like Class.Name.Awesome.js
-        var packageName = this.file.split('.');
-        packageName = packageName.slice(0, packageName.length - 1).join('.');
+        var package_name = this.file.split('.');
+        package_name = package_name.slice(0, package_name.length - 1).join('.');
 
-        var path = _translate_platform(SRC_PREFIX + this.pointerString.substring(0, this.pointerString.length - 3));
+        var path = _translate_platform(SRC_PREFIX + this.pointer.substring(0, this.pointer.length - 3));
 
         path = _source_to_api(path);
 
@@ -81,14 +81,14 @@ lychee.define('sorbet.serve.api.Docs').requires([
 
         if (doc === null) {
 
-          pointer[packageName] = false;
+          pointer[package_name] = false;
 
         } else {
 
-          if (moduleName === SRC_PREFIX + this.pointerString.substring(0, this.pointerString.length - 3)) {
-            pointer[packageName] = lychee.serialize(doc);
+          if (name === SRC_PREFIX + this.pointer.substring(0, this.pointer.length - 3)) {
+            pointer[package_name] = lychee.serialize(doc);
           } else {
-            pointer[packageName] = true;
+            pointer[package_name] = true;
           }
 
         }
@@ -99,66 +99,66 @@ lychee.define('sorbet.serve.api.Docs').requires([
 
         pointer[this.file] = {};
 
-        files.forEach(function(newFile) {
+        files.forEach(function(new_file) {
 
-          var newWalkScope = {
+          var scope = {
             parents: this.parents.concat(this.file),
-            file: newFile
+            file: new_file
           };
 
-          _walk.call(newWalkScope);
+          _walk.call(scope);
         }, this);
       }
 
     }
 
     _filesystem.dir(SRC_PREFIX).forEach(function(id) {
-      var walkScope = {
+      var walk_scope = {
         parents: [],
         file: id
       };
 
-      _walk.call(walkScope);
+      _walk.call(walk_scope);
     });
 
     return tree;
   };
 
-  var _get_docs_only = function(moduleName) {
-    moduleName = moduleName[0] === '/' ? moduleName.slice(1, moduleName.length) : moduleName;
-    moduleName = _translate_platform(moduleName);
+  var _get_docs_only = function(name) {
+    name = name[0] === '/' ? name.slice(1, name.length) : name;
+    name = _translate_platform(name);
 
-    var doc = _filesystem.read(_source_to_api(moduleName));
+    var doc = _filesystem.read(_source_to_api(name));
     return {
       doc: lychee.serialize(doc)
     };
   };
 
   var _source_to_api = function(src) {
-    var apiString = API_PREFIX + src.split('/source/')[1].replace('.js', '.md');
-    if (apiString.substr(apiString.length - 3) !== '.md') {
-      apiString += '.md';
+    var api_string = API_PREFIX + src.split('/source/')[1].replace('.js', '.md');
+    if (api_string.substr(api_string.length - 3) !== '.md') {
+      api_string += '.md';
     }
-    return apiString;
+    return api_string;
   }
 
-  var _translate_platform = function(moduleName) {
+  var _translate_platform = function(name) {
     /**
      * if we have a platform specific implementation,
      * take the implementation from lychee/api/core or lychee/api/net
      */
 
-    var newName = moduleName;
+    var output = name;
 
-    if (/platform/.test(moduleName)) {
-      if (/net/.test(moduleName)) {
-        newName = SRC_PREFIX + "net/" + moduleName.split('/').pop();
+    if (/platform/.test(name)) {
+      if (/net/.test(name)) {
+        output = SRC_PREFIX + "net/" + name.split('/').pop();
       } else {
-        newName = SRC_PREFIX + "core/" + moduleName.split('/').pop();
+        output = SRC_PREFIX + "core/" + name.split('/').pop();
       }
     }
 
-    return newName;
+    return output;
   }
 
 
