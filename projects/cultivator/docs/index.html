@@ -162,17 +162,18 @@
 			font-size: 30px;
 		}
 
-		article#docs h3 {
-			font-family: monospace;
+		article#docs h3,
+		article#docs h4 {
+			font-size: 30px;
+			font-family: 'museo-sans-300';
 			text-transform: none;
 			font-weight: bold;
+			color: #f2f2f2;
 		}
 
 		article#docs h4 {
 			margin-left: 16px;
 			font-size: 20px;
-			font-weight: bold;
-			font-family: monospace;
 		}
 
 		article#docs p {
@@ -191,6 +192,7 @@
 
 		article#docs pre {
 			padding: 16px;
+			font-family: monaco, Consolas, 'Lucida Console', monospace;
 		}
 
 		article#docs code {
@@ -200,15 +202,16 @@
 			padding-right: 0.4em;
 			display: inline-block;
 			border-radius: 3px;
+			font-family: monaco, Consolas, 'Lucida Console', monospace;
 		}
 
-		article#docs code.lang-javascript-constructor,
+/*		article#docs code.lang-javascript-constructor,
 		article#docs code.lang-javascript-enum,
 		article#docs code.lang-javascript-event,
 		article#docs code.lang-javascript-method,
 		article#docs code.lang-javascript-property {
 			font-size: 18px;
-		}
+		}*/
 
 		article#docs article#constructor pre:nth-of-type(1) {
 			padding-left: 0;
@@ -222,17 +225,18 @@
 		}
 
 		article#docs code strong.highlight {
-			color: #32afe5;
-			text-shadow: #32afe5 0 0 10px;
-			-moz-animation: textpulse 3000ms infinite;
-			-webkit-animation: textpulse 3000ms infinite;
-			animation: textpulse 3000ms infinite;
+			color: #31c0ff;
+			font-weight: normal;
+			text-shadow: none;
+			-moz-animation: none;
+			-webkit-animation: none;
+			animation: none;
 		}
 
 
 		article#docs article#constructor pre:nth-of-type(1) strong.highlight {
-			color: rgb(208,73,75);
-			text-shadow: rgba(208,73,75,.5) 0 0 10px;
+			color: #31c0ff;
+			text-shadow: none;
 			-moz-animation: none;
 			-webkit-animation: none;
 			animation: none;
