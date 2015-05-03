@@ -19,83 +19,83 @@ lychee.define('tool.Main').requires([
 
 	var _custom_parser = function(docs) {
 		docs = docs.split(/=\{(.*)\}/);
-		var docsCode = docs[0];
+		var docs_code = docs[0];
 
-		var enumSeen         = false;
-		var eventSeen        = false;
-		var methodSeen       = false;
-		var propertySeen     = false;
+		var enum_seen         = false;
+		var event_seen        = false;
+		var method_seen       = false;
+		var property_seen     = false;
 
 
 		for (var i = 1; i < docs.length; i += 2) {
 
-			var constructorCode  = '';
+			var constructor_code  = '';
 
 			if (docs[i] === 'constructor') {
 
-				var strong = '<strong class="highlight">' + this.activeModule + '</strong>';
-				docs[i+1] = docs[i+1].replace(new RegExp(this.activeModule, 'g'), strong);
-				constructorCode = ' id="' + docs[i] + '"';
+				var strong = '<strong class="highlight">' + this.active_module + '</strong>';
+				docs[i+1] = docs[i+1].replace(new RegExp(this.active_module, 'g'), strong);
+				constructor_code = ' id="' + docs[i] + '"';
 
 			} else if (docs[i].substring(0, 5) === 'enums') {
-				if (!enumSeen) {
-					enumSeen = true;
-					docsCode += '<h2>Enums</h2>'
+				if (!enum_seen) {
+					enum_seen = true;
+					docs_code += '<h2>Enums</h2>'
 				}
 
-				var enumName = docs[i].split('-')[1];
+				var name = docs[i].split('-')[1];
 
-				docsCode += '<h4 id="' + docs[i] + '"><a href="#' + docs[i] + '">' + enumName + '</a></h4>';
+				docs_code += '<h4 id="' + docs[i] + '"><a href="#' + docs[i] + '">' + name + '</a></h4>';
 
-				var strong = '<strong class="highlight">' + enumName + '</strong>';
-				docs[i+1] = docs[i+1].replace(new RegExp(enumName, 'g'), strong);
+				var strong = '<strong class="highlight">' + name + '</strong>';
+				docs[i+1] = docs[i+1].replace(new RegExp(name, 'g'), strong);
 
 			} else if (docs[i].substring(0, 6) === 'events') {
-				if (!eventSeen) {
-					eventSeen = true;
-					docsCode += '<h2>Events</h2>'
+				if (!event_seen) {
+					event_seen = true;
+					docs_code += '<h2>Events</h2>'
 				}
 
-				var eventName = docs[i].split('-')[1];
+				var name = docs[i].split('-')[1];
 
-				docsCode += '<h4 id="' + docs[i] + '"><a href="#' + docs[i] + '">' + eventName + '</a></h4>';
+				docs_code += '<h4 id="' + docs[i] + '"><a href="#' + docs[i] + '">' + name + '</a></h4>';
 
-				var strong = '<strong class="highlight">' + eventName + '</strong>';
-				docs[i+1] = docs[i+1].replace(new RegExp(eventName, 'g'), strong);
+				var strong = '<strong class="highlight">' + name + '</strong>';
+				docs[i+1] = docs[i+1].replace(new RegExp(name, 'g'), strong);
 
 			} else if (docs[i].substring(0, 10) === 'properties') {
-				if (!propertySeen) {
-					propertySeen = true;
-					docsCode += '<h2>Properties</h2>'
+				if (!property_seen) {
+					property_seen = true;
+					docs_code += '<h2>Properties</h2>'
 				}
 
-				var propertyName = docs[i].split('-')[1];
+				var name = docs[i].split('-')[1];
 
-				docsCode += '<h4 id="' + docs[i] + '"><a href="#' + docs[i] + '">' + propertyName + '</a></h4>';
+				docs_code += '<h4 id="' + docs[i] + '"><a href="#' + docs[i] + '">' + name + '</a></h4>';
 
-				var strong = '<strong class="highlight">' + propertyName + '</strong>';
-				docs[i+1] = docs[i+1].replace(new RegExp(propertyName, 'g'), strong);
+				var strong = '<strong class="highlight">' + name + '</strong>';
+				docs[i+1] = docs[i+1].replace(new RegExp(name, 'g'), strong);
 
 			} else if (docs[i].substring(0, 7) === 'methods') {
-				if (!methodSeen) {
-					methodSeen = true;
-					docsCode += '<h2>Methods</h2>'
+				if (!method_seen) {
+					method_seen = true;
+					docs_code += '<h2>Methods</h2>'
 				}
 
-				var methodName = docs[i].split('-')[1];
+				var name = docs[i].split('-')[1];
 
-				docsCode += '<h4 id="' + docs[i] + '"><a href="#' + docs[i] + '">' + methodName + '</a></h4>';
+				docs_code += '<h4 id="' + docs[i] + '"><a href="#' + docs[i] + '">' + name + '</a></h4>';
 
-				var strong = '<strong class="highlight">' + methodName + '</strong>';
-				docs[i+1] = docs[i+1].replace(new RegExp(methodName, 'g'), strong);
+				var strong = '<strong class="highlight">' + name + '</strong>';
+				docs[i+1] = docs[i+1].replace(new RegExp(name, 'g'), strong);
 			}
 
-			docsCode += '<article' + constructorCode + '>'
+			docs_code += '<article' + constructor_code + '>'
 			         +  docs[i + 1]
 			         +  '</article>';
 		}
 
-		return docsCode;
+		return docs_code;
 	}
 
 	var _debounce = function(fn, delay) {
@@ -116,11 +116,11 @@ lychee.define('tool.Main').requires([
 	var _generate_actions = function() {
 
 		var code = '';
-		if (this.activeBlob !== null) {
+		if (this.active_blob !== null) {
 
 			var GITHUB_URL = 'https://github.com/LazerUnicorns/lycheeJS/edit/development-0.9/lychee/api/';
 
-			var suffix = this.activeDoc.split('/source/')[1];
+			var suffix = this.active_doc.split('/source/')[1];
 
 			code = '<a class="edit" href="' + GITHUB_URL + suffix + '.md">Edit on Github</a>';
 
@@ -131,7 +131,7 @@ lychee.define('tool.Main').requires([
 
 	var _initial_api = function(callback, scope) {
 
-		this.config = new Config('http://localhost:4848/api/Docs?module=' + this.activeDoc);
+		this.config = new Config('http://localhost:4848/api/Docs?module=' + this.active_doc);
 
 		this.config.onload = function(result) {
 			result.__path = '/';
@@ -142,49 +142,49 @@ lychee.define('tool.Main').requires([
 	};
 
 	var _open_doc = function(_module, event) {
-		if (typeof _module !== 'string' || _module === this.activeDoc) return;
+		if (typeof _module !== 'string' || _module === this.active_doc) return;
 
-		this.activeDoc    = _module;
-		this.activeModule = _module.split('/').pop();
+		this.active_doc    = _module;
+		this.active_module = _module.split('/').pop();
 
 
 		// disable the old tree element, enable the new
 		_set_tree_active.call(this, _module);
 
-		if (_CACHE[this.activeDoc]) {
+		if (_CACHE[this.active_doc]) {
 
-			ui.render(_generate_actions.call(this) + _CACHE[this.activeDoc], '#docs');
+			ui.render(_generate_actions.call(this) + _CACHE[this.active_doc], '#docs');
 
 			var state = {
-				activeDoc: this.activeDoc,
-				activeModule: this.activeModule
+				active_doc: this.active_doc,
+				active_module: this.active_module
 			};
 
-			history.pushState(state, this.activeModule, "index.html?module=" + this.activeDoc);
+			history.pushState(state, this.active_module, "index.html?module=" + this.active_doc);
 
 		} else {
-			this.config = new Config('http://localhost:4848/api/Docs?module=' + this.activeDoc + '&docsonly');
+			this.config = new Config('http://localhost:4848/api/Docs?module=' + this.active_doc + '&docsonly');
 
 			this.config.onload = function(result) {
 
-				this.activeBlob = this.config.buffer.doc;
+				this.active_blob = this.config.buffer.doc;
 
-				if (this.activeBlob) {
+				if (this.active_blob) {
 
-					var markdownCode = lychee.deserialize(this.activeBlob).toString();
-					_render_markdown.call(this, markdownCode);
+					var markdown_code = lychee.deserialize(this.active_blob).toString();
+					_render_markdown.call(this, markdown_code);
 
 				} else {
-					_CACHE[this.activeDoc] = NO_DOCS;
+					_CACHE[this.active_doc] = NO_DOCS;
 					ui.render(_generate_actions.call(this) + NO_DOCS, '#docs');
 				}
 
 				var state = {
-					activeDoc: this.activeDoc,
-					activeModule: this.activeModule
+					active_doc: this.active_doc,
+					active_module: this.active_module
 				};
-				console.log('pushing state', state);
-				history.pushState(state, this.activeModule, "index.html?module=" + this.activeDoc);
+
+				history.pushState(state, this.active_module, "index.html?module=" + this.active_doc);
 
 			}.bind(this);
 
@@ -194,29 +194,28 @@ lychee.define('tool.Main').requires([
 
 
 
-		window.onpopstate = function(stateEvent) {
-			var state = stateEvent.state;
+		window.onpopstate = function(event) {
+			var state = event.state;
 			var worked = false;
 
 			if (state !== null) {
-				this.activeModule = state.activeModule;
-				this.activeDoc = state.activeDoc;
+				this.active_module = state.active_module;
+				this.active_doc = state.active_doc;
 				worked = true;
 			} else {
-				var oldDoc = document.location.href.split('?')[1].split('=')[1];
-				if (_CACHE[oldDoc]) {
+				var old_doc = document.location.href.split('?')[1].split('=')[1];
+				if (_CACHE[old_doc]) {
 					worked = true;
-					this.activeDoc = oldDoc;
-					this.activeModule = oldDoc.split('/').pop();
-					console.log('paarrssse', this.activeDoc, this.activeModule);
+					this.active_doc = old_doc;
+					this.active_module = old_doc.split('/').pop();
 				}
 			}
 
 			if (worked) {
 
-				_set_tree_active.call(this, this.activeDoc);
+				_set_tree_active.call(this, this.active_doc);
 
-				ui.render(_generate_actions.call(this) + _CACHE[this.activeDoc], '#docs');
+				ui.render(_generate_actions.call(this) + _CACHE[this.active_doc], '#docs');
 
 			}
 
@@ -238,8 +237,8 @@ lychee.define('tool.Main').requires([
 			this.position = params.length > 1 ? params[1] : null;
 
 			if (param.length > 1 && param[0] == 'module') {
-				this.activeDoc = param[1];
-				this.activeModule = param[1].split('/').pop();
+				this.active_doc = param[1];
+				this.active_module = param[1].split('/').pop();
 			}
 
 		}
@@ -252,31 +251,31 @@ lychee.define('tool.Main').requires([
 			code += '<li>';
 
 			var pointer = this[key];
-			var currentPath = LYCHEE_SRC + this.__path + '/' + key;
+			var current_path = LYCHEE_SRC + this.__path + '/' + key;
 
 
 			if (typeof pointer === 'boolean' || (pointer.hasOwnProperty('constructor') || pointer.hasOwnProperty('arguments'))) {
 
-				var classCode = 'class="';
-				var id = 'tree' + currentPath.split('/').join('-');
+				var class_code = 'class="';
+				var id = 'tree' + current_path.split('/').join('-');
 
-				if (currentPath === main.activeDoc) {
-					classCode = ' class="active';
-					main.activeTreeId = id;
+				if (current_path === main.active_doc) {
+					class_code = ' class="active';
+					main.active_tree_id = id;
 				}
 
 				if (pointer === false) {
-					classCode += ' no-docs"';
+					class_code += ' no-docs"';
 				} else {
-					classCode += '"'
+					class_code += '"'
 				}
 
 
-				code += '<a id="' + id + '" href="index.html?module=' + currentPath + '" onclick="MAIN.trigger(\'open_doc\', [\'' + currentPath + '\', event]); return false;"' + classCode + '>' + key + '</a>';
+				code += '<a id="' + id + '" href="index.html?module=' + current_path + '" onclick="MAIN.trigger(\'open_doc\', [\'' + current_path + '\', event]); return false;"' + class_code + '>' + key + '</a>';
 
 
 				if (pointer && pointer.hasOwnProperty('constructor') && pointer.hasOwnProperty('arguments')) {
-					main.activeBlob = pointer || null;
+					main.active_blob = pointer || null;
 				}
 
 				main.count(!!pointer);
@@ -297,23 +296,23 @@ lychee.define('tool.Main').requires([
 	};
 
 
-	var _render_markdown = function(markdownCode) {
+	var _render_markdown = function(markdown_code) {
 		marked.setOptions({
 			highlight: function(code) {
 				return hljs.highlightAuto(code).value;
 			}
 		});
 
-		var docs = marked(markdownCode);
+		var docs = marked(markdown_code);
 
 		/**
 		 * Parse custom ={tags}
 		 */
-		var docsCode = _custom_parser.call(this, docs);
+		var docs_code = _custom_parser.call(this, docs);
 
-		ui.render(_generate_actions.call(this) + docsCode, '#docs');
+		ui.render(_generate_actions.call(this) + docs_code, '#docs');
 
-		_CACHE[this.activeDoc] = docsCode;
+		_CACHE[this.active_doc] = docs_code;
 
 		setTimeout(function() {
 			if (typeof this.position === 'string') {
@@ -325,7 +324,7 @@ lychee.define('tool.Main').requires([
 
 	var _render_score = function() {
 		var code = ''
-						+ '<span id="num-documented">' + this.documentedClasses + '</span>'
+						+ '<span id="num-documented">' + this.documented_classes + '</span>'
 						+ '/'
 						+ '<span id="num-total">' + this.classes + '</span>'
 						+ ' classes documented';
@@ -346,17 +345,14 @@ lychee.define('tool.Main').requires([
 
 	var _set_tree_active = function(_module) {
 
-		console.log('call on me');
 
 		[].slice.call(document.querySelectorAll('#packages-tree a.active')).forEach(function(element) {
-			console.log('removin it', element);
 			element.classList.remove('active');
-			console.log('yeah, removed it', element);
 		});
 
-		this.activeTreeId = 'tree' + _module.split('/').join('-');
-		treeElement = document.getElementById(this.activeTreeId);
-		treeElement.classList.add('active');
+		this.active_tree_id = 'tree' + _module.split('/').join('-');
+		var tree_element = document.getElementById(this.active_tree_id);
+		tree_element.classList.add('active');
 
 	}
 
@@ -383,15 +379,15 @@ lychee.define('tool.Main').requires([
 
 		lychee.game.Main.call(this, settings);
 
-		this.activeBlob           = null;
-		this.activeDoc            = "/lychee/source/core/Asset";
-		this.activeModule         = 'Asset';
+		this.active_blob           = null;
+		this.active_doc            = "/lychee/source/core/Asset";
+		this.active_module         = 'Asset';
 		this.config               = null;
 		this.classes              = 0;
-		this.documentedClasses    = 0;
+		this.documented_classes    = 0;
 		this.position             = null;
-		this.undocumentedClasses  = 0;
-		this.activeTreeId    = null;
+		this.undocumented_classes  = 0;
+		this.active_tree_id    = null;
 
 		/*
 		 * INITIALIZATION
@@ -431,18 +427,18 @@ lychee.define('tool.Main').requires([
 					_render_score.call(this);
 
 
-					if (this.activeBlob !== null) {
-						var markdownCode = lychee.deserialize(this.activeBlob).toString();
+					if (this.active_blob !== null) {
+						var markdown_code = lychee.deserialize(this.active_blob).toString();
 
 						if (marked) {
-							_render_markdown.call(this, markdownCode);
+							_render_markdown.call(this, markdown_code);
 						} else {
 							// if the markdown parser `marked` hasn't loaded yet
-							setTimeout(_render_markdown.bind(this, markdownCode), 500);
+							setTimeout(_render_markdown.bind(this, markdown_code), 500);
 						}
 
 					} else {
-						_CACHE[this.activeDoc] = NO_DOCS;
+						_CACHE[this.active_doc] = NO_DOCS;
 						ui.render(_generate_actions.call(this) + NO_DOCS, '#docs');
 					}
 
@@ -460,9 +456,9 @@ lychee.define('tool.Main').requires([
 		count: function(val) {
 			this.classes++;
 			if (val) {
-				this.documentedClasses++;
+				this.documented_classes++;
 			} else {
-				this.undocumentedClasses++;
+				this.undocumented_classes++;
 			}
 		}
 	};
