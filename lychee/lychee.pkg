@@ -398,5 +398,49 @@
 				}
 			}
 		}
+	},
+	"api": {
+		"files": {
+			"core": {
+				"Asset": [
+					"md"
+				],
+				"Debugger": [
+					"md"
+				],
+				"Definition": [
+					"md"
+				],
+				"Environment": [
+					"md"
+				],
+				"Input": [
+					"md"
+				],
+				"Package": [
+					"md"
+				],
+				"Storage": [
+					"md"
+				],
+				"Viewport": [
+					"md"
+				],
+				"lychee": [
+					"md"
+				]
+			},
+			"event": {
+				"Emitter": [
+					"md"
+				],
+				"Promise": [
+					"md"
+				],
+				"Queue": [
+					"md"
+				]
+			}
+		}
 	}
 }
