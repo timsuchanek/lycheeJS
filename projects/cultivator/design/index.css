@@ -84,12 +84,12 @@ label.ico-only:before {
 
 
 .ico-add:before         { content: "\e095"; }
+.ico-api:before         { content: "\e04c"; }
 .ico-boot:before        { content: "\e05c"; }
 .ico-browser:before     { content: "\e037"; }
 .ico-console:before     { content: "\e011"; }
 .ico-create:before      { content: "\e095"; }
 .ico-debugger:before    { content: "\e052"; }
-.ico-docs:before        { content: "\e04c"; }
 .ico-download:before    { content: "\e083"; }
 .ico-editor:before      { content: "\e00c"; }
 .ico-error:before       { content: "\e082"; }
