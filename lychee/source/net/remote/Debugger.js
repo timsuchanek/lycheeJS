@@ -5,7 +5,7 @@ lychee.define('lychee.net.remote.Debugger').requires([
 	'lychee.net.Service'
 ]).exports(function(lychee, global, attachments) {
 
-	var _connections = {};
+	var _connections = { 'debugger': [], 'editor': [] };
 	var _tunnels     = [];
 
 	var _storage     = new lychee.Storage({
@@ -49,8 +49,8 @@ lychee.define('lychee.net.remote.Debugger').requires([
 			_storage.sync();
 
 
-			var master = this.tunnel.host + ':' + this.tunnel.port;
-			var slave  = data.id || null;
+			var mode  = data.mode || 'debugger';
+			var slave = data.id   || null;
 
 			if (slave !== null) {
 
@@ -59,7 +59,7 @@ lychee.define('lychee.net.remote.Debugger').requires([
 				})[0] || null;
 
 				if (object !== null) {
-					object.state = 'debug';
+					object.mode = mode;
 					_storage.update(object);
 				}
 
@@ -70,9 +70,9 @@ lychee.define('lychee.net.remote.Debugger').requires([
 
 				if (remote !== null) {
 
-					var slaves = _connections[master] || null;
+					var slaves = _connections[mode] || null;
 					if (slaves === null) {
-						slaves = _connections[master] = [];
+						slaves = _connections[mode] = [];
 					}
 
 					if (slaves.indexOf(remote) === -1) {
@@ -90,8 +90,8 @@ lychee.define('lychee.net.remote.Debugger').requires([
 			_storage.sync();
 
 
-			var master = this.tunnel.host + ':' + this.tunnel.port;
-			var slaves = _connections[master] || null;
+			var mode   = data.mode || 'debugger';
+			var slaves = _connections[mode] || null;
 
 			if (slaves instanceof Array) {
 
@@ -110,8 +110,8 @@ lychee.define('lychee.net.remote.Debugger').requires([
 
 		this.bind('disconnect', function(data) {
 
-			var master = this.tunnel.host + ':' + this.tunnel.port;
-			var slave  = data.id || null;
+			var mode  = data.mode || 'debugger';
+			var slave = data.id   || null;
 
 			if (slave !== null) {
 
@@ -120,7 +120,7 @@ lychee.define('lychee.net.remote.Debugger').requires([
 				})[0] || null;
 
 				if (object !== null) {
-					object.state = 'default';
+					object.mode = 'default';
 					_storage.update(object);
 				}
 
@@ -131,9 +131,9 @@ lychee.define('lychee.net.remote.Debugger').requires([
 
 				if (remote !== null) {
 
-					var index = _connections[master].indexOf(remote);
+					var index = _connections[mode].indexOf(remote);
 					if (index !== -1) {
-						_connections[master].splice(index, 1);
+						_connections[mode].splice(index, 1);
 					}
 
 				}

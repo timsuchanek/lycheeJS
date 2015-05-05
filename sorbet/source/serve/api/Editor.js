@@ -27,7 +27,7 @@ lychee.define('sorbet.serve.api.Editor').requires([
 			'Access-Control-Max-Age':       60 * 60,
 			'Content-Control':              'no-transform',
 			'Content-Type':                 'application/json'
-		}
+		};
 
 	};
 

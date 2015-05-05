@@ -49,6 +49,35 @@ lychee = typeof lychee !== 'undefined' ? lychee : (function(global) {
 
 	}
 
+	if (typeof Array.prototype.unique !== 'function') {
+
+		Array.prototype.unique = function() {
+
+			if (this == null) {
+				throw new TypeError('Array.prototype.unique called on null or undefined');
+			}
+
+			var clone  = [];
+			var list   = Object(this);
+			var length = this.length >>> 0;
+			var value;
+
+			for (var i = 0; i < this.length; i++) {
+
+				value = list[i];
+
+				if (clone.indexOf(value) === -1) {
+					clone.push(value);
+				}
+			}
+
+
+			return clone;
+
+		};
+
+	}
+
 	if (typeof Object.filter !== 'function') {
 
 		Object.filter = function(object, predicate/*, thisArg */) {

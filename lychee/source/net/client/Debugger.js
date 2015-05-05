@@ -5,6 +5,10 @@ lychee.define('lychee.net.client.Debugger').includes([
 
 	var Class = function(client) {
 
+
+		this.mode = 'debugger';
+
+
 		lychee.net.Service.call(this, 'debugger', client, lychee.net.Service.TYPE.client);
 
 
@@ -31,6 +35,10 @@ console.log(data);
 
 	Class.prototype = {
 
+		/*
+		 * CUSTOM API
+		 */
+
 		connect: function(id) {
 
 			id = typeof id === 'string' ? id : null;
@@ -39,7 +47,8 @@ console.log(data);
 			if (id !== null && this.tunnel !== null) {
 
 				this.tunnel.send({
-					id:    id
+					id:    id,
+					mode:  this.mode
 				}, {
 					id:    'debugger',
 					event: 'connect'
@@ -89,12 +98,31 @@ console.log(data);
 			if (id !== null && this.tunnel !== null) {
 
 				this.tunnel.send({
-					id:    id
+					id:    id,
+					mode:  this.mode
 				}, {
 					id:    'debugger',
 					event: 'disconnect'
 				});
 
+
+				return true;
+
+			}
+
+
+			return false;
+
+		},
+
+		setMode: function(mode) {
+
+			mode = typeof mode === 'string' ? mode : null;
+
+
+			if (mode !== null) {
+
+				this.mode = mode;
 
 				return true;
 
