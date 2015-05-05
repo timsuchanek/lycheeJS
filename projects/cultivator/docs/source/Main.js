@@ -384,12 +384,12 @@ lychee.define('tool.Main').requires([
 		this.active_blob           = null;
 		this.active_doc            = "/lychee/source/core/Asset";
 		this.active_module         = 'Asset';
-		this.config               = null;
-		this.classes              = 0;
+		this.config                = null;
+		this.classes               = 0;
 		this.documented_classes    = 0;
-		this.position             = null;
+		this.position              = null;
 		this.undocumented_classes  = 0;
-		this.active_tree_id    = null;
+		this.active_tree_id        = null;
 
 		/*
 		 * INITIALIZATION
