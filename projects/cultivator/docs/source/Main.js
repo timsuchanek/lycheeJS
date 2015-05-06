@@ -119,78 +119,81 @@ lychee.define('tool.Main').requires([
 		if (this.active_blob !== null) {
 
 			var GITHUB_URL = 'https://github.com/LazerUnicorns/lycheeJS/edit/development-0.9/lychee/api/';
+			// TODO
+			// var suffix = this.active_module.split('/source/')[1];
 
-			var suffix = this.active_doc.split('/source/')[1];
-
-			code += '<a href="#" class="button ico-docs view active">Docs View</a>';
-			code += '<a href="#" class="button ico-glasses view">Source View</a>';
-			code += '<a class="button ico-edit edit" href="' + GITHUB_URL + suffix + '.md">Edit on Github</a>';
+			// code += '<a href="#" class="button ico-docs view active">Docs View</a>';
+			// code += '<a href="#" class="button ico-glasses view">Source View</a>';
+			// code += '<a class="button ico-edit edit" href="' + GITHUB_URL + suffix + '.md">Edit on Github</a>';
 
 		}
 
 		return code;
 	}
 
-	var _initial_api = function(callback, scope) {
+	var _load_api = function(callback, scope) {
+		this.pkg = new Config('/lychee/lychee.pkg');
 
-		this.config = new Config('http://localhost:4848/api/Docs?module=' + this.active_doc);
+		this.pkg.onload = function(result) {
 
-		this.config.onload = function(result) {
-			result.__path = '/';
+			/**
+			 * sort files alphabetically
+			 */
+			var sorted_files = {};
+			Object.keys(scope.pkg.buffer.source.files).sort().forEach(function(key) {
+				sorted_files[key] = scope.pkg.buffer.source.files[key];
+			});
+			scope.pkg.buffer.source.files = sorted_files;
+
+
 			callback.call(scope, result);
+
 		};
 
-		this.config.load();
+		this.pkg.load();
 	};
 
-	var _open_doc = function(_module, event) {
-		if (typeof _module !== 'string' || _module === this.active_doc) return;
-
-		this.active_doc    = _module;
-		this.active_module = _module.split('/').pop();
-
+	var _load_doc = function() {
 
 		// disable the old tree element, enable the new
-		_set_tree_active.call(this, _module);
+		_set_tree_active.call(this);
 
-		if (_CACHE[this.active_doc]) {
+		if (_CACHE[this.active_module]) {
 
-			ui.render(_generate_actions.call(this) + _CACHE[this.active_doc], '#docs');
+			ui.render(_generate_actions.call(this) + _CACHE[this.active_module], '#docs');
 
 			var state = {
-				active_doc: this.active_doc,
-				active_module: this.active_module
+				active_module: this.active_module,
+				active_path:   _module_to_path(this.active_module)
 			};
 
-			history.pushState(state, this.active_module, "index.html?module=" + this.active_doc);
+			history.pushState(state, this.active_module, "index.html?module=" + this.active_module);
 
 		} else {
-			this.config = new Config('http://localhost:4848/api/Docs?module=' + this.active_doc + '&docsonly');
 
-			this.config.onload = function(result) {
+			this.active_doc = new Stuff('/lychee/api' + this.active_path + '.md');
 
-				this.active_blob = this.config.buffer.doc;
+			this.active_doc.onload = function(result) {
 
-				if (this.active_blob) {
+				if (this.active_doc.buffer) {
 
-					var markdown_code = lychee.deserialize(this.active_blob).toString();
-					_render_markdown.call(this, markdown_code);
+					_render_markdown.call(this, this.active_doc.buffer);
 
 				} else {
-					_CACHE[this.active_doc] = NO_DOCS;
+					_CACHE[this.active_module] = NO_DOCS;
 					ui.render(_generate_actions.call(this) + NO_DOCS, '#docs');
 				}
 
 				var state = {
-					active_doc: this.active_doc,
-					active_module: this.active_module
+					active_module: this.active_module,
+					active_path: this.active_path
 				};
 
-				history.pushState(state, this.active_module, "index.html?module=" + this.active_doc);
+				history.pushState(state, this.active_module, "index.html?module=" + this.active_module);
 
 			}.bind(this);
 
-			this.config.load();
+			this.active_doc.load();
 
 		}
 
@@ -202,32 +205,28 @@ lychee.define('tool.Main').requires([
 
 			if (state !== null) {
 				this.active_module = state.active_module;
-				this.active_doc = state.active_doc;
+				this.active_module = state.active_module;
 				worked = true;
 			} else {
 				var old_doc = document.location.href.split('?')[1].split('=')[1];
 				if (_CACHE[old_doc]) {
 					worked = true;
-					this.active_doc = old_doc;
+					this.active_module = old_doc;
 					this.active_module = old_doc.split('/').pop();
 				}
 			}
 
 			if (worked) {
 
-				_set_tree_active.call(this, this.active_doc);
+				_set_tree_active.call(this);
 
-				ui.render(_generate_actions.call(this) + _CACHE[this.active_doc], '#docs');
+				ui.render(_generate_actions.call(this) + _CACHE[this.active_module], '#docs');
 
 			}
 
 
 		}.bind(this);
 
-		event.preventDefault();
-		event.stopPropagation();
-
-		return false;
 	};
 
 	var _parse_url = function() {
@@ -239,54 +238,96 @@ lychee.define('tool.Main').requires([
 			this.position = params.length > 1 ? params[1] : null;
 
 			if (param.length > 1 && param[0] == 'module') {
-				this.active_doc = param[1];
-				this.active_module = param[1].split('/').pop();
+				this.active_module = param[1];
+				this.active_path = _module_to_path(param[1]);
 			}
 
 		}
 	};
 
 	var _render_tree = function(main) {
+
+
+		// TODO: traverse simultaniaasulsy
+
 		var code = '<ul>';
 
-		Object.keys(this).forEach(function(key) {
+		Object.keys(this.source).forEach(function(key) {
 			code += '<li>';
 
-			var pointer = this[key];
-			var current_path = LYCHEE_SRC + this.__path + '/' + key;
+			var src_pointer = this.source[key];
+
+			var api_pointer = null;
+			if (this.__path.substring(0, 9) === '.platform' && Array.isArray(src_pointer)) {
+				api_pointer = (main.pkg.buffer.api.files.core.hasOwnProperty(key)) ? main.pkg.buffer.api.files.core[key] : null;
+			} else {
+				api_pointer = (this.api && this.api.hasOwnProperty(key)) ? this.api[key] : null;
+			}
 
 
-			if (typeof pointer === 'boolean' || (pointer.hasOwnProperty('constructor') || pointer.hasOwnProperty('arguments'))) {
+
+
+			if (Array.isArray(src_pointer)) {
+
+
+				/**
+				 * calculate current path
+				 * translate path, if we have a core or platform class
+				 */
+
+				var current_class = '';
+
+				// special condition for core & platform classes
+				if (this.__path.substring(0, 5) === '.core' || this.__path.substring(0, 9) === '.platform') {
+
+					current_class = key;
+
+				} else {
+
+					current_class = 'lychee' + this.__path + '.' + key;
+
+				}
+
+				var current_path = LYCHEE_SRC + this.__path + '/' + key;
+
+
+
 
 				var class_code = 'class="';
 				var id = 'tree' + current_path.split('/').join('-');
 
-				if (current_path === main.active_doc) {
+				if (current_path === main.active_module) {
 					class_code = ' class="active';
 					main.active_tree_id = id;
 				}
 
-				if (pointer === false) {
+				if (api_pointer === null) {
 					class_code += ' no-docs"';
 				} else {
 					class_code += '"'
 				}
 
 
-				code += '<a id="' + id + '" href="index.html?module=' + current_path + '" onclick="MAIN.trigger(\'open_doc\', [\'' + current_path + '\', event]); return false;"' + class_code + '>' + key + '</a>';
+
+				code += '<a id="' + id + '" href="index.html?module=' + current_class + '" onclick="MAIN.trigger(\'open_doc\', [\'' + current_path + '\', event]); return false;"' + class_code + '>' + key + '</a>';
 
 
-				if (pointer && pointer.hasOwnProperty('constructor') && pointer.hasOwnProperty('arguments')) {
-					main.active_blob = pointer || null;
+				if (src_pointer && src_pointer.hasOwnProperty('constructor') && src_pointer.hasOwnProperty('arguments')) {
+					main.active_blob = src_pointer || null;
 				}
 
-				main.count(!!pointer);
+				main.count(!!api_pointer);
 
-			} else if (typeof pointer === 'object') {
+			} else if (typeof src_pointer === 'object') {
 				code += '<span>' + key + '</span>';
 
-				pointer.__path = this.__path + '/' + key;
-				code += _render_tree.call(pointer, main);
+				var scope = {
+					source: src_pointer,
+					api: api_pointer,
+					__path: this.__path + '.' + key
+				};
+
+				code += _render_tree.call(scope, main);
 			}
 
 			code += '</li>';
@@ -296,7 +337,6 @@ lychee.define('tool.Main').requires([
 
 		return code;
 	};
-
 
 	var _render_markdown = function(markdown_code) {
 		marked.setOptions({
@@ -314,14 +354,13 @@ lychee.define('tool.Main').requires([
 
 		ui.render(_generate_actions.call(this) + docs_code, '#docs');
 
-		_CACHE[this.active_doc] = docs_code;
+		_CACHE[this.active_module] = docs_code;
 
 		setTimeout(function() {
 			if (typeof this.position === 'string') {
 				_scroll_to_id(this.position);
 			}
 		}.bind(this), 10);
-
 	};
 
 	var _render_score = function() {
@@ -345,17 +384,38 @@ lychee.define('tool.Main').requires([
 		}
 	};
 
-	var _set_tree_active = function(_module) {
-
-
+	var _set_tree_active = function() {
 		[].slice.call(document.querySelectorAll('#packages-tree a.active')).forEach(function(element) {
 			element.classList.remove('active');
 		});
 
-		this.active_tree_id = 'tree' + _module.split('/').join('-');
-		var tree_element = document.getElementById(this.active_tree_id);
-		tree_element.classList.add('active');
 
+		this.active_tree_id = 'tree-lychee-api' + this.active_path.split('/').join('-');
+		var tree_element = document.getElementById(this.active_tree_id) || null;
+		if (tree_element !== null) {
+			tree_element.classList.add('active');
+		}
+	};
+
+	var _module_to_path = function(input) {
+		var output = input.split('.');
+		if (output.length === 1) {
+			var name = output[0];
+			if (name.length > 0) {
+				// if there is no lychee... package path, we have a core Class
+				return '/core/' + name;
+			} else {
+				return null;
+			}
+		} else {
+			if (output[0] === 'lychee') {
+				output.shift();
+				return '/' + output.join('/');
+			} else {
+				return null;
+			}
+		}
+		return output;
 	}
 
 	/*
@@ -381,9 +441,9 @@ lychee.define('tool.Main').requires([
 
 		lychee.game.Main.call(this, settings);
 
-		this.active_blob           = null;
-		this.active_doc            = "/lychee/source/core/Asset";
-		this.active_module         = 'Asset';
+		this.active_doc           = null;
+		this.active_module         = "Asset";
+		this.active_path           = _module_to_path(this.active_module);
 		this.config                = null;
 		this.classes               = 0;
 		this.documented_classes    = 0;
@@ -415,41 +475,59 @@ lychee.define('tool.Main').requires([
 
 			_parse_url.call(this);
 
-			_initial_api.call(this, function(result) {
+			_load_api.call(this, function(result) {
 
-				if (result) {
+				var dummy = {
+					source: this.pkg.buffer.source.files,
+					api: this.pkg.buffer.api.files,
+					__path: ''
+				};
 
-					// initial value for recursion
-					this.config.buffer.__path = '';
+				var tree = _render_tree.call(dummy, this);
 
-					var code = _render_tree.call(this.config.buffer, this);
+				ui.render(tree, '#packages-tree');
 
-					ui.render(code, '#packages-tree');
+				_render_score.call(this);
 
-					_render_score.call(this);
+				_load_doc.call(this);
+
+				// if (result) {
+
+				// 	// initial value for recursion
 
 
-					if (this.active_blob !== null) {
-						var markdown_code = lychee.deserialize(this.active_blob).toString();
 
-						if (marked) {
-							_render_markdown.call(this, markdown_code);
-						} else {
-							// if the markdown parser `marked` hasn't loaded yet
-							setTimeout(_render_markdown.bind(this, markdown_code), 500);
-						}
+				// 	if (this.active_blob !== null) {
+				// 		var markdown_code = lychee.deserialize(this.active_blob).toString();
 
-					} else {
-						_CACHE[this.active_doc] = NO_DOCS;
-						ui.render(_generate_actions.call(this) + NO_DOCS, '#docs');
-					}
+				// 		if (marked) {
+				// 			_render_markdown.call(this, markdown_code);
+				// 		} else {
+				// 			// if the markdown parser `marked` hasn't loaded yet
+				// 			setTimeout(_render_markdown.bind(this, markdown_code), 500);
+				// 		}
 
-				}
+				// 	} else {
+				// 		_CACHE[this.active_module] = NO_DOCS;
+				// 		ui.render(_generate_actions.call(this) + NO_DOCS, '#docs');
+				// 	}
+
+				// }
 			}, this);
 
 		}, this, true);
 
-		this.bind('open_doc', _open_doc, this);
+		this.bind('open_doc', function(name, event) {
+
+			this.active_module         = name;
+			this.active_path           = _module_to_path(this.active_module);
+
+			_load_doc.call(this);
+
+			event.preventDefault();
+			event.stopPropagation();
+			return false;
+		}, this);
 
 	};
 
