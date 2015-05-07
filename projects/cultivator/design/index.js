@@ -9,7 +9,6 @@ ui = (function(global) {
 		'fnt':   { type: 'application/json',       constructor: 'Font'    },
 		'js':    { type: 'application/javascript', constructor: 'Buffer'  },
 		'json':  { type: 'application/json',       constructor: 'Config'  },
-		'md':    { type: 'text/x-markdown',        constructor: 'Buffer'  },
 		'png':   { type: 'image/png',              constructor: 'Texture' },
 		'pkg':   { type: 'application/json',       constructor: 'lychee.Package' },
 		'store': { type: 'application/json',       constructor: 'lychee.Storage' }

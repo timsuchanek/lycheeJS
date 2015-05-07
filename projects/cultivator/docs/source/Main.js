@@ -168,7 +168,7 @@ lychee.define('tool.Main').requires([
 
 		} else {
 
-			this.active_doc = new Stuff('/lychee/api' + this.active_path + '.md');
+			this.active_doc = new lychee.Asset('/lychee/api' + this.active_path + '.md', null);
 
 			var that = this;
 
