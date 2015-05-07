@@ -91,11 +91,13 @@ label.ico-only:before {
 .ico-create:before      { content: "\e095"; }
 .ico-debugger:before    { content: "\e052"; }
 .ico-download:before    { content: "\e083"; }
+.ico-edit:before        { content: "\e05f"; }
 .ico-editor:before      { content: "\e00c"; }
 .ico-error:before       { content: "\e082"; }
 .ico-exit:before        { content: "\e097"; }
 .ico-fail:before        { content: "\e082"; }
 .ico-folder:before      { content: "\e039"; }
+.ico-glasses:before     { content: "\e01d"; }
 .ico-help:before        { content: "\e08b"; }
 .ico-intro:before       { content: "\e020"; }
 .ico-message:before     { content: "\e086"; }

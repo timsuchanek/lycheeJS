@@ -18,6 +18,22 @@
 
 	<style>
 
+		a.button.view {
+			background: none;
+			color: #f2f2f2;
+			border: none;
+			margin-right: 32px;
+		}
+
+		a.button.view:hover,
+		a.button.view:focus,
+		a.button.view.active {
+			color: #31c0ff;
+			text-shadow: none;
+			-moz-animation: none;
+			-webkit-animation: none;
+			animation: none;
+		}
 
 		h1#version {
 			margin-top: 0;
@@ -129,7 +145,9 @@
 		}
 
 		article#packages-tree ul li a {
-			color: rgb(208, 73, 75);
+			color: #b3b3b3;
+			font-family: 'museo-sans-300';
+			font-size: 14px;
 			display: block;
 		}
 
@@ -140,8 +158,7 @@
 			-moz-animation: none;
 			-webkit-animation: none;
 			animation: none;
-			background: rgb(208, 73, 75);
-			color: white;
+			color: #31c0ff;
 		}
 
 		article#packages-tree ul li a.no-docs {
@@ -150,10 +167,18 @@
 
 		article#docs {
 			padding: 16px;
+			background: none;
+			color: #b3b3b3;
+		}
+
+		article#docs article {
+			background: none;
 		}
 
 		article#docs h1 {
-			margin-top: 0;
+			margin-top: 32px;
+			font-family: 'museo-sans-300';
+			font-size: 36px;
 		}
 
 		article#docs h2 {
@@ -162,17 +187,18 @@
 			font-size: 30px;
 		}
 
-		article#docs h3 {
-			font-family: monospace;
+		article#docs h3,
+		article#docs h4 {
+			font-size: 30px;
+			font-family: 'museo-sans-300';
 			text-transform: none;
 			font-weight: bold;
+			color: #f2f2f2;
 		}
 
 		article#docs h4 {
 			margin-left: 16px;
 			font-size: 20px;
-			font-weight: bold;
-			font-family: monospace;
 		}
 
 		article#docs p {
@@ -182,7 +208,11 @@
 		article#docs p,
 		article#docs li {
 			line-height: 1.5;
-			font-size: 16px;
+			font-size: 17px;
+			font-family: 'museo-sans-300';
+			color: rgb(179,179,179);
+			-webkit-font-smoothing: auto;
+			letter-spacing: 0.05em;
 		}
 
 		article#docs li {
@@ -191,24 +221,27 @@
 
 		article#docs pre {
 			padding: 16px;
+			font-family: monaco, Consolas, 'Lucida Console', monospace;
+			background: #2f3736;
 		}
 
 		article#docs code {
 			font-size: 14px;
-			background: #1f2726;
-			padding: 0.2em;
-			padding-right: 0.4em;
+			background: #2f3736;
+			padding: 0.2em 0.4em;
 			display: inline-block;
 			border-radius: 3px;
+			font-family: monaco, Consolas, 'Lucida Console', monospace;
+			-webkit-font-smoothing: antialiased;
 		}
 
-		article#docs code.lang-javascript-constructor,
+/*		article#docs code.lang-javascript-constructor,
 		article#docs code.lang-javascript-enum,
 		article#docs code.lang-javascript-event,
 		article#docs code.lang-javascript-method,
 		article#docs code.lang-javascript-property {
 			font-size: 18px;
-		}
+		}*/
 
 		article#docs article#constructor pre:nth-of-type(1) {
 			padding-left: 0;
@@ -222,17 +255,18 @@
 		}
 
 		article#docs code strong.highlight {
-			color: #32afe5;
-			text-shadow: #32afe5 0 0 10px;
-			-moz-animation: textpulse 3000ms infinite;
-			-webkit-animation: textpulse 3000ms infinite;
-			animation: textpulse 3000ms infinite;
+			color: #31c0ff;
+			font-weight: normal;
+			text-shadow: none;
+			-moz-animation: none;
+			-webkit-animation: none;
+			animation: none;
 		}
 
 
 		article#docs article#constructor pre:nth-of-type(1) strong.highlight {
-			color: rgb(208,73,75);
-			text-shadow: rgba(208,73,75,.5) 0 0 10px;
+			color: #31c0ff;
+			text-shadow: none;
 			-moz-animation: none;
 			-webkit-animation: none;
 			animation: none;
