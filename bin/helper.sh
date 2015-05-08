@@ -94,8 +94,9 @@ if [ "$protocol" == "lycheejs" ]; then
 
 				cd $LYCHEEJS_ROOT;
 
-				./bin/sorbet.sh stop;
-				./bin/sorbet.sh start "$resource";
+				./bin/sorbet.sh stop 2>&1;
+				./bin/sorbet.sh start "$resource" 2>&1;
+				exit 0;
 
 			;;
 
@@ -103,19 +104,22 @@ if [ "$protocol" == "lycheejs" ]; then
 
 				cd $LYCHEEJS_ROOT;
 
-				./bin/sorbet.sh stop;
+				./bin/sorbet.sh stop 2>&1;
+				exit 0;
 
 			;;
 
 			start)
 
 				_put_API_Projects "start" "$resource";
+				exit 0;
 
 			;;
 
 			stop)
 
 				_put_API_Projects "stop" "$resource";
+				exit 0;
 
 			;;
 
@@ -123,8 +127,10 @@ if [ "$protocol" == "lycheejs" ]; then
 
 				if [ "$OS" == "linux" -o "$OS" == "osx" ]; then
 					./bin/editor.sh "file://$LYCHEEJS_ROOT/projects/$resource/lychee.pkg" 2>&1;
+					exit 0;
 				elif [ "$OS" == "windows"]; then
 					./bin/editor.sh "file://c:$LYCHEEJS_ROOT/projects/$resource/lychee.pkg" 2>&1;
+					exit 0;
 				fi;
 
 			;;

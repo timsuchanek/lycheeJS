@@ -50,7 +50,7 @@ lychee.define('tool.state.Bootup').includes([
 					if (result === true) {
 						ui.changeState('status');
 					} else {
-						alert('Could not boot lycheeJS.\nFix might be to execute "sudo ./bin/configure.sh" manually.');
+						ui.changeState('status');
 					}
 
 				}, this);
