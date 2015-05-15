@@ -328,13 +328,15 @@
 			},
 			"ui": {
 				"Button": [
-					"js"
+					"js",
+					"fnt"
 				],
 				"Entity": [
 					"js"
 				],
 				"Input": [
-					"js"
+					"js",
+					"fnt"
 				],
 				"Joystick": [
 					"js"

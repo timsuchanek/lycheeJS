@@ -1,24 +1,26 @@
 
 lychee.define('lychee.ui.Input').includes([
 	'lychee.ui.Entity'
-]).exports(function(lychee, global) {
+]).exports(function(lychee, global, attachments) {
+
+	var _font = attachments["fnt"];
+
 
 	var Class = function(data) {
 
 		var settings = lychee.extend({}, data);
 
 
-		this.font  = null;
+		this.font  = _font;
 		this.max   = Infinity;
 		this.min   = 0;
 		this.type  = Class.TYPE.text;
 		this.value = null;
 
 		this.__buffer  = null;
-		this.__drag    = null;
 		this.__pulse   = {
 			active:   false,
-			duration: 250,
+			duration: 300,
 			start:    null,
 			alpha:    0.0
 		};
@@ -41,7 +43,7 @@ lychee.define('lychee.ui.Input').includes([
 
 		settings.shape  = lychee.ui.Entity.SHAPE.rectangle;
 		settings.width  = typeof settings.width === 'number'  ? settings.width  : 128;
-		settings.height = typeof settings.height === 'number' ? settings.height : 64;
+		settings.height = typeof settings.height === 'number' ? settings.height :  32;
 
 
 		lychee.ui.Entity.call(this, settings);
@@ -113,6 +115,8 @@ lychee.define('lychee.ui.Input').includes([
 
 		this.bind('key', function(key, name, delta) {
 
+			var type = this.type;
+
 			if (key === 'backspace') {
 
 				var raw = this.__value.substr(0, this.__value.length - 1);
@@ -149,11 +153,9 @@ lychee.define('lychee.ui.Input').includes([
 			}
 
 
-
 			if (key.length === 1) {
 
-				var type = this.type;
-				if (type === Class.TYPE.text && key.match(/([A-Za-z0-9\s-_]+)/)) {
+				if (type === Class.TYPE.text && key.match(/([A-Za-z0-9\s+=-_#@$%*:.\(\)?!]+)/)) {
 
 					this.__value = this.__value + key;
 
@@ -237,7 +239,7 @@ lychee.define('lychee.ui.Input').includes([
 
 				var t = (clock - pulse.start) / pulse.duration;
 				if (t <= 1) {
-					pulse.alpha = (1 - t) * 0.6;
+					pulse.alpha = (1 - t) * 1.0;
 				} else {
 					pulse.alpha  = 0.0;
 					pulse.active = false;
@@ -255,16 +257,27 @@ lychee.define('lychee.ui.Input').includes([
 			if (this.visible === false) return;
 
 
+			var position = this.position;
+			var x        = position.x + offsetX;
+			var y        = position.y + offsetY;
+			var hwidth   = (this.width  - 2) / 2;
+			var hheight  = (this.height - 2) / 2;
+
+
+			renderer.drawBox(
+				x - hwidth,
+				y - hheight,
+				x + hwidth,
+				y + hheight,
+				this.state === 'active' ? '#32afe5' : '#545857',
+				false,
+				2
+			);
+
+
 			var buffer = this.__buffer;
 			if (buffer === null) {
-
-				buffer = renderer.createBuffer(
-					this.width - 24,
-					this.height
-				);
-
-				this.__buffer = buffer;
-
+				this.__buffer = buffer = renderer.createBuffer(this.width - 16, this.height);
 			}
 
 
@@ -275,94 +288,60 @@ lychee.define('lychee.ui.Input').includes([
 
 
 				var font = this.font;
-				if (font !== null) {
+				var text = this.__value;
+				var dim  = font.measure(text);
 
-					var text = this.__value;
-					var dim  = font.measure(text);
+				if (dim.width > buffer.width) {
 
-					if (dim.width > buffer.width) {
+					renderer.drawText(
+						buffer.width - dim.width,
+						dim.height / 2,
+						text,
+						font,
+						false
+					);
 
-						renderer.drawText(
-							buffer.width - dim.width,
-							dim.height / 2,
-							text,
-							font,
-							false
-						);
+				} else {
 
-					} else {
-
-						renderer.drawText(
-							0,
-							dim.height / 2,
-							text,
-							font,
-							false
-						);
-
-					}
+					renderer.drawText(
+						0,
+						dim.height / 2,
+						text,
+						font,
+						false
+					);
 
 				}
 
 
 				renderer.setBuffer(null);
-
-
 				this.__isDirty = false;
 
 			}
 
 
-			var position = this.position;
+			var pulse = this.__pulse;
+			if (pulse.active === true) {
 
-			var x = position.x + offsetX;
-			var y = position.y + offsetY;
+				renderer.setAlpha(pulse.alpha);
 
-			var color  = this.state === 'active' ? '#33b5e5' : '#0099cc';
-			var color2 = this.state === 'active' ? '#0099cc' : '#575757';
+				renderer.drawBox(
+					x - hwidth,
+					y - hheight,
+					x + hwidth,
+					y + hheight,
+					'#32afe5',
+					true
+				);
 
+				renderer.setAlpha(1.0);
 
-			var hwidth  = this.width / 2;
-			var hheight = this.height / 2;
-
-			var x1 = x - hwidth;
-			var y1 = y - hheight;
-			var x2 = x + hwidth;
-			var y2 = y + hheight;
-
-
-			renderer.drawLine(
-				x1,
-				y2 - 7,
-				x1,
-				y2,
-				color,
-				2
-			);
-
-			renderer.drawLine(
-				x1,
-				y2,
-				x2,
-				y2,
-				color,
-				2
-			);
-
-			renderer.drawLine(
-				x2,
-				y2 - 7,
-				x2,
-				y2,
-				color,
-				2
-			);
-
+			}
 
 
 			renderer.drawBuffer(
-				x1 + 14,
-				y1,
+				x - hwidth + 8,
+				y - hheight,
 				this.__buffer
 			);
 
@@ -418,6 +397,32 @@ lychee.define('lychee.ui.Input').includes([
 			if (min !== null) {
 
 				this.min = min;
+
+				return true;
+
+			}
+
+
+			return false;
+
+		},
+
+		setState: function(id) {
+
+			var result = lychee.ui.Entity.prototype.setState.call(this, id);
+			if (result === true) {
+
+				var pulse = this.__pulse;
+
+
+				if (id === 'active') {
+
+					pulse.alpha  = 1.0;
+					pulse.start  = null;
+					pulse.active = true;
+
+				}
+
 
 				return true;
 
