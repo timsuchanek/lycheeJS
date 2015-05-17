@@ -546,59 +546,11 @@ ul.tabs li.active {
 	background: #32afe5;
 }
 
+
+
 /*
  * UI
  */
-
-@-moz-keyframes textpulse {
-	0%   { text-shadow: #32afe5 0 0 10px;     }
-	50%  { text-shadow: transparent 0 0 10px; }
-	100% { text-shadow: #32afe5 0 0 10px;     }
-}
-
-@-ms-keyframes textpulse {
-	0%   { text-shadow: #32afe5 0 0 10px;     }
-	50%  { text-shadow: transparent 0 0 10px; }
-	100% { text-shadow: #32afe5 0 0 10px;     }
-}
-
-@-webkit-keyframes textpulse {
-	0%   { text-shadow: #32afe5 0 0 10px;     }
-	50%  { text-shadow: transparent 0 0 10px; }
-	100% { text-shadow: #32afe5 0 0 10px;     }
-}
-
-@keyframes textpulse {
-	0%   { text-shadow: #32afe5 0 0 10px;     }
-	50%  { text-shadow: transparent 0 0 10px; }
-	100% { text-shadow: #32afe5 0 0 10px;     }
-}
-
-@-moz-keyframes pulse {
-	0%   { box-shadow: transparent 0 0 20px; }
-	50%  { box-shadow: #32afe5 0 0 20px;     }
-	100% { box-shadow: transparent 0 0 20px; }
-}
-
-@-ms-keyframes pulse {
-	0%   { box-shadow: transparent 0 0 20px; }
-	50%  { box-shadow: #32afe5 0 0 20px;     }
-	100% { box-shadow: transparent 0 0 20px; }
-}
-
-@-webkit-keyframes pulse {
-	0%   { box-shadow: transparent 0 0 20px; }
-	50%  { box-shadow: #32afe5 0 0 20px;     }
-	100% { box-shadow: transparent 0 0 20px; }
-}
-
-@keyframes pulse {
-	0%   { box-shadow: transparent 0 0 20px; }
-	50%  { box-shadow: #32afe5 0 0 20px;     }
-	100% { box-shadow: transparent 0 0 20px; }
-}
-
-
 
 a {
 	color: #32afe5;
@@ -1034,6 +986,7 @@ input[type="range"]::-webkit-slider-thumb {
 input[type="range"]:active::-moz-range-thumb {
 	background: #32afe5;
 	border: 2px solid #32afe5;
+	-moz-transition: all 0ms;
 }
 input[type="range"]:focus::-moz-range-thumb {
 	border: 2px solid #32afe5;
@@ -1042,6 +995,7 @@ input[type="range"]:focus::-moz-range-thumb {
 input[type="range"]:active::-ms-thumb {
 	background: #32afe5;
 	border: 2px solid #32afe5;
+	-ms-transition: all 0ms;
 }
 
 input[type="range"]:focus::-ms-thumb {
@@ -1051,6 +1005,7 @@ input[type="range"]:focus::-ms-thumb {
 input[type="range"]:active::-webkit-slider-thumb {
 	background: #32afe5;
 	border: 2px solid #32afe5;
+	-webkit-transition: all 0ms;
 }
 
 input[type="range"]:focus::-webkit-slider-thumb {
