@@ -181,14 +181,6 @@ lychee.define('lychee.ui.Slider').includes([
 
 		}, this);
 
-		this.bind('focus', function() {
-			this.setState('active');
-		}, this);
-
-		this.bind('blur', function() {
-			this.setState('default');
-		}, this);
-
 		this.bind('key', function(key, name, delta) {
 
 			var val  = this.value;
@@ -212,6 +204,14 @@ lychee.define('lychee.ui.Slider').includes([
 				this.trigger('change', [ val ]);
 			}
 
+		}, this);
+
+		this.bind('focus', function() {
+			this.setState('active');
+		}, this);
+
+		this.bind('blur', function() {
+			this.setState('default');
 		}, this);
 
 

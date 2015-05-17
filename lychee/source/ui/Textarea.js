@@ -61,21 +61,6 @@ lychee.define('lychee.ui.Textarea').includes([
 
 		this.bind('touch', function() {}, this);
 
-		this.bind('focus', function() {
-			this.setState('active');
-		}, this);
-
-		this.bind('blur', function() {
-
-			if (this.value !== this.__value) {
-				this.trigger('change', [ this.value ]);
-				this.__value = this.value;
-			}
-
-			this.setState('default');
-
-		}, this);
-
 		this.bind('key', function(key, name, delta) {
 
 			var line      = this.__lines[this.__lines.length - 1];
@@ -122,6 +107,21 @@ lychee.define('lychee.ui.Textarea').includes([
 				this.value = this.__lines.join('\n');
 
 			}
+
+		}, this);
+
+		this.bind('focus', function() {
+			this.setState('active');
+		}, this);
+
+		this.bind('blur', function() {
+
+			if (this.value !== this.__value) {
+				this.trigger('change', [ this.value ]);
+				this.__value = this.value;
+			}
+
+			this.setState('default');
 
 		}, this);
 

@@ -85,6 +85,21 @@ lychee.define('lychee.ui.Select').includes([
 
 		}, this);
 
+		this.bind('key', function(key, name, delta) {
+
+			var val = null;
+			var q   = this.options.indexOf(this.value);
+
+			if (key === 'arrow-up')   val = this.options[q - 1] || null;
+			if (key === 'arrow-down') val = this.options[q + 1] || null;
+
+
+			var result = this.setValue(val);
+			if (result === true) {
+				this.trigger('change', [ val ]);
+			}
+
+		}, this);
 
 		this.bind('focus', function() {
 			this.setState('active');

@@ -68,63 +68,6 @@ lychee.define('lychee.ui.Input').includes([
 
 		this.bind('touch', function() {}, this);
 
-		this.bind('focus', function() {
-			this.setState('active');
-		}, this);
-
-		this.bind('blur', function() {
-
-			var oldvalue = this.value;
-			var newvalue = null;
-
-
-			var type = this.type;
-			if (type === Class.TYPE.text) {
-
-				newvalue = this.__value;
-
-				if (newvalue !== oldvalue) {
-
-					if (this.setValue(newvalue) === false) {
-						this.setValue(newvalue.substr(0, this.max));
-					}
-
-				}
-
-			} else if (type === Class.TYPE.number) {
-
-				newvalue = parseInt(this.__value, 10);
-
-				if (newvalue !== oldvalue && !isNaN(newvalue)) {
-
-					if (this.setValue(newvalue) === false) {
-
-						if (newvalue > this.max) {
-							this.value     = this.max;
-							this.__value   = this.max + '';
-							this.__isDirty = true;
-						} else if (newvalue < this.min) {
-							this.value     = this.min;
- 							this.__value   = this.min + '';
-							this.__isDirty = true;
-						}
-
-					}
-
-				}
-
-			}
-
-
-			if (oldvalue !== this.value) {
-				this.trigger('change', [ this.value ]);
-			}
-
-
-			this.setState('default');
-
-		}, this);
-
 		this.bind('key', function(key, name, delta) {
 
 			var type = this.type;
@@ -185,6 +128,63 @@ lychee.define('lychee.ui.Input').includes([
 				this.__isDirty = true;
 
 			}
+
+		}, this);
+
+		this.bind('focus', function() {
+			this.setState('active');
+		}, this);
+
+		this.bind('blur', function() {
+
+			var oldvalue = this.value;
+			var newvalue = null;
+
+
+			var type = this.type;
+			if (type === Class.TYPE.text) {
+
+				newvalue = this.__value;
+
+				if (newvalue !== oldvalue) {
+
+					if (this.setValue(newvalue) === false) {
+						this.setValue(newvalue.substr(0, this.max));
+					}
+
+				}
+
+			} else if (type === Class.TYPE.number) {
+
+				newvalue = parseInt(this.__value, 10);
+
+				if (newvalue !== oldvalue && !isNaN(newvalue)) {
+
+					if (this.setValue(newvalue) === false) {
+
+						if (newvalue > this.max) {
+							this.value     = this.max;
+							this.__value   = this.max + '';
+							this.__isDirty = true;
+						} else if (newvalue < this.min) {
+							this.value     = this.min;
+ 							this.__value   = this.min + '';
+							this.__isDirty = true;
+						}
+
+					}
+
+				}
+
+			}
+
+
+			if (oldvalue !== this.value) {
+				this.trigger('change', [ this.value ]);
+			}
+
+
+			this.setState('default');
 
 		}, this);
 
