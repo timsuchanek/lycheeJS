@@ -74,7 +74,7 @@ lychee.define('lychee.ui.Select').includes([
 			if (q >= 0) {
 
 				var val    = this.options[q] || null;
-				var result = this.setValue(value);
+				var result = this.setValue(val);
 				if (result === true) {
 					this.trigger('change', [ val ]);
 				}
