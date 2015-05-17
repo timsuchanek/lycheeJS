@@ -385,7 +385,9 @@ lychee.define('lychee.ui.Textarea').includes([
 
 				if (id === 'active') {
 
+					cursor.start  = null;
 					cursor.active = true;
+
 					pulse.alpha   = 1.0;
 					pulse.start   = null;
 					pulse.active  = true;

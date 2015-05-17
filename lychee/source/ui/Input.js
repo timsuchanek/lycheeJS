@@ -251,7 +251,7 @@ lychee.define('lychee.ui.Input').includes([
 
 				var t = (clock - pulse.start) / pulse.duration;
 				if (t <= 1) {
-					pulse.alpha = (1 - t) * 1.0;
+					pulse.alpha = (1 - t);
 				} else {
 					pulse.alpha  = 0.0;
 					pulse.active = false;
@@ -485,7 +485,9 @@ lychee.define('lychee.ui.Input').includes([
 
 				if (id === 'active') {
 
+					cursor.start  = null;
 					cursor.active = true;
+
 					pulse.alpha   = 1.0;
 					pulse.start   = null;
 					pulse.active  = true;

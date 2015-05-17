@@ -352,7 +352,8 @@
 					"fnt"
 				],
 				"Slider": [
-					"js"
+					"js",
+					"fnt"
 				],
 				"Sprite": [
 					"js"
