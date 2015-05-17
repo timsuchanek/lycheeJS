@@ -359,7 +359,8 @@
 					"js"
 				],
 				"Switch": [
-					"js"
+					"js",
+					"fnt"
 				],
 				"Textarea": [
 					"js",

@@ -15,6 +15,13 @@ lychee.define('lychee.ui.Select').includes([
 		this.options = [];
 		this.value   = '';
 
+		this.__cursor = {
+			active:   false,
+			alpha:    0.0,
+			duration: 600,
+			start:    null,
+			pingpong: false
+		};
 		this.__pulse = {
 			active:   false,
 			duration: 300,
@@ -164,11 +171,30 @@ lychee.define('lychee.ui.Select').includes([
 
 				var t = (clock - pulse.start) / pulse.duration;
 				if (t <= 1) {
-					pulse.alpha = (1 - t) * 1.0;
+					pulse.alpha = (1 - t);
 				} else {
 					pulse.alpha    = 0.0;
 					pulse.active   = false;
 					pulse.previous = null;
+				}
+
+			}
+
+
+			var cursor = this.__cursor;
+			if (cursor.active === true) {
+
+				if (cursor.start === null) {
+					cursor.start = clock;
+				}
+
+
+				var t = (clock - cursor.start) / cursor.duration;
+				if (t <= 1) {
+					cursor.alpha = cursor.pingpong === true ? (1 - t) : t;
+				} else {
+					cursor.start    = clock;
+					cursor.pingpong = !cursor.pingpong;
 				}
 
 			}
@@ -184,6 +210,7 @@ lychee.define('lychee.ui.Select').includes([
 
 
 			var position = this.position;
+			var cursor   = this.__cursor;
 			var pulse    = this.__pulse;
 			var font     = this.font;
 			var value    = this.value;
@@ -278,6 +305,23 @@ lychee.define('lychee.ui.Select').includes([
 							2
 						);
 
+
+						if (cursor.active === true) {
+
+							renderer.setAlpha(cursor.alpha);
+
+							renderer.drawCircle(
+								x1 + 16,
+								y1 + 16,
+								12,
+								'#32afe5',
+								true
+							);
+
+							renderer.setAlpha(1.0);
+
+						}
+
 					} else {
 
 						renderer.drawCircle(
@@ -340,6 +384,40 @@ lychee.define('lychee.ui.Select').includes([
 				this.options = options.map(function(option) {
 					return '' + option;
 				});
+
+				return true;
+
+			}
+
+
+			return false;
+
+		},
+
+		setState: function(id) {
+
+			var result = lychee.ui.Entity.prototype.setState.call(this, id);
+			if (result === true) {
+
+				var cursor = this.__cursor;
+				var pulse  = this.__pulse;
+
+
+				if (id === 'active') {
+
+					cursor.start  = null;
+					cursor.active = true;
+
+					pulse.alpha   = 1.0;
+					pulse.start   = null;
+					pulse.active  = true;
+
+				} else {
+
+					cursor.active = false;
+
+				}
+
 
 				return true;
 
