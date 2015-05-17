@@ -706,11 +706,13 @@ button:not(.ico-only) {
 
 
 a.button:active,
-button:active,
-a.button:hover,
-button:hover {
+button:active {
 	background: #32afe5;
 	border: 2px solid #32afe5;
+	-moz-transition: all 0ms;
+	-ms-transition: all 0ms;
+	-webkit-transition: all 0ms;
+	transition: all 0ms;
 }
 
 a.button:not([href]),
@@ -812,6 +814,10 @@ label.file:not(.ico-only) {
 label.file:active {
 	background: #32afe5;
 	border: 2px solid #32afe5;
+	-moz-transition: all 0ms;
+	-ms-transition: all 0ms;
+	-webkit-transition: all 0ms;
+	transition: all 0ms;
 }
 
 label.file input[type="file"] {
@@ -849,6 +855,10 @@ input[type="number"] {
 input[type="number"]:active {
 	background: #32afe5;
 	border: 2px solid #32afe5;
+	-moz-transition: all 0ms;
+	-ms-transition: all 0ms;
+	-webkit-transition: all 0ms;
+	transition: all 0ms;
 }
 
 input[type="number"]:focus {
@@ -887,6 +897,10 @@ input[type="radio"]:checked {
 input[type="radio"]:active {
 	background: #32afe5;
 	border: 2px solid #32afe5;
+	-moz-transition: all 0ms;
+	-ms-transition: all 0ms;
+	-webkit-transition: all 0ms;
+	transition: all 0ms;
 }
 
 
@@ -1068,6 +1082,10 @@ input[type="text"] {
 input[type="text"]:active {
 	background: #32afe5;
 	border: 2px solid #32afe5;
+	-moz-transition: all 0ms;
+	-ms-transition: all 0ms;
+	-webkit-transition: all 0ms;
+	transition: all 0ms;
 }
 
 input[type="text"]:focus {
