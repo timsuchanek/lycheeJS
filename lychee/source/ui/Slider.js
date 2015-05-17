@@ -116,7 +116,6 @@ lychee.define('lychee.ui.Slider').includes([
 		this.bind('touch', function(id, position, delta) {
 
 			var val  = null;
-			var map  = this.__cursor.map;
 			var type = this.type;
 
 			if (type === Class.TYPE.horizontal) {
@@ -124,18 +123,14 @@ lychee.define('lychee.ui.Slider').includes([
 				var qx = Math.max(-0.5, Math.min(0.5, position.x / (this.width - 44))) + 0.5;
 				var vx = (this.min + qx * (this.max - this.min)) | 0;
 
-				val   = ((vx / this.step) | 0) * this.step;
-				map.x = qx * (this.width - 44);
-				map.y = 0;
+				val = ((vx / this.step) | 0) * this.step;
 
 			} else if (type === Class.TYPE.vertical) {
 
 				var qy = Math.max(-0.5, Math.min(0.5, position.y / (this.height - 44))) + 0.5;
 				var vy = (this.min + qy * (this.max - this.min)) | 0;
 
-				val   = ((vy / this.step) | 0) * this.step;
-				map.x = 0;
-				map.y = qy * (this.height - 44);
+				val = ((vy / this.step) | 0) * this.step;
 
 			}
 
@@ -150,7 +145,6 @@ lychee.define('lychee.ui.Slider').includes([
 		this.bind('swipe', function(id, state, position, delta, swipe) {
 
 			var val  = null;
-			var map  = this.__cursor.map;
 			var type = this.type;
 
 			if (type === Class.TYPE.horizontal) {
@@ -158,18 +152,14 @@ lychee.define('lychee.ui.Slider').includes([
 				var qx = Math.max(-0.5, Math.min(0.5, position.x / (this.width - 44))) + 0.5;
 				var vx = (this.min + qx * (this.max - this.min)) | 0;
 
-				val   = ((vx / this.step) | 0) * this.step;
-				map.x = qx * (this.width - 44);
-				map.y = 0;
+				val = ((vx / this.step) | 0) * this.step;
 
 			} else if (type === Class.TYPE.vertical) {
 
 				var qy = Math.max(-0.5, Math.min(0.5, position.y / (this.height - 44))) + 0.5;
 				var vy = (this.min + qy * (this.max - this.min)) | 0;
 
-				val   = ((vy / this.step) | 0) * this.step;
-				map.x = 0;
-				map.y = qy * (this.height - 44);
+				val = ((vy / this.step) | 0) * this.step;
 
 			}
 

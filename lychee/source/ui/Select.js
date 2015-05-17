@@ -67,25 +67,16 @@ lychee.define('lychee.ui.Select').includes([
 			if (this.options.length === 0) return;
 
 
-			var index = -1;
-			var lh    = this.height / this.options.length;
-			var pos   = (position.y + this.height / 2);
+			var lh  = this.height / this.options.length;
+			var pos = (position.y + this.height / 2);
 
-			if (pos > 0) {
-				index = (pos / lh) | 0;
-			}
+			var q = (pos / lh) | 0;
+			if (q >= 0) {
 
-
-			if (index >= 0) {
-
-				var value = this.options[index] || null;
-				if (value !== null && value !== this.value) {
-
-					var result = this.setValue(value);
-					if (result === true) {
-						this.trigger('change', [ this.value ]);
-					}
-
+				var val    = this.options[q] || null;
+				var result = this.setValue(value);
+				if (result === true) {
+					this.trigger('change', [ val ]);
 				}
 
 			}
@@ -93,6 +84,9 @@ lychee.define('lychee.ui.Select').includes([
 		}, this);
 
 		this.bind('key', function(key, name, delta) {
+
+			if (this.options.length === 0) return;
+
 
 			var val = null;
 			var q   = this.options.indexOf(this.value);
