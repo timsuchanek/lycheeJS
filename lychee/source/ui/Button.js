@@ -226,7 +226,6 @@ lychee.define('lychee.ui.Button').includes([
 
 				var pulse = this.__pulse;
 
-
 				if (id === 'active') {
 
 					pulse.alpha  = 1.0;

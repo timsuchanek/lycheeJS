@@ -18,6 +18,18 @@ lychee.define('lychee.ui.Input').includes([
 		this.value = null;
 
 		this.__buffer  = null;
+		this.__cursor  = {
+			active:   false,
+			alpha:    0.0,
+			duration: 600,
+			start:    null,
+			pingpong: false,
+			map: {
+				x: 0,
+				w: 10,
+				h: 16
+			}
+		};
 		this.__pulse   = {
 			active:   false,
 			duration: 300,
@@ -248,6 +260,25 @@ lychee.define('lychee.ui.Input').includes([
 			}
 
 
+			var cursor = this.__cursor;
+			if (cursor.active === true) {
+
+				if (cursor.start === null) {
+					cursor.start = clock;
+				}
+
+
+				var t = (clock - cursor.start) / cursor.duration;
+				if (t <= 1) {
+					cursor.alpha = cursor.pingpong === true ? (1 - t) : t;
+				} else {
+					cursor.start    = clock;
+					cursor.pingpong = !cursor.pingpong;
+				}
+
+			}
+
+
 			lychee.ui.Entity.prototype.update.call(this, clock, delta);
 
 		},
@@ -287,15 +318,17 @@ lychee.define('lychee.ui.Input').includes([
 				renderer.setBuffer(buffer);
 
 
-				var font = this.font;
-				var text = this.__value;
-				var dim  = font.measure(text);
+				var font  = this.font;
+				var lh    = font.lineheight;
+				var text  = this.__value;
+				var cur   = this.__cursor.map;
+				var dim_x = font.measure(text).width;
 
-				if (dim.width > buffer.width) {
+				if (dim_x > buffer.width) {
 
 					renderer.drawText(
-						buffer.width - dim.width,
-						dim.height / 2,
+						buffer.width - dim_x,
+						lh / 2,
 						text,
 						font,
 						false
@@ -305,7 +338,7 @@ lychee.define('lychee.ui.Input').includes([
 
 					renderer.drawText(
 						0,
-						dim.height / 2,
+						lh / 2,
 						text,
 						font,
 						false
@@ -314,8 +347,35 @@ lychee.define('lychee.ui.Input').includes([
 				}
 
 
+				cur.x = dim_x > buffer.width ? buffer.width : dim_x;
+
+
 				renderer.setBuffer(null);
 				this.__isDirty = false;
+
+			}
+
+
+			var cursor = this.__cursor;
+			if (cursor.active === true) {
+
+				var map = cursor.map;
+				var cx1 = x - hwidth  + map.x + 8;
+				var cy1 = y - hheight + 8;
+
+
+				renderer.setAlpha(cursor.alpha);
+
+				renderer.drawBox(
+					cx1,
+					cy1,
+					cx1 + map.w,
+					cy1 + map.h,
+					'#32afe5',
+					true
+				);
+
+				renderer.setAlpha(1.0);
 
 			}
 
@@ -361,6 +421,13 @@ lychee.define('lychee.ui.Input').includes([
 			if (font !== null) {
 
 				this.font = font;
+
+
+				var map = this.__cursor.map;
+
+				map.w = font.measure('_').realwidth;
+				map.h = font.measure('_').realheight;
+
 
 				return true;
 
@@ -412,14 +479,20 @@ lychee.define('lychee.ui.Input').includes([
 			var result = lychee.ui.Entity.prototype.setState.call(this, id);
 			if (result === true) {
 
-				var pulse = this.__pulse;
+				var cursor = this.__cursor;
+				var pulse  = this.__pulse;
 
 
 				if (id === 'active') {
 
-					pulse.alpha  = 1.0;
-					pulse.start  = null;
-					pulse.active = true;
+					cursor.active = true;
+					pulse.alpha   = 1.0;
+					pulse.start   = null;
+					pulse.active  = true;
+
+				} else {
+
+					cursor.active = false;
 
 				}
 
