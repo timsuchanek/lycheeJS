@@ -190,11 +190,32 @@ lychee.define('lychee.ui.Slider').includes([
 		}, this);
 
 		this.bind('key', function(key, name, delta) {
-// TODO: Arrow key integration
+
+			var val  = this.value;
+			var type = this.type;
+
+			if (type === Class.TYPE.horizontal) {
+
+				if (key === 'arrow-left')  val -= this.step;
+				if (key === 'arrow-right') val += this.step;
+
+			} else if (type === Class.TYPE.vertical) {
+
+				if (key === 'arrow-up')    val -= this.step;
+				if (key === 'arrow-down')  val += this.step;
+
+			}
+
+
+			var result = this.setValue(val);
+			if (result === true) {
+				this.trigger('change', [ val ]);
+			}
+
 		}, this);
 
 
-		// This fixes the width/height dependency problem for the drag
+		// This fixes the width/height dependency problem for cursor
 		this.setValue(this.value);
 
 
@@ -586,10 +607,14 @@ lychee.define('lychee.ui.Slider').includes([
 
 			if (value !== null) {
 
-				this.value = value;
-				_refresh.call(this);
+				if (value >= this.min && value <= this.max) {
 
-				return true;
+					this.value = value;
+					_refresh.call(this);
+
+					return true;
+
+				}
 
 			}
 
