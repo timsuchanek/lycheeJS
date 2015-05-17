@@ -1,13 +1,14 @@
 
 lychee.define('sorbet.serve.api.Project').requires([
-	'lychee.data.JSON'
+	'lychee.data.JSON',
+	'sorbet.mod.Server'
 ]).exports(function(lychee, sorbet, global, attachments) {
 
-	// var _JSON = lychee.data.JSON;
-	var _JSON = {
+	var _JSON   = {
 		encode: JSON.stringify,
 		decode: JSON.parse
 	};
+	var _Server = sorbet.mod.Server;
 
 
 
@@ -238,7 +239,7 @@ lychee.define('sorbet.serve.api.Project').requires([
 						var server = project.server;
 						if (server === null && action === 'start') {
 
-							sorbet.mod.Server.process(project);
+							_Server.process(project);
 
 							ready({
 								status:  200,

@@ -192,7 +192,16 @@ lychee.define('lychee.ui.Select').includes([
 
 					if (option === value) {
 
-						renderer.setAlpha(1.0 - pulse.alpha);
+						renderer.drawCircle(
+							x1 + 16,
+							y1 + 16,
+							11,
+							'#32afe5',
+							false,
+							2
+						);
+
+						renderer.setAlpha(pulse.alpha);
 
 						renderer.drawCircle(
 							x1 + 16,
@@ -220,9 +229,10 @@ lychee.define('lychee.ui.Select').includes([
 						renderer.drawCircle(
 							x1 + 16,
 							y1 + 16,
-							12,
+							11,
 							'#32afe5',
-							true
+							false,
+							2
 						);
 
 						renderer.setAlpha(1.0);
@@ -247,9 +257,10 @@ lychee.define('lychee.ui.Select').includes([
 						renderer.drawCircle(
 							x1 + 16,
 							y1 + 16,
-							12,
+							11,
 							'#32afe5',
-							true
+							false,
+							2
 						);
 
 					} else {

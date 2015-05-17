@@ -36,6 +36,22 @@
 
 
 
+::moz-placeholder {
+	color: #545857;
+}
+
+::ms-input-placeholder {
+	color: #545857;
+}
+
+::webkit-input-placeholder {
+	color: #545857;
+}
+
+::placeholder {
+	color: #545857;
+}
+
 ::-moz-selection {
 	color: #efefef;
 	background: #32afe5;
@@ -591,12 +607,9 @@ a {
 	cursor: pointer;
 }
 
-a:hover,
+a:not(.button):hover,
 a:focus {
 	text-shadow: #32afe5 0 0 10px;
-	-moz-animation: textpulse 3000ms infinite;
-	-webkit-animation: textpulse 3000ms infinite;
-	animation: textpulse 3000ms infinite;
 }
 
 abbr {
@@ -674,43 +687,37 @@ button {
 	vertical-align: middle;
 	outline: none;
 	cursor: pointer;
-	-moz-transition: all 250ms ease-out;
-	-ms-transition: all 250ms ease-out;
-	-webkit-transition: all 250ms ease-out;
-	transition: all 250ms ease-out;
+	-moz-transition: all 300ms ease-out;
+	-ms-transition: all 300ms ease-out;
+	-webkit-transition: all 300ms ease-out;
+	transition: all 300ms ease-out;
 	-moz-appearance: none;
 	-ms-appearance: none;
 	-webkit-appearance: none;
 	appearance: none;
 }
 
+
+
 a.button:not(.ico-only),
 button:not(.ico-only) {
 	min-width: 112px;
 }
 
+
+a.button:active,
+button:active,
 a.button:hover,
-a.button:focus,
-button:hover,
-button:focus {
-	border: 2px solid #32afe5;
+button:hover {
 	background: #32afe5;
-	text-shadow: #eeeeee 0 0 10px;
-	-moz-animation: pulse 3000ms infinite;
-	-webkit-animation: pulse 3000ms infinite;
-	animation: pulse 3000ms infinite;
+	border: 2px solid #32afe5;
 }
 
 a.button:not([href]),
-a.button:not([href]):hover,
-a.button:not([href]):focus,
-button[disabled],
-button[disabled]:hover,
-button[disabled]:focus {
+button[disabled] {
 	color: #545857;
 	background: #2f3736;
 	border: 2px solid #545857;
-	text-shadow: none;
 	box-shadow: none;
 	cursor: not-allowed;
 	-moz-animation: none;
@@ -745,6 +752,10 @@ input[type="color"] {
 	background: transparent;
 	outline: none;
 	cursor: pointer;
+	-moz-transition: all 300ms ease-out;
+	-ms-transition: all 300ms ease-out;
+	-webkit-transition: all 300ms ease-out;
+	transition: all 300ms ease-out;
 	-moz-appearance: none;
 	-ms-appearance: none;
 	-webkit-appearance: none;
@@ -754,9 +765,6 @@ input[type="color"] {
 input[type="color"]:hover,
 input[type="color"]:focus {
 	border: 2px solid #32afe5;
-	-moz-animation: pulse 3000ms infinite;
-	-webkit-animation: pulse 3000ms infinite;
-	animation: pulse 3000ms infinite;
 }
 
 input[type="color"]::-webkit-color-swatch-wrapper {
@@ -801,14 +809,9 @@ label.file:not(.ico-only) {
 	min-width: 110px;
 }
 
-label.file:hover,
-label.file:focus {
+label.file:active {
 	background: #32afe5;
 	border: 2px solid #32afe5;
-	text-shadow: #eeeeee 0 0 10px;
-	-moz-animation: pulse 3000ms infinite;
-	-webkit-animation: pulse 3000ms infinite;
-	animation: pulse 3000ms infinite;
 }
 
 label.file input[type="file"] {
@@ -833,37 +836,23 @@ input[type="number"] {
 	outline: none;
 	cursor: text;
 	text-align: left;
-	-moz-transition: all 250ms ease-out;
-	-ms-transition: all 250ms ease-out;
-	-webkit-transition: all 250ms ease-out;
-	transition: all 250ms ease-out;
+	-moz-transition: all 300ms ease-out;
+	-ms-transition: all 300ms ease-out;
+	-webkit-transition: all 300ms ease-out;
+	transition: all 300ms ease-out;
 	-moz-appearance: none;
 	-ms-appearance: none;
 	-webkit-appearance: none;
 	appearance: none;
 }
 
-input[type="number"]:hover,
+input[type="number"]:active {
+	background: #32afe5;
+	border: 2px solid #32afe5;
+}
+
 input[type="number"]:focus {
 	border: 2px solid #32afe5;
-	-moz-animation: pulse 3000ms infinite;
-	-webkit-animation: pulse 3000ms infinite;
-	animation: pulse 3000ms infinite;
-}
-
-input[type="number"]::-moz-placeholder {
-	color: #efefef;
-	text-align: left;
-}
-
-input[type="number"]::-webkit-input-placeholder {
-	color: #efefef;
-	text-align: left;
-}
-
-input[type="number"]::-ms-input-placeholder {
-	color: #efefef;
-	text-align: left;
 }
 
 
@@ -881,10 +870,10 @@ input[type="radio"] {
 	vertical-align: middle;
 	outline: none;
 	cursor: pointer;
-	-moz-transition: all 250ms ease-out;
-	-ms-transition: all 250ms ease-out;
-	-webkit-transition: all 250ms ease-out;
-	transition: all 250ms ease-out;
+	-moz-transition: all 300ms ease-out;
+	-ms-transition: all 300ms ease-out;
+	-webkit-transition: all 300ms ease-out;
+	transition: all 300ms ease-out;
 	-moz-appearance: none;
 	-ms-appearance: none;
 	-webkit-appearance: none;
@@ -893,21 +882,16 @@ input[type="radio"] {
 
 input[type="radio"]:checked {
 	border: 2px solid #32afe5;
-	background: #32afe5;
 }
 
-input[type="radio"]:hover {
+input[type="radio"]:active {
 	background: #32afe5;
 	border: 2px solid #32afe5;
-	-moz-animation: pulse 3000ms infinite;
-	-ms-animation: pulse 3000ms infinite;
-	-webkit-animation: pulse 3000ms infinite;
-	animation: pulse 3000ms infinite;
 }
 
+
 input[type="radio"][value^="new"],
-input[type="radio"][value^="new"]:checked,
-input[type="radio"][value^="new"]:hover {
+input[type="radio"][value^="new"]:checked {
 	width: 22px;
 	height: 22px;
 	border: 0px solid transparent;
@@ -918,12 +902,16 @@ input[type="radio"][value^="new"]:hover {
 	animation: none;
 }
 
+input[type="radio"][value^="new"]:active {
+	background: #32afe5;
+}
+
 input[type="radio"][value^="new"]:before {
 	display: inline-block;
 	box-sizing: border-box;
-	width: 20px;
-	height: 20px;
-	line-height: 20px;
+	width: 24px;
+	height: 24px;
+	line-height: 24px;
 	margin: 0px;
 	padding: 0px;
 	background: transparent;
@@ -933,24 +921,14 @@ input[type="radio"][value^="new"]:before {
 	text-align: center;
 	content: "\e095";
 	font-family: 'icon';
-	font-size: 20px;
-	color: #efefef;
+	font-size: 24px;
+	color: #545857;
 }
 
+input[type="radio"][value^="new"]:active:before,
 input[type="radio"][value^="new"]:checked:before {
-	color: #efefef;
-	background: #32afe5;
+	color: #32afe5;
 }
-
-input[type="radio"][value^="new"]:hover:before {
-	color: #efefef;
-	background: #32afe5;
-	-moz-animation: pulse 3000ms infinite;
-	-ms-animation: pulse 3000ms infinite;
-	-webkit-animation: pulse 3000ms infinite;
-	animation: pulse 3000ms infinite;
-}
-
 
 
 input[type="range"] {
@@ -992,12 +970,9 @@ input[type="range"]:after {
 	content: attr(max);
 }
 
-input[type="range"]:hover,
+input[type="range"]:active,
 input[type="range"]:focus {
 	background: #32afe5;
-	-moz-animation: pulse 3000ms infinite;
-	-webkit-animation: pulse 3000ms infinite;
-	animation: pulse 3000ms infinite;
 }
 
 input[type="range"]::-moz-range-thumb {
@@ -1008,7 +983,7 @@ input[type="range"]::-moz-range-thumb {
 	background: #363f3e;
 	border: 2px solid #545857;
 	border-radius: 32px;
-	-moz-transition: all 250ms ease-out;
+	-moz-transition: all 300ms ease-out;
 	-moz-appearance: none;
 	outline: none;
 	cursor: move;
@@ -1022,7 +997,7 @@ input[type="range"]::-ms-thumb {
 	background: #363f3e;
 	border: 2px solid #545857;
 	border-radius: 32px;
-	-ms-transition: all 250ms ease-out;
+	-ms-transition: all 300ms ease-out;
 	-ms-appearance: none;
 	outline: none;
 	cursor: move;
@@ -1036,31 +1011,36 @@ input[type="range"]::-webkit-slider-thumb {
 	background: #363f3e;
 	border: 2px solid #545857;
 	border-radius: 32px;
-	-webkit-transition: all 250ms ease-out;
+	-webkit-transition: all 300ms ease-out;
 	-webkit-appearance: none;
 	outline: none;
 	cursor: move;
 }
 
-input[type="range"]:hover::-moz-range-thumb,
+input[type="range"]:active::-moz-range-thumb {
+	background: #32afe5;
+	border: 2px solid #32afe5;
+}
 input[type="range"]:focus::-moz-range-thumb {
 	border: 2px solid #32afe5;
-	background: #32afe5;
-	box-shadow: #32afe5 0 0 20px;
 }
 
-input[type="range"]:hover::-ms-thumb,
+input[type="range"]:active::-ms-thumb {
+	background: #32afe5;
+	border: 2px solid #32afe5;
+}
+
 input[type="range"]:focus::-ms-thumb {
 	border: 2px solid #32afe5;
-	background: #32afe5;
-	box-shadow: #32afe5 0 0 20px;
 }
 
-input[type="range"]:hover::-webkit-slider-thumb,
+input[type="range"]:active::-webkit-slider-thumb {
+	background: #32afe5;
+	border: 2px solid #32afe5;
+}
+
 input[type="range"]:focus::-webkit-slider-thumb {
 	border: 2px solid #32afe5;
-	background: #32afe5;
-	box-shadow: #32afe5 0 0 20px;
 }
 
 
@@ -1075,30 +1055,23 @@ input[type="text"] {
 	border: 2px solid #545857;
 	outline: none;
 	cursor: text;
-	-moz-transition: all 250ms ease-out;
-	-ms-transition: all 250ms ease-out;
-	-webkit-transition: all 250ms ease-out;
-	transition: all 250ms ease-out;
+	-moz-transition: all 300ms ease-out;
+	-ms-transition: all 300ms ease-out;
+	-webkit-transition: all 300ms ease-out;
+	transition: all 300ms ease-out;
 	-moz-appearance: none;
 	-ms-appearance: none;
 	-webkit-appearance: none;
 	appearance: none;
 }
 
-input[type="text"][placeholder] {
-	color: #545857;
+input[type="text"]:active {
+	background: #32afe5;
+	border: 2px solid #32afe5;
 }
 
-input[type="text"][placeholder] {
-	color: #f2f2f2;
-}
-
-input[type="text"]:hover,
 input[type="text"]:focus {
 	border: 2px solid #32afe5;
-	-moz-animation: pulse 3000ms infinite;
-	-webkit-animation: pulse 3000ms infinite;
-	animation: pulse 3000ms infinite;
 }
 
 

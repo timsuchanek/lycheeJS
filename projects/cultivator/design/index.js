@@ -371,55 +371,6 @@ ui = (function(global) {
 		}
 
 
-
-		var selects = [].slice.call(document.querySelectorAll('ul.select'));
-		if (selects.length > 0) {
-
-			selects.forEach(function(select) {
-
-				var options = [].slice.call(select.querySelectorAll('input'));
-				if (options.length > 0) {
-
-					var _checked = 0;
-
-					options.forEach(function(option, index) {
-						if (option.checked === true) {
-							_checked = index;
-						}
-					});
-
-					options[_checked].checked = true;
-
-
-
-					options.forEach(function(option) {
-
-						option.addEventListener('mouseenter', function() {
-
-							options.forEach(function(other) { other.checked = false; });
-							this.checked = true;
-
-						});
-
-						option.addEventListener('mouseleave', function() {
-
-							options.forEach(function(other) { other.checked = false; });
-							options[_checked].checked = true;
-
-						});
-
-						option.addEventListener('mouseup', function() {
-							_checked = options.indexOf(this);
-						});
-
-					});
-
-				}
-
-			});
-
-		}
-
 		var menu  = document.querySelector('menu');
 		var items = [].slice.call(document.querySelectorAll('menu li'));
 
