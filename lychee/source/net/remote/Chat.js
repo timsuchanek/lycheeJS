@@ -32,9 +32,12 @@ lychee.define('lychee.net.remote.Chat').includes([
 			// 2. Join Room
 			} else {
 
-				if (cache.users.indexOf(user) === -1) {
-					cache.users.push(user);
+				var tid = cache.tunnels.indexOf(this.tunnel);
+				if (tid === -1) {
 					cache.tunnels.push(this.tunnel);
+					cache.users.push(user);
+				} else {
+					cache.users[tid] = user;
 				}
 
 
@@ -48,7 +51,7 @@ lychee.define('lychee.net.remote.Chat').includes([
 
 				if (rId === room) continue;
 
-				var index = _cache[rId].users.indexOf(user);
+				var index = _cache[rId].tunnels.indexOf(this.tunnel);
 				if (index !== -1) {
 					_cache[rId].users.splice(index, 1);
 					_cache[rId].tunnels.splice(index, 1);
@@ -63,8 +66,8 @@ lychee.define('lychee.net.remote.Chat').includes([
 
 	var _on_message = function(data) {
 
-		var user    = data.user || null;
-		var room    = data.room || null;
+		var user    = data.user    || null;
+		var room    = data.room    || null;
 		var message = data.message || null;
 		if (user !== null && room !== null && message !== null) {
 
