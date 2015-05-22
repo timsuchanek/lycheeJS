@@ -108,7 +108,10 @@ lychee.define('sorbet.serve.api.Server').requires([
 					var project = host.getProject(identifier);
 					if (project !== null) {
 
-						project.host = data.headers['Host'].split(':')[0];
+						var raw = _serialize(project);
+						if (raw !== null) {
+							raw.host = data.headers['Host'].split(':')[0];
+						}
 
 
 						ready({
@@ -117,7 +120,7 @@ lychee.define('sorbet.serve.api.Server').requires([
 								'Content-Control': 'no-transform',
 								'Content-Type':    'application/json'
 							},
-							payload: _JSON.encode(_serialize(project))
+							payload: _JSON.encode(raw)
 						});
 
 					} else {
