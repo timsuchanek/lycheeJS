@@ -400,19 +400,19 @@ lychee.define('Renderer').tags({
 				ctx.drawImage(buffer.__buffer, x1, y1);
 
 
-				if (lychee.debug === true) {
+				// if (lychee.debug === true) {
 
-					this.drawBox(
-						x1,
-						y1,
-						x1 + buffer.width,
-						y1 + buffer.height,
-						'#00ff00',
-						false,
-						1
-					);
+				// 	this.drawBox(
+				// 		x1,
+				// 		y1,
+				// 		x1 + buffer.width,
+				// 		y1 + buffer.height,
+				// 		'#00ff00',
+				// 		false,
+				// 		1
+				// 	);
 
-				}
+				// }
 
 			}
 
@@ -452,6 +452,49 @@ lychee.define('Renderer').tags({
 			ctx.closePath();
 
 		},
+
+
+		drawEllipse: function(x, y, w, h, color, background, lineWidth) {
+
+			color      = _is_color(color) === true ? color : '#000000';
+			background = background === true;
+			lineWidth  = typeof lineWidth === 'number' ? lineWidth : 1;
+
+
+			var ctx = this.__ctx;
+
+
+			ctx.globalAlpha = this.alpha;
+			ctx.beginPath();
+
+
+			var kappa = 0.5522848,
+			    ox = (w / 2) * kappa, // control point offset horizontal
+			    oy = (h / 2) * kappa, // control point offset vertical
+			    xe = x + w,           // x-end
+			    ye = y + h,           // y-end
+			    xm = x + w / 2,       // x-middle
+			    ym = y + h / 2;       // y-middle
+
+			ctx.moveTo(x, ym);
+			ctx.bezierCurveTo(x, ym - oy, xm - ox, y, xm, y);
+			ctx.bezierCurveTo(xm + ox, y, xe, ym - oy, xe, ym);
+			ctx.bezierCurveTo(xe, ym + oy, xm + ox, ye, xm, ye);
+			ctx.bezierCurveTo(xm - ox, ye, x, ym + oy, x, ym);
+
+			if (background === false) {
+				ctx.lineWidth   = lineWidth;
+				ctx.strokeStyle = color;
+				ctx.stroke();
+			} else {
+				ctx.fillStyle   = color;
+				ctx.fill();
+			}
+
+			ctx.closePath();
+
+		},
+
 
 		drawLight: function(x, y, radius, color, background, lineWidth) {
 
@@ -614,6 +657,87 @@ lychee.define('Renderer').tags({
 
 		},
 
+		drawRoundedRect: function(x, y, width, height, radius, color, background, lineWidth) {
+
+
+			var maxRadius = Math.min(width, height) / 2 | 0;
+
+
+			background = background === true;
+			color      = _is_color(color) === true ? color : '#000000';
+			lineWidth  = typeof lineWidth === 'number' ? lineWidth : 1;
+			radius     = radius > maxRadius ? maxRadius : radius;
+
+			var ctx = this.__ctx;
+
+			ctx.beginPath();
+			ctx.moveTo(x, y + radius);
+			ctx.lineTo(x, y + height - radius);
+			ctx.quadraticCurveTo(x, y + height, x + radius, y + height);
+			ctx.lineTo(x + width - radius, y + height);
+			ctx.quadraticCurveTo(x + width, y + height, x + width, y + height - radius);
+			ctx.lineTo(x + width, y + radius);
+			ctx.quadraticCurveTo(x + width, y, x + width - radius, y);
+			ctx.lineTo(x + radius, y);
+			ctx.quadraticCurveTo(x, y, x, y + radius);
+			ctx.closePath();
+
+
+
+			ctx.globalAlpha = this.alpha;
+
+			if (background === false) {
+				ctx.lineWidth   = lineWidth;
+				ctx.strokeStyle = color;
+				ctx.stroke();
+			} else {
+				ctx.fillStyle   = color;
+				ctx.fill();
+			}
+
+		},
+
+		drawPoly: function(points, color background, closed, lineWidth) {
+
+			var ctx = this.__ctx;
+
+
+			points     = points.length > 0 ? points : [];
+			color      = _is_color(color) ? color : '#ffffff';
+			background = background === true;
+			lineWidth  = typeof lineWidth === 'number' ? lineWidth : 0;
+			closed     = closed === true;
+
+
+			ctx.beginPath();
+
+			ctx.moveTo(points[0][0], points[0][1]);
+
+			for (var i = 1; i < points.length; i++) {
+				ctx.lineTo(points[i][0], points[i][1]);
+			}
+
+			if (closed) {
+				ctx.lineTo(points[0][0], points[0][1]);
+			}
+
+			if (points[0][0] === points[points.length - 1][0] && points[0][1] === points[points.length - 1][1]) {
+				ctx.closePath();
+			}
+
+			ctx.globalAlpha = this.alpha;
+
+			if (background === false) {
+				ctx.lineWidth   = lineWidth;
+				ctx.strokeStyle = color;
+				ctx.stroke();
+			} else {
+				ctx.fillStyle   = color;
+				ctx.fill();
+			}
+
+		},
+
 		drawSprite: function(x1, y1, texture, map) {
 
 			texture = texture instanceof Texture ? texture : null;
@@ -637,19 +761,19 @@ lychee.define('Renderer').tags({
 
 				} else {
 
-					if (lychee.debug === true) {
+					// if (lychee.debug === true) {
 
-						this.drawBox(
-							x1,
-							y1,
-							x1 + map.w,
-							y1 + map.h,
-							'#ff0000',
-							false,
-							1
-						);
+					// 	this.drawBox(
+					// 		x1,
+					// 		y1,
+					// 		x1 + map.w,
+					// 		y1 + map.h,
+					// 		'#ff0000',
+					// 		false,
+					// 		1
+					// 	);
 
-					}
+					// }
 
 					ctx.drawImage(
 						texture.buffer,
@@ -703,19 +827,19 @@ lychee.define('Renderer').tags({
 
 						var chr = font.measure(text[t]);
 
-						if (lychee.debug === true) {
+						// if (lychee.debug === true) {
 
-							this.drawBox(
-								x1 + margin,
-								y1,
-								x1 + margin + chr.realwidth,
-								y1 + chr.height,
-								'#00ff00',
-								false,
-								1
-							);
+						// 	this.drawBox(
+						// 		x1 + margin,
+						// 		y1,
+						// 		x1 + margin + chr.realwidth,
+						// 		y1 + chr.height,
+						// 		'#00ff00',
+						// 		false,
+						// 		1
+						// 	);
 
-						}
+						// }
 
 						ctx.drawImage(
 							texture.buffer,
