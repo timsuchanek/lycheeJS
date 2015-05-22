@@ -77,7 +77,7 @@ lychee.define('lychee.net.Server').tags({
 		var upgrade    = (request.headers.upgrade    || '').toLowerCase();
 		var protocol   = (request.headers['sec-websocket-protocol'] || '').toLowerCase();
 
-		if (connection === 'upgrade' && upgrade === 'websocket' && protocol === 'lycheejs') {
+		if (connection.indexOf('upgrade') !== -1 && upgrade.indexOf('websocket') !== -1 && protocol === 'lycheejs') {
 
 			var handshake = _get_websocket_handshake(request);
 			if (handshake !== null) {

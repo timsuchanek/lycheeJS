@@ -41,7 +41,7 @@ lychee.define('Renderer').tags({
 
 		if (typeof color === 'string') {
 
-			if (color.match(/(#[AaBbCcDdEeFf0-9]{6})/) || color.match(/(#[AaBbCcDdEeFf0-9]{8})/)) {
+			if (color.match(/(#[AaBbCcDdEeFf0-9]{6})/)) {
 				return true;
 			}
 
@@ -49,44 +49,6 @@ lychee.define('Renderer').tags({
 
 
 		return false;
-
-	};
-
-	var _hex_to_rgba = function(hex) {
-
-		if (_color_cache[hex] !== undefined) {
-			return _color_cache[hex];
-		}
-
-		var rgba = [ 0, 0, 0, 255 ];
-
-		if (typeof hex === 'string') {
-
-			if (hex.length === 7) {
-
-				rgba[0] = parseInt(hex[1] + hex[2], 16);
-				rgba[1] = parseInt(hex[3] + hex[4], 16);
-				rgba[2] = parseInt(hex[5] + hex[6], 16);
-				rgba[3] = 255;
-
-			} else if (hex.length === 9) {
-
- 				rgba[0] = parseInt(hex[1] + hex[2], 16);
-				rgba[1] = parseInt(hex[3] + hex[4], 16);
-				rgba[2] = parseInt(hex[5] + hex[6], 16);
-				rgba[3] = parseInt(hex[7] + hex[8], 16);
-
-			}
-
-		}
-
-
-		var color = 'rgba(' + rgba[0] + ',' + rgba[1] + ',' + rgba[2] + ',' + (rgba[3] / 255) + ')';
-
-		_color_cache[hex] = color;
-
-
-		return color;
 
 	};
 
@@ -453,7 +415,6 @@ lychee.define('Renderer').tags({
 
 		},
 
-
 		drawEllipse: function(x, y, w, h, color, background, lineWidth) {
 
 			color      = _is_color(color) === true ? color : '#000000';
@@ -536,6 +497,7 @@ lychee.define('Renderer').tags({
 			ctx.closePath();
 
 		},
+
 
 		drawLine: function(x1, y1, x2, y2, color, lineWidth) {
 

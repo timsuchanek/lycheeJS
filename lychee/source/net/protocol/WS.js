@@ -421,7 +421,7 @@ lychee.define('lychee.net.protocol.WS').exports(function(lychee, global) {
 		});
 
 		this.socket.on('end', function() {
-			that.close(Class.STATUS.normal_closure);
+			// that.close(Class.STATUS.normal_closure);
 		});
 
 		this.socket.on('close', function() {

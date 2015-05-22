@@ -12,6 +12,7 @@
 
 
 # Whitelisted git-tracked projects
+!/projects/chat
 !/projects/blitzkrieg
 !/projects/boilerplate
 !/projects/cultivator

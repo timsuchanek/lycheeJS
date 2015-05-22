@@ -83,14 +83,12 @@ lychee.define('lychee.ui.Slider').includes([
 		this.setMin(settings.min);
 		this.setStep(settings.step);
 		this.setType(settings.type);
-		this.setValue(settings.value);
 
 		delete settings.font;
 		delete settings.max;
 		delete settings.min;
 		delete settings.step;
 		delete settings.type;
-		delete settings.value;
 
 
 		settings.shape = lychee.ui.Entity.SHAPE.rectangle;
@@ -205,8 +203,7 @@ lychee.define('lychee.ui.Slider').includes([
 		}, this);
 
 
-		// This fixes the width/height dependency problem for cursor
-		this.setValue(this.value);
+		this.setValue(settings.value);
 
 
 		settings = null;
@@ -322,6 +319,7 @@ lychee.define('lychee.ui.Slider').includes([
 			var map = cursor.map;
 			var cx  = 0;
 			var cy  = 0;
+
 
 			if (type === Class.TYPE.horizontal) {
 
