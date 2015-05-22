@@ -9,6 +9,21 @@ lychee.define('lychee.net.remote.Chat').includes([
 
 	var _cache = {};
 
+	var _on_disconnect = function() {
+
+		for (var rId in _cache) {
+
+			var index = _cache[rId].tunnels.indexOf(this.tunnel);
+			if (index !== -1) {
+				_cache[rId].users.splice(index, 1);
+				_cache[rId].tunnels.splice(index, 1);
+				_sync_room.call(this, _cache[rId]);
+			}
+
+		}
+
+	};
+
 	var _on_sync = function(data) {
 
 		var user = data.user || null;
@@ -53,9 +68,12 @@ lychee.define('lychee.net.remote.Chat').includes([
 
 				var index = _cache[rId].tunnels.indexOf(this.tunnel);
 				if (index !== -1) {
+
 					_cache[rId].users.splice(index, 1);
 					_cache[rId].tunnels.splice(index, 1);
+
 					_sync_room.call(this, _cache[rId]);
+
 				}
 
 			}
@@ -149,6 +167,8 @@ lychee.define('lychee.net.remote.Chat').includes([
 
 		this.bind('sync',    _on_sync,    this);
 		this.bind('message', _on_message, this);
+
+		this.tunnel.bind('disconnect', _on_disconnect, this);
 
 
 		settings = null;
