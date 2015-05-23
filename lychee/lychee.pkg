@@ -18,7 +18,7 @@
 				},
 				"variant": "library"
 			},
-			"nodejs/main": {
+			"iojs/main": {
 				"build": "lychee.game.Main",
 				"debug": false,
 				"sandbox": false,
@@ -30,7 +30,7 @@
 				],
 				"tags": {
 					"platform": [
-						"nodejs"
+						"iojs"
 					]
 				},
 				"variant": "library"
@@ -61,7 +61,7 @@
 					"js"
 				]
 			},
-			"nodejs": {
+			"iojs": {
 				"core": [
 					"js"
 				],
@@ -69,7 +69,7 @@
 					"js"
 				]
 			},
-			"nodejs-sdl": {
+			"iojs-sdl": {
 				"core": [
 					"js"
 				],
@@ -77,7 +77,7 @@
 					"js"
 				]
 			},
-			"nodejs-webgl": {
+			"iojs-webgl": {
 				"core": [
 					"js"
 				],
@@ -94,9 +94,9 @@
 				"html": "platform/html",
 				"html-webgl": "platform/html-webgl",
 				"html-nwjs": "platform/html-nwjs",
-				"nodejs": "platform/nodejs",
-				"nodejs-sdl": "platform/nodejs-sdl",
-				"nodejs-webgl": "platform/nodejs-webgl"
+				"iojs": "platform/iojs",
+				"iojs-sdl": "platform/iojs-sdl",
+				"iojs-webgl": "platform/iojs-webgl"
 			}
 		},
 		"files": {
@@ -136,7 +136,7 @@
 						"Sprite.fs"
 					]
 				},
-				"nodejs": {
+				"iojs": {
 					"bootstrap": [
 						"js"
 					],

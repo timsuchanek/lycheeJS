@@ -9,7 +9,7 @@
 		"lycheejs",
 		"application",
 		"engine",
-		"nodejs",
+		"iojs",
 		"webgl",
 		"opengl",
 		"libsdl",
@@ -21,7 +21,7 @@
 		"windows"
 	],
 
-	"main":           "./lychee/build/nodejs/core.js",
+	"main":           "./lychee/build/iojs/core.js",
 	"readmeFilename": "README.md",
 
 	"scripts": {

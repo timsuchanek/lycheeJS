@@ -1,5 +1,5 @@
 
-lychee.define('fertilizer.template.nodejs.Library').requires([
+lychee.define('fertilizer.template.iojs.Library').requires([
 	'lychee.data.JSON'
 ]).includes([
 	'fertilizer.Template'

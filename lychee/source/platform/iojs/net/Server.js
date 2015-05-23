@@ -1,6 +1,6 @@
 
 lychee.define('lychee.net.Server').tags({
-	platform: 'nodejs'
+	platform: 'iojs'
 }).requires([
 	'lychee.Storage',
 	'lychee.data.JSON',
