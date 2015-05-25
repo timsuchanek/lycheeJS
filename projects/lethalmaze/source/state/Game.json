@@ -1,20 +1,5 @@
 {
 	"layers": {
-		"background": {
-			"constructor": "lychee.game.Layer",
-			"arguments": [{}],
-			"blob": {
-				"entities": [{
-					"constructor": "lychee.game.Background",
-					"arguments": [{
-						"color": "#330000"
-					}]
-				}],
-				"map": {
-					"background": 0
-				}
-			}
-		},
 		"game": {
 			"constructor": "lychee.game.Layer",
 			"arguments": [{}],

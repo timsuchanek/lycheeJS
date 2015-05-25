@@ -21,11 +21,6 @@
 					"json",
 					"png"
 				],
-				"Button": [
-					"js",
-					"json",
-					"png"
-				],
 				"Item": [
 					"js",
 					"json",
@@ -40,10 +35,6 @@
 				"Wall": [
 					"js",
 					"json",
-					"png"
-				],
-				"lycheeJS": [
-					"js",
 					"png"
 				],
 				"Terrain": [
@@ -101,5 +92,8 @@
 				]
 			}
 		}
+	},
+	"api": {
+		"files": {}
 	}
 }
