@@ -1,0 +1,27 @@
+{
+	"api": {
+		"files": {
+			"source": {
+				"Main": [
+					"js"
+				],
+				"lib": {
+					"highlight": {
+						"highlight": [
+							"pack.js"
+						]
+					},
+					"marked": [
+						"js"
+					]
+				}
+			}
+		}
+	},
+	"build": {
+		"files": {}
+	},
+	"source": {
+		"files": {}
+	}
+}

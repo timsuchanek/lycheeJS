@@ -53,6 +53,15 @@
 				},
 				"variant": "application"
 			}
+		},
+		"files": {
+			"nodejs": {
+				"server": {
+					"index": [
+						"js"
+					]
+				}
+			}
 		}
 	},
 	"source": {
@@ -123,6 +132,12 @@
 					"json",
 					"png",
 					"fnt"
+				],
+				"Circle": [
+					"fnt"
+				],
+				"Title": [
+					"fnt"
 				]
 			},
 			"DeviceSpecificHacks": [
@@ -135,5 +150,8 @@
 				"js"
 			]
 		}
+	},
+	"api": {
+		"files": {}
 	}
 }
