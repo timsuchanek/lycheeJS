@@ -1,5 +1,5 @@
 
-lychee.define('fertilizer.template.nodejs.Application').requires([
+lychee.define('fertilizer.template.iojs.Application').requires([
 	'lychee.data.JSON'
 ]).includes([
 	'fertilizer.Template'
@@ -36,7 +36,7 @@ lychee.define('fertilizer.template.nodejs.Application').requires([
 			if (env !== null && fs !== null) {
 
 				var blob  = _JSON.encode(env.serialize());
-				var core  = this.getCore('nodejs');
+				var core  = this.getCore('iojs');
 				var info  = this.getInfo(true);
 				var index = _template.toString();
 

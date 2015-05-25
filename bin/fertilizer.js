@@ -6,12 +6,12 @@ var fs     = require('fs');
 var path   = require('path');
 
 
-if (fs.existsSync(root + '/lychee/build/nodejs/core.js') === false) {
+if (fs.existsSync(root + '/lychee/build/iojs/core.js') === false) {
 	require(root + '/lychee/configure.js');
 }
 
 
-var lychee = require(root + '/lychee/build/nodejs/core.js')(root);
+var lychee = require(root + '/lychee/build/iojs/core.js')(root);
 
 
 
@@ -62,7 +62,7 @@ var _print_help = function() {
 	console.log('                                                      ');
 	console.log('Available Fertilizers:                                ');
 	console.log('                                                      ');
-	console.log('   html, html-nwjs, nodejs                            ');
+	console.log('   html, html-nwjs, html-webview, iojs                ');
 	console.log('                                                      ');
 	console.log('Available Projects:                                   ');
 	console.log('                                                      ');
@@ -71,7 +71,7 @@ var _print_help = function() {
 	console.log('Examples:                                             ');
 	console.log('                                                      ');
 	console.log('    fertilizer boilerplate "html-nwjs/main"           ');
-	console.log('    fertilizer boilerplate "nodejs/server"            ');
+	console.log('    fertilizer boilerplate "iojs/server"              ');
 	console.log('                                                      ');
 
 };
@@ -156,7 +156,7 @@ var _settings = (function() {
 				new lychee.Package('fertilizer', '/fertilizer/lychee.pkg')
 			],
 			tags:     {
-				platform: [ 'nodejs' ]
+				platform: [ 'iojs' ]
 			}
 		}));
 

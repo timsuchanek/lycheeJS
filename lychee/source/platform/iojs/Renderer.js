@@ -1,6 +1,6 @@
 
 lychee.define('Renderer').tags({
-	platform: 'nodejs'
+	platform: 'iojs'
 }).supports(function(lychee, global) {
 
 	if (typeof process !== 'undefined') {

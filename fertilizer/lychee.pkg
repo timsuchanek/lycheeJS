@@ -4,12 +4,12 @@
 
 		"environments": {
 
-			"nodejs/main": {
+			"iojs/main": {
 				"build":    "fertilizer.Main",
 				"debug":    false,
 				"sandbox":  false,
 				"packages": [ [ "fertilizer", "./lychee.pkg" ] ],
-				"tags":     { "platform": [ "nodejs" ] },
+				"tags":     { "platform": [ "iojs" ] },
 				"variant":  "application"
 			}
 
@@ -50,7 +50,7 @@
 					"Library":     [ "js", "tpl" ]
 				},
 
-				"nodejs": {
+				"iojs": {
 					"Application": [ "js", "tpl" ],
 					"Library":     [ "js", "tpl" ]
 				}

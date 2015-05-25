@@ -1,7 +1,6 @@
 
 lychee.define('game.data.Level').requires([
 	'lychee.game.Logic',
-	'game.entity.Button',
 	'game.entity.Item',
 	'game.entity.Tank',
 	'game.entity.Terrain',
@@ -49,7 +48,7 @@ lychee.define('game.data.Level').requires([
 
 		decode: function(data) {
 
-			data = data instanceof Object ? data : null;
+			data = data instanceof Array ? data : null;
 
 
 			if (data !== null) {
@@ -60,7 +59,7 @@ lychee.define('game.data.Level').requires([
 				};
 
 
-				data.terrain.forEach(function(line, y) {
+				data.forEach(function(line, y) {
 
 					line.forEach(function(type, x) {
 
@@ -71,28 +70,11 @@ lychee.define('game.data.Level').requires([
 						};
 
 						_logic.projectPosition(position);
+
 
 						cache.terrain.push(new game.entity.Terrain({
-							type:     type,
 							position: position
 						}));
-
-					});
-
-				});
-
-
-				data.objects.forEach(function(line, y) {
-
-					line.forEach(function(type, x) {
-
-						var position = {
-							x: x + 0.5,
-							y: y + 0.5,
-							z: 0
-						};
-
-						_logic.projectPosition(position);
 
 
 						switch (type) {
@@ -114,14 +96,6 @@ lychee.define('game.data.Level').requires([
 							break;
 
 							case 3:
-
-								cache.objects.push(new game.entity.Button({
-									position: position
-								}));
-
-							break;
-
-							case 4:
 
 								cache.objects.push(new game.entity.Item({
 									position: position

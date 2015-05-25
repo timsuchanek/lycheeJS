@@ -36,7 +36,7 @@
 				},
 				"variant": "application"
 			},
-			"nodejs/server": {
+			"iojs/server": {
 				"build": "game.net.Server",
 				"debug": false,
 				"sandbox": false,
@@ -48,7 +48,7 @@
 				],
 				"tags": {
 					"platform": [
-						"nodejs"
+						"iojs"
 					]
 				},
 				"variant": "application"

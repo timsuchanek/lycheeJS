@@ -8,15 +8,14 @@ back into master, tagged and published.
 
 ## v0.8.6
 
-- Rename nodejs platform to iojs platform
 - sorbet.plugin.Fertilizer should auto-build environments for all projects
 - Sorbet Log File serialization to be inspectable and remote-debuggable via ranger
-- lychee.net.(client||remote).DHT as described in Bittorrent's DHT protocol [1] which extends lychee.data.BENCODE for its logical behaviours
 - API + Implementation: lychee.net.Hybrid
 
 ## v0.8.7
 
 - Debugger Tool: Timeline Analysis of Snapshots (live-edit and live-modification)
+- lychee.net.(client||remote).DHT as described in Bittorrent's DHT protocol [1] which extends lychee.data.BENCODE for its logical behaviours
 - lychee.net.remote.Controller and lychee.net.client.Controller
 - API + Implementation: lychee.game.Logic
 - API + Implementation: lychee.game.Physic

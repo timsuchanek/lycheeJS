@@ -1,6 +1,6 @@
 
 lychee.define('lychee.net.Client').tags({
-	platform: 'nodejs'
+	platform: 'iojs'
 }).requires([
 	'lychee.net.protocol.HTTP',
 	'lychee.net.protocol.WS',

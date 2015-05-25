@@ -3,7 +3,7 @@
 
 	var environment = new lychee.Environment({
 		id:       'lethalmaze',
-		debug:    true,
+		debug:    false,
 		sandbox:  false,
 		build:    'game.Main',
 		packages: [

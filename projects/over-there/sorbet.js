@@ -11,7 +11,7 @@ var _folder = __dirname.substr(_root.length);
 var _port   = parseInt(process.argv[3], 10);
 var _host   = process.argv[4] === 'null' ? null : process.argv[4];
 
-require(_root + '/lychee/build/nodejs/core.js')(_root);
+require(_root + '/lychee/build/iojs/core.js')(_root);
 
 
 
@@ -29,7 +29,7 @@ require(_root + '/lychee/build/nodejs/core.js')(_root);
 			new lychee.Package('game', _folder + '/lychee.pkg')
 		],
 		tags:     {
-			platform: [ 'nodejs' ]
+			platform: [ 'iojs' ]
 		}
 	});
 

@@ -6,14 +6,6 @@ lychee.define('game.entity.Terrain').includes([
 	var _texture = attachments["png"];
 	var _config  = attachments["json"].buffer;
 
-	var _TYPES   = {
-		0: 'default',
-		1: 'arrow-top',
-		2: 'arrow-right',
-		3: 'arrow-bottom',
-		4: 'arrow-left'
-	};
-
 
 	var Class = function(data) {
 
@@ -26,10 +18,7 @@ lychee.define('game.entity.Terrain').includes([
 		settings.height  = _config.height;
 		settings.shape   = lychee.game.Entity.SHAPE.rectangle;
 		settings.states  = _config.states;
-		settings.state   = _TYPES[settings.type] || 'default';
-
-
-		delete settings.type;
+		settings.state   = 'default';
 
 
 		lychee.game.Sprite.call(this, settings);

@@ -1,6 +1,6 @@
 
 lychee.define('Input').tags({
-	platform: 'nodejs'
+	platform: 'iojs'
 }).includes([
 	'lychee.event.Emitter'
 ]).supports(function(lychee, global) {

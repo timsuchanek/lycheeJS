@@ -1,6 +1,5 @@
 
 lychee.define('game.state.Game').requires([
-	'lychee.game.Background',
 	'lychee.game.Layer',
 	'game.data.Level',
 	'game.Controller'
@@ -47,10 +46,6 @@ lychee.define('game.state.Game').requires([
 					var width  = renderer.width;
 					var height = renderer.height;
 
-
-					entity = this.queryLayer('background', 'background');
-					entity.width  = width;
-					entity.height = height;
 
 					entity = this.getLayer('game');
 					entity.offset.x = -1/2 * width;

@@ -1,7 +1,7 @@
 {
 	"build": {
 		"environments": {
-			"nodejs/main": {
+			"iojs/main": {
 				"build": "sorbet.Main",
 				"debug": false,
 				"sandbox": false,
@@ -13,7 +13,7 @@
 				],
 				"tags": {
 					"platform": [
-						"nodejs"
+						"iojs"
 					]
 				},
 				"variant": "application"

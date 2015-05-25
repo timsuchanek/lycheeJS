@@ -1489,7 +1489,7 @@
 	 * EXPORTS
 	 */
 
-	// global.Buffer  = Buffer; // Not necessary, NodeJS data type
+	// global.Buffer  = Buffer; // Not necessary, IOJS data type
 	global.Config  = Config;
 	global.Font    = Font;
 	global.Music   = Music;
@@ -1525,7 +1525,7 @@
 		var is_emitting = stream._emitsKeypress === true;
 		if (is_emitting === false) {
 
-			// Note: This fixes issues with running nodejs with nohup
+			// Note: This fixes issues with running IOJS with nohup
 			if (stream.isTTY === true) {
 
 				stream._emitsKeypress = true;

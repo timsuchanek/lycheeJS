@@ -23,10 +23,6 @@
 !/projects/lethalmaze
 
 
-# Not-yet ready projects
-!/projects/p2pdemo
-
-
 # Cultivator
 /projects/*/build
 /projects/cultivator/editor/build
