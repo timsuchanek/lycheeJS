@@ -18,12 +18,9 @@ lychee.define('sorbet.serve.api.Project').requires([
 
 	var _to_header = function(status, data) {
 
-		var origin = data.headers['Origin'] || '*';
-
-
 		return {
 			'Access-Control-Allow-Headers': 'Content-Type',
-			'Access-Control-Allow-Origin':  origin,
+			'Access-Control-Allow-Origin':  data.headers.origin || '*',
 			'Access-Control-Allow-Methods': 'GET, PUT, POST',
 			'Access-Control-Max-Age':       60 * 60,
 			'Content-Control':              'no-transform',
