@@ -94,7 +94,7 @@ lychee.define('sorbet.serve.api.Server').requires([
 					status:  200,
 					headers: {
 						'Access-Control-Allow-Headers': 'Content-Type',
-						'Access-Control-Allow-Origin':  data.headers['Host'],
+						'Access-Control-Allow-Origin':  data.headers.host,
 						'Access-Control-Allow-Methods': 'GET',
 						'Access-Control-Max-Age':       60 * 60
 					},
@@ -110,7 +110,7 @@ lychee.define('sorbet.serve.api.Server').requires([
 
 						var raw = _serialize(project);
 						if (raw !== null) {
-							raw.host = data.headers['Host'].split(':')[0];
+							raw.host = data.headers.host.split(':')[0];
 						}
 
 
