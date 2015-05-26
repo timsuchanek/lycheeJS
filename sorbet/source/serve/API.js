@@ -36,7 +36,7 @@ lychee.define('sorbet.serve.API').requires([
 		process: function(host, url, data, ready) {
 
 			var api  = url.split('/').pop().split('?')[0];
-			var name = (data.headers['Host'] || '');
+			var name = (data.headers.host || '');
 
 			if (name === 'localhost:4848' && _ADMIN[api] !== undefined) {
 
