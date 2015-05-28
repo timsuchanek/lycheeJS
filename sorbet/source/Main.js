@@ -85,7 +85,7 @@ lychee.define('sorbet.Main').requires([
 
 	var _process_server = function(data, ready) {
 
-		var identifier = (data.headers['Host'] || '').split(':')[0];
+		var identifier = (data.headers.host || '').split(':')[0];
 		var host       = this.hosts[identifier] || null;
 		var url        = data.headers.url || null;
 

@@ -1,6 +1,23 @@
 {
 	"build": {
 		"environments": {
+			"html/main": {
+				"build": "game.Main",
+				"debug": false,
+				"sandbox": false,
+				"packages": [
+					[
+						"game",
+						"./lychee.pkg"
+					]
+				],
+				"tags": {
+					"platform": [
+						"html"
+					]
+				},
+				"variant": "application"
+			},
 			"html-nwjs/main": {
 				"build": "game.Main",
 				"debug": false,
@@ -19,7 +36,7 @@
 				},
 				"variant": "application"
 			},
-			"html/main": {
+			"html-webview/main": {
 				"build": "game.Main",
 				"debug": false,
 				"sandbox": false,
@@ -31,6 +48,7 @@
 				],
 				"tags": {
 					"platform": [
+						"html-webview",
 						"html"
 					]
 				},

@@ -92,8 +92,9 @@
 		"tags": {
 			"platform": {
 				"html": "platform/html",
-				"html-webgl": "platform/html-webgl",
 				"html-nwjs": "platform/html-nwjs",
+				"html-webgl": "platform/html-webgl",
+				"html-webview": "platform/html-webview",
 				"iojs": "platform/iojs",
 				"iojs-sdl": "platform/iojs-sdl",
 				"iojs-webgl": "platform/iojs-webgl"
