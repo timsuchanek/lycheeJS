@@ -17,7 +17,7 @@ elif [ "$OS" == "linux" ]; then
 
 	OS="linux";
 
-elif [ "$OS" == "windowsnt" ]; then
+elif [ "$OS" == "windows_nt" ]; then
 
 	OS="windows";
 
