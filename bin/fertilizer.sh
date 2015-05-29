@@ -38,7 +38,7 @@ elif [ "$OS" == "linux" ]; then
 	OS="linux";
 	LYCHEEJS_IOJS="$LYCHEEJS_ROOT/bin/runtime/iojs/linux/$ARCH/iojs";
 
-elif [ "$OS" == "windowsnt" ]; then
+elif [ "$OS" == "windows_nt" ]; then
 
 	OS="windows";
 	LYCHEEJS_IOJS="$LYCHEEJS_ROOT/bin/runtime/iojs/windows/$ARCH/iojs.exe";

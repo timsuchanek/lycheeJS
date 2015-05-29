@@ -43,7 +43,7 @@ execute this in the Terminal:
 
 ```bash
 # This will create a lycheeJS Installation in ./lycheejs
-wget -q -O - http://lycheejs.org/dist/lycheejs-0.8.6.sh | bash;
+wget -q -O - http://lycheejs.org/dist/lycheejs-0.8.6-netinstall.sh | bash;
 ```
 
 
@@ -59,12 +59,6 @@ npm run-script localhost;
 ```
 
 
-## Documentation
-
-The documentation is available online at
-[http://lycheejs.org/documentation/index.html](http://lycheejs.org/documentation/index.html).
-
-
 ## Roadmap
 
 You want to see what kind of fancy features will arrive next?
@@ -75,24 +69,6 @@ Take a look at the [ROADMAP.md](ROADMAP.md) file.
 
 You want to contribute to the project?
 Take a look at the [CONTRIBUTING.md](CONTRIBUTING.md) file.
-
-
-## Other (unsupported) JavaScript Runtimes
-
-The lycheeJS architecture is independent of the environment which
-means it will run in any theoretical JavaScript runtime.
-
-The only requirement for such a platform is a fully implemented
-[bootstrap API](http://lycheejs.org/documentation/bootstrap.html).
-
-For fully supporting a client-side environment, you will also have to implement
-a [lychee.Input](http://lycheejs.org/documentation/lychee-Input.html),
-a [lychee.Renderer](http://lycheejs.org/documentation/lychee-Renderer.html),
-a [lychee.Storage](http://lycheejs.org/documentation/lychee-Storage.html),
-and a [lychee.Viewport](http://lycheejs.org/documentation/lychee-Viewport.html).
-
-These implementations are fully optional and only necessary if you are using
-them inside your Game or Application.
 
 
 ## License

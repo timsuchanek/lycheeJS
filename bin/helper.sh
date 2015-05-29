@@ -17,7 +17,7 @@ elif [ "$OS" == "linux" ]; then
 
 	OS="linux";
 
-elif [ "$OS" == "windowsnt" ]; then
+elif [ "$OS" == "windows_nt" ]; then
 
 	OS="windows";
 
@@ -125,12 +125,16 @@ if [ "$protocol" == "lycheejs" ]; then
 
 			edit)
 
-				if [ "$OS" == "linux" -o "$OS" == "osx" ]; then
-					./bin/editor.sh "file://$LYCHEEJS_ROOT/projects/$resource/lychee.pkg" 2>&1;
-					exit 0;
-				elif [ "$OS" == "windows"]; then
-					./bin/editor.sh "file://c:$LYCHEEJS_ROOT/projects/$resource/lychee.pkg" 2>&1;
-					exit 0;
+				if [ -f ./bin/editor.sh ]; then
+
+					if [ "$OS" == "linux" -o "$OS" == "osx" ]; then
+						./bin/editor.sh "file://$LYCHEEJS_ROOT/projects/$resource/lychee.pkg" 2>&1;
+						exit 0;
+					elif [ "$OS" == "windows"]; then
+						./bin/editor.sh "file://c:$LYCHEEJS_ROOT/projects/$resource/lychee.pkg" 2>&1;
+						exit 0;
+					fi;
+
 				fi;
 
 			;;
