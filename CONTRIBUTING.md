@@ -1,5 +1,5 @@
 
-# Contributing to lycheeJS
+# Contribution Workflow
 
 Upcoming feature requests are better stored in their own branch, so
 we can make usage of pull requests on github.
@@ -53,15 +53,14 @@ features.
 - all *documentation-x.x* branches are reserved for the master repository.
 
 
-# Contributing to Documentation
+# Contribution to Documentation
 
 If you want to contribute to the documentation, please use the guide in the
 **Contribution Workflow** and replace *fancy-feature* with *documentation-0.9*.
 
-
 The main guide for documentation is that all the files have the same structure.
 For automatic parsing purposes, the structure of articles shall have the
-identical structure and wording.
+identical structure and wordings.
 
 The folder structure is setup like this:
 
@@ -72,5 +71,3 @@ if (exists('/lychee/source/game/Entity.js') && !exists('/lychee/api/game/Entity.
 }
 
 ```
- 
-
