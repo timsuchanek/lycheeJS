@@ -23,11 +23,8 @@ of HTML5 or native OpenGL(ES) or libSDL2 based applications.
 
 The project has the goal to ease up development of applications
 and shipment to further platforms. The development process is
-optimized for Blink-based browsers (Chromium, Google Chrome, Opera)
-and their developer tools.
-
-Note that the Host OS, which the bundles are for, is the developer's
-or designer's machine and not the target platform.
+optimized for Blink-based browsers (Chromium, Google Chrome,
+Opera) and their developer tools.
 
 The [lycheeJS-runtime](https://github.com/LazerUnicorns/lycheeJS-runtime.git)
 repository contains all binary pre-compiled runtimes that are
@@ -35,19 +32,16 @@ included in the bundles.
 
 The [lycheeJS-bundle](https://github.com/LazerUnicorns/lycheeJS-bundle.git)
 repository contains all scripts and logic required to generate
-operating system ready packages (such as deb packages or dmg images).
+operating system ready packages.
 
 
 ## Bundle Installation
 
 There are prebuilt bundles that ship all dependencies and
 runtimes lycheeJS needs in order to work and cross-compile
-properly. Take a look at [lycheejs.org](http://lycheejs.org)
-for a list of available bundles for all operating systems.
-
-Those packages can be built by using the
-[lycheeJS-bundle](https://github.com/LazerUnicorns/lycheeJS-bundle.git)
-repository.
+properly. These bundles should be installed on the developer's
+machine and not on the target platform. Visit [lycheejs.org](http://lycheejs.org)
+for a list of available bundles.
 
 
 ## Manual Installation
@@ -55,8 +49,6 @@ repository.
 The netinstall shell script allows to automatically install
 lycheeJS on any machine (arm, x86 or x86_64). The only
 requirement for the script is `curl` and `unzip`.
-
-Simple execute this command in the Terminal:
 
 ```bash
 # This will create a lycheeJS Installation in ./lycheejs
@@ -66,18 +58,17 @@ wget -q -O - http://lycheejs.org/dist/lycheejs-0.8.6-netinstall.sh | bash;
 
 ## NPM Installation
 
-There's an npm package available. Npm has several issues
-(no multi-platform support, no multi-architecture support,
-no binary shipment of runtimes possible etc.), so it is not
-recommended as it complicates the installation process.
+There's an npm package available, though npm has several
+conceptual issues (no multi-platform support, no multi-
+architecture support, no binary shipment of runtimes, no
+cross-compilation sdks possible etc.).
 
-It is necessary to manually download the
-[lycheeJS-runtime](https://github.com/LazerUnicorns/lycheeJS-runtime.git)
-repository and install them into `./bin/runtime`.
+That's why it is *NOT* recommended as it complicates the
+installation process.
 
-It is also possible to change integrations with other parts of
-the node ecosystem. Modify the `./lycheejs/package.json/script`
-section as necessary.
+Modify the `./lycheejs/package.json/scripts` section to
+get integration with other parts of the node ecosystem.
+
 
 ```bash
 npm install lycheejs;
