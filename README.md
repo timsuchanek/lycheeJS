@@ -47,7 +47,7 @@ for a list of available bundles.
 ## Manual Installation
 
 The netinstall shell script allows to automatically install
-lycheeJS on any machine (arm, x86 or x86_64). The only
+lycheeJS on any machine (arm, x86 or x86\_64). The only
 requirement for the script is `curl` and `unzip`.
 
 ```bash
@@ -59,9 +59,10 @@ wget -q -O - http://lycheejs.org/download/lycheejs-0.8.6-netinstall.sh | bash;
 ## NPM Installation
 
 There's an npm package available, though npm has several
-conceptual issues (no multi-platform support, no multi-
-architecture support, no binary shipment of runtimes, no
-cross-compilation sdks possible etc.).
+conceptual issues (no multi-platform distribution,
+no multi-architecture support, no binary shipment runtimes,
+no cross-compilation sdks, no binary shipment of updates
+possible etc.).
 
 That's why it is *NOT* recommended as it complicates the
 installation process.
