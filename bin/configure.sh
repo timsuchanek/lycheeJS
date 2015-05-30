@@ -11,6 +11,11 @@ USER=`whoami`;
 LYCHEEJS_IOJS="";
 LYCHEEJS_ROOT=$(cd "$(dirname "$0")/../"; pwd);
 
+NO_INTEGRATION=false;
+if [ "$1" == "--no-integration" ]; then
+	NO_INTEGRATION=true;
+fi;
+
 
 if [ "$ARCH" == "x86_64" -o "$ARCH" == "amd64" ]; then
 	ARCH="x86_64";
@@ -101,36 +106,40 @@ else
 	fi;
 
 
-	if [ "$OS" == "linux" ]; then
+	if [ "$NO_INTEGRATION" == "false" ]; then
 
-		if [ -d /usr/share/applications ]; then
+		if [ "$OS" == "linux" ]; then
+
+			if [ -d /usr/share/applications ]; then
+
+				echo "Integrating Editor, Helper and Ranger...";
+
+				cp ./bin/helper/linux/editor.desktop /usr/share/applications/lycheejs-editor.desktop;
+				cp ./bin/helper/linux/helper.desktop /usr/share/applications/lycheejs-helper.desktop;
+				cp ./bin/helper/linux/ranger.desktop /usr/share/applications/lycheejs-ranger.desktop;
+
+
+				sed -i 's|__ROOT__|'$LYCHEEJS_ROOT'|g' "/usr/share/applications/lycheejs-editor.desktop";
+				sed -i 's|__ROOT__|'$LYCHEEJS_ROOT'|g' "/usr/share/applications/lycheejs-helper.desktop";
+				sed -i 's|__ROOT__|'$LYCHEEJS_ROOT'|g' "/usr/share/applications/lycheejs-ranger.desktop";
+
+				echo "Done.";
+
+			fi;
+
+		elif [ "$OS" == "osx" ]; then
 
 			echo "Integrating Editor, Helper and Ranger...";
+			open ./bin/helper/osx/helper.app;
+			echo "Done.";
 
-			cp ./bin/helper/linux/editor.desktop /usr/share/applications/lycheejs-editor.desktop;
-			cp ./bin/helper/linux/helper.desktop /usr/share/applications/lycheejs-helper.desktop;
-			cp ./bin/helper/linux/ranger.desktop /usr/share/applications/lycheejs-ranger.desktop;
+		elif [ "$OS" == "windows" ]; then
 
-
-			sed -i 's|__ROOT__|'$LYCHEEJS_ROOT'|g' "/usr/share/applications/lycheejs-editor.desktop";
-			sed -i 's|__ROOT__|'$LYCHEEJS_ROOT'|g' "/usr/share/applications/lycheejs-helper.desktop";
-			sed -i 's|__ROOT__|'$LYCHEEJS_ROOT'|g' "/usr/share/applications/lycheejs-ranger.desktop";
-
+			echo "Integrating Editor, Helper and Ranger...";
+			regedit.exe /S ./bin/helper/windows/helper.reg;
 			echo "Done.";
 
 		fi;
-
-	elif [ "$OS" == "osx" ]; then
-
-		echo "Integrating Editor, Helper and Ranger...";
-		open ./bin/helper/osx/helper.app;
-		echo "Done.";
-
-	elif [ "$OS" == "windows" ]; then
-
-		echo "Integrating Editor, Helper and Ranger...";
-		regedit.exe /S ./bin/helper/windows/helper.reg;
-		echo "Done.";
 
 	fi;
 
