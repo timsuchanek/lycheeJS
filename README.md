@@ -15,31 +15,48 @@
 [gratipay-url]: https://gratipay.com/martensms/
 
 
+## Overview
+
 lycheeJS is a Next-Gen Isomorphic Application Engine that
 offers a complete solution for prototyping and deployment
 of HTML5 or native OpenGL(ES) or libSDL2 based applications.
 
-The development process is optimized for Blink-based browsers
-(Chromium, Google Chrome, Opera) and their developer tools.
+The project has the goal to ease up development of applications
+and shipment to further platforms. The development process is
+optimized for Blink-based browsers (Chromium, Google Chrome, Opera)
+and their developer tools.
+
+Note that the Host OS, which the bundles are for, is the developer's
+or designer's machine and not the target platform.
+
+The [lycheeJS-runtime](https://github.com/LazerUnicorns/lycheeJS-runtime.git)
+repository contains all binary pre-compiled runtimes that are
+included in the bundles.
+
+The [lycheeJS-bundle](https://github.com/LazerUnicorns/lycheeJS-bundle.git)
+repository contains all scripts and logic required to generate
+operating system ready packages (such as deb packages or dmg images).
 
 
-## Automatic Installation
+## Bundle Installation
 
-There are prebuilt packages that ship all dependencies and
+There are prebuilt bundles that ship all dependencies and
 runtimes lycheeJS needs in order to work and cross-compile
-properly.
+properly. Take a look at [lycheejs.org](http://lycheejs.org)
+for a list of available bundles for all operating systems.
 
-Take a look at [lycheejs.org](http://lycheejs.org) for a list
-of available packages for your your operating system.
+Those packages can be built by using the
+[lycheeJS-bundle](https://github.com/LazerUnicorns/lycheeJS-bundle.git)
+repository.
 
 
 ## Manual Installation
 
 The netinstall shell script allows to automatically install
-lycheeJS on any server.
+lycheeJS on any machine (arm, x86 or x86_64). The only
+requirement for the script is `curl` and `unzip`.
 
-If you want to install lycheejs in that way, you can simply
-execute this in the Terminal:
+Simple execute this command in the Terminal:
 
 ```bash
 # This will create a lycheeJS Installation in ./lycheejs
@@ -47,14 +64,27 @@ wget -q -O - http://lycheejs.org/dist/lycheejs-0.8.6-netinstall.sh | bash;
 ```
 
 
-#### NPM / NodeJS Integration
+## NPM Installation
 
-You can modify the **~/lycheeJS/package.json**/*scripts* section to
-use your own sorbet profile. Take a look at the examples *localhost*
-or *lycheejs.org*.
+There's an npm package available. Npm has several issues
+(no multi-platform support, no multi-architecture support,
+no binary shipment of runtimes possible etc.), so it is not
+recommended as it complicates the installation process.
+
+It is necessary to manually download the
+[lycheeJS-runtime](https://github.com/LazerUnicorns/lycheeJS-runtime.git)
+repository and install them into `./bin/runtime`.
+
+It is also possible to change integrations with other parts of
+the node ecosystem. Modify the `./lycheejs/package.json/script`
+section as necessary.
 
 ```bash
-cd ~/Development/lycheeJS;
+npm install lycheejs;
+mv node_modules/lycheejs ./lycheejs;
+git clone https://github.com/LazerUnicorns/lycheeJS-runtime.git ./lycheejs/bin/runtime;
+
+cd lycheejs;
 npm run-script localhost;
 ```
 
