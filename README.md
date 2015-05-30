@@ -90,7 +90,7 @@ Take a look at the [ROADMAP.md](ROADMAP.md) file.
 ## Contribution
 
 You want to contribute to the project?
-Take a look at the [CONTRIBUTING.md](CONTRIBUTING.md) file.
+Take a look at the [CONTRIBUTION.md](CONTRIBUTION.md) file.
 
 
 ## License
@@ -98,4 +98,6 @@ Take a look at the [CONTRIBUTING.md](CONTRIBUTING.md) file.
 lycheeJS is (c) 2012-2015 LazerUnicorns and released under MIT license.
 The projects and demos are licensed under CC0 (public domain) license.
 The runtimes are owned and copyrighted by their respective owners.
+
+Take a look at the [LICENSE.txt](LICENSE.txt) file.
 
