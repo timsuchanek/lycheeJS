@@ -18,12 +18,12 @@ lychee.define('lychee.math.Matrix4').exports(function(lychee, global) {
 	};
 
 
-	Class.IDENTITY = new _type(
+	Class.IDENTITY = new _type([
 		1, 0, 0, 0,
 		0, 1, 0, 0,
 		0, 0, 1, 0,
 		0, 0, 0, 1
-	);
+	]);
 
 
 	Class.PRECISION = 0.000001;

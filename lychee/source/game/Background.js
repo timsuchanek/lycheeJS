@@ -200,19 +200,7 @@ lychee.define('lychee.game.Background').includes([
 			}
 
 
-			if (lychee.debug === true) {
 
-				renderer.drawBox(
-					x1,
-					y1,
-					x2,
-					y2,
-					'#ffff00',
-					false,
-					1
-				);
-
-			}
 
 		},
 

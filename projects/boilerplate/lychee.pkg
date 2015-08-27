@@ -74,11 +74,10 @@
 		},
 		"files": {
 			"nodejs": {
-				"server": {
-					"index": [
-						"js"
-					]
-				}
+				"server": {}
+			},
+			"html-webview": {
+				"main": {}
 			}
 		}
 	},
@@ -149,12 +148,6 @@
 					"js",
 					"json",
 					"png",
-					"fnt"
-				],
-				"Circle": [
-					"fnt"
-				],
-				"Title": [
 					"fnt"
 				]
 			},

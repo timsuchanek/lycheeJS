@@ -1,7 +1,13 @@
 
 lychee.define('Renderer').tags({
 	platform: 'html-webgl'
-}).supports(function(lychee, global) {
+})
+.requires([
+	'lychee.math.Webgl',
+	'lychee.math.Primitive',
+	'lychee.math.Matrix3'
+])
+.supports(function(lychee, global) {
 
 	/*
 	 * Hint for check against undefined
@@ -38,82 +44,63 @@ lychee.define('Renderer').tags({
 	 * HELPERS
 	 */
 
-	var _programs = {};
+	// var _programs = {};
 
-	(function(attachments) {
+	var _primitive_vs = [
+	'attribute vec2 a_position;',
 
-		for (var file in attachments) {
+	'uniform mat3 u_matrix;',
 
-			var tmp = file.split('.');
-			var id  = tmp[0];
-			var ext = tmp[1];
+	'void main() {',
 
+	'  gl_Position = vec4((u_matrix * vec3(a_position, 1)).xy, 0, 1);',
 
-			var entry = _programs[id] || null;
-			if (entry === null) {
-				entry = _programs[id] = {
-					fs: '',
-					vs: ''
-				};
-			}
+	// '  gl_Position = vec4(a_position, 0, 1);',
+
+	'}'
+	].join('\n');
 
 
-			if (ext === 'fs') {
-				entry.fs = attachments[file].buffer;
-			} else if (ext === 'vs') {
-				entry.vs = attachments[file].buffer;
-			}
+	var _primitive_fs = [
+	'precision mediump float;',
 
-		}
+	'uniform vec4 u_color;',
 
-	})(attachments);
+	'void main() {',
+	'  gl_FragColor = u_color;',
+	'}'
+	].join('\n');
 
+	var _texture_vs = [
 
+		'attribute vec2 a_position;',
 
-	var _init_program = function(id) {
+		'uniform mat3 u_matrix;',
 
-		id = typeof id === 'string' ? id : '';
-
-
-		var shader = _programs[id] || null;
-		if (shader !== null) {
-
-			var gl      = this.__ctx;
-			var program = gl.createProgram();
+		'varying vec2 v_texCoord;',
 
 
-			var fs = gl.createShader(gl.FRAGMENT_SHADER);
+		'void main() {',
 
-			gl.shaderSource(fs, shader.fs);
-			gl.compileShader(fs);
+		'  gl_Position = vec4((u_matrix * vec3(a_position, 1)).xy, 0, 1);',
 
+		'  v_texCoord = a_position;',
 
-			var vs = gl.createShader(gl.VERTEX_SHADER);
+		'}'
 
-			gl.shaderSource(vs, shader.vs);
-			gl.compileShader(vs);
+	].join('\n');
 
+	var _texture_fs = [
+	'precision mediump float;',
 
-			gl.attachShader(program, vs);
-			gl.attachShader(program, fs);
-			gl.linkProgram(program);
+	'uniform sampler2D u_image;',
 
+	'varying vec2 v_texCoord;',
 
-			var status = gl.getProgramParameter(program, gl.LINK_STATUS);
-			if (status === true) {
-
-				gl.useProgram(program);
-
-				return program;
-
-			}
-
-		}
-
-
-		return null;
-
-	};
+	'void main() {',
+	'  gl_FragColor = texture2D(u_image, v_texCoord);',
+	'}'
+	].join('\n');
 
 
 
@@ -121,7 +108,26 @@ lychee.define('Renderer').tags({
 	 * HELPERS
 	 */
 
-	var _color_cache = {};
+	var _create_program_info = function(shaders) {
+
+		var gl = this.__ctx;
+
+		var program = gl.createProgram();
+		shaders.forEach(function(shader) {
+			gl.attachShader(program, shader);
+		});
+
+		gl.linkProgram(program);
+
+		var linked = gl.getProgramParameter(program, gl.LINK_STATUS);
+
+		if (!linked) {
+			throw new Error("Couldn't link.");
+			gl.deleteProgram(program);
+		}
+
+		return program;
+	};
 
 	var _is_color = function(color) {
 
@@ -140,7 +146,6 @@ lychee.define('Renderer').tags({
 
 
 		return false;
-
 	};
 
 	var _hex_to_rgba = function(hex) {
@@ -177,64 +182,17 @@ lychee.define('Renderer').tags({
 
 
 		return rgba;
-
 	};
-
-	var _texture_cache = {};
-
-	var _get_gltexture = function(texture) {
-
-		var url = texture.url;
-		if (_texture_cache[url] !== undefined) {
-			return _texture_cache[url];
-		}
-
-
-		var gl        = this.__ctx;
-		var gltexture = gl.createTexture();
-		var size      = gl.getParameter(gl.MAX_TEXTURE_SIZE);
-
-
-		if (
-			   texture.width  <= size
-			&& texture.height <= size
-		) {
-
-			gl.bindTexture(gl.TEXTURE_2D, gltexture);
-// gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-			gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
-			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.buffer);
-
-			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S,     gl.CLAMP_TO_EDGE);
-			gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T,     gl.CLAMP_TO_EDGE);
-
-/*
- * TODO: Figure out why Mipmaps won't work :/
-			var is_power_of_two = (texture.width & (texture.width - 1) === 0);
-			if (is_power_of_two === true) {
-				gl.generateMipmap(gl.TEXTURE_2D);
-			}
-*/
-
-			gl.bindTexture(gl.TEXTURE_2D, null);
-
-		}
-
-
-		_texture_cache[url] = gltexture;
-
-
-		return gltexture;
-
-	};
-
 
 
 	/*
 	 * STRUCTS
 	 */
+
+	var _color_cache = {};
+
+	var _texture_cache = {};
+
 
 	var _buffer = function(width, height) {
 
@@ -244,6 +202,20 @@ lychee.define('Renderer').tags({
 	};
 
 
+	var _buffer_info_cache = {
+		rectangle: {
+			stroke: null,
+			background: null
+		},
+		circle: null,
+		line: null,
+		ellipse: null,
+		texture: null
+	};
+
+	var _last_used_program_info = null;
+	var _last_used_buffer_info  = null;
+	var _bind_buffers           = false;
 
 	/*
 	 * IMPLEMENTATION
@@ -282,9 +254,121 @@ lychee.define('Renderer').tags({
 		settings = null;
 
 
-		for (var id in _programs) {
-			this.__programs[id] = _init_program.call(this, id);
-		}
+
+
+		var gl = this.__ctx;
+
+		this.util = new lychee.math.Webgl(gl);
+		this.primitive = new lychee.math.Primitive(this.width, this.height);
+
+		this.program_infos = {
+			primitive: this.util.createProgramInfo([_primitive_vs, _primitive_fs]),
+			texture: this.util.createProgramInfo([_texture_vs, _texture_fs])
+		};
+
+
+		// set primitive program uniforms
+
+		this.matrix_location = {
+			primitive: gl.getUniformLocation(this.program_infos.primitive.program, 'u_matrix'),
+			texture: gl.getUniformLocation(this.program_infos.texture.program, 'u_matrix')
+		};
+
+		this.color_location = gl.getUniformLocation(this.program_infos.primitive.program, 'u_color');
+
+		// set texture program uniform
+
+		this.image_location = gl.getUniformLocation(this.program_infos.texture.program, 'u_image');
+
+
+		/** Testing this shit */
+
+
+		/** Compile Vertex Shader */
+
+		// var vshader = gl.createShader(gl.VERTEX_SHADER);
+
+		// gl.shaderSource(vshader, _vs);
+
+		// gl.compileShader(vshader);
+
+		// if (!gl.getShaderParameter(vshader, gl.COMPILE_STATUS)) {
+		// 	throw new Error('Couldnt compile vertex shader');
+		// }
+
+
+		// /** Compile Fragment Shader */
+
+		// var fshader = gl.createShader(gl.FRAGMENT_SHADER);
+
+		// gl.shaderSource(fshader, _fs);
+
+		// gl.compileShader(fshader);
+
+		// if (!gl.getShaderParameter(fshader, gl.COMPILE_STATUS)) {
+		// 	throw new Error('Couldnt compile Fragment Shader');
+		// }
+
+
+		// /** Create Program */
+
+		// var program = gl.createProgram();
+
+		// gl.attachShader(program, vshader);
+		// gl.attachShader(program, fshader);
+
+		// gl.linkProgram(program);
+
+		// if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+		// 	throw new Error('Oops.');
+		// }
+
+		// gl.useProgram(program);
+
+		// var vertices = new Float32Array([
+  //     -1.0, -1.0,
+  //      1.0, -1.0,
+  //     -1.0,  2.0,
+  //     -1.0,  1.0,
+  //      1.0, -1.0,
+  //      1.0,  1.0]);
+
+
+		// var positionLocation = gl.getAttribLocation(program, 'a_position');
+
+		// var buffer = gl.createBuffer();
+		// gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+		// gl.bufferData(gl.ARRAY_BUFFER,
+		// 	new Float32Array([
+		// 	      -1.0, -1.0,
+		// 	       1.0, -1.0,
+		// 	      -1.0,  1.0,
+		// 	      -1.0,  1.0,
+		// 	       1.0, -1.0,
+		// 	       1.0,  1.0
+		// 	 ]),
+		// 	gl.STATIC_DRAW);
+		// gl.enableVertexAttribArray(positionLocation);
+		// gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0)
+
+		// var matrixLocation = gl.getUniformLocation(program, 'u_matrix');
+
+		// gl.uniformMatrix3fv(matrixLocation,
+		// 	false,
+		// 	[
+		// 		1, 0, 0,
+		// 		0, 1, 0,
+		// 		0, 0, 1
+		// 	]
+		// );
+
+		gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+
+		// gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+
+
+
 
 	};
 
@@ -314,10 +398,7 @@ lychee.define('Renderer').tags({
 				'arguments':   [ settings ],
 				'blob':        null
 			};
-
 		},
-
-
 
 		/*
 		 * SETTERS AND GETTERS
@@ -335,7 +416,6 @@ lychee.define('Renderer').tags({
 			) {
 				this.alpha = alpha;
 			}
-
 		},
 
 		setBackground: function(color) {
@@ -347,7 +427,6 @@ lychee.define('Renderer').tags({
 				this.background = color;
 				this.__canvas.style.backgroundColor = color;
 			}
-
 		},
 
 		setId: function(id) {
@@ -359,7 +438,6 @@ lychee.define('Renderer').tags({
 				this.id = id;
 				this.__canvas.id = id;
 			}
-
 		},
 
 		setWidth: function(width) {
@@ -378,7 +456,6 @@ lychee.define('Renderer').tags({
 			this.__canvas.style.width = this.width + 'px';
 			this.__ctx._width         = this.width;
 			this.offset.x             = this.__canvas.offsetLeft;
-
 		},
 
 		setHeight: function(height) {
@@ -397,7 +474,6 @@ lychee.define('Renderer').tags({
 			this.__canvas.style.height = this.height + 'px';
 			this.__ctx._height         = this.height;
 			this.offset.y              = this.__canvas.offsetTop;
-
 		},
 
 
@@ -408,22 +484,22 @@ lychee.define('Renderer').tags({
 
 		clear: function(buffer) {
 
-			buffer = buffer instanceof _buffer ? buffer : null;
+			// buffer = buffer instanceof _buffer ? buffer : null;
 
 
-			if (buffer !== null) {
+			// if (buffer !== null) {
 
-				// TODO: Use gl.clear(gl.COLOR_BUFFER_BIT) on buffer;
-				buffer.clear();
+			// 	// TODO: Use gl.clear(gl.COLOR_BUFFER_BIT) on buffer;
+			// 	buffer.clear();
 
-			} else {
+			// } else {
 
-				var gl    = this.__ctx;
-				var color = _hex_to_rgba(this.background);
+			// 	var gl    = this.__ctx;
+			// 	var color = _hex_to_rgba(this.background);
 
-				gl.clearColor(color[0], color[1], color[2], color[3]);
+			// 	gl.clearColor(color[0], color[1], color[2], color[3]);
 
-			}
+			// }
 
 		},
 
@@ -431,23 +507,21 @@ lychee.define('Renderer').tags({
 
 		},
 
-// TODO: createBuffer() implementation for gl.createFramebuffer();
-		createBuffer: function(width, height) {
-			return new _buffer(width, height);
-		},
 
-// TODO: setBuffer();
+		createBuffer: function(width, height) {
+			//return new _buffer(width, height);
+		},
 
 		setBuffer: function(buffer) {
 
-			buffer = buffer instanceof _buffer ? buffer : null;
+			// buffer = buffer instanceof _buffer ? buffer : null;
 
 
-			if (buffer !== null) {
-				// this.__ctx = buffer.__ctx;
-			} else {
-				// this.__ctx = this.__canvas.getContext('2d');
-			}
+			// if (buffer !== null) {
+			// 	// this.__ctx = buffer.__ctx;
+			// } else {
+			// 	// this.__ctx = this.__canvas.getContext('2d');
+			// }
 
 		},
 
@@ -457,672 +531,225 @@ lychee.define('Renderer').tags({
 		 * DRAWING API
 		 */
 
-		drawArc: function(x, y, start, end, radius, color, background, lineWidth) {
 
-// TODO: drawArc() implementation;
-return;
-
+		drawBox: function(x1, y1, x2, y2, scaleX, scaleY, rotation, color, background, lineWidth) {
 
 			color      = _is_color(color) === true ? color : '#000000';
 			background = background === true;
 			lineWidth  = typeof lineWidth === 'number' ? lineWidth : 1;
 
 
-			var ctx = this.__ctx;
-			var pi2 = Math.PI * 2;
+			var gl = this.__ctx;
 
-
-			ctx.globalAlpha = this.alpha;
-			ctx.beginPath();
-
-			ctx.arc(
-				x,
-				y,
-				radius,
-				start * pi2,
-				end * pi2
-			);
-
-			if (background === false) {
-				ctx.lineWidth   = lineWidth;
-				ctx.strokeStyle = color;
-				ctx.stroke();
-			} else {
-				ctx.fillStyle   = color;
-				ctx.fill();
-			}
-
-			ctx.closePath();
-
-		},
-
-		drawBox: function(x1, y1, x2, y2, color, background, lineWidth) {
-
-// TODO: drawBox() implementation;
-return;
-
-			color      = _is_color(color) === true ? color : '#000000';
-			background = background === true;
-			lineWidth  = typeof lineWidth === 'number' ? lineWidth : 1;
-
-
-			var ctx = this.__ctx;
-
-
-			ctx.globalAlpha = this.alpha;
-
-			if (background === false) {
-				ctx.lineWidth   = lineWidth;
-				ctx.strokeStyle = color;
-				ctx.strokeRect(x1, y1, x2 - x1, y2 - y1);
-			} else {
-				ctx.fillStyle   = color;
-				ctx.fillRect(x1, y1, x2 - x1, y2 - y1);
-			}
-
-		},
-
-		drawBuffer: function(x1, y1, buffer) {
-
-// TODO: drawBuffer() implementation;
-return;
-
-
-			buffer = buffer instanceof _buffer ? buffer : null;
-
-
-			if (buffer !== null) {
-
-				var ctx = this.__ctx;
-
-
-				ctx.globalAlpha = this.alpha;
-				ctx.drawImage(buffer.__buffer, x1, y1);
-
-
-				if (lychee.debug === true) {
-
-					this.drawBox(
-						x1,
-						y1,
-						x1 + buffer.width,
-						y1 + buffer.height,
-						'#00ff00',
-						false,
-						1
-					);
-
+			if (background) {
+				if (!_buffer_info_cache.rectangle.background) {
+					// if it's the first rectangle with background, we draw, create the buffer.
+					var vertices = this.primitive.rectangle(0, 0, 1.0, 1.0);
+					_buffer_info_cache.rectangle.background = this.util.createPrimitiveBufferInfo(vertices);
 				}
 
+				var object_to_draw = {
+					programInfo: this.program_infos.primitive,
+					bufferInfo: _buffer_info_cache.rectangle.background,
+					uniforms: {
+						u_color: _hex_to_rgba(color),
+						u_matrix: this.primitive.matrixForRect(x1, y1, x2, y2, scaleX, scaleY, rotation)
+					}
+				};
+
+				this.drawPrimitive.call(this, object_to_draw);
+			} else {
+				if (!_buffer_info_cache.rectangle.stroke) {
+					// if it's the first rectangle WITHOUT background, we draw, create the buffer.
+					var vertices = this.primitive.rectangle(0, 0, 1.0, 1.0, false, lineWidth);
+					_buffer_info_cache.rectangle.stroke = this.util.createPrimitiveBufferInfo(vertices);
+				}
 			}
+
+		},
+
+		drawSprite: function(x1, y1, x2, y2, texture, scaleX, scaleY, rotation) {
+			// texture = texture instanceof Texture ? texture : null;
+			// map     = map instanceof Object      ? map     : null;
+
+
+
+			if (!_buffer_info_cache.texture) {
+				// if it's the first rectangle with background, we draw, create the buffer.
+				var vertices = this.primitive.rectangle(0, 0, 1.0, 1.0);
+				_buffer_info_cache.texture = this.util.createTextureBufferInfo(vertices);
+			}
+
+			if (texture !== null) {
+				var object_to_draw = {
+					programInfo: this.program_infos.texture,
+					bufferInfo: _buffer_info_cache.texture,
+					uniforms: {
+						u_matrix: this.primitive.matrixForRect(x1, y1, x2, y2, scaleX, scaleY, rotation)
+					},
+					image: texture
+				};
+
+				this.drawTexture.call(this, object_to_draw);
+			}
+		},
+
+		drawTexture: function(obj) {
+			var programInfo = obj.programInfo;
+			var bufferInfo = obj.bufferInfo;
+			var uniforms = obj.uniforms;
+			var image = obj.image;
+			var gl = this.__ctx;
+
+
+			_bind_buffers = false;
+
+			if (programInfo !== _last_used_program_info) {
+				_last_used_program_info = programInfo;
+				gl.useProgram(programInfo.program);
+
+				/**
+				 * If the program changed, we have to rebind the buffers
+				 */
+
+				var positionLocation = gl.getAttribLocation(programInfo.program, 'a_position');
+
+				var texture = gl.createTexture();
+				gl.bindTexture(gl.TEXTURE_2D, texture);
+
+				// Set the parameters so we can render any size image.
+				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+
+				// Upload the image into the texture.
+
+				gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+
+
+				// Set the position buffer
+
+				var positionBuffer = gl.createBuffer();
+
+				gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+				gl.bufferData(gl.ARRAY_BUFFER, bufferInfo.vertices, gl.STATIC_DRAW);
+				gl.enableVertexAttribArray(positionLocation);
+
+				gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0)
+
+
+
+			}
+
+			gl.uniformMatrix3fv(this.matrix_location.texture, false, uniforms.u_matrix);
+
+			gl.drawArrays(gl.TRIANGLES, 0, bufferInfo.numElements);
 
 		},
 
 		drawCircle: function(x, y, radius, color, background, lineWidth) {
 
-// TODO: drawCircle() implementation;
-return;
-
 			color      = _is_color(color) === true ? color : '#000000';
 			background = background === true;
 			lineWidth  = typeof lineWidth === 'number' ? lineWidth : 1;
 
 
-			var ctx = this.__ctx;
+			var gl = this.__ctx;
 
-
-			ctx.globalAlpha = this.alpha;
-			ctx.beginPath();
-
-			ctx.arc(
-				x,
-				y,
-				radius,
-				0,
-				Math.PI * 2
-			);
-
-
-			if (background === false) {
-				ctx.lineWidth   = lineWidth;
-				ctx.strokeStyle = color;
-				ctx.stroke();
-			} else {
-				ctx.fillStyle   = color;
-				ctx.fill();
-			}
-
-			ctx.closePath();
-
-		},
-
-		drawLight: function(x, y, radius, color, background, lineWidth) {
-
-// TODO: drawLight() implementation;
-return;
-
-
-			color      = _is_color(color) ? _hex_to_rgba(color) : 'rgba(255,255,255,1.0)';
-			background = background === true;
-			lineWidth  = typeof lineWidth === 'number' ? lineWidth : 1;
-
-
-			var ctx = this.__ctx;
-
-
-			var gradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
-
-			gradient.addColorStop(0, color);
-			gradient.addColorStop(1, 'rgba(0,0,0,0)');
-
-
-			ctx.globalAlpha = this.alpha;
-			ctx.beginPath();
-
-			ctx.arc(
-				x,
-				y,
-				radius,
-				0,
-				Math.PI * 2
-			);
-
-
-			if (background === false) {
-				ctx.lineWidth   = lineWidth;
-				ctx.strokeStyle = gradient;
-				ctx.stroke();
-			} else {
-				ctx.fillStyle   = gradient;
-				ctx.fill();
-			}
-
-			ctx.closePath();
-
-		},
-
-		drawLine: function(x1, y1, x2, y2, color, lineWidth) {
-
-// TODO: drawLine() implementation;
-return;
-
-
-			color     = _is_color(color) === true ? color : '#000000';
-			lineWidth = typeof lineWidth === 'number' ? lineWidth : 1;
-
-
-			var ctx = this.__ctx;
-
-
-			ctx.globalAlpha = this.alpha;
-			ctx.beginPath();
-			ctx.moveTo(x1, y1);
-			ctx.lineTo(x2, y2);
-
-			ctx.lineWidth   = lineWidth;
-			ctx.strokeStyle = color;
-			ctx.stroke();
-
-			ctx.closePath();
-
-		},
-
-		drawTriangle: function(x1, y1, x2, y2, x3, y3, color, background, lineWidth) {
-
-// TODO: drawTriangle() implementation;
-return;
-
-
-			color      = _is_color(color) === true ? color : '#000000';
-			background = background === true;
-			lineWidth  = typeof lineWidth === 'number' ? lineWidth : 1;
-
-
-			var ctx = this.__ctx;
-
-
-			ctx.globalAlpha = this.alpha;
-			ctx.beginPath();
-			ctx.moveTo(x1, y1);
-			ctx.lineTo(x2, y2);
-			ctx.lineTo(x3, y3);
-			ctx.lineTo(x1, y1);
-
-			if (background === false) {
-				ctx.lineWidth   = lineWidth;
-				ctx.strokeStyle = color;
-				ctx.stroke();
-			} else {
-				ctx.fillStyle   = color;
-				ctx.fill();
-			}
-
-			ctx.closePath();
-
-		},
-
-		// points, x1, y1, [ ... x(a), y(a) ... ], [ color, background, lineWidth ]
-		drawPolygon: function(points, x1, y1) {
-
-// TODO: drawPolygon() implementation;
-return;
-
-
-			var l = arguments.length;
-
-			if (points > 3) {
-
-				var optargs = l - (points * 2) - 1;
-
-
-				var color, background, lineWidth;
-
-				if (optargs === 3) {
-
-					color      = arguments[l - 3];
-					background = arguments[l - 2];
-					lineWidth  = arguments[l - 1];
-
-				} else if (optargs === 2) {
-
-					color      = arguments[l - 2];
-					background = arguments[l - 1];
-
-				} else if (optargs === 1) {
-
-					color      = arguments[l - 1];
-
+			if (background) {
+				if (!_buffer_info_cache.circle.background) {
+					// if it's the first circle with background, we draw, create the buffer.
+					var vertices = this.primitive.circle(0, 0, 1.0);
+					_buffer_info_cache.circle.background = this.util.createPrimitiveBufferInfo(vertices);
 				}
 
-
-				color      = _is_color(color) === true ? color : '#000000';
-				background = background === true;
-				lineWidth  = typeof lineWidth === 'number' ? lineWidth : 1;
-
-
-				var ctx = this.__ctx;
-
-
-				ctx.globalAlpha = this.alpha;
-				ctx.beginPath();
-				ctx.moveTo(x1, y1);
-
-				for (var p = 1; p < points; p++) {
-
-					ctx.lineTo(
-						arguments[1 + p * 2],
-						arguments[1 + p * 2 + 1]
-					);
-
-				}
-
-				ctx.lineTo(x1, y1);
-
-				if (background === false) {
-					ctx.lineWidth   = lineWidth;
-					ctx.strokeStyle = color;
-					ctx.stroke();
-				} else {
-					ctx.fillStyle   = color;
-					ctx.fill();
-				}
-
-				ctx.closePath();
-
-			}
-
-		},
-
-		drawSprite: function(x1, y1, texture, map) {
-
-			texture = texture instanceof Texture ? texture : null;
-			map     = map instanceof Object      ? map     : null;
-
-console.log(x1, y1);
-
-if (y1 < 0) {
-	return;
-}
-
-
-			var program = this.__programs['Sprite'];
-			if (
-				   program !== null
-				&& texture !== null
-			) {
-
-				var gl  = this.__ctx;
-				var tex = _get_gltexture.call(this, texture);
-
-				var  x2 = 0,  y2 = 0;
-				var tx1 = 0, ty1 = 0;
-				var tx2 = 0, ty2 = 0;
-
-
-				// TODO: alpha implementation in shader
-				// ctx.globalAlpha = this.alpha;
-
-				if (map === null) {
-
-					x2  = x1 + texture.width;
-					y2  = y1 + texture.height;
-
-					tx1 = 0;
-					ty1 = 0;
-					tx2 = 1.0;
-					ty2 = 1.0;
-
-				} else {
-
-					x2  = x1 + map.w;
-					y2  = y1 + map.h;
-
-					tx1 = map.x / texture.width;
-					ty1 = map.y / texture.height;
-					tx2 = tx1 + (map.w / texture.width);
-					ty2 = ty1 + (map.h / texture.height);
-
-					if (lychee.debug === true) {
-
-						this.drawBox(
-							x1,
-							y1,
-							x2,
-							y2,
-							'#ff0000',
-							false,
-							1
-						);
-
+				var object_to_draw = {
+					programInfo: this.program_info,
+					bufferInfo: _buffer_info_cache.circle.background,
+					uniforms: {
+						u_color: _hex_to_rgba(color),
+						u_matrix: this.primitive.matrixForRect(x1, y1, x2, y2, scaleX, scaleY, rotation)
 					}
+				};
 
+				this.drawPrimitive.call(this, object_to_draw);
+			} else {
+				if (!_buffer_info_cache.circle.stroke) {
+					// if it's the first circle WITHOUT background, we draw, create the buffer.
+					var vertices = this.primitive.circle(0, 0, 1.0, 1.0, false, lineWidth);
+					_buffer_info_cache.circle.stroke = this.util.createPrimitiveBufferInfo(vertices);
 				}
+			}
+
+		},
+
+		drawPrimitive: function(obj) {
+			var programInfo = obj.programInfo;
+			var bufferInfo = obj.bufferInfo;
+			var uniforms = obj.uniforms;
+			var gl = this.__ctx;
 
 
-				gl.useProgram(program);
-				gl.bindTexture(gl.TEXTURE_2D, tex);
+			_bind_buffers = false;
 
+			if (programInfo !== _last_used_program_info) {
+				_last_used_program_info = programInfo;
+				gl.useProgram(programInfo.program);
 
+				/**
+				 * If the program changed, we have to rebind the buffers
+				 */
 
-				console.log(tx1, ty1, ' > ', tx2, ty2);
-				console.log(x1, y1, ' >> ', x2, y2);
+				var positionLocation = gl.getAttribLocation(programInfo.program, 'a_position');
 
+				var buffer = gl.createBuffer();
 
-				var texCoordLocation = gl.getAttribLocation(program, 'a_texCoord');
-				var texCoordBuffer   = gl.createBuffer();
-
-				gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
-				gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-					tx1, ty1,
-					tx2, ty1,
-					tx1, ty2,
-					tx1, ty2,
-					tx2, ty1,
-					tx2, ty2
-				]), gl.STATIC_DRAW);
-
-				gl.enableVertexAttribArray(texCoordLocation);
-				gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, 0);
-
-
-				var resolutionLocation = gl.getUniformLocation(program, 'u_resolution');
-
-				gl.uniform2f(resolutionLocation, gl._width, gl._height);
-
-
-				var positionLocation = gl.getAttribLocation(program, 'a_position');
-				var positionBuffer   = gl.createBuffer();
-
-				gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-
+				gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+				gl.bufferData(gl.ARRAY_BUFFER, bufferInfo.vertices, gl.STATIC_DRAW);
 				gl.enableVertexAttribArray(positionLocation);
-				gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
 
-
-				gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-					x1, y1,
-					x2, y1,
-					x1, y2,
-					x1, y2,
-					x2, y1,
-					x2, y2
-				]), gl.STATIC_DRAW);
-
-
-				gl.drawArrays(gl.TRIANGLES, 0, 6);
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-
-
- // setup GLSL program
-  gl.useProgram(program);
-
-  // look up where the vertex data needs to go.
-  var positionLocation = gl.getAttribLocation(program, "a_position");
-
-  // Create a texture.
-  var texture = gl.createTexture();
-  gl.bindTexture(gl.TEXTURE_2D, texture);
-
-  // Set the parameters so we can render any size image.
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-
-  // Upload the image into the texture.
-  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
-
-
-
-
-}
-
-function randomInt(range) {
-  return Math.floor(Math.random() * range);
-}
-
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-
-				var textureBuffer = gl.createBuffer();
-
-				gl.bindBuffer(gl.ARRAY_BUFFER, textureBuffer);
-				gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-					tx1 / texture.width, ty1 / texture.height,
-					tx2 / texture.width, ty1 / texture.height,
-					tx1 / texture.width, ty2 / texture.height,
-					tx1 / texture.width, ty2 / texture.height,
-					tx2 / texture.width, ty1 / texture.height,
-					tx2 / texture.width, ty2 / texture.height
-				]), gl.STATIC_DRAW);
-				gl.vertexAttribPointer(program._aTexture, 2, gl.FLOAT, false, 0, 0);
-
-				gl.bindTexture(gl.TEXTURE_2D, tex);
-
-
-				gl.uniform2f(program._uViewport, gl._width, gl._height);
-				gl.uniform1i(program._uSampler, 0);
-
-
-				var positionBuffer = gl.createBuffer();
-
-				gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-				gl.enableVertexAttribArray(program._aPosition);
-				gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-					x1 / gl._width, y1 / gl._height,
-					x2 / gl._width, y1 / gl._height,
-					x1 / gl._width, y2 / gl._height,
-					x1 / gl._width, y2 / gl._height,
-					x2 / gl._width, y1 / gl._height,
-					x2 / gl._width, y2 / gl._height
-				]), gl.STATIC_DRAW);
-				gl.vertexAttribPointer(program._aPosition, 2, gl.FLOAT, false, 0, 0);
-
-
-				gl.drawArrays(gl.TRIANGLES, 0, 6);
-
-				gl.deleteBuffer(positionBuffer);
-				gl.deleteBuffer(textureBuffer);
-
-*/
+				gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0)
 
 			}
 
-		},
+			// if (_bind_buffers || bufferInfo !== _last_used_buffer_info) {
+			// 	_last_used_buffer_info = bufferInfo;
+				// this.util.setBuffers(programInfo.attribSetters, bufferInfo.buffers);
+			// }
 
-		drawText: function(x1, y1, text, font, center) {
-
-// TODO: drawText() implementation;
-return;
-
-
-			font   = font instanceof Font ? font : null;
-			center = center === true;
-
-
-			if (font !== null) {
-
-				if (center === true) {
-
-					var dim = font.measure(text);
-
-					x1 -= dim.realwidth / 2;
-					y1 -= (dim.realheight - font.baseline) / 2;
-
-				}
+			// set the uniform
+			// this.util.setUniforms(programInfo.uniformSetters, uniforms);
+			// debugger
+			// draw
 
 
-				y1 -= font.baseline / 2;
+			// debugger
+
+			// var um = uniforms.u_matrix;
+			// var vs = bufferInfo.vertices;
 
 
-				var margin  = 0;
-				var texture = font.texture;
-				if (texture !== null) {
+			// console.log(vs)
+			// console.log(um);
 
-					var ctx = this.__ctx;
+			// var m = new lychee.math.Matrix3(um);
 
 
-					ctx.globalAlpha = this.alpha;
+			// for (var i = 0; i < vs.length; i += 2) {
 
-					for (t = 0, l = text.length; t < l; t++) {
+			// 	var v = [vs[i], vs[i + 1], 1];
+			// 	console.log([vs[i], vs[i + 1]], m.multiplyVector(v));
+			// }
 
-						var chr = font.measure(text[t]);
+			// console.log(obj.x1, obj.y1, obj.x2, obj.y2);
 
-						if (lychee.debug === true) {
+			// debugger
 
-							this.drawBox(
-								x1 + margin,
-								y1,
-								x1 + margin + chr.realwidth,
-								y1 + chr.height,
-								'#00ff00',
-								false,
-								1
-							);
+			gl.uniformMatrix3fv(this.matrix_location.primitive, false, uniforms.u_matrix);
+			gl.uniform4fv(this.color_location, uniforms.u_color);
 
-						}
-
-						ctx.drawImage(
-							texture.buffer,
-							chr.x,
-							chr.y,
-							chr.width,
-							chr.height,
-							x1 + margin - font.spacing,
-							y1,
-							chr.width,
-							chr.height
-						);
-
-						margin += chr.realwidth + font.kerning;
-
-					}
-
-				}
-
-			}
+			gl.drawArrays(gl.TRIANGLES, 0, bufferInfo.numElements);
 
 		},
 

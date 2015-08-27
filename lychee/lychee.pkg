@@ -142,7 +142,9 @@
 					"Renderer": [
 						"js",
 						"Sprite.vs",
-						"Sprite.fs"
+						"Sprite.fs",
+						"Default.vs",
+						"Default.fs"
 					]
 				},
 				"iojs": {
@@ -229,6 +231,12 @@
 				],
 				"Color": [
 					"js"
+				],
+				"Width": [
+					"js"
+				],
+				"Height": [
+					"js"
 				]
 			},
 			"event": {
@@ -294,6 +302,15 @@
 					"js"
 				],
 				"Vector4": [
+					"js"
+				],
+				"Webgl": [
+					"js"
+				],
+				"Primitive": [
+					"js"
+				],
+				"Matrix3": [
 					"js"
 				]
 			},
@@ -444,6 +461,9 @@
 				],
 				"lychee": [
 					"md"
+				],
+				"Renderer": [
+					"md"
 				]
 			},
 			"event": {
@@ -456,7 +476,10 @@
 				"Queue": [
 					"md"
 				]
-			}
+			},
+			"CODESTYLE": [
+				"md"
+			]
 		}
 	}
 }

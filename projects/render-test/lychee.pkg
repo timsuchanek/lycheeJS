@@ -36,7 +36,7 @@
 				},
 				"variant": "application"
 			},
-			"iojs/server": {
+			"nodejs/server": {
 				"build": "game.net.Server",
 				"debug": false,
 				"sandbox": false,
@@ -48,7 +48,7 @@
 				],
 				"tags": {
 					"platform": [
-						"iojs"
+						"nodejs"
 					]
 				},
 				"variant": "application"
@@ -60,12 +60,6 @@
 				"main-osx": {
 					"x86_64": {}
 				}
-			},
-			"html": {
-				"main": {}
-			},
-			"nodejs": {
-				"server": {}
 			}
 		}
 	},
@@ -73,39 +67,68 @@
 		"environments": {},
 		"tags": {},
 		"files": {
-			"net": {
-				"client": {},
-				"remote": {},
-				"Server": [
+			"entity": {
+				"Circle": [
+					"js",
+					"fnt",
+					"json",
+					"png"
+				],
+				"Particle": [
 					"js"
 				],
+				"Emblem": [
+					"js"
+				]
+			},
+			"net": {
+				"client": {
+					"Highscore": [
+						"js"
+					],
+					"Ping": [
+						"js"
+					]
+				},
+				"remote": {
+					"Highscore": [
+						"js"
+					],
+					"Ping": [
+						"js"
+					]
+				},
 				"Client": [
+					"js"
+				],
+				"Server": [
 					"js"
 				]
 			},
 			"state": {
-				"Chat": [
+				"Game": [
 					"js",
 					"json",
-					"join_empty.snd",
-					"join_full.snd",
-					"message.snd"
-				]
-			},
-			"ui": {
-				"Avatar": [
-					"js",
-					"png"
-				],
-				"Messages": [
-					"js",
 					"fnt"
 				]
 			},
+			"ui": {
+				"Layer": [
+					"js",
+					"json",
+					"fnt"
+				]
+			},
+			"DeviceSpecificHacks": [
+				"js"
+			],
 			"Main": [
 				"js"
 			],
 			"index": [
+				"js"
+			],
+			"stats": [
 				"js"
 			]
 		}

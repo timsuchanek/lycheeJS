@@ -21,7 +21,7 @@
 !/projects/pong
 !/projects/tictactoe
 !/projects/lethalmaze
-
+!/projects/render-test
 
 # Cultivator
 /projects/*/build

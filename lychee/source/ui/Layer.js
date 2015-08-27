@@ -252,28 +252,6 @@ lychee.define('lychee.ui.Layer').includes([
 			}
 
 
-			if (lychee.debug === true) {
-
-				ox = position.x + offsetX;
-				oy = position.y + offsetY;
-
-
-				var hwidth   = this.width  / 2;
-				var hheight  = this.height / 2;
-
-
-				renderer.drawBox(
-					ox - hwidth,
-					oy - hheight,
-					ox + hwidth,
-					oy + hheight,
-					'#ff00ff',
-					false,
-					1
-				);
-
-			}
-
 		},
 
 

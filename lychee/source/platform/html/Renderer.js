@@ -659,7 +659,7 @@ lychee.define('Renderer').tags({
 
 		},
 
-		drawPoly: function(points, color background, closed, lineWidth) {
+		drawPoly: function(points, color, background, closed, lineWidth) {
 
 			var ctx = this.__ctx;
 
